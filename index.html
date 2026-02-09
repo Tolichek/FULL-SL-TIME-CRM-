@@ -20,7 +20,7 @@
             --accent: #ffffff;
             --neon: rgba(219, 0, 255, 0.6);
             --neon-text: #fff;
-            --panel-glass: rgba(0, 0, 0, 0.3);
+            --panel-glass: rgba(255, 255, 255, 0.1);
         }
         body.theme-graphite { --bg: linear-gradient(180deg, #1a1a1b 0%, #2c2c2e 50%, #000000 100%); --card-grad: linear-gradient(135deg, #3a3a3c 0%, #1a1a1b 100%); --neon: rgba(255, 255, 255, 0.4); }
         body.theme-blue { --bg: linear-gradient(180deg, #021b49 0%, #0a2e57 50%, #010a1b 100%); --card-grad: linear-gradient(135deg, #052661 0%, #021b49 100%); --neon: rgba(0, 150, 255, 0.7); }
@@ -43,26 +43,20 @@
         .page-container { height: calc(100vh - 145px); display: none; width: 100%; position: relative; }
         .page-active { display: flex; flex-direction: column; }
 
-        /* Шапка етапів - Синхронізована з бордом */
-        .sticky-header-row { 
-            position: sticky; top: 0; left: 0; 
-            height: 50px; background: rgba(0,0,0,0.3); 
-            backdrop-filter: blur(20px); z-index: 150; 
-            border-bottom: 1px solid rgba(255,255,255,0.05); 
-            display: flex; min-width: max-content;
-        }
+        .sticky-header-row { position: absolute; top: 0; left: 0; right: 0; height: 50px; background: var(--panel-glass); backdrop-filter: blur(20px); z-index: 150; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; overflow: hidden; }
+        .board { display: flex; overflow-x: auto; padding: 50px 0 0; gap: 20px; width: 100%; scroll-snap-type: x mandatory; height: 100%; cursor: grab; }
+        .board:active { cursor: grabbing; }
 
-        .board { display: flex; overflow-x: auto; padding: 0; gap: 20px; width: 100%; scroll-snap-type: x mandatory; height: 100%; scroll-behavior: smooth; }
+        .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; height: 100%; overflow-y: auto; scrollbar-width: none; padding: 0 20px 120px; }
         
-        .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; height: 100%; overflow-y: auto; scrollbar-width: none; padding: 15px 20px 120px; }
-        .board-spacer { min-width: 20px; flex-shrink: 0; }
-
         @media (min-width: 1024px) {
             .board { scroll-snap-type: none; }
-            .column, .col-head-item { min-width: 320px; max-width: 350px; flex: 0 0 auto; scroll-snap-align: none; }
+            .column { min-width: 320px; max-width: 350px; flex: 0 0 auto; scroll-snap-align: none; }
         }
 
-        .col-head-item { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 13px; text-transform: uppercase; padding: 0 20px; height: 100%; }
+        .col-head-item { min-width: 100%; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 13px; text-transform: uppercase; padding: 0 20px; flex: 0 0 auto; height: 100%; }
+        @media (min-width: 1024px) { .col-head-item { min-width: 320px; max-width: 350px; margin-right: 20px; } }
+        
         .add-btn-center { grid-column: 2; cursor: pointer; font-size: 30px; font-weight: bold; padding: 0 20px; }
         
         .card { background: var(--card-grad); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 10px var(--neon); }
@@ -87,10 +81,7 @@
         .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; line-height: 1.6; font-size: 16px; word-break: break-word; }
         #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; line-height: 1.6; font-size: 16px; outline: none; }
 
-        #filter-popup { position: absolute; top: 75px; right: 20px; background: rgba(0,0,0,0.9); border-radius: 12px; display: none; flex-direction: column; z-index: 300; border: 1px solid rgba(255,255,255,0.1); }
-        .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
-
-        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; align-items: center; z-index: 200; }
+        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: var(--panel-glass); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; align-items: center; z-index: 200; }
         .nav-item { cursor: pointer; opacity: 0.4; transition: 0.3s; width: 33.3%; height: 100%; display: flex; align-items: center; justify-content: center; }
         .nav-item.active { opacity: 1; }
         .nav-icon { width: 26px; height: 26px; fill: white; }
@@ -112,16 +103,16 @@
             <div id="total-clients" class="total-count">0</div>
             <div class="filter-btn" onclick="toggleFilter()"><div class="f-line l1"></div><div class="f-line l2"></div><div class="f-line l3"></div></div>
         </div>
-        <div id="filter-popup">
-            <div class="f-item" onclick="setFilter('az')">А-Я</div>
-            <div class="f-item" onclick="setFilter('new')">Нові</div>
-            <div class="f-item" onclick="setFilter('old')">Старі</div>
+        <div id="filter-popup" style="position: absolute; top: 75px; right: 20px; background: rgba(0,0,0,0.9); border-radius: 12px; display: none; flex-direction: column; z-index: 300; border: 1px solid rgba(255,255,255,0.1);">
+            <div class="f-item" onclick="setFilter('az')" style="padding: 15px 25px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05);">А-Я</div>
+            <div class="f-item" onclick="setFilter('new')" style="padding: 15px 25px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05);">Нові</div>
+            <div class="f-item" onclick="setFilter('old')" style="padding: 15px 25px; cursor: pointer;">Старі</div>
         </div>
     </header>
 
     <main id="page-crm" class="page-container page-active">
-        <div class="board" id="main-board">
-            </div>
+        <div class="sticky-header-row" id="crm-header-row"></div>
+        <div class="board" id="main-board"></div>
     </main>
 
     <main id="page-structure" class="page-container" style="justify-content: center; align-items: center; opacity: 0.3;">СТРУКТУРА</main>
@@ -178,12 +169,6 @@
         <div class="status-msg" id="save-status"></div>
     </div>
 
-    <nav class="nav-bar">
-        <div class="nav-item active" onclick="switchPage('crm', this)"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M21 4H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM3 18V6h18v12H3zM11 8H5v10h6V8z"/></svg></div>
-        <div class="nav-item" onclick="switchPage('structure', this)"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M22 11V3h-7v3H9V3H2v8h7V8h2v10h4v3h7v-8h-7v3h-2V8h2v3h7z"/></svg></div>
-        <div class="nav-item" onclick="switchPage('planner', this)"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10 9.99-4.47 9.99-10S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg></div>
-    </nav>
-
     <script>
         const firebaseConfig = { apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY", authDomain: "starlife-crm.firebaseapp.com", projectId: "starlife-crm", storageBucket: "starlife-crm.firebasestorage.app", messagingSenderId: "1022280682130", appId: "1:1022280682130:web:3ea517e8b6d22c7787744b" };
         firebase.initializeApp(firebaseConfig);
@@ -202,15 +187,21 @@
             else { document.getElementById('login-ui').style.display = 'block'; }
         });
 
+        // ПОВЕРНЕННЯ СКРИПТА ДЛЯ ПЕРЕТЯГУВАННЯ МИШКОЮ (АЛМАЗ)
+        const slider = document.getElementById('main-board');
+        let isDown = false, startX, scrollLeft;
+        slider.addEventListener('mousedown', (e) => { if(window.innerWidth < 1024) return; isDown = true; startX = e.pageX - slider.offsetLeft; scrollLeft = slider.scrollLeft; });
+        slider.addEventListener('mouseleave', () => { isDown = false; });
+        slider.addEventListener('mouseup', () => { isDown = false; });
+        slider.addEventListener('mousemove', (e) => { if(!isDown) return; e.preventDefault(); const x = e.pageX - slider.offsetLeft; const walk = (x - startX) * 2; slider.scrollLeft = scrollLeft - walk; });
+
         async function loadData() {
             const meDoc = await db.collection("users").doc(user.uid).get();
             if(meDoc.exists) { 
                 if(meDoc.data().steps) steps = meDoc.data().steps; 
                 if(meDoc.data().me) { 
                     me = meDoc.data().me; 
-                    document.getElementById('me-lname').value = me.lname||""; 
-                    document.getElementById('me-fname').value = me.fname||""; 
-                    document.getElementById('me-level').value = me.level||""; 
+                    document.getElementById('me-lname').value = me.lname||""; document.getElementById('me-fname').value = me.fname||""; document.getElementById('me-level').value = me.level||""; 
                     if(me.photo) document.getElementById('me-photo-display').style.backgroundImage = `url(${me.photo})`; 
                 }
             }
@@ -222,13 +213,8 @@
         }
 
         function renderBoard() {
-            const b = document.getElementById('main-board'), s = document.getElementById('e-step');
-            b.innerHTML = ''; s.innerHTML = '';
-            
-            // Створюємо синхронну шапку
-            const headerRow = document.createElement('div');
-            headerRow.className = 'sticky-header-row';
-            
+            const b = document.getElementById('main-board'), h = document.getElementById('crm-header-row'), s = document.getElementById('e-step');
+            b.innerHTML = ''; h.innerHTML = ''; s.innerHTML = '';
             let sorted = [...clients];
             if(filterType === 'az') sorted.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
             if(filterType === 'new') sorted.sort((a,b) => b.created - a.created);
@@ -236,13 +222,10 @@
 
             steps.forEach((n, i) => {
                 const filtered = sorted.filter(c => c.step == i);
-                
-                // Додаємо елемент у шапку
-                headerRow.innerHTML += `<div class="col-head-item">
+                h.innerHTML += `<div class="col-head-item">
                     <div style="display:flex; align-items:center; gap:25px; cursor:pointer" onclick="editStepName(${i})"><span>${n}</span><span style="opacity:1; color:white">${filtered.length}</span></div>
                     <div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}${i==steps.length-1?'<span onclick="addStep()">+</span>':''}</div>
                 </div>`;
-
                 s.innerHTML += `<option value="${i}">${n}</option>`;
                 const column = document.createElement('div'); column.className = 'column';
                 filtered.forEach(c => {
@@ -252,9 +235,7 @@
                 });
                 b.appendChild(column);
             });
-            
-            b.prepend(headerRow); // Вставляємо шапку в борд, щоб вона крутилася разом з ним
-            b.appendChild(document.createElement('div')).className = 'board-spacer';
+            b.onscroll = () => { h.scrollLeft = b.scrollLeft; };
         }
 
         async function autoSave() {
@@ -283,10 +264,8 @@
 
         function saveMe() {
             db.collection("users").doc(user.uid).set({ me: { 
-                lname: document.getElementById('me-lname').value, 
-                fname: document.getElementById('me-fname').value, 
-                level: document.getElementById('me-level').value, 
-                photo: me.photo || '' 
+                lname: document.getElementById('me-lname').value, fname: document.getElementById('me-fname').value, 
+                level: document.getElementById('me-level').value, photo: me.photo || '' 
             } }, { merge: true });
         }
 
@@ -296,8 +275,7 @@
                 me.photo = e.target.result; 
                 document.getElementById('me-photo-display').style.backgroundImage = `url(${me.photo})`; 
                 saveMe(); 
-            }; 
-            r.readAsDataURL(input.files[0]); 
+            }; r.readAsDataURL(input.files[0]); 
         }
 
         function handleFile(input) { const r = new FileReader(); r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; autoSave(); }; r.readAsDataURL(input.files[0]); }
@@ -305,7 +283,7 @@
         function switchPage(pId, el) { document.querySelectorAll('.page-container').forEach(p => p.classList.remove('page-active')); document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); document.getElementById('page-'+pId).classList.add('page-active'); el.classList.add('active'); }
         function showUserMenu() { addHistoryPoint(); document.getElementById('user-menu').style.display='flex'; document.getElementById('bg-overlay').style.display = 'block'; }
         function showMeMenu() { addHistoryPoint(); document.getElementById('me-screen').style.display='flex'; document.getElementById('bg-overlay').style.display = 'block'; }
-        function closeAll() { document.getElementById('edit-screen').style.display='none'; document.getElementById('user-menu').style.display='none'; document.getElementById('me-screen').style.display='none'; document.getElementById('bg-overlay').style.display = 'none'; editId = null; }
+        function closeAll() { document.getElementById('edit-screen').style.display='none'; document.getElementById('user-menu').style.display='none'; document.getElementById('me-screen').style.display='none'; document.getElementById('bg-overlay').style.display = 'none'; document.getElementById('filter-popup').style.display = 'none'; editId = null; }
         function setTheme(t) { document.body.className = 'theme-'+t; localStorage.setItem('crm_theme', t); }
         function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
         function setFilter(f) { filterType = f; renderBoard(); toggleFilter(); }
