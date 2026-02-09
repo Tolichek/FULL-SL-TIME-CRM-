@@ -35,7 +35,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
         body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
 
-        /* Сяюча вивіска в шапці */
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; height: 80px; position: relative; z-index: 200; }
         .avatar { width: 42px; height: 42px; border-radius: 50%; background-size: cover; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; }
         .header-title { 
@@ -63,6 +62,16 @@
         #edit-screen, #user-menu, #me-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 25px; overflow-y: auto; }
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 8999; display: none; backdrop-filter: blur(5px); }
         
+        /* Повернення бокової панелі для ПК */
+        @media (min-width: 1024px) {
+            #edit-screen, #me-screen { inset: auto; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; height: 80vh; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
+            #user-menu { 
+                inset: 0 auto 0 0; width: 320px; 
+                background: rgba(0,0,0,0.4); backdrop-filter: blur(20px); 
+                border-right: 1px solid rgba(255,255,255,0.1); 
+            }
+        }
+
         .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
         .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; line-height: 1.6; font-size: 16px; word-break: break-word; }
         #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; line-height: 1.6; font-size: 16px; outline: none; }
@@ -243,7 +252,7 @@
         function handleFile(input) { const r = new FileReader(); r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; autoSave(); }; r.readAsDataURL(input.files[0]); }
         function updateCardLevel() { document.getElementById('card-level-display').innerText = document.getElementById('e-level-card').value || ""; }
         function switchPage(pId, el) { document.querySelectorAll('.page-container').forEach(p => p.classList.remove('page-active')); document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); document.getElementById('page-'+pId).classList.add('page-active'); el.classList.add('active'); }
-        function showUserMenu() { addHistoryPoint(); document.getElementById('user-menu').style.display='flex'; document.getElementById('bg-overlay').style.display = 'block'; }
+        function showUserMenu() { addHistoryPoint(); document.getElementById('user-menu').style.display='flex'; if(window.innerWidth >= 1024) document.getElementById('bg-overlay').style.display = 'block'; }
         function showMeMenu() { addHistoryPoint(); document.getElementById('me-screen').style.display='flex'; document.getElementById('bg-overlay').style.display = 'block'; }
         function closeAll() { document.getElementById('edit-screen').style.display='none'; document.getElementById('user-menu').style.display='none'; document.getElementById('me-screen').style.display='none'; document.getElementById('bg-overlay').style.display = 'none'; document.getElementById('filter-popup').style.display = 'none'; editId = null; }
         function setTheme(t) { document.body.className = 'theme-'+t; localStorage.setItem('crm_theme', t); }
