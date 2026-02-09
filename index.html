@@ -40,7 +40,7 @@
         .f-line { height: 2px; background: white; border-radius: 2px; }
         .l1 { width: 22px; } .l2 { width: 16px; } .l3 { width: 10px; }
 
-        .page-container { height: calc(100vh - 145px); display: none; width: 100%; position: relative; }
+        .page-container { height: calc(100vh - 145px); display: none; width: 100%; position: relative; overflow: hidden; }
         .page-active { display: flex; flex-direction: column; }
 
         .board { display: flex; overflow-x: auto; padding: 0; gap: 20px; width: 100%; scroll-snap-type: x mandatory; height: 100%; cursor: grab; }
@@ -50,7 +50,7 @@
             min-width: calc(100vw - 40px); scroll-snap-align: center; 
             display: flex; flex-direction: column; height: 100%; 
             overflow-y: auto; scrollbar-width: none; position: relative;
-            padding-bottom: 120px;
+            padding-bottom: 50px;
         }
         
         @media (min-width: 1024px) {
@@ -58,10 +58,10 @@
             .column { min-width: 320px; max-width: 350px; flex: 0 0 auto; scroll-snap-align: none; }
         }
 
-        /* Назва етапу всередині стовпчика — тепер вони єдине ціле */
+        /* Повернення оригінальної товщини та стилю борду етапів */
         .col-header-sticky { 
             position: sticky; top: 0; left: 0; right: 0; 
-            height: 50px; background: rgba(0, 0, 0, 0.3); 
+            height: 50px; background: var(--panel-glass); 
             backdrop-filter: blur(20px); z-index: 100;
             display: grid; grid-template-columns: 1fr auto 1fr; 
             align-items: center; font-size: 13px; text-transform: uppercase; 
@@ -92,6 +92,7 @@
         .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; line-height: 1.6; font-size: 16px; word-break: break-word; }
         #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; line-height: 1.6; font-size: 16px; outline: none; }
 
+        /* Нижня панель (борд навігації) */
         .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: var(--panel-glass); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; align-items: center; z-index: 200; }
         .nav-item { cursor: pointer; opacity: 0.4; transition: 0.3s; width: 33.3%; height: 100%; display: flex; align-items: center; justify-content: center; }
         .nav-item.active { opacity: 1; }
@@ -126,6 +127,7 @@
     </main>
 
     <main id="page-structure" class="page-container" style="justify-content: center; align-items: center; opacity: 0.3;">СТРУКТУРА</main>
+
     <main id="page-planner" class="page-container" style="justify-content: center; align-items: center; opacity: 0.3;">ПЛАНУВАЛЬНИК</main>
 
     <div id="user-menu">
@@ -179,6 +181,12 @@
         <div class="status-msg" id="save-status"></div>
     </div>
 
+    <nav class="nav-bar">
+        <div class="nav-item active" onclick="switchPage('crm', this)"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M21 4H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM3 18V6h18v12H3zM11 8H5v10h6V8z"/></svg></div>
+        <div class="nav-item" onclick="switchPage('structure', this)"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M22 11V3h-7v3H9V3H2v8h7V8h2v10h4v3h7v-8h-7v3h-2V8h2v3h7z"/></svg></div>
+        <div class="nav-item" onclick="switchPage('planner', this)"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10 9.99-4.47 9.99-10S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg></div>
+    </nav>
+
     <script>
         const firebaseConfig = { apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY", authDomain: "starlife-crm.firebaseapp.com", projectId: "starlife-crm", storageBucket: "starlife-crm.firebasestorage.app", messagingSenderId: "1022280682130", appId: "1:1022280682130:web:3ea517e8b6d22c7787744b" };
         firebase.initializeApp(firebaseConfig);
@@ -231,8 +239,6 @@
                 s.innerHTML += `<option value="${i}">${n}</option>`;
                 
                 const column = document.createElement('div'); column.className = 'column';
-                
-                // Шапка етапу ТЕПЕР ТУТ, всередині стовпчика
                 column.innerHTML = `<div class="col-header-sticky">
                     <div style="display:flex; align-items:center; gap:25px; cursor:pointer" onclick="editStepName(${i})"><span>${n}</span><span style="opacity:1; color:white">${filtered.length}</span></div>
                     <div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}${i==steps.length-1?'<span onclick="addStep()">+</span>':''}</div>
