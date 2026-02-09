@@ -58,7 +58,6 @@
             .column { min-width: 320px; max-width: 350px; flex: 0 0 auto; scroll-snap-align: none; }
         }
 
-        /* Повернення оригінальної товщини та стилю борду етапів */
         .col-header-sticky { 
             position: sticky; top: 0; left: 0; right: 0; 
             height: 50px; background: var(--panel-glass); 
@@ -92,11 +91,13 @@
         .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; line-height: 1.6; font-size: 16px; word-break: break-word; }
         #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; line-height: 1.6; font-size: 16px; outline: none; }
 
-        /* Нижня панель (борд навігації) */
         .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: var(--panel-glass); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; align-items: center; z-index: 200; }
         .nav-item { cursor: pointer; opacity: 0.4; transition: 0.3s; width: 33.3%; height: 100%; display: flex; align-items: center; justify-content: center; }
         .nav-item.active { opacity: 1; }
         .nav-icon { width: 26px; height: 26px; fill: white; }
+
+        /* Заливка кольором в налаштуваннях */
+        .theme-btn { padding:15px; border-radius:10px; text-align:center; cursor:pointer; font-weight:bold; border: 1px solid rgba(255,255,255,0.2); }
     </style>
 </head>
 <body class="theme-purple">
@@ -127,7 +128,6 @@
     </main>
 
     <main id="page-structure" class="page-container" style="justify-content: center; align-items: center; opacity: 0.3;">СТРУКТУРА</main>
-
     <main id="page-planner" class="page-container" style="justify-content: center; align-items: center; opacity: 0.3;">ПЛАНУВАЛЬНИК</main>
 
     <div id="user-menu">
@@ -135,12 +135,12 @@
         <button onclick="showMeMenu()" style="width:100%; padding:15px; background:var(--card-grad); border:1px solid rgba(255,255,255,0.2); border-radius:12px; color:white; font-weight:bold; margin-bottom:20px;">ОСОБИСТІ ДАНІ</button>
         <label>ТЕМА ОФОРМЛЕННЯ</label>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
-            <div onclick="setTheme('purple')" style="padding:15px; border:1px solid white; border-radius:10px; text-align:center;">Фіолет</div>
-            <div onclick="setTheme('graphite')" style="padding:15px; border:1px solid white; border-radius:10px; text-align:center;">Графіт</div>
-            <div onclick="setTheme('blue')" style="padding:15px; border:1px solid white; border-radius:10px; text-align:center;">Синій</div>
-            <div onclick="setTheme('green')" style="padding:15px; border:1px solid white; border-radius:10px; text-align:center;">Зелений</div>
-            <div onclick="setTheme('gold')" style="padding:15px; border:1px solid white; border-radius:10px; text-align:center;">Золото</div>
-            <div onclick="setTheme('pink')" style="padding:15px; border:1px solid white; border-radius:10px; text-align:center;">Рожевий</div>
+            <div onclick="setTheme('purple')" class="theme-btn" style="background:#2e0249;">Фіолет</div>
+            <div onclick="setTheme('graphite')" class="theme-btn" style="background:#1a1a1b;">Графіт</div>
+            <div onclick="setTheme('blue')" class="theme-btn" style="background:#021b49;">Синій</div>
+            <div onclick="setTheme('green')" class="theme-btn" style="background:#02331a;">Зелений</div>
+            <div onclick="setTheme('gold')" class="theme-btn" style="background:#493602;">Золото</div>
+            <div onclick="setTheme('pink')" class="theme-btn" style="background:#49022e;">Рожевий</div>
         </div>
         <button onclick="closeAll()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold;">ЗАКРИТИ</button>
     </div>
@@ -228,22 +228,15 @@
         function renderBoard() {
             const b = document.getElementById('main-board'), s = document.getElementById('e-step');
             b.innerHTML = ''; s.innerHTML = '';
-            
             let sorted = [...clients];
             if(filterType === 'az') sorted.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
             if(filterType === 'new') sorted.sort((a,b) => b.created - a.created);
             if(filterType === 'old') sorted.sort((a,b) => a.created - b.created);
-
             steps.forEach((n, i) => {
                 const filtered = sorted.filter(c => c.step == i);
                 s.innerHTML += `<option value="${i}">${n}</option>`;
-                
                 const column = document.createElement('div'); column.className = 'column';
-                column.innerHTML = `<div class="col-header-sticky">
-                    <div style="display:flex; align-items:center; gap:25px; cursor:pointer" onclick="editStepName(${i})"><span>${n}</span><span style="opacity:1; color:white">${filtered.length}</span></div>
-                    <div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}${i==steps.length-1?'<span onclick="addStep()">+</span>':''}</div>
-                </div>`;
-
+                column.innerHTML = `<div class="col-header-sticky"><div style="display:flex; align-items:center; gap:25px; cursor:pointer" onclick="editStepName(${i})"><span>${n}</span><span style="opacity:1; color:white">${filtered.length}</span></div><div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}${i==steps.length-1?'<span onclick="addStep()">+</span>':''}</div></div>`;
                 filtered.forEach(c => {
                     const div = document.createElement('div'); div.className = 'card'; div.onclick = () => openEdit(c.id);
                     div.innerHTML = `<div style="font-weight:600">${c.lname||""} ${c.fname||""}</div>${c.level ? `<div class="card-level">${c.level}</div>` : ''}`;
@@ -285,12 +278,7 @@
             } }, { merge: true });
         }
 
-        function handleMeFile(input) { 
-            const r = new FileReader(); 
-            r.onload = e => { me.photo = e.target.result; document.getElementById('me-photo-display').style.backgroundImage = `url(${me.photo})`; saveMe(); }; 
-            r.readAsDataURL(input.files[0]); 
-        }
-
+        function handleMeFile(input) { const r = new FileReader(); r.onload = e => { me.photo = e.target.result; document.getElementById('me-photo-display').style.backgroundImage = `url(${me.photo})`; saveMe(); }; r.readAsDataURL(input.files[0]); }
         function handleFile(input) { const r = new FileReader(); r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; autoSave(); }; r.readAsDataURL(input.files[0]); }
         function updateCardLevel() { document.getElementById('card-level-display').innerText = document.getElementById('e-level-card').value || ""; }
         function switchPage(pId, el) { document.querySelectorAll('.page-container').forEach(p => p.classList.remove('page-active')); document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); document.getElementById('page-'+pId).classList.add('page-active'); el.classList.add('active'); }
