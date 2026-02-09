@@ -27,10 +27,10 @@
         body.theme-gold { --bg: linear-gradient(180deg, #493602 0%, #57440a 50%, #1a1400 100%); --neon-bright: #ffd700; }
         body.theme-pink { --bg: linear-gradient(180deg, #49022e 0%, #570a3a 50%, #1b0010 100%); --neon-bright: #ff0096; }
         
-        @keyframes pulseNeon { 
-            0% { transform: scale(1); filter: drop-shadow(0 0 5px var(--neon-bright)); opacity: 0.9; } 
-            50% { transform: scale(1.05); filter: drop-shadow(0 0 25px var(--neon-bright)); opacity: 1; } 
-            100% { transform: scale(1); filter: drop-shadow(0 0 5px var(--neon-bright)); opacity: 0.9; } 
+        @keyframes pulseLogo { 
+            0% { transform: scale(1); filter: drop-shadow(0 0 10px var(--neon-bright)); } 
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 30px var(--neon-bright)); } 
+            100% { transform: scale(1); filter: drop-shadow(0 0 10px var(--neon-bright)); } 
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -63,23 +63,39 @@
             #user-menu { inset: 0 auto 0 0; width: 320px; background: rgba(0,0,0,0.4); backdrop-filter: blur(20px); border-right: 1px solid rgba(255,255,255,0.1); }
         }
 
-        /* Стилізація вибору (ПК та Смартфон) */
-        select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; border-radius: 0; appearance: none; -webkit-appearance: none; }
+        /* Примітки як в Алмазі */
+        .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
+        .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; line-height: 1.6; font-size: 16px; word-break: break-word; }
+        #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; line-height: 1.6; font-size: 16px; outline: none; border-radius: 0; }
+
+        /* Випадаючі списки 1 в 1 як на смартфоні */
+        select { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; border-radius: 0; appearance: none; -webkit-appearance: none; cursor: pointer; }
         option { background: #2c2c2e; color: white; }
 
+        input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; border-radius: 0; }
         label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
         .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; align-items: center; z-index: 200; backdrop-filter: blur(20px); }
         .nav-item { cursor: pointer; opacity: 0.4; }
         .nav-item.active { opacity: 1; filter: drop-shadow(0 0 8px var(--neon-bright)); }
+
+        /* Квадратний логотип Splash */
+        .splash-logo-box {
+            width: 140px; height: 140px; 
+            background: #2e0249; 
+            border-radius: 25px; 
+            display: flex; align-items: center; justify-content: center;
+            border: 2px solid rgba(255,255,255,0.1);
+            animation: pulseLogo 2s infinite ease-in-out;
+        }
     </style>
 </head>
 <body class="theme-purple">
 
     <div id="splash" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-        <div style="width:140px;height:140px;border:3px solid #fff;border-radius:50%;display:flex;align-items:center;justify-content:center;animation: pulseNeon 2s infinite ease-in-out;">
-            <span style="font-size:52px; font-weight:bold; font-family:'Caveat', cursive; color: #fff; text-shadow: 0 0 10px var(--neon-bright); line-height: 1; margin-top: 5px;">SL</span>
+        <div class="splash-logo-box">
+            <span style="font-size:55px; font-weight:bold; font-family:'Caveat', cursive; color: #fff; text-shadow: 0 0 15px var(--neon-bright); line-height: 1; margin-top: 5px;">SL</span>
         </div>
-        <div id="login-ui" style="display:none; margin-top:50px;"><button onclick="login()" style="background:white;border:none;padding:12px 35px;border-radius:25px;font-weight:bold;cursor:pointer;">УВІЙТИ</button></div>
+        <div id="login-ui" style="display:none; margin-top:50px;"><button onclick="login()" style="background:white;border:none;padding:12px 35px;border-radius:25px;font-weight:bold;cursor:pointer;color:black;">УВІЙТИ</button></div>
     </div>
 
     <div id="bg-overlay" class="overlay" onclick="closeAll()"></div>
