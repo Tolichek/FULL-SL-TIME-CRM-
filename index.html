@@ -43,25 +43,26 @@
         .page-container { height: calc(100vh - 145px); display: none; width: 100%; position: relative; }
         .page-active { display: flex; flex-direction: column; }
 
-        /* Шапка етапів */
-        .sticky-header-row { position: absolute; top: 0; left: 0; right: 0; height: 50px; background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); z-index: 150; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; overflow: hidden; }
-        .board { display: flex; overflow-x: auto; padding: 50px 0 0; gap: 20px; width: 100%; scroll-snap-type: x mandatory; height: 100%; scroll-behavior: smooth; }
+        /* Шапка етапів - Синхронізована з бордом */
+        .sticky-header-row { 
+            position: sticky; top: 0; left: 0; 
+            height: 50px; background: rgba(0,0,0,0.3); 
+            backdrop-filter: blur(20px); z-index: 150; 
+            border-bottom: 1px solid rgba(255,255,255,0.05); 
+            display: flex; min-width: max-content;
+        }
+
+        .board { display: flex; overflow-x: auto; padding: 0; gap: 20px; width: 100%; scroll-snap-type: x mandatory; height: 100%; scroll-behavior: smooth; }
         
-        .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; height: 100%; overflow-y: auto; scrollbar-width: none; padding: 0 20px 120px; }
-        .board-spacer { min-width: 20px; flex-shrink: 0; } /* Розпірка для докрутки */
+        .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; height: 100%; overflow-y: auto; scrollbar-width: none; padding: 15px 20px 120px; }
+        .board-spacer { min-width: 20px; flex-shrink: 0; }
 
         @media (min-width: 1024px) {
             .board { scroll-snap-type: none; }
-            .column { min-width: 320px; max-width: 350px; flex: 0 0 auto; scroll-snap-align: none; }
-            .sticky-header-row { width: fit-content; min-width: 100%; }
+            .column, .col-head-item { min-width: 320px; max-width: 350px; flex: 0 0 auto; scroll-snap-align: none; }
         }
 
-        .col-head-item { min-width: 100%; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 13px; text-transform: uppercase; padding: 0 20px; flex: 0 0 auto; height: 100%; }
-        
-        @media (min-width: 1024px) {
-            .col-head-item { min-width: 320px; max-width: 350px; margin-right: 20px; }
-        }
-
+        .col-head-item { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 13px; text-transform: uppercase; padding: 0 20px; height: 100%; }
         .add-btn-center { grid-column: 2; cursor: pointer; font-size: 30px; font-weight: bold; padding: 0 20px; }
         
         .card { background: var(--card-grad); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 10px var(--neon); }
@@ -72,7 +73,7 @@
         
         @media (min-width: 1024px) {
             #edit-screen, #me-screen { inset: auto; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; height: 80vh; border-radius: 20px; }
-            #user-menu { inset: 0 auto 0 0; width: 320px; background: rgba(0,0,0,0.4); backdrop-filter: blur(20px); border-right: 1px solid rgba(255,255,255,0.1); }
+            #user-menu { inset: 0 auto 0 0; width: 320px; background: rgba(0,0,0,0.5); backdrop-filter: blur(20px); border-right: 1px solid rgba(255,255,255,0.1); }
         }
 
         .edit-photo-wrap { text-align: center; margin-bottom: 20px; position: relative; }
@@ -119,8 +120,8 @@
     </header>
 
     <main id="page-crm" class="page-container page-active">
-        <div class="sticky-header-row" id="crm-header-row"></div>
-        <div class="board" id="main-board"></div>
+        <div class="board" id="main-board">
+            </div>
     </main>
 
     <main id="page-structure" class="page-container" style="justify-content: center; align-items: center; opacity: 0.3;">СТРУКТУРА</main>
@@ -221,8 +222,12 @@
         }
 
         function renderBoard() {
-            const b = document.getElementById('main-board'), h = document.getElementById('crm-header-row'), s = document.getElementById('e-step');
-            b.innerHTML = ''; h.innerHTML = ''; s.innerHTML = '';
+            const b = document.getElementById('main-board'), s = document.getElementById('e-step');
+            b.innerHTML = ''; s.innerHTML = '';
+            
+            // Створюємо синхронну шапку
+            const headerRow = document.createElement('div');
+            headerRow.className = 'sticky-header-row';
             
             let sorted = [...clients];
             if(filterType === 'az') sorted.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
@@ -231,10 +236,13 @@
 
             steps.forEach((n, i) => {
                 const filtered = sorted.filter(c => c.step == i);
-                h.innerHTML += `<div class="col-head-item">
+                
+                // Додаємо елемент у шапку
+                headerRow.innerHTML += `<div class="col-head-item">
                     <div style="display:flex; align-items:center; gap:25px; cursor:pointer" onclick="editStepName(${i})"><span>${n}</span><span style="opacity:1; color:white">${filtered.length}</span></div>
                     <div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}${i==steps.length-1?'<span onclick="addStep()">+</span>':''}</div>
                 </div>`;
+
                 s.innerHTML += `<option value="${i}">${n}</option>`;
                 const column = document.createElement('div'); column.className = 'column';
                 filtered.forEach(c => {
@@ -244,8 +252,9 @@
                 });
                 b.appendChild(column);
             });
-            b.appendChild(document.createElement('div')).className = 'board-spacer'; // Додаємо розпірку
-            b.onscroll = () => { h.scrollLeft = b.scrollLeft; };
+            
+            b.prepend(headerRow); // Вставляємо шапку в борд, щоб вона крутилася разом з ним
+            b.appendChild(document.createElement('div')).className = 'board-spacer';
         }
 
         async function autoSave() {
@@ -273,8 +282,12 @@
         }
 
         function saveMe() {
-            me = { lname: document.getElementById('me-lname').value, fname: document.getElementById('me-fname').value, level: document.getElementById('me-level').value, photo: me.photo || '' };
-            db.collection("users").doc(user.uid).set({ me }, { merge: true });
+            db.collection("users").doc(user.uid).set({ me: { 
+                lname: document.getElementById('me-lname').value, 
+                fname: document.getElementById('me-fname').value, 
+                level: document.getElementById('me-level').value, 
+                photo: me.photo || '' 
+            } }, { merge: true });
         }
 
         function handleMeFile(input) { 
@@ -282,7 +295,7 @@
             r.onload = e => { 
                 me.photo = e.target.result; 
                 document.getElementById('me-photo-display').style.backgroundImage = `url(${me.photo})`; 
-                saveMe(); // Викликаємо збереження одразу після завантаження
+                saveMe(); 
             }; 
             r.readAsDataURL(input.files[0]); 
         }
