@@ -43,11 +43,12 @@
         .page-container { height: calc(100vh - 145px); display: none; width: 100%; position: relative; overflow: hidden; }
         .page-active { display: flex; flex-direction: column; }
 
-        .board { display: flex; overflow-x: auto; padding: 0; gap: 20px; width: 100%; scroll-snap-type: x mandatory; height: 100%; cursor: grab; }
+        /* Board без gap для суцільного борду */
+        .board { display: flex; overflow-x: auto; padding: 0; gap: 0; width: 100%; scroll-snap-type: x mandatory; height: 100%; cursor: grab; }
         .board:active { cursor: grabbing; }
 
         .column { 
-            min-width: calc(100vw - 40px); scroll-snap-align: center; 
+            min-width: 100vw; scroll-snap-align: center; 
             display: flex; flex-direction: column; height: 100%; 
             overflow-y: auto; scrollbar-width: none; position: relative;
             padding-bottom: 50px;
@@ -55,7 +56,7 @@
         
         @media (min-width: 1024px) {
             .board { scroll-snap-type: none; }
-            .column { min-width: 320px; max-width: 350px; flex: 0 0 auto; scroll-snap-align: none; }
+            .column { min-width: 320px; max-width: 350px; flex: 0 0 auto; scroll-snap-align: none; margin-right: 20px; }
         }
 
         .col-header-sticky { 
@@ -69,7 +70,7 @@
 
         .add-btn-center { grid-column: 2; cursor: pointer; font-size: 30px; font-weight: bold; padding: 0 20px; }
         
-        .card { background: var(--card-grad); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 10px var(--neon); }
+        .card { background: var(--card-grad); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin: 15px 20px 0; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 10px var(--neon); }
         .card-level { position: absolute; top: 50%; right: 25px; transform: translateY(-50%); font-family: 'Caveat', cursive; font-size: 34px; color: var(--neon-text); text-shadow: 0 0 10px var(--neon); }
 
         #edit-screen, #user-menu, #me-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 25px; overflow-y: auto; }
@@ -96,7 +97,6 @@
         .nav-item.active { opacity: 1; }
         .nav-icon { width: 26px; height: 26px; fill: white; }
 
-        /* Заливка кольором в налаштуваннях */
         .theme-btn { padding:15px; border-radius:10px; text-align:center; cursor:pointer; font-weight:bold; border: 1px solid rgba(255,255,255,0.2); }
     </style>
 </head>
