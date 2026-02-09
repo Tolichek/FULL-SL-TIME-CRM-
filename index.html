@@ -35,31 +35,36 @@
         .avatar { width: 42px; height: 42px; border-radius: 50%; background-size: cover; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; }
         .header-title { font-family: 'Caveat', cursive; font-size: 32px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 5px #fff, 0 0 10px var(--neon), 0 0 20px var(--neon), 0 0 40px var(--neon); transform: rotate(-2deg); }
         .header-right { display: flex; align-items: center; gap: 15px; }
+        .total-count { font-size: 16px; font-weight: bold; opacity: 0.8; }
         .filter-btn { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; cursor: pointer; width: 30px; }
         .f-line { height: 2px; background: white; border-radius: 2px; }
         .l1 { width: 22px; } .l2 { width: 16px; } .l3 { width: 10px; }
 
-        /* Контейнери просторів */
         .page-container { height: calc(100vh - 145px); display: none; width: 100%; position: relative; }
         .page-active { display: flex; flex-direction: column; }
 
-        /* Фіксована шапка етапів */
         .sticky-header-row { position: absolute; top: 0; left: 0; right: 0; height: 50px; background: var(--panel-glass); backdrop-filter: blur(20px); z-index: 150; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; overflow: hidden; }
+        .board { display: flex; overflow-x: auto; padding: 50px 0 0; gap: 20px; width: 100%; scroll-snap-type: x mandatory; height: 100%; }
+        
+        /* Стовпчики як в Алмазі */
+        .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; height: 100%; overflow-y: auto; scrollbar-width: none; padding: 0 20px 120px; } /* padding-bottom 120px для прокрутки над бордом */
+        
+        @media (min-width: 1024px) {
+            .column { min-width: 320px; max-width: 350px; flex: 0 0 auto; scroll-snap-align: none; }
+        }
+
         .col-head-item { min-width: 100%; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 13px; text-transform: uppercase; padding: 0 20px; flex: 0 0 auto; height: 100%; }
         .add-btn-center { grid-column: 2; cursor: pointer; font-size: 30px; font-weight: bold; padding: 0 20px; }
-
-        .board { display: flex; overflow-x: auto; padding: 50px 0 0; gap: 20px; width: 100%; scroll-snap-type: x mandatory; height: 100%; }
-        .column { min-width: 100%; scroll-snap-align: center; display: flex; flex-direction: column; height: 100%; overflow-y: auto; scrollbar-width: none; padding: 0 20px 20px; }
         
         .card { background: var(--card-grad); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 10px var(--neon); }
         .card-level { position: absolute; top: 50%; right: 25px; transform: translateY(-50%); font-family: 'Caveat', cursive; font-size: 34px; color: var(--neon-text); text-shadow: 0 0 10px var(--neon); }
 
         #edit-screen, #user-menu, #me-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 25px; overflow-y: auto; }
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 8999; display: none; backdrop-filter: blur(5px); }
-        .del-top { position: absolute; top: 25px; right: 25px; color: #ff4d4d; font-size: 12px; text-transform: uppercase; cursor: pointer; }
         
-        /* Фото та неоновий рівень */
-        .photo-circle { width: 110px; height: 110px; border-radius: 50%; background: rgba(255,255,255,0.1); background-size: cover; border: 1px solid rgba(255,255,255,0.2); margin: 0 auto 10px; position: relative; }
+        /* Центрування фото в меню картки */
+        .edit-photo-wrap { text-align: center; margin-bottom: 20px; position: relative; }
+        .photo-circle { width: 110px; height: 110px; border-radius: 50%; background: rgba(255,255,255,0.1); background-size: cover; border: 1px solid rgba(255,255,255,0.2); margin: 0 auto; position: relative; }
         .menu-level-num { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Caveat', cursive; font-size: 85px; color: var(--neon-text); text-shadow: 0 0 10px var(--neon), 0 0 20px var(--neon); line-height: 1; pointer-events: none; }
         
         label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
@@ -69,11 +74,6 @@
         .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; line-height: 1.6; font-size: 16px; word-break: break-word; }
         #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; line-height: 1.6; font-size: 16px; outline: none; }
 
-        #filter-popup { position: absolute; top: 75px; right: 20px; background: rgba(0,0,0,0.9); border-radius: 12px; display: none; flex-direction: column; z-index: 300; border: 1px solid rgba(255,255,255,0.1); }
-        .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .status-msg { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); font-size: 10px; opacity: 0.5; }
-
-        /* Нижня панель */
         .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: var(--panel-glass); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; align-items: center; z-index: 200; }
         .nav-item { cursor: pointer; opacity: 0.4; transition: 0.3s; width: 33.3%; height: 100%; display: flex; align-items: center; justify-content: center; }
         .nav-item.active { opacity: 1; }
@@ -93,6 +93,7 @@
         <div class="avatar" id="u-avatar" onclick="showUserMenu()"></div>
         <div class="header-title">SL Time CRM</div>
         <div class="header-right">
+            <div id="total-clients" class="total-count">0</div>
             <div class="filter-btn" onclick="toggleFilter()"><div class="f-line l1"></div><div class="f-line l2"></div><div class="f-line l3"></div></div>
         </div>
         <div id="filter-popup">
@@ -108,7 +109,6 @@
     </main>
 
     <main id="page-structure" class="page-container" style="justify-content: center; align-items: center; opacity: 0.3;">СТРУКТУРА</main>
-
     <main id="page-planner" class="page-container" style="justify-content: center; align-items: center; opacity: 0.3;">ПЛАНУВАЛЬНИК</main>
 
     <div id="user-menu">
@@ -127,7 +127,11 @@
     </div>
 
     <div id="me-screen">
-        <div class="photo-circle" id="me-photo-display"></div>
+        <div class="edit-photo-wrap">
+            <div class="photo-circle" id="me-photo-display"></div>
+            <p style="font-size:10px; margin-top:10px; opacity:0.5; cursor: pointer;" onclick="document.getElementById('me-upload').click()">ЗМІНИТИ ФОТО</p>
+        </div>
+        <input type="file" id="me-upload" hidden onchange="handleMeFile(this)">
         <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname" oninput="saveMe()">
         <label>ІМ'Я</label><input type="text" id="me-fname" oninput="saveMe()">
         <label>РІВЕНЬ</label><select id="me-level" onchange="saveMe()"></select>
@@ -135,9 +139,11 @@
     </div>
 
     <div id="edit-screen">
-        <span class="del-top" onclick="removeClient()">Видалити</span>
-        <div class="photo-circle" id="c-photo"><div class="menu-level-num" id="card-level-display"></div></div>
-        <p style="text-align:center; font-size:10px; opacity:0.5; margin-bottom:20px; cursor: pointer;" onclick="document.getElementById('c-upload').click()">ЗМІНИТИ ФОТО</p>
+        <span class="del-top" onclick="removeClient()" style="position: absolute; top: 25px; right: 25px; color: #ff4d4d; font-size: 12px; text-transform: uppercase; cursor: pointer;">Видалити</span>
+        <div class="edit-photo-wrap">
+            <div class="photo-circle" id="c-photo"><div class="menu-level-num" id="card-level-display"></div></div>
+            <p style="font-size:10px; margin-top:10px; opacity:0.5; cursor: pointer;" onclick="document.getElementById('c-upload').click()">ЗМІНИТИ ФОТО</p>
+        </div>
         <input type="file" id="c-upload" hidden onchange="handleFile(this)">
         
         <label>ЕТАП</label><select id="e-step" onchange="autoSave()"></select>
@@ -154,9 +160,7 @@
         <label>РІВЕНЬ</label><select id="e-level-card" onchange="updateCardLevel(); autoSave()"></select>
 
         <label>ПРИМІТКИ</label>
-        <div class="notes-wrapper">
-            <textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value; autoSave()"></textarea>
-        </div>
+        <div class="notes-wrapper"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value; autoSave()"></textarea></div>
         <div class="status-msg" id="save-status"></div>
     </div>
 
@@ -171,9 +175,8 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.firestore();
 
-        let user = null, clients = [], me = { lname: '', fname: '', level: '' }, steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Семінар", "Поліс"], filterType = 'new', editId = null, currentPhoto = null, saveTimeout;
+        let user = null, clients = [], me = { lname: '', fname: '', level: '', photo: '' }, steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Семінар", "Поліс"], filterType = 'new', editId = null, currentPhoto = null, saveTimeout;
 
-        // Наповнення випадаючих списків рівня
         const fillLevels = (id) => { const s = document.getElementById(id); s.innerHTML = '<option value="">-</option>'; for(let i=1; i<=16; i++) s.innerHTML += `<option value="${i}">${i}</option>`; };
         fillLevels('me-level'); fillLevels('e-level-card');
 
@@ -186,10 +189,11 @@
             const meDoc = await db.collection("users").doc(user.uid).get();
             if(meDoc.exists) { 
                 if(meDoc.data().steps) steps = meDoc.data().steps; 
-                if(meDoc.data().me) { me = meDoc.data().me; document.getElementById('me-lname').value = me.lname||""; document.getElementById('me-fname').value = me.fname||""; document.getElementById('me-level').value = me.level||""; }
+                if(meDoc.data().me) { me = meDoc.data().me; document.getElementById('me-lname').value = me.lname||""; document.getElementById('me-fname').value = me.fname||""; document.getElementById('me-level').value = me.level||""; if(me.photo) document.getElementById('me-photo-display').style.backgroundImage = `url(${me.photo})`; }
             }
             db.collection("users").doc(user.uid).collection("clients").onSnapshot(snap => {
                 clients = []; snap.forEach(d => clients.push({id: d.id, ...d.data()}));
+                document.getElementById('total-clients').innerText = clients.length;
                 renderBoard();
             });
         }
@@ -250,10 +254,12 @@
         }
 
         function saveMe() {
-            me = { lname: document.getElementById('me-lname').value, fname: document.getElementById('me-fname').value, level: document.getElementById('me-level').value };
+            me = { lname: document.getElementById('me-lname').value, fname: document.getElementById('me-fname').value, level: document.getElementById('me-level').value, photo: me.photo };
             db.collection("users").doc(user.uid).set({ me }, { merge: true });
         }
 
+        function handleMeFile(input) { const r = new FileReader(); r.onload = e => { me.photo = e.target.result; document.getElementById('me-photo-display').style.backgroundImage = `url(${me.photo})`; saveMe(); }; r.readAsDataURL(input.files[0]); }
+        function handleFile(input) { const r = new FileReader(); r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; autoSave(); }; r.readAsDataURL(input.files[0]); }
         function updateCardLevel() { document.getElementById('card-level-display').innerText = document.getElementById('e-level-card').value || ""; }
         function switchPage(pId, el) { document.querySelectorAll('.page-container').forEach(p => p.classList.remove('page-active')); document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); document.getElementById('page-'+pId).classList.add('page-active'); el.classList.add('active'); }
         function showUserMenu() { document.getElementById('user-menu').style.display='flex'; }
@@ -264,7 +270,6 @@
         function setFilter(f) { filterType = f; renderBoard(); toggleFilter(); }
         async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({lname:"", fname:"", step:0, created:Date.now()}); openEdit(res.id); }
         function login() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
-        function handleFile(input) { const r = new FileReader(); r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; autoSave(); }; r.readAsDataURL(input.files[0]); }
     </script>
 </body>
 </html>
