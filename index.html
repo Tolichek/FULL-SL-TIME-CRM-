@@ -43,17 +43,25 @@
         .page-container { height: calc(100vh - 145px); display: none; width: 100%; position: relative; }
         .page-active { display: flex; flex-direction: column; }
 
+        /* Шапка етапів */
         .sticky-header-row { position: absolute; top: 0; left: 0; right: 0; height: 50px; background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); z-index: 150; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; overflow: hidden; }
-        .board { display: flex; overflow-x: auto; padding: 50px 0 0; gap: 20px; width: 100%; scroll-snap-type: x mandatory; height: 100%; }
+        .board { display: flex; overflow-x: auto; padding: 50px 0 0; gap: 20px; width: 100%; scroll-snap-type: x mandatory; height: 100%; scroll-behavior: smooth; }
         
         .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; height: 100%; overflow-y: auto; scrollbar-width: none; padding: 0 20px 120px; }
-        
+        .board-spacer { min-width: 20px; flex-shrink: 0; } /* Розпірка для докрутки */
+
         @media (min-width: 1024px) {
             .board { scroll-snap-type: none; }
             .column { min-width: 320px; max-width: 350px; flex: 0 0 auto; scroll-snap-align: none; }
+            .sticky-header-row { width: fit-content; min-width: 100%; }
         }
 
         .col-head-item { min-width: 100%; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 13px; text-transform: uppercase; padding: 0 20px; flex: 0 0 auto; height: 100%; }
+        
+        @media (min-width: 1024px) {
+            .col-head-item { min-width: 320px; max-width: 350px; margin-right: 20px; }
+        }
+
         .add-btn-center { grid-column: 2; cursor: pointer; font-size: 30px; font-weight: bold; padding: 0 20px; }
         
         .card { background: var(--card-grad); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 10px var(--neon); }
@@ -183,7 +191,7 @@
         let user = null, clients = [], me = { lname: '', fname: '', level: '', photo: '' }, steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Семінар", "Поліс"], filterType = 'new', editId = null, currentPhoto = null, saveTimeout;
 
         function addHistoryPoint() { window.history.pushState({modal: true}, ""); }
-        window.onpopstate = () => { if(document.querySelector('[style*="display: flex"]') || document.querySelector('[style*="display: flex"]')) { closeAll(); } };
+        window.onpopstate = () => { if(document.querySelector('[style*="display: flex"]')) { closeAll(); } };
 
         const fillLevels = (id) => { const s = document.getElementById(id); s.innerHTML = '<option value="">-</option>'; for(let i=1; i<=16; i++) s.innerHTML += `<option value="${i}">${i}</option>`; };
         fillLevels('me-level'); fillLevels('e-level-card');
@@ -197,7 +205,13 @@
             const meDoc = await db.collection("users").doc(user.uid).get();
             if(meDoc.exists) { 
                 if(meDoc.data().steps) steps = meDoc.data().steps; 
-                if(meDoc.data().me) { me = meDoc.data().me; document.getElementById('me-lname').value = me.lname||""; document.getElementById('me-fname').value = me.fname||""; document.getElementById('me-level').value = me.level||""; if(me.photo) document.getElementById('me-photo-display').style.backgroundImage = `url(${me.photo})`; }
+                if(meDoc.data().me) { 
+                    me = meDoc.data().me; 
+                    document.getElementById('me-lname').value = me.lname||""; 
+                    document.getElementById('me-fname').value = me.fname||""; 
+                    document.getElementById('me-level').value = me.level||""; 
+                    if(me.photo) document.getElementById('me-photo-display').style.backgroundImage = `url(${me.photo})`; 
+                }
             }
             db.collection("users").doc(user.uid).collection("clients").onSnapshot(snap => {
                 clients = []; snap.forEach(d => clients.push({id: d.id, ...d.data()}));
@@ -230,6 +244,7 @@
                 });
                 b.appendChild(column);
             });
+            b.appendChild(document.createElement('div')).className = 'board-spacer'; // Додаємо розпірку
             b.onscroll = () => { h.scrollLeft = b.scrollLeft; };
         }
 
@@ -258,11 +273,20 @@
         }
 
         function saveMe() {
-            me = { lname: document.getElementById('me-lname').value, fname: document.getElementById('me-fname').value, level: document.getElementById('me-level').value, photo: me.photo };
+            me = { lname: document.getElementById('me-lname').value, fname: document.getElementById('me-fname').value, level: document.getElementById('me-level').value, photo: me.photo || '' };
             db.collection("users").doc(user.uid).set({ me }, { merge: true });
         }
 
-        function handleMeFile(input) { const r = new FileReader(); r.onload = e => { me.photo = e.target.result; document.getElementById('me-photo-display').style.backgroundImage = `url(${me.photo})`; saveMe(); }; r.readAsDataURL(input.files[0]); }
+        function handleMeFile(input) { 
+            const r = new FileReader(); 
+            r.onload = e => { 
+                me.photo = e.target.result; 
+                document.getElementById('me-photo-display').style.backgroundImage = `url(${me.photo})`; 
+                saveMe(); // Викликаємо збереження одразу після завантаження
+            }; 
+            r.readAsDataURL(input.files[0]); 
+        }
+
         function handleFile(input) { const r = new FileReader(); r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; autoSave(); }; r.readAsDataURL(input.files[0]); }
         function updateCardLevel() { document.getElementById('card-level-display').innerText = document.getElementById('e-level-card').value || ""; }
         function switchPage(pId, el) { document.querySelectorAll('.page-container').forEach(p => p.classList.remove('page-active')); document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); document.getElementById('page-'+pId).classList.add('page-active'); el.classList.add('active'); }
