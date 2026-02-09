@@ -43,20 +43,31 @@
         .page-container { height: calc(100vh - 145px); display: none; width: 100%; position: relative; }
         .page-active { display: flex; flex-direction: column; }
 
-        .sticky-header-row { position: absolute; top: 0; left: 0; right: 0; height: 50px; background: var(--panel-glass); backdrop-filter: blur(20px); z-index: 150; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; overflow: hidden; }
-        .board { display: flex; overflow-x: auto; padding: 50px 0 0; gap: 20px; width: 100%; scroll-snap-type: x mandatory; height: 100%; cursor: grab; }
+        .board { display: flex; overflow-x: auto; padding: 0; gap: 20px; width: 100%; scroll-snap-type: x mandatory; height: 100%; cursor: grab; }
         .board:active { cursor: grabbing; }
 
-        .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; height: 100%; overflow-y: auto; scrollbar-width: none; padding: 0 20px 120px; }
+        .column { 
+            min-width: calc(100vw - 40px); scroll-snap-align: center; 
+            display: flex; flex-direction: column; height: 100%; 
+            overflow-y: auto; scrollbar-width: none; position: relative;
+            padding-bottom: 120px;
+        }
         
         @media (min-width: 1024px) {
             .board { scroll-snap-type: none; }
             .column { min-width: 320px; max-width: 350px; flex: 0 0 auto; scroll-snap-align: none; }
         }
 
-        .col-head-item { min-width: 100%; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 13px; text-transform: uppercase; padding: 0 20px; flex: 0 0 auto; height: 100%; }
-        @media (min-width: 1024px) { .col-head-item { min-width: 320px; max-width: 350px; margin-right: 20px; } }
-        
+        /* Назва етапу всередині стовпчика — тепер вони єдине ціле */
+        .col-header-sticky { 
+            position: sticky; top: 0; left: 0; right: 0; 
+            height: 50px; background: rgba(0, 0, 0, 0.3); 
+            backdrop-filter: blur(20px); z-index: 100;
+            display: grid; grid-template-columns: 1fr auto 1fr; 
+            align-items: center; font-size: 13px; text-transform: uppercase; 
+            padding: 0 20px; border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
         .add-btn-center { grid-column: 2; cursor: pointer; font-size: 30px; font-weight: bold; padding: 0 20px; }
         
         .card { background: var(--card-grad); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 10px var(--neon); }
@@ -111,7 +122,6 @@
     </header>
 
     <main id="page-crm" class="page-container page-active">
-        <div class="sticky-header-row" id="crm-header-row"></div>
         <div class="board" id="main-board"></div>
     </main>
 
@@ -187,7 +197,6 @@
             else { document.getElementById('login-ui').style.display = 'block'; }
         });
 
-        // ПОВЕРНЕННЯ СКРИПТА ДЛЯ ПЕРЕТЯГУВАННЯ МИШКОЮ (АЛМАЗ)
         const slider = document.getElementById('main-board');
         let isDown = false, startX, scrollLeft;
         slider.addEventListener('mousedown', (e) => { if(window.innerWidth < 1024) return; isDown = true; startX = e.pageX - slider.offsetLeft; scrollLeft = slider.scrollLeft; });
@@ -199,11 +208,7 @@
             const meDoc = await db.collection("users").doc(user.uid).get();
             if(meDoc.exists) { 
                 if(meDoc.data().steps) steps = meDoc.data().steps; 
-                if(meDoc.data().me) { 
-                    me = meDoc.data().me; 
-                    document.getElementById('me-lname').value = me.lname||""; document.getElementById('me-fname').value = me.fname||""; document.getElementById('me-level').value = me.level||""; 
-                    if(me.photo) document.getElementById('me-photo-display').style.backgroundImage = `url(${me.photo})`; 
-                }
+                if(meDoc.data().me) { me = meDoc.data().me; document.getElementById('me-lname').value = me.lname||""; document.getElementById('me-fname').value = me.fname||""; document.getElementById('me-level').value = me.level||""; if(me.photo) document.getElementById('me-photo-display').style.backgroundImage = `url(${me.photo})`; }
             }
             db.collection("users").doc(user.uid).collection("clients").onSnapshot(snap => {
                 clients = []; snap.forEach(d => clients.push({id: d.id, ...d.data()}));
@@ -213,8 +218,9 @@
         }
 
         function renderBoard() {
-            const b = document.getElementById('main-board'), h = document.getElementById('crm-header-row'), s = document.getElementById('e-step');
-            b.innerHTML = ''; h.innerHTML = ''; s.innerHTML = '';
+            const b = document.getElementById('main-board'), s = document.getElementById('e-step');
+            b.innerHTML = ''; s.innerHTML = '';
+            
             let sorted = [...clients];
             if(filterType === 'az') sorted.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
             if(filterType === 'new') sorted.sort((a,b) => b.created - a.created);
@@ -222,12 +228,16 @@
 
             steps.forEach((n, i) => {
                 const filtered = sorted.filter(c => c.step == i);
-                h.innerHTML += `<div class="col-head-item">
+                s.innerHTML += `<option value="${i}">${n}</option>`;
+                
+                const column = document.createElement('div'); column.className = 'column';
+                
+                // Шапка етапу ТЕПЕР ТУТ, всередині стовпчика
+                column.innerHTML = `<div class="col-header-sticky">
                     <div style="display:flex; align-items:center; gap:25px; cursor:pointer" onclick="editStepName(${i})"><span>${n}</span><span style="opacity:1; color:white">${filtered.length}</span></div>
                     <div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}${i==steps.length-1?'<span onclick="addStep()">+</span>':''}</div>
                 </div>`;
-                s.innerHTML += `<option value="${i}">${n}</option>`;
-                const column = document.createElement('div'); column.className = 'column';
+
                 filtered.forEach(c => {
                     const div = document.createElement('div'); div.className = 'card'; div.onclick = () => openEdit(c.id);
                     div.innerHTML = `<div style="font-weight:600">${c.lname||""} ${c.fname||""}</div>${c.level ? `<div class="card-level">${c.level}</div>` : ''}`;
@@ -235,7 +245,7 @@
                 });
                 b.appendChild(column);
             });
-            b.onscroll = () => { h.scrollLeft = b.scrollLeft; };
+            b.appendChild(document.createElement('div')).style.minWidth = '20px';
         }
 
         async function autoSave() {
@@ -271,11 +281,8 @@
 
         function handleMeFile(input) { 
             const r = new FileReader(); 
-            r.onload = e => { 
-                me.photo = e.target.result; 
-                document.getElementById('me-photo-display').style.backgroundImage = `url(${me.photo})`; 
-                saveMe(); 
-            }; r.readAsDataURL(input.files[0]); 
+            r.onload = e => { me.photo = e.target.result; document.getElementById('me-photo-display').style.backgroundImage = `url(${me.photo})`; saveMe(); }; 
+            r.readAsDataURL(input.files[0]); 
         }
 
         function handleFile(input) { const r = new FileReader(); r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; autoSave(); }; r.readAsDataURL(input.files[0]); }
