@@ -20,7 +20,7 @@
             --accent: #ffffff;
             --neon: rgba(219, 0, 255, 0.6);
             --neon-text: #fff;
-            --panel-glass: rgba(255, 255, 255, 0.1);
+            --panel-glass: rgba(0, 0, 0, 0.3);
         }
         body.theme-graphite { --bg: linear-gradient(180deg, #1a1a1b 0%, #2c2c2e 50%, #000000 100%); --card-grad: linear-gradient(135deg, #3a3a3c 0%, #1a1a1b 100%); --neon: rgba(255, 255, 255, 0.4); }
         body.theme-blue { --bg: linear-gradient(180deg, #021b49 0%, #0a2e57 50%, #010a1b 100%); --card-grad: linear-gradient(135deg, #052661 0%, #021b49 100%); --neon: rgba(0, 150, 255, 0.7); }
@@ -43,7 +43,7 @@
         .page-container { height: calc(100vh - 145px); display: none; width: 100%; position: relative; }
         .page-active { display: flex; flex-direction: column; }
 
-        .sticky-header-row { position: absolute; top: 0; left: 0; right: 0; height: 50px; background: var(--panel-glass); backdrop-filter: blur(20px); z-index: 150; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; overflow: hidden; }
+        .sticky-header-row { position: absolute; top: 0; left: 0; right: 0; height: 50px; background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); z-index: 150; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; overflow: hidden; }
         .board { display: flex; overflow-x: auto; padding: 50px 0 0; gap: 20px; width: 100%; scroll-snap-type: x mandatory; height: 100%; }
         
         .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; height: 100%; overflow-y: auto; scrollbar-width: none; padding: 0 20px 120px; }
@@ -62,6 +62,11 @@
         #edit-screen, #user-menu, #me-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 25px; overflow-y: auto; }
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 8999; display: none; backdrop-filter: blur(5px); }
         
+        @media (min-width: 1024px) {
+            #edit-screen, #me-screen { inset: auto; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; height: 80vh; border-radius: 20px; }
+            #user-menu { inset: 0 auto 0 0; width: 320px; background: rgba(0,0,0,0.4); backdrop-filter: blur(20px); border-right: 1px solid rgba(255,255,255,0.1); }
+        }
+
         .edit-photo-wrap { text-align: center; margin-bottom: 20px; position: relative; }
         .photo-circle { width: 110px; height: 110px; border-radius: 50%; background: rgba(255,255,255,0.1); background-size: cover; border: 1px solid rgba(255,255,255,0.2); margin: 0 auto; position: relative; }
         .menu-level-num { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Caveat', cursive; font-size: 85px; color: var(--neon-text); text-shadow: 0 0 10px var(--neon), 0 0 20px var(--neon); line-height: 1; pointer-events: none; }
@@ -73,7 +78,10 @@
         .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; line-height: 1.6; font-size: 16px; word-break: break-word; }
         #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; line-height: 1.6; font-size: 16px; outline: none; }
 
-        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: var(--panel-glass); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; align-items: center; z-index: 200; }
+        #filter-popup { position: absolute; top: 75px; right: 20px; background: rgba(0,0,0,0.9); border-radius: 12px; display: none; flex-direction: column; z-index: 300; border: 1px solid rgba(255,255,255,0.1); }
+        .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; background: rgba(255,255,255,0.1); backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; align-items: center; z-index: 200; }
         .nav-item { cursor: pointer; opacity: 0.4; transition: 0.3s; width: 33.3%; height: 100%; display: flex; align-items: center; justify-content: center; }
         .nav-item.active { opacity: 1; }
         .nav-icon { width: 26px; height: 26px; fill: white; }
@@ -95,6 +103,11 @@
             <div id="total-clients" class="total-count">0</div>
             <div class="filter-btn" onclick="toggleFilter()"><div class="f-line l1"></div><div class="f-line l2"></div><div class="f-line l3"></div></div>
         </div>
+        <div id="filter-popup">
+            <div class="f-item" onclick="setFilter('az')">А-Я</div>
+            <div class="f-item" onclick="setFilter('new')">Нові</div>
+            <div class="f-item" onclick="setFilter('old')">Старі</div>
+        </div>
     </header>
 
     <main id="page-crm" class="page-container page-active">
@@ -110,12 +123,12 @@
         <button onclick="showMeMenu()" style="width:100%; padding:15px; background:var(--card-grad); border:1px solid rgba(255,255,255,0.2); border-radius:12px; color:white; font-weight:bold; margin-bottom:20px;">ОСОБИСТІ ДАНІ</button>
         <label>ТЕМА ОФОРМЛЕННЯ</label>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
-            <div onclick="setTheme('purple')" style="padding:15px; background:#2e0249; border-radius:10px; text-align:center;">Фіолет</div>
-            <div onclick="setTheme('graphite')" style="padding:15px; background:#1a1a1b; border-radius:10px; text-align:center;">Графіт</div>
-            <div onclick="setTheme('blue')" style="padding:15px; background:#021b49; border-radius:10px; text-align:center;">Синій</div>
-            <div onclick="setTheme('green')" style="padding:15px; background:#02331a; border-radius:10px; text-align:center;">Зелений</div>
-            <div onclick="setTheme('gold')" style="padding:15px; background:#493602; border-radius:10px; text-align:center;">Золото</div>
-            <div onclick="setTheme('pink')" style="padding:15px; background:#49022e; border-radius:10px; text-align:center;">Рожевий</div>
+            <div onclick="setTheme('purple')" style="padding:15px; border:1px solid white; border-radius:10px; text-align:center;">Фіолет</div>
+            <div onclick="setTheme('graphite')" style="padding:15px; border:1px solid white; border-radius:10px; text-align:center;">Графіт</div>
+            <div onclick="setTheme('blue')" style="padding:15px; border:1px solid white; border-radius:10px; text-align:center;">Синій</div>
+            <div onclick="setTheme('green')" style="padding:15px; border:1px solid white; border-radius:10px; text-align:center;">Зелений</div>
+            <div onclick="setTheme('gold')" style="padding:15px; border:1px solid white; border-radius:10px; text-align:center;">Золото</div>
+            <div onclick="setTheme('pink')" style="padding:15px; border:1px solid white; border-radius:10px; text-align:center;">Рожевий</div>
         </div>
         <button onclick="closeAll()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold;">ЗАКРИТИ</button>
     </div>
@@ -169,9 +182,8 @@
 
         let user = null, clients = [], me = { lname: '', fname: '', level: '', photo: '' }, steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Семінар", "Поліс"], filterType = 'new', editId = null, currentPhoto = null, saveTimeout;
 
-        // Історія для кнопки "Назад"
         function addHistoryPoint() { window.history.pushState({modal: true}, ""); }
-        window.onpopstate = () => { if(document.querySelector('[style*="display: flex"]') && !document.getElementById('splash').offsetParent) { closeAll(); } };
+        window.onpopstate = () => { if(document.querySelector('[style*="display: flex"]') || document.querySelector('[style*="display: flex"]')) { closeAll(); } };
 
         const fillLevels = (id) => { const s = document.getElementById(id); s.innerHTML = '<option value="">-</option>'; for(let i=1; i<=16; i++) s.innerHTML += `<option value="${i}">${i}</option>`; };
         fillLevels('me-level'); fillLevels('e-level-card');
@@ -197,8 +209,14 @@
         function renderBoard() {
             const b = document.getElementById('main-board'), h = document.getElementById('crm-header-row'), s = document.getElementById('e-step');
             b.innerHTML = ''; h.innerHTML = ''; s.innerHTML = '';
+            
+            let sorted = [...clients];
+            if(filterType === 'az') sorted.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
+            if(filterType === 'new') sorted.sort((a,b) => b.created - a.created);
+            if(filterType === 'old') sorted.sort((a,b) => a.created - b.created);
+
             steps.forEach((n, i) => {
-                const filtered = clients.filter(c => c.step == i);
+                const filtered = sorted.filter(c => c.step == i);
                 h.innerHTML += `<div class="col-head-item">
                     <div style="display:flex; align-items:center; gap:25px; cursor:pointer" onclick="editStepName(${i})"><span>${n}</span><span style="opacity:1; color:white">${filtered.length}</span></div>
                     <div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}${i==steps.length-1?'<span onclick="addStep()">+</span>':''}</div>
@@ -228,8 +246,7 @@
         }
 
         function openEdit(id) { 
-            addHistoryPoint();
-            editId = id; const c = clients.find(x => x.id === id); 
+            addHistoryPoint(); editId = id; const c = clients.find(x => x.id === id); 
             document.getElementById('e-lname').value = c.lname||""; document.getElementById('e-fname').value = c.fname||""; 
             document.getElementById('e-notes').value = c.notes||""; document.getElementById('e-dob').value = c.dob||""; 
             document.getElementById('e-phone').value = c.phone||""; document.getElementById('e-policy-date').value = c.policyDate||""; 
@@ -237,6 +254,7 @@
             document.getElementById('e-step').value = c.step||0; currentPhoto = c.photo;
             document.getElementById('c-photo').style.backgroundImage = currentPhoto ? `url(${currentPhoto})` : 'none';
             updateCardLevel(); document.getElementById('edit-screen').style.display='flex';
+            document.getElementById('bg-overlay').style.display = 'block';
         }
 
         function saveMe() {
@@ -248,11 +266,12 @@
         function handleFile(input) { const r = new FileReader(); r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; autoSave(); }; r.readAsDataURL(input.files[0]); }
         function updateCardLevel() { document.getElementById('card-level-display').innerText = document.getElementById('e-level-card').value || ""; }
         function switchPage(pId, el) { document.querySelectorAll('.page-container').forEach(p => p.classList.remove('page-active')); document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); document.getElementById('page-'+pId).classList.add('page-active'); el.classList.add('active'); }
-        function showUserMenu() { addHistoryPoint(); document.getElementById('user-menu').style.display='flex'; }
-        function showMeMenu() { addHistoryPoint(); document.getElementById('me-screen').style.display='flex'; }
-        function closeAll() { document.getElementById('edit-screen').style.display='none'; document.getElementById('user-menu').style.display='none'; document.getElementById('me-screen').style.display='none'; editId = null; }
+        function showUserMenu() { addHistoryPoint(); document.getElementById('user-menu').style.display='flex'; document.getElementById('bg-overlay').style.display = 'block'; }
+        function showMeMenu() { addHistoryPoint(); document.getElementById('me-screen').style.display='flex'; document.getElementById('bg-overlay').style.display = 'block'; }
+        function closeAll() { document.getElementById('edit-screen').style.display='none'; document.getElementById('user-menu').style.display='none'; document.getElementById('me-screen').style.display='none'; document.getElementById('bg-overlay').style.display = 'none'; editId = null; }
         function setTheme(t) { document.body.className = 'theme-'+t; localStorage.setItem('crm_theme', t); }
         function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
+        function setFilter(f) { filterType = f; renderBoard(); toggleFilter(); }
         async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({lname:"", fname:"", step:0, created:Date.now()}); openEdit(res.id); }
         function login() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
     </script>
