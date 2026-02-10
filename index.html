@@ -34,15 +34,15 @@
         .header-title { font-family: 'Caveat', cursive; font-size: 34px; font-weight: 700; color: #fff; transform: rotate(-2deg); text-shadow: 0 0 10px var(--neon-bright); }
         
         /* Виправлено лічильник */
-        .header-right { display: flex; align-items: center; gap: 15px; }
-        .total-count { font-size: 18px; font-weight: bold; text-shadow: 0 0 10px var(--neon-bright); margin-right: 5px; }
+        .header-right { display: flex; align-items: center; gap: 20px; }
+        .total-count { font-size: 20px; font-weight: bold; text-shadow: 0 0 10px var(--neon-bright); }
 
         .board { display: flex; overflow-x: auto; padding: 0; gap: 0; width: 100%; height: calc(100vh - 145px); scroll-snap-type: x mandatory; scroll-behavior: smooth; }
         .column { min-width: 100vw; scroll-snap-align: center; scroll-snap-stop: always; display: flex; flex-direction: column; height: 100%; overflow-y: auto; scrollbar-width: none; padding-bottom: 80px; }
         
-        .col-header-sticky { position: sticky; top: 0; z-index: 100; min-height: 60px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 13px; text-transform: uppercase; padding: 0 20px; border-bottom: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(20px); }
+        .col-header-sticky { position: sticky; top: 0; z-index: 100; min-height: 60px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 13px; text-transform: uppercase; padding: 0 20px; border-bottom: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(20px); background: transparent; }
 
-        /* НЕОНОВА ПІДСВІТКА КАРТОК */
+        /* НЕОН ПОВЕРНЕНО */
         .card { 
             background: transparent; 
             padding: 20px; 
@@ -51,7 +51,7 @@
             margin: 15px 20px 0; 
             cursor: pointer; 
             position: relative; 
-            box-shadow: 0 0 15px rgba(219, 0, 255, 0.15); /* М'який неон */
+            box-shadow: 0 0 15px var(--neon-bright); 
             text-shadow: 0 0 5px var(--neon-bright); 
         }
         .card-level { position: absolute; top: 50%; right: 25px; transform: translateY(-50%); font-family: 'Caveat', cursive; font-size: 34px; color: #fff; text-shadow: 0 0 10px var(--neon-bright); }
@@ -70,7 +70,6 @@
         .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; line-height: 1.6; font-size: 16px; word-break: break-word; }
         #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent !important; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2) !important; resize: none; overflow: hidden; padding: 10px 0; line-height: 1.6; font-size: 16px; outline: none; border-radius: 0; }
 
-        label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
         .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; align-items: center; z-index: 200; backdrop-filter: blur(20px); }
         .nav-item { cursor: pointer; opacity: 0.4; }
         .nav-item.active { opacity: 1; filter: drop-shadow(0 0 8px var(--neon-bright)); }
@@ -104,9 +103,9 @@
     </main>
 
     <nav class="nav-bar">
-        <div class="nav-item active" onclick="switchPage('crm', this)"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z"/></svg></div>
-        <div class="nav-item" onclick="switchPage('structure', this)"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M22 11V3h-7v3H9V3H2v8h7V8h2v10h4v3h7v-8h-7v3h-2V8h2v3h7z"/></svg></div>
-        <div class="nav-item" onclick="switchPage('planner', this)"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10 9.99-4.47 9.99-10S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg></div>
+        <div class="nav-item active"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z"/></svg></div>
+        <div class="nav-item"><svg width="24" height="24" viewBox="0 0 24 24" fill="white" style="opacity:0.2"><path d="M22 11V3h-7v3H9V3H2v8h7V8h2v10h4v3h7v-8h-7v3h-2V8h2v3h7z"/></svg></div>
+        <div class="nav-item"><svg width="24" height="24" viewBox="0 0 24 24" fill="white" style="opacity:0.2"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10 9.99-4.47 9.99-10S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg></div>
     </nav>
 
     <script>
@@ -141,14 +140,13 @@
                 });
                 b.appendChild(column);
             });
-            // Spacer для прокрутки далеко за останній список
+            // Spacer для прокрутки daleko за останній список
             const spacer = document.createElement('div');
             spacer.style.minWidth = '100vw'; 
             b.appendChild(spacer);
         }
 
         function closeAll() { document.querySelectorAll('#edit-screen, #user-menu, #me-screen').forEach(el => el.style.display='none'); }
-        function switchPage(pId, el) { /* логіка перемикання */ }
     </script>
 </body>
 </html>
