@@ -8,8 +8,6 @@
     <title>SL TIME CRM Emerald</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%232e0249'/><text x='50%' y='63%' text-anchor='middle' fill='white' font-family='Caveat' font-weight='bold' font-size='55' style='filter:drop-shadow(0 0 10px %23db00ff)'>SL</text></svg>">
-
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -22,9 +20,6 @@
         }
         body.theme-graphite { --bg: linear-gradient(180deg, #1a1a1b 0%, #2c2c2e 50%, #000000 100%); --neon-bright: #ffffff; }
         body.theme-blue { --bg: linear-gradient(180deg, #021b49 0%, #0a2e57 50%, #010a1b 100%); --neon-bright: #0096ff; }
-        body.theme-green { --bg: linear-gradient(180deg, #02331a 0%, #0a492e 50%, #01140a 100%); --neon-bright: #00ff85; }
-        body.theme-gold { --bg: linear-gradient(180deg, #493602 0%, #57440a 50%, #1a1400 100%); --neon-bright: #ffd700; }
-        body.theme-pink { --bg: linear-gradient(180deg, #49022e 0%, #570a3a 50%, #1b0010 100%); --neon-bright: #ff0096; }
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
         body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
@@ -33,42 +28,26 @@
         .avatar { width: 42px; height: 42px; border-radius: 50%; background-size: cover; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; }
         .header-title { font-family: 'Caveat', cursive; font-size: 34px; font-weight: 700; color: #fff; transform: rotate(-2deg); text-shadow: 0 0 10px var(--neon-bright); }
         
-        /* Виправлено лічильник */
-        .header-right { display: flex; align-items: center; gap: 20px; }
+        .header-right { display: flex; align-items: center; gap: 15px; }
         .total-count { font-size: 20px; font-weight: bold; text-shadow: 0 0 10px var(--neon-bright); }
 
         .board { display: flex; overflow-x: auto; padding: 0; gap: 0; width: 100%; height: calc(100vh - 145px); scroll-snap-type: x mandatory; scroll-behavior: smooth; }
         .column { min-width: 100vw; scroll-snap-align: center; scroll-snap-stop: always; display: flex; flex-direction: column; height: 100%; overflow-y: auto; scrollbar-width: none; padding-bottom: 80px; }
         
-        .col-header-sticky { position: sticky; top: 0; z-index: 100; min-height: 60px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 13px; text-transform: uppercase; padding: 0 20px; border-bottom: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(20px); background: transparent; }
+        .col-header-sticky { position: sticky; top: 0; z-index: 100; min-height: 60px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 13px; text-transform: uppercase; padding: 0 20px; border-bottom: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(20px); }
 
-        /* НЕОН ПОВЕРНЕНО */
         .card { 
-            background: transparent; 
-            padding: 20px; 
-            border-radius: 12px; 
-            border: 1px solid rgba(255,255,255,0.1); 
-            margin: 15px 20px 0; 
-            cursor: pointer; 
-            position: relative; 
-            box-shadow: 0 0 15px var(--neon-bright); 
-            text-shadow: 0 0 5px var(--neon-bright); 
+            background: transparent; padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); 
+            margin: 15px 20px 0; cursor: pointer; position: relative; 
+            box-shadow: 0 0 15px var(--neon-bright); text-shadow: 0 0 5px var(--neon-bright); 
         }
-        .card-level { position: absolute; top: 50%; right: 25px; transform: translateY(-50%); font-family: 'Caveat', cursive; font-size: 34px; color: #fff; text-shadow: 0 0 10px var(--neon-bright); }
+        .card-level { position: absolute; top: 50%; right: 25px; transform: translateY(-50%); font-family: 'Caveat', cursive; font-size: 34px; color: #fff; }
 
-        #edit-screen, #user-menu, #me-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 25px; overflow-y: auto; }
+        #edit-screen, #user-menu { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 25px; overflow-y: auto; }
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 8999; display: none; backdrop-filter: blur(5px); }
         
-        input, select { 
-            width: 100%; background: transparent !important; border: none !important; 
-            border-bottom: 1px solid rgba(255,255,255,0.2) !important; color: white !important; 
-            padding: 12px 0; margin-bottom: 20px; outline: none !important; font-size: 16px; 
-            border-radius: 0 !important;
-        }
-        
-        .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
-        .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; line-height: 1.6; font-size: 16px; word-break: break-word; }
-        #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent !important; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2) !important; resize: none; overflow: hidden; padding: 10px 0; line-height: 1.6; font-size: 16px; outline: none; border-radius: 0; }
+        input, select, textarea { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
+        label { font-size: 10px; opacity: 0.5; text-transform: uppercase; }
 
         .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; align-items: center; z-index: 200; backdrop-filter: blur(20px); }
         .nav-item { cursor: pointer; opacity: 0.4; }
@@ -77,10 +56,8 @@
 </head>
 <body class="theme-purple">
 
-    <div id="splash" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-        <div style="width:140px;height:140px;background:#2e0249;border-radius:25px;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,0.1);">
-            <span style="font-size:55px; font-weight:bold; font-family:'Caveat', cursive; color: #fff; text-shadow: 0 0 15px var(--neon-bright); line-height: 1; margin-top: 5px;">SL</span>
-        </div>
+    <div id="splash" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;">
+        <span style="font-size:55px; font-family:'Caveat', cursive; text-shadow: 0 0 15px var(--neon-bright);">SL</span>
     </div>
 
     <div id="bg-overlay" class="overlay" onclick="closeAll()"></div>
@@ -90,7 +67,7 @@
         <div class="header-title">SL Time CRM</div>
         <div class="header-right">
             <div id="total-clients" class="total-count">0</div>
-            <div onclick="toggleFilter()" style="cursor:pointer; padding: 5px;">
+            <div onclick="toggleFilter()" style="cursor:pointer;">
                 <div style="height:2px;width:22px;background:white;margin-bottom:4px"></div>
                 <div style="height:2px;width:16px;background:white;margin-bottom:4px;margin-left:6px"></div>
                 <div style="height:2px;width:10px;background:white;margin-left:12px"></div>
@@ -98,14 +75,19 @@
         </div>
     </header>
 
-    <main id="page-crm" class="page-container page-active">
-        <div class="board" id="main-board"></div>
-    </main>
+    <main id="main-board" class="board"></main>
+
+    <div id="edit-screen">
+        <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname" oninput="autoSave()">
+        <label>ІМ'Я</label><input type="text" id="e-fname" oninput="autoSave()">
+        <label>ЕТАП</label><select id="e-step" onchange="autoSave()"></select>
+        <button onclick="closeAll()" style="margin-top:20px; padding:15px; border-radius:25px; border:none; font-weight:bold;">ЗАКРИТИ</button>
+    </div>
 
     <nav class="nav-bar">
-        <div class="nav-item active"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z"/></svg></div>
-        <div class="nav-item"><svg width="24" height="24" viewBox="0 0 24 24" fill="white" style="opacity:0.2"><path d="M22 11V3h-7v3H9V3H2v8h7V8h2v10h4v3h7v-8h-7v3h-2V8h2v3h7z"/></svg></div>
-        <div class="nav-item"><svg width="24" height="24" viewBox="0 0 24 24" fill="white" style="opacity:0.2"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10 9.99-4.47 9.99-10S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg></div>
+        <div class="nav-item active" onclick="switchPage('crm', this)"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z"/></svg></div>
+        <div class="nav-item" onclick="switchPage('structure', this)"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M22 11V3h-7v3H9V3H2v8h7V8h2v10h4v3h7v-8h-7v3h-2V8h2v3h7z"/></svg></div>
+        <div class="nav-item" onclick="switchPage('planner', this)"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10 9.99-4.47 9.99-10S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg></div>
     </nav>
 
     <script>
@@ -113,10 +95,11 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.firestore();
 
-        let user = null, clients = [], steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Семінар", "Поліс"];
+        let user = null, clients = [], editId = null, saveTimeout, steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Семінар", "Поліс"];
 
         auth.onAuthStateChanged(u => {
             if(u) { user = u; document.getElementById('u-avatar').style.backgroundImage = `url(${u.photoURL})`; document.getElementById('splash').style.display = 'none'; loadData(); }
+            else { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
         });
 
         async function loadData() {
@@ -129,24 +112,35 @@
 
         function renderBoard() {
             const b = document.getElementById('main-board'); b.innerHTML = '';
+            const s = document.getElementById('e-step'); s.innerHTML = '';
             steps.forEach((n, i) => {
+                s.innerHTML += `<option value="${i}">${n}</option>`;
                 const filtered = clients.filter(c => c.step == i);
                 const column = document.createElement('div'); column.className = 'column';
                 column.innerHTML = `<div class="col-header-sticky"><div><span>${n}</span> <span style="opacity:0.5">${filtered.length}</span></div><div onclick="${i==0?'createCard()':''}" style="font-size:28px; font-weight:bold; cursor:pointer">${i==0?'+':''}</div></div>`;
                 filtered.forEach(c => {
-                    const div = document.createElement('div'); div.className = 'card';
-                    div.innerHTML = `<div style="font-weight:600">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;margin-top:5px">${c.phone||""}</div>${c.level ? `<div class="card-level">${c.level}</div>` : ''}`;
+                    const div = document.createElement('div'); div.className = 'card'; div.onclick = () => openEdit(c.id);
+                    div.innerHTML = `<div style="font-weight:600">${c.lname||""} ${c.fname||""}</div><div class="card-level">${c.level||''}</div>`;
                     column.appendChild(div);
                 });
                 b.appendChild(column);
             });
-            // Spacer для прокрутки daleko за останній список
-            const spacer = document.createElement('div');
-            spacer.style.minWidth = '100vw'; 
-            b.appendChild(spacer);
+            const spacer = document.createElement('div'); spacer.style.minWidth = '100vw'; b.appendChild(spacer);
         }
 
-        function closeAll() { document.querySelectorAll('#edit-screen, #user-menu, #me-screen').forEach(el => el.style.display='none'); }
+        function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); document.getElementById('e-lname').value = c.lname||""; document.getElementById('e-fname').value = c.fname||""; document.getElementById('e-step').value = c.step||0; document.getElementById('edit-screen').style.display='flex'; document.getElementById('bg-overlay').style.display = 'block'; }
+        
+        async function autoSave() {
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(async () => {
+                const data = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, step: parseInt(document.getElementById('e-step').value), updated: Date.now() };
+                await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(data, {merge:true});
+            }, 500);
+        }
+
+        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({lname:"Новий", fname:"Клієнт", step:0, created:Date.now()}); openEdit(res.id); }
+        function closeAll() { document.getElementById('edit-screen').style.display='none'; document.getElementById('bg-overlay').style.display = 'none'; }
+        function switchPage(p, el) { document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); el.classList.add('active'); }
     </script>
 </body>
 </html>
