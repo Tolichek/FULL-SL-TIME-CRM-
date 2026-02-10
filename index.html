@@ -18,86 +18,163 @@
             --bg: linear-gradient(180deg, #2e0249 0%, #570a57 50%, #1a1a1b 100%);
             --card-grad: linear-gradient(135deg, #3d0561 0%, #2e0249 100%);
             --accent: #ffffff;
-            --neon: rgba(219, 0, 255, 0.6);
+            --neon: rgba(219, 0, 255, 0.8);
+            --neon-text: #fff;
         }
-        body.theme-graphite { --bg: linear-gradient(180deg, #1a1a1b 0%, #2c2c2e 50%, #000000 100%); --card-grad: linear-gradient(135deg, #3a3a3c 0%, #1a1a1b 100%); --neon: rgba(255, 255, 255, 0.4); }
-        body.theme-blue { --bg: linear-gradient(180deg, #021b49 0%, #0a2e57 50%, #010a1b 100%); --card-grad: linear-gradient(135deg, #052661 0%, #021b49 100%); --neon: rgba(0, 150, 255, 0.7); }
-        body.theme-green { --bg: linear-gradient(180deg, #02331a 0%, #0a492e 50%, #01140a 100%); --card-grad: linear-gradient(135deg, #054126 0%, #02331a 100%); --neon: rgba(0, 255, 133, 0.6); }
+        body.theme-graphite { --bg: linear-gradient(180deg, #1a1a1b 0%, #2c2c2e 50%, #000000 100%); --card-grad: linear-gradient(135deg, #3a3a3c 0%, #1a1a1b 100%); --neon: rgba(255, 255, 255, 0.5); }
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
         body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
 
+        /* Пункт 2: Прибираємо смуги прокрутки всюди */
+        ::-webkit-scrollbar { display: none; }
+        * { -ms-overflow-style: none; scrollbar-width: none; }
+
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; height: 80px; position: relative; z-index: 10; }
         .avatar { width: 42px; height: 42px; border-radius: 50%; background-size: cover; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; background-position: center; }
-        .header-title { font-family: 'Caveat', cursive; font-size: 32px; font-weight: 700; color: #fff; text-shadow: 0 0 10px var(--neon); }
+        
+        /* Пункт 3: Більше неону на вивіску */
+        .header-title { 
+            font-family: 'Caveat', cursive; font-size: 34px; font-weight: 700; color: var(--neon-text);
+            text-shadow: 0 0 10px #fff, 0 0 20px var(--neon), 0 0 30px var(--neon), 0 0 50px var(--neon);
+            letter-spacing: 1px; transform: rotate(-2deg);
+        }
+        
+        .header-right { display: flex; align-items: center; gap: 15px; }
+        .total-count { font-size: 18px; font-weight: bold; font-family: 'Caveat', cursive; text-shadow: 0 0 10px var(--neon); }
+
+        /* Пункт 1: Фільтр */
+        .filter-btn { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; cursor: pointer; width: 30px; }
+        .f-line { height: 2px; background: white; border-radius: 2px; transition: 0.3s; }
+        .l1 { width: 22px; } .l2 { width: 16px; } .l3 { width: 10px; }
+        #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); border-radius: 12px; display: none; flex-direction: column; z-index: 100; border: 1px solid rgba(255,255,255,0.1); }
+        .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
         .board { display: flex; overflow-x: auto; padding: 0 20px 40px; gap: 20px; height: calc(100vh - 80px); scroll-snap-type: x mandatory; }
         .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; gap: 15px; }
         
-        .col-head { display: flex; justify-content: space-between; align-items: center; font-size: 13px; text-transform: uppercase; padding-bottom: 5px; opacity: 0.8; }
-        .add-btn { font-size: 28px; cursor: pointer; padding: 0 10px; font-weight: bold; }
+        .col-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; padding-bottom: 5px; opacity: 0.8; }
+        .add-btn-center { grid-column: 2; cursor: pointer; font-size: 30px; font-weight: bold; padding: 0 10px; }
 
-        .card { background: var(--card-grad); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 10px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
-        .card-level { position: absolute; top: 10px; right: 15px; font-size: 18px; font-family: 'Caveat', cursive; color: var(--accent); }
+        /* Пункт 3: Неон під картки */
+        .card { 
+            background: var(--card-grad); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); 
+            margin-top: 15px; cursor: pointer; position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon);
+        }
+        /* Пункт 3: Великі цифри рівня як вивіска */
+        .card-level { 
+            position: absolute; top: 8px; right: 15px; font-size: 22px; font-weight: bold; 
+            font-family: 'Caveat', cursive; color: #fff;
+            text-shadow: 0 0 5px var(--neon), 0 0 10px var(--neon);
+        }
 
-        #edit-screen, #user-menu { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px; overflow-y: auto; }
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 8999; display: none; }
+        #edit-screen, #user-menu, #personal-data-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 8999; display: none; backdrop-filter: blur(5px); }
 
-        input, select, textarea { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
-        label { font-size: 10px; opacity: 0.5; text-transform: uppercase; }
+        select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
+        label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
 
-        .status-msg { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: bold; letter-spacing: 2px; pointer-events: none; transition: opacity 0.3s; }
+        /* Пункт 4: Розтягуючі примітки */
+        .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
+        .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; font-size: 16px; }
+        #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; font-size: 16px; outline: none; }
+
+        .status-msg { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); font-size: 10px; opacity: 0.8; letter-spacing: 2px; font-weight: bold; color: #fff; pointer-events: none; }
     </style>
 </head>
 <body class="theme-purple">
 
     <div id="splash" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;">
-        <div id="login-ui" style="display:none;"><button onclick="login()" style="padding:12px 30px; border-radius:25px; border:none; font-weight:bold;">Увійти через Google</button></div>
+        <div style="width:160px;height:160px;border:2px solid silver;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:bold;color:white;">SL</div>
+        <div id="login-ui" style="display:none; margin-top:40px;"><button onclick="login()" style="background:white;border:none;padding:12px 30px;border-radius:25px;font-weight:bold;">Увійти через Google</button></div>
     </div>
 
-    <div id="bg-overlay" class="overlay" onclick="handleBack()"></div>
+    <div id="bg-overlay" class="overlay" onclick="closeAll()"></div>
 
     <header>
         <div class="avatar" id="u-avatar" onclick="showUserMenu()"></div>
         <div class="header-title">SL Time CRM</div>
-        <div id="total-clients" style="font-weight:bold; opacity:0.8;">0</div>
+        <div class="header-right">
+            <div id="total-clients" class="total-count">0</div>
+            <div class="filter-btn" onclick="toggleFilter()">
+                <div class="f-line l1"></div><div class="f-line l2"></div><div class="f-line l3"></div>
+            </div>
+        </div>
+        <div id="filter-popup">
+            <div class="f-item" onclick="setFilter('az')">А-Я</div>
+            <div class="f-item" onclick="setFilter('new')">Нові</div>
+            <div class="f-item" onclick="setFilter('old')">Старі</div>
+        </div>
     </header>
 
     <main class="board" id="main-board"></main>
 
     <div id="user-menu">
+        <div style="font-size:18px; font-weight:bold; margin-bottom:30px; text-align:center;">НАЛАШТУВАННЯ</div>
+        
+        <button onclick="showPersonalData()" style="padding:15px; background:rgba(255,255,255,0.1); color:white; border:1px solid silver; border-radius:12px; width:100%; font-weight:bold; margin-bottom:30px; cursor:pointer;">ОСОБИСТІ ДАНІ</button>
+
+        <label>ТЕМА ОФОРМЛЕННЯ</label>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom: 30px;">
+            <div onclick="setTheme('purple')" style="padding:15px; border:1px solid rgba(255,255,255,0.3); text-align:center; cursor:pointer; border-radius:10px;">Фіолет</div>
+            <div onclick="setTheme('graphite')" style="padding:15px; border:1px solid rgba(255,255,255,0.3); text-align:center; cursor:pointer; border-radius:10px;">Графіт</div>
+        </div>
+        <button onclick="closeAll()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; cursor: pointer;">ЗАКРИТИ</button>
+        <div style="text-align:center; color:#ff4d4d; margin-top:30px; cursor:pointer; font-size:12px;" onclick="logout()">ВИЙТИ</div>
+    </div>
+
+    <div id="personal-data-screen">
+        <div style="font-size:18px; font-weight:bold; margin-bottom:30px; text-align:center;">ОСОБИСТІ ДАНІ</div>
         <div style="text-align:center; margin-bottom: 30px;">
-            <div id="me-photo" style="width:110px; height:110px; border-radius:50%; background:rgba(255,255,255,0.1); margin:0 auto; background-size:cover; background-position:center;"></div>
-            <p style="font-size:10px; margin-top:10px; opacity:0.5; cursor:pointer;" onclick="document.getElementById('me-upload').click()">ЗМІНИТИ ФОТО</p>
+            <div id="me-photo" style="width:110px; height:110px; border-radius:50%; background:rgba(255,255,255,0.1); margin:0 auto; background-size:cover; background-position:center; border:1px solid rgba(255,255,255,0.2)"></div>
+            <p style="font-size:10px; margin-top:10px; opacity:0.5; cursor: pointer;" onclick="document.getElementById('me-upload').click()">ЗМІНИТИ ФОТО</p>
             <input type="file" id="me-upload" hidden onchange="handleMeFile(this)">
         </div>
-        <label>ТЕМА</label>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;">
-            <button onclick="setTheme('purple')" style="padding:10px; color:white; background:rgba(255,255,255,0.1); border:1px solid silver; border-radius:10px;">Фіолет</button>
-            <button onclick="setTheme('graphite')" style="padding:10px; color:white; background:rgba(255,255,255,0.1); border:1px solid silver; border-radius:10px;">Графіт</button>
-        </div>
-        <button onclick="handleBack()" style="width:100%; padding:15px; border-radius:25px; font-weight:bold; margin-top:20px;">ЗАКРИТИ</button>
-        <div style="text-align:center; color:red; margin-top:30px; cursor:pointer;" onclick="logout()">ВИЙТИ</div>
+        <label>ПРІЗВИЩЕ</label>
+        <input type="text" id="me-lname" oninput="saveMeData()">
+        <label>ІМ'Я</label>
+        <input type="text" id="me-fname" oninput="saveMeData()">
+        <label>РІВЕНЬ</label>
+        <select id="me-level" onchange="saveMeData()">
+            <option value="">Не обрано</option>
+            <script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script>
+        </select>
+        <button onclick="document.getElementById('personal-data-screen').style.display='none'" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; cursor: pointer;">НАЗАД</button>
     </div>
 
     <div id="edit-screen">
-        <div style="text-align:right; color:red; font-size:12px; cursor:pointer;" onclick="removeClient()">ВИДАЛИТИ</div>
+        <span class="del-top" onclick="removeClient()">Видалити</span>
         <div style="text-align:center; margin-bottom: 20px;">
-            <div id="c-photo" style="width:110px; height:110px; border-radius:50%; background:rgba(255,255,255,0.1); margin:0 auto; background-size:cover; background-position:center;"></div>
-            <p style="font-size:10px; margin-top:10px; opacity:0.5; cursor:pointer;" onclick="document.getElementById('f-upload').click()">ЗМІНИТИ ФОТО</p>
+            <div id="c-photo" style="width:110px; height:110px; border-radius:50%; background:rgba(255,255,255,0.1); margin:0 auto; background-size:cover; background-position:center; border:1px solid rgba(255,255,255,0.2)"></div>
+            <p style="font-size:10px; margin-top:10px; opacity:0.5; cursor: pointer;" onclick="document.getElementById('f-upload').click()">ЗМІНИТИ ФОТО</p>
             <input type="file" id="f-upload" hidden onchange="handleFile(this)">
         </div>
-        <label>ЕТАП</label><select id="e-step" onchange="autoSave()"></select>
+        <label>ЕТАП</label>
+        <select id="e-step" onchange="autoSave()"></select>
+        
+        <label>ПРІЗВИЩЕ</label>
+        <input type="text" id="e-lname" oninput="autoSave()">
+        <label>ІМ'Я</label>
+        <input type="text" id="e-fname" oninput="autoSave()">
+        <label>НОМЕР ТЕЛЕФОНУ</label>
+        <input type="tel" id="e-phone" oninput="autoSave()">
+        
+        <label>НОМЕР ПОЛІСУ</label>
+        <input type="text" id="e-pnum" oninput="autoSave()">
+        <label>ДАТА ПОЛІСУ</label>
+        <input type="date" id="e-pdate" onchange="autoSave()">
+        
         <label>РІВЕНЬ</label>
         <select id="e-level" onchange="autoSave()">
             <option value="">Не обрано</option>
-            <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
-            <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>
+            <script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script>
         </select>
-        <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname" oninput="autoSave()">
-        <label>ІМ'Я</label><input type="text" id="e-fname" oninput="autoSave()">
-        <label>ТЕЛЕФОН</label><input type="tel" id="e-phone" oninput="autoSave()">
-        <label>ПРИМІТКИ</label><textarea id="e-notes" oninput="autoSave()" style="min-height:100px;"></textarea>
+
+        <label>ПРИМІТКИ</label>
+        <div class="notes-wrapper" id="notes-wrap">
+            <textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value; autoSave()"></textarea>
+        </div>
         <div class="status-msg" id="save-status"></div>
     </div>
 
@@ -113,22 +190,19 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.firestore(), provider = new firebase.auth.GoogleAuthProvider();
 
-        let user = null, clients = [], editId = null, currentPhoto = null, saveTimeout;
+        let user = null, clients = [], editId = null, currentPhoto = null, filterType = 'new', saveTimeout;
         let steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Семінар", "Поліс"];
 
-        // Навігація Back Button (Пункт 2)
-        window.addEventListener('popstate', function() {
-            closeScreens();
-        });
+        window.onpopstate = function() {
+            if (document.getElementById('personal-data-screen').style.display === 'flex') { document.getElementById('personal-data-screen').style.display = 'none'; }
+            else if (document.getElementById('edit-screen').style.display === 'flex' || document.getElementById('user-menu').style.display === 'flex') { closeAll(); }
+        };
 
-        function handleBack() {
+        function closeAll() {
             if (editId) autoSave(true);
-            window.history.back();
-        }
-
-        function closeScreens() {
             document.getElementById('edit-screen').style.display = 'none';
             document.getElementById('user-menu').style.display = 'none';
+            document.getElementById('personal-data-screen').style.display = 'none';
             document.getElementById('bg-overlay').style.display = 'none';
             editId = null;
         }
@@ -139,9 +213,7 @@
                 document.getElementById('splash').style.display = 'none';
                 await loadUserConfig();
                 loadClients();
-            } else { 
-                document.getElementById('login-ui').style.display = 'block'; 
-            }
+            } else { document.getElementById('login-ui').style.display = 'block'; }
         });
 
         async function loadUserConfig() {
@@ -151,6 +223,9 @@
             const photo = data.myPhoto || user.photoURL;
             document.getElementById('u-avatar').style.backgroundImage = `url(${photo})`;
             document.getElementById('me-photo').style.backgroundImage = `url(${photo})`;
+            document.getElementById('me-lname').value = data.meLname || "";
+            document.getElementById('me-fname').value = data.meFname || "";
+            document.getElementById('me-level').value = data.meLevel || "";
             setTheme(localStorage.getItem('crm_theme') || data.theme || 'purple');
         }
 
@@ -166,64 +241,66 @@
             const b = document.getElementById('main-board'), s = document.getElementById('e-step');
             b.innerHTML = ''; s.innerHTML = '';
             
+            let sorted = [...clients];
+            if(filterType === 'az') sorted.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
+            if(filterType === 'new') sorted.sort((a,b) => b.created - a.created);
+            if(filterType === 'old') sorted.sort((a,b) => a.created - b.created);
+
             steps.forEach((n, i) => {
-                const filtered = clients.filter(c => c.step == i);
+                const filtered = sorted.filter(c => c.step == i);
                 const col = document.createElement('div');
                 col.className = 'column';
-                
-                // Логіка кнопок + (Пункт 1)
-                let btnHtml = '';
-                if(i === 0) btnHtml = `<div class="add-btn" onclick="createCard()">+</div>`;
-                if(i === steps.length - 1) btnHtml = `<div class="add-btn" onclick="addStep()">+</div>`;
-
                 col.innerHTML = `
                     <div class="col-head">
-                        <div onclick="editStep(${i})">${n} (${filtered.length})</div>
-                        ${btnHtml}
+                        <div onclick="editStep(${i})" style="cursor:pointer">${n} <span style="opacity:0.4">${filtered.length}</span></div>
+                        <div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}${i==steps.length-1?'<span onclick="addStep()">+</span>':''}</div>
+                        <div></div>
                     </div>
                     <div id="list-${i}" style="flex:1; overflow-y:auto;"></div>`;
                 b.appendChild(col);
                 s.innerHTML += `<option value="${i}">${n}</option>`;
 
                 filtered.forEach(c => {
-                    const div = document.createElement('div');
-                    div.className = 'card';
-                    div.onclick = () => { 
-                        window.history.pushState({edit: true}, ""); 
-                        openEdit(c.id); 
-                    };
-                    // Відображення рівня (Пункт 1)
-                    const level = c.level ? `<div class="card-level">${c.level}</div>` : '';
-                    div.innerHTML = `${level}<div>${c.lname||""} ${c.fname||""}</div>`;
+                    const div = document.createElement('div'); div.className = 'card';
+                    div.onclick = () => { window.history.pushState({edit:true}, ""); openEdit(c.id); };
+                    const levelHtml = c.level ? `<div class="card-level">${c.level}</div>` : '';
+                    div.innerHTML = `${levelHtml}<div style="font-weight:600">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;margin-top:5px">${c.phone||""}</div>`;
                     document.getElementById(`list-${i}`).appendChild(div);
                 });
             });
         }
 
         async function autoSave(instant = false) {
-            if(!editId) return;
+            if (!editId) return;
             const status = document.getElementById('save-status');
             status.innerText = "ЗБЕРЕЖЕННЯ...";
-            status.style.opacity = "1";
-
             clearTimeout(saveTimeout);
-            const saveFunc = async () => {
+            const save = async () => {
                 const data = {
                     lname: document.getElementById('e-lname').value,
                     fname: document.getElementById('e-fname').value,
                     phone: document.getElementById('e-phone').value,
+                    pnum: document.getElementById('e-pnum').value,
+                    pdate: document.getElementById('e-pdate').value,
                     notes: document.getElementById('e-notes').value,
-                    step: parseInt(document.getElementById('e-step').value),
                     level: document.getElementById('e-level').value,
+                    step: parseInt(document.getElementById('e-step').value),
                     photo: currentPhoto, updated: Date.now()
                 };
                 await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(data, {merge:true});
                 status.innerText = "ЗБЕРЕЖЕНО";
-                setTimeout(() => { status.style.opacity = "0"; }, 500); // Швидке зникнення (Пункт 2)
+                setTimeout(() => { status.innerText = ""; }, 500);
             };
+            if(instant) await save(); else saveTimeout = setTimeout(save, 1000);
+        }
 
-            if(instant) await saveFunc();
-            else saveTimeout = setTimeout(saveFunc, 1000);
+        async function saveMeData() {
+            const data = {
+                meLname: document.getElementById('me-lname').value,
+                meFname: document.getElementById('me-fname').value,
+                meLevel: document.getElementById('me-level').value
+            };
+            await db.collection("users").doc(user.uid).set(data, {merge:true});
         }
 
         function openEdit(id) {
@@ -231,7 +308,10 @@
             document.getElementById('e-lname').value = c.lname || "";
             document.getElementById('e-fname').value = c.fname || "";
             document.getElementById('e-phone').value = c.phone || "";
+            document.getElementById('e-pnum').value = c.pnum || "";
+            document.getElementById('e-pdate').value = c.pdate || "";
             document.getElementById('e-notes').value = c.notes || "";
+            document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || "";
             document.getElementById('e-step').value = c.step || 0;
             document.getElementById('e-level').value = c.level || "";
             currentPhoto = c.photo;
@@ -241,40 +321,21 @@
 
         async function createCard() {
             const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()});
-            window.history.pushState({edit: true}, "");
-            openEdit(res.id);
+            window.history.pushState({edit:true}, ""); openEdit(res.id);
         }
 
+        function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
+        function setFilter(t) { filterType = t; renderBoard(); toggleFilter(); }
+        function showUserMenu() { window.history.pushState({menu:true}, ""); document.getElementById('user-menu').style.display = 'flex'; }
+        function showPersonalData() { window.history.pushState({personal:true}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
+        function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); }
+        function handleFile(input) { const r = new FileReader(); r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; autoSave(); }; r.readAsDataURL(input.files[0]); }
+        function handleMeFile(input) { const r = new FileReader(); r.onload = async e => { const img = e.target.result; document.getElementById('me-photo').style.backgroundImage = `url(${img})`; document.getElementById('u-avatar').style.backgroundImage = `url(${img})`; await db.collection("users").doc(user.uid).set({myPhoto: img}, {merge:true}); }; r.readAsDataURL(input.files[0]); }
         async function addStep() { const n = prompt("Назва етапу:"); if(n) { steps.push(n); syncSteps(); } }
-        async function editStep(i) { const n = prompt("Назва:", steps[i]); if(n==="") steps.splice(i,1); else if(n) steps[i]=n; syncSteps(); }
         async function syncSteps() { await db.collection("users").doc(user.uid).set({steps}, {merge:true}); renderBoard(); }
-
-        function showUserMenu() { 
-            window.history.pushState({menu: true}, ""); 
-            document.getElementById('user-menu').style.display = 'flex'; 
-        }
-
-        function handleMeFile(input) { // Пункт 3
-            const r = new FileReader();
-            r.onload = async e => {
-                const img = e.target.result;
-                document.getElementById('me-photo').style.backgroundImage = `url(${img})`;
-                document.getElementById('u-avatar').style.backgroundImage = `url(${img})`;
-                await db.collection("users").doc(user.uid).set({myPhoto: img}, {merge:true});
-            };
-            r.readAsDataURL(input.files[0]);
-        }
-
-        function handleFile(input) {
-            const r = new FileReader();
-            r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; autoSave(); };
-            r.readAsDataURL(input.files[0]);
-        }
-
-        function setTheme(t) { document.body.className = 'theme-'+t; localStorage.setItem('crm_theme', t); }
         function login() { auth.signInWithPopup(provider); }
         function logout() { auth.signOut().then(() => location.reload()); }
-        async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); handleBack(); } }
+        async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAll(); } }
     </script>
 </body>
 </html>
