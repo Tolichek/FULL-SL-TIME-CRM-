@@ -21,66 +21,66 @@
             --neon: #db00ff;
         }
 
-        /* Теми */
         body.theme-purple { --bg: linear-gradient(180deg, #2e0249 0%, #1a1a1b 100%); --neon: #db00ff; }
         body.theme-graphite { --bg: linear-gradient(180deg, #2c2c2e 0%, #000000 100%); --neon: #ffffff; }
         body.theme-blue { --bg: linear-gradient(180deg, #021b49 0%, #000000 100%); --neon: #0096ff; }
-        body.theme-green { --bg: linear-gradient(180deg, #02331a 0%, #000000 100%); --neon: #00ff85; }
+        body.theme-green { --bg: linear-gradient(180deg, #02331a 0%, #000000 100%); --card-grad: linear-gradient(135deg, #054126 0%, #02331a 100%); --neon: #00ff85; }
         body.theme-gold { --bg: linear-gradient(180deg, #443501 0%, #000000 100%); --neon: #ffd700; }
         body.theme-pink { --bg: linear-gradient(180deg, #49022e 0%, #000000 100%); --neon: #ff0096; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; border: none !important; }
         body, html { height: 100%; background: #000; color: var(--accent); overflow: hidden; }
         
         #app-wrapper { height: 100%; display: flex; flex-direction: column; background: var(--bg); }
 
         header { display: flex; justify-content: space-between; align-items: center; padding: env(safe-area-inset-top) 20px 10px; height: 100px; position: relative; z-index: 10; }
-        
-        .header-title { 
-            font-family: 'Monoton', cursive; font-size: 22px; color: #fff;
-            text-shadow: 0 0 5px #fff, 0 0 10px var(--neon), 0 0 20px var(--neon);
-            text-transform: uppercase; text-align: center; flex: 1;
-        }
-
-        .avatar { width: 42px; height: 42px; border-radius: 50%; background-size: cover; border: 2px solid #fff; box-shadow: 0 0 10px var(--neon); cursor: pointer; }
+        .header-title { font-family: 'Monoton', cursive; font-size: 20px; color: #fff; text-shadow: 0 0 5px #fff, 0 0 10px var(--neon), 0 0 20px var(--neon); text-transform: uppercase; text-align: center; flex: 1; }
+        .avatar { width: 42px; height: 42px; border-radius: 50%; background-size: cover; border: 2px solid #fff !important; box-shadow: 0 0 10px var(--neon); cursor: pointer; background-position: center; }
         
         .header-right { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 44px; }
-        .total-count { font-family: 'Caveat', cursive; font-size: 22px; text-shadow: 0 0 10px var(--neon); }
+        .total-count { font-family: 'Caveat', cursive; font-size: 22px; text-shadow: 0 0 10px var(--neon); line-height: 1; }
 
-        /* Відновлений Фільтр */
         .filter-btn { display: flex; flex-direction: column; gap: 4px; cursor: pointer; }
-        .f-line { height: 2px; background: #fff; border-radius: 2px; transition: 0.3s; }
+        .f-line { height: 2px; background: #fff; border-radius: 2px; }
         .l1 { width: 20px; } .l2 { width: 14px; } .l3 { width: 8px; }
 
-        .board { display: flex; overflow-x: auto; padding: 10px 20px 20px; gap: 20px; flex: 1; scroll-snap-type: x mandatory; }
-        .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; }
-        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 20px; }
+        #filter-popup { position: absolute; top: 85px; right: 20px; background: rgba(0,0,0,0.95); border-radius: 12px; display: none; flex-direction: column; z-index: 100; border: 1px solid rgba(255,255,255,0.1) !important; }
+        .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05) !important; }
 
-        .card { 
-            background: var(--card-grad); padding: 20px; border-radius: 12px; margin-top: 12px; 
-            position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.5), inset 0 0 10px rgba(255,255,255,0.05); 
-        }
+        .app-container { height: calc(100vh - 135px); overflow: hidden; display: none; }
+        .app-container.active { display: block; }
+
+        .board { display: flex; overflow-x: auto; padding: 10px 20px 20px; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
+        .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; gap: 10px; }
+        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 60px; }
+
+        .col-head { display: flex; justify-content: space-between; align-items: center; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.1) !important; }
+
+        .card { background: var(--card-grad); padding: 20px; border-radius: 12px; margin-top: 12px; position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         .card-level { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-family: 'Caveat', cursive; font-size: 28px; text-shadow: 0 0 10px var(--neon); }
 
-        /* НИЖНЯ ПАНЕЛЬ - ПОВНЕ ВИДАЛЕННЯ БОРДУ */
+        /* ЧОРНИЙ НИЗ: Без бордерів та блюру */
         .bottom-nav { 
-            height: calc(60px + env(safe-area-inset-bottom)); 
-            background: #000; display: flex; justify-content: space-around; 
-            padding-bottom: env(safe-area-inset-bottom); border: none !important;
+            height: calc(55px + env(safe-area-inset-bottom)); 
+            background: #000000 !important; 
+            display: flex; justify-content: space-around; 
+            padding-bottom: env(safe-area-inset-bottom); 
+            z-index: 1000;
         }
         .nav-item { opacity: 0.4; display: flex; align-items: center; justify-content: center; width: 33%; height: 100%; }
         .nav-item.active { opacity: 1; filter: drop-shadow(0 0 8px var(--neon)); }
-        .nav-icon-svg { width: 26px; height: 26px; stroke: #fff; }
+        .nav-icon-svg { width: 24px; height: 24px; stroke: #fff; }
 
+        /* Модалки */
         #edit-screen, #user-menu, #personal-data-screen { position: fixed; inset: 0; background: #000; z-index: 9000; display: none; flex-direction: column; padding: 40px 25px; overflow-y: auto; }
-        input, select, textarea { background: rgba(255,255,255,0.05); color: #fff; padding: 15px; border-radius: 8px; margin-bottom: 20px; width: 100%; border: 1px solid rgba(255,255,255,0.1) !important; }
+        input, select, textarea { background: rgba(255,255,255,0.05); color: #fff; padding: 15px; border-radius: 8px; margin-bottom: 20px; width: 100%; border: 1px solid rgba(255,255,255,0.1) !important; outline: none; }
         label { font-size: 10px; text-transform: uppercase; margin-bottom: 5px; opacity: 0.6; display: block; }
 
         #splash { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .splash-logo { width: 120px; height: 120px; border: 2px solid #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; box-shadow: 0 0 20px var(--neon); }
+        .splash-logo { width: 120px; height: 120px; border: 2px solid #fff !important; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; box-shadow: 0 0 20px var(--neon); }
     </style>
 </head>
-<body>
+<body class="theme-purple">
 
     <div id="splash">
         <div class="splash-logo">SL</div>
@@ -97,43 +97,47 @@
                     <div class="f-line l1"></div><div class="f-line l2"></div><div class="f-line l3"></div>
                 </div>
             </div>
+            <div id="filter-popup">
+                <div class="f-item" onclick="setFilter('az')">А-Я</div>
+                <div class="f-item" onclick="setFilter('new')">Нові</div>
+            </div>
         </header>
 
         <div id="screen-crm" class="app-container active"><main class="board" id="main-board"></main></div>
-        <div id="screen-struct" class="app-container" style="display:none; text-align:center; padding-top:50px; opacity:0.5;">СТРУКТУРА</div>
-        <div id="screen-plan" class="app-container" style="display:none; text-align:center; padding-top:50px; opacity:0.5;">ПЛАН</div>
+        <div id="screen-struct" class="app-container" style="text-align:center; padding-top:100px; opacity:0.3;">СТРУКТУРА</div>
+        <div id="screen-plan" class="app-container" style="text-align:center; padding-top:100px; opacity:0.3;">ПЛАН</div>
 
         <nav class="bottom-nav">
             <div class="nav-item active" onclick="switchPage('crm', this)">
-                <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h7m-3.5-3.5v7"/></svg>
+                <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="white"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h7m-3.5-3.5v7"/></svg>
             </div>
             <div class="nav-item" onclick="switchPage('struct', this)">
-                <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 3v18m-4-4l4 4 4-4m-8-10l4-4 4 4"/></svg>
+                <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="white"><path d="M12 3v18m-4-4l4 4 4-4m-8-10l4-4 4 4"/></svg>
             </div>
             <div class="nav-item" onclick="switchPage('plan', this)">
-                <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke="white"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
             </div>
         </nav>
     </div>
 
     <div id="edit-screen">
-        <button onclick="handleBack()" style="color:var(--neon); margin-bottom:20px;">← НАЗАД</button>
+        <button onclick="handleBack()" style="color:var(--neon); margin-bottom:20px; background:none;">← НАЗАД</button>
         <label>Прізвище</label><input type="text" id="e-lname" oninput="autoSave()">
         <label>Ім'я</label><input type="text" id="e-fname" oninput="autoSave()">
         <label>Телефон</label><input type="tel" id="e-phone" oninput="autoSave()">
         <label>Рівень</label><select id="e-level" onchange="autoSave()"><script>for(let i=0;i<=16;i++)document.write(`<option value="${i}">${i}</option>`)</script></select>
-        <button onclick="removeClient()" style="color:red; margin-top:20px;">ВИДАЛИТИ КЛІЄНТА</button>
+        <button onclick="removeClient()" style="color:red; margin-top:20px; background:none;">ВИДАЛИТИ</button>
     </div>
 
     <div id="user-menu">
-        <button onclick="handleBack()" style="color:var(--neon); margin-bottom:20px;">← ЗАКРИТИ</button>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <button onclick="setTheme('purple')" style="background:#2e0249; padding:20px; border-radius:10px;">Фіолет</button>
-            <button onclick="setTheme('graphite')" style="background:#1a1a1b; padding:20px; border-radius:10px;">Графіт</button>
-            <button onclick="setTheme('blue')" style="background:#021b49; padding:20px; border-radius:10px;">Синій</button>
-            <button onclick="setTheme('green')" style="background:#02331a; padding:20px; border-radius:10px;">Зелений</button>
+        <button onclick="handleBack()" style="color:var(--neon); margin-bottom:30px; background:none;">← ЗАКРИТИ</button>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:40px;">
+            <button onclick="setTheme('purple')" style="background:#2e0249; padding:20px; border-radius:10px; color:#fff;">Фіолет</button>
+            <button onclick="setTheme('graphite')" style="background:#1a1a1b; padding:20px; border-radius:10px; color:#fff;">Графіт</button>
+            <button onclick="setTheme('blue')" style="background:#021b49; padding:20px; border-radius:10px; color:#fff;">Синій</button>
+            <button onclick="setTheme('green')" style="background:#02331a; padding:20px; border-radius:10px; color:#fff;">Зелений</button>
         </div>
-        <button onclick="logout()" style="margin-top:40px; opacity:0.5;">Вийти з акаунту</button>
+        <button onclick="logout()" style="color:red; background:none;">Вийти</button>
     </div>
 
     <script>
@@ -141,9 +145,9 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.firestore(), provider = new firebase.auth.GoogleAuthProvider();
         
-        let user = null, clients = [], editId = null, saveTimeout;
+        let user = null, clients = [], editId = null, saveTimeout, filterType = 'new';
+        const steps = ["Список", "Бесіда", "Розробка", "Презенти", "Ліфт", "Семінар", "Поліс"];
 
-        // Навігація
         window.history.replaceState({main:true}, "");
         window.onpopstate = () => { if(editId || document.getElementById('user-menu').style.display === 'flex') handleBack(); };
 
@@ -154,9 +158,9 @@
         }
 
         function switchPage(p, el) {
-            document.querySelectorAll('.app-container').forEach(c => c.style.display = 'none');
+            document.querySelectorAll('.app-container').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            document.getElementById('screen-'+p).style.display = 'block';
+            document.getElementById('screen-'+p).classList.add('active');
             el.classList.add('active');
         }
 
@@ -166,6 +170,7 @@
                 document.getElementById('splash').style.display = 'none';
                 document.getElementById('u-avatar').style.backgroundImage = `url(${u.photoURL})`;
                 loadClients();
+                setTheme(localStorage.getItem('crm_theme') || 'purple');
             } else {
                 document.getElementById('login-ui').style.display = 'block';
             }
@@ -181,8 +186,6 @@
 
         function renderBoard() {
             const b = document.getElementById('main-board'); b.innerHTML = '';
-            const steps = ["Список", "Бесіда", "Розробка", "Презенти", "Ліфт", "Семінар", "Поліс"];
-            
             steps.forEach((n, i) => {
                 const filtered = clients.filter(c => (c.step || 0) == i);
                 const col = document.createElement('div');
@@ -190,17 +193,14 @@
                 col.innerHTML = `
                     <div class="col-head">
                         <div>${n} <span style="opacity:0.5">${filtered.length}</span></div>
-                        <div onclick="createCard()" style="cursor:pointer; font-size:24px;">${i==0?'+':''}</div>
+                        <div onclick="createCard()" style="cursor:pointer; font-size:20px;">${i==0?'+':''}</div>
                     </div>
-                    <div class="cards-area">
-                        ${filtered.map(c => `
-                            <div class="card" onclick="openEdit('${c.id}')">
-                                <div style="font-weight:bold">${c.lname || 'Без імені'}</div>
-                                <div style="font-size:12px; opacity:0.6">${c.phone || ''}</div>
-                                <div class="card-level">${c.level || ''}</div>
-                            </div>
-                        `).join('')}
-                    </div>`;
+                    <div class="cards-area">${filtered.map(c => `
+                        <div class="card" onclick="openEdit('${c.id}')">
+                            <div style="font-weight:bold">${c.lname || 'Новий'} ${c.fname || ''}</div>
+                            <div style="font-size:12px; opacity:0.6">${c.phone || ''}</div>
+                            <div class="card-level">${c.level || ''}</div>
+                        </div>`).join('')}</div>`;
                 b.appendChild(col);
             });
         }
@@ -224,20 +224,15 @@
             if(!editId) return;
             clearTimeout(saveTimeout);
             saveTimeout = setTimeout(async () => {
-                const data = {
-                    lname: document.getElementById('e-lname').value,
-                    fname: document.getElementById('e-fname').value,
-                    phone: document.getElementById('e-phone').value,
-                    level: document.getElementById('e-level').value,
-                    updated: Date.now()
-                };
+                const data = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, level: document.getElementById('e-level').value, updated: Date.now() };
                 await db.collection("users").doc(user.uid).collection("clients").doc(editId).update(data);
             }, 500);
         }
 
+        function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
+        function setFilter(t) { filterType = t; renderBoard(); toggleFilter(); }
         function showUserMenu() { document.getElementById('user-menu').style.display = 'flex'; window.history.pushState({modal:true}, ""); }
         function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); }
-        function toggleFilter() { alert('Фільтр: А-Я / Нові (Буде в наступному патчі)'); }
         function login() { auth.signInWithPopup(provider); }
         function logout() { auth.signOut().then(() => location.reload()); }
         async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); handleBack(); } }
