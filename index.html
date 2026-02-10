@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>SL TIME CRM 2.0</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&family=Caveat:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -43,7 +43,6 @@
             box-shadow: 0 0 15px var(--neon);
         }
         
-        /* ВИПРАВЛЕНО: застосовано шрифт Montserrat Alternates та прибрано нахил для чіткості */
         .header-title { 
             font-family: 'Montserrat Alternates', sans-serif; font-size: 28px; font-weight: 700; color: var(--neon-text);
             text-shadow: 0 0 10px #fff, 0 0 20px var(--neon), 0 0 30px var(--neon), 0 0 50px var(--neon);
@@ -85,10 +84,12 @@
             margin-top: 15px; cursor: pointer; position: relative;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon);
         }
+
+        /* ОНОВЛЕНО: шрифт для рівнів на картках */
         .card-level { 
             position: absolute; top: 50%; right: 20px; transform: translateY(-50%);
-            font-size: 34px; font-weight: bold; 
-            font-family: 'Caveat', cursive; color: #fff;
+            font-size: 30px; font-weight: bold; 
+            font-family: 'Montserrat Alternates', sans-serif; color: #fff;
             text-shadow: 0 0 8px var(--neon), 0 0 15px var(--neon);
         }
 
@@ -119,9 +120,11 @@
         #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; font-size: 16px; outline: none; }
 
         .photo-container { position: relative; width: 110px; height: 110px; margin: 0 auto; }
+        
+        /* ОНОВЛЕНО: шрифт для рівнів у меню карток */
         .edit-level-display {
             position: absolute; top: 50%; left: -65px; transform: translateY(-50%);
-            font-family: 'Caveat', cursive; font-size: 70px; font-weight: bold; color: #fff;
+            font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff;
             text-shadow: 0 0 15px var(--neon), 0 0 25px var(--neon);
             pointer-events: none; width: 60px; text-align: center;
         }
