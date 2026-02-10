@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="uk" style="background-color: #000 !important;">
+<html lang="uk" style="background-color: #000;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -27,21 +27,23 @@
         body.theme-pink { --bg: linear-gradient(180deg, #49022e 0%, #570a3a 50%, #1b0010 100%); --neon-bright: #ff0096; }
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
-        body, html { height: 100%; background: #000 !important; color: var(--accent); overflow: hidden; }
+        
+        /* Повернено градієнтний фон */
+        body { height: 100vh; background: var(--bg); color: var(--accent); overflow: hidden; }
 
         #splash {
-            position: fixed; inset: 0; background: #000 !important; z-index: 9999;
+            position: fixed; inset: 0; background: #000; z-index: 9999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: opacity 0.8s ease, visibility 0.8s;
         }
         #splash.hidden { opacity: 0; visibility: hidden; }
         #splash-video { width: 100%; height: 100%; object-fit: cover; }
 
-        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; height: 80px; position: relative; z-index: 200; background: transparent; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; height: 80px; position: relative; z-index: 200; }
         .avatar { width: 42px; height: 42px; border-radius: 50%; background-size: cover; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; }
         .header-title { font-family: 'Caveat', cursive; font-size: 34px; font-weight: 700; color: #fff; transform: rotate(-2deg); text-shadow: 0 0 10px var(--neon-bright); }
         .header-right { display: flex; align-items: center; gap: 15px; }
-        .total-count { font-size: 18px; font-weight: bold; text-shadow: 0 0 10px var(--neon-bright); position: absolute; right: 45px; top: 22px; }
+        .total-count { font-size: 18px; font-weight: bold; text-shadow: 0 0 10px var(--neon-bright); }
 
         .board { display: flex; overflow-x: auto; padding: 0; gap: 0; width: 100%; height: calc(100vh - 145px); scroll-snap-type: x mandatory; scroll-behavior: smooth; }
         .column { min-width: 100vw; scroll-snap-align: center; scroll-snap-stop: always; display: flex; flex-direction: column; height: 100%; overflow-y: auto; scrollbar-width: none; padding-bottom: 80px; }
@@ -61,7 +63,7 @@
             border-radius: 0 !important; appearance: none; -webkit-appearance: none;
         }
         
-        /* ПРИМІТКИ 1 в 1 ЯК В АЛМАЗІ */
+        /* ПРИМІТКИ ЯК В 2.0 */
         .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
         .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; line-height: 1.6; font-size: 16px; word-break: break-word; }
         #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent !important; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2) !important; resize: none; overflow: hidden; padding: 10px 0; line-height: 1.6; font-size: 16px; outline: none; border-radius: 0; }
@@ -213,10 +215,8 @@
                 });
                 b.appendChild(column);
             });
-            // ДОДАНО: Спейсер для прокрутки останнього списку
-            const spacer = document.createElement('div');
-            spacer.style.minWidth = "100vw";
-            b.appendChild(spacer);
+            // Посилений відступ для прокрутки останнього списку
+            const spacer = document.createElement('div'); spacer.style.minWidth = "100vw"; b.appendChild(spacer);
         }
 
         async function autoSave() {
