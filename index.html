@@ -7,6 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>SL TIME CRM 2.0</title>
     
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -43,10 +44,11 @@
             box-shadow: 0 0 15px var(--neon);
         }
         
+        /* Новий шрифт Dancing Script для вивіски */
         .header-title { 
-            font-family: 'Caveat', cursive; font-size: 34px; font-weight: 700; color: var(--neon-text);
+            font-family: 'Dancing Script', cursive; font-size: 34px; font-weight: 700; color: var(--neon-text);
             text-shadow: 0 0 10px #fff, 0 0 20px var(--neon), 0 0 30px var(--neon), 0 0 50px var(--neon);
-            letter-spacing: 1px; transform: rotate(-2deg);
+            letter-spacing: 0.5px;
         }
         
         .header-right { display: flex; flex-direction: column; align-items: center; gap: 5px; }
@@ -86,7 +88,6 @@
             text-shadow: 0 0 8px var(--neon), 0 0 15px var(--neon);
         }
 
-        /* Пункти 2 та 3: Нижній борд вужчий, без назв */
         .bottom-nav { 
             position: fixed; bottom: 0; left: 0; right: 0; height: 55px; 
             background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); 
@@ -96,11 +97,7 @@
         .nav-item { 
             color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33%; height: 100%;
         }
-        .nav-item.active { 
-            opacity: 1; 
-        }
-        
-        /* Пункт 4: Кіберпанк іконки (SVG Neon) */
+        .nav-item.active { opacity: 1; }
         .nav-icon-svg { width: 24px; height: 24px; transition: 0.3s; filter: drop-shadow(0 0 0px var(--neon)); }
         .nav-item.active .nav-icon-svg { filter: drop-shadow(0 0 5px var(--neon)) drop-shadow(0 0 10px var(--neon)); stroke: #fff; }
 
@@ -110,7 +107,6 @@
         select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
         label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
 
-        /* Пункт 1: Структура приміток, що розтягуються */
         .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
         .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; font-size: 16px; }
         #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; font-size: 16px; outline: none; }
@@ -142,7 +138,7 @@
         <div id="login-ui" style="display:none; margin-top:40px;"><button onclick="login()" style="background:white;border:none;padding:12px 30px;border-radius:25px;font-weight:bold;">Увійти через Google</button></div>
     </div>
 
-    <div id="bg-overlay" class="overlay" onclick="closeAll()"></div>
+    <div id="bg-overlay" class="overlay" onclick="handleBack()"></div>
 
     <header>
         <div class="avatar" id="u-avatar" onclick="showUserMenu()"></div>
@@ -175,22 +171,17 @@
     <nav class="bottom-nav">
         <div class="nav-item active" onclick="switchPage('crm', this)">
             <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <rect x="3" y="3" width="7" height="7" rx="1"/>
-                <rect x="14" y="3" width="7" height="7" rx="1"/>
-                <rect x="3" y="14" width="7" height="7" rx="1"/>
-                <path d="M14 14h7m-3.5-3.5v7" stroke-linecap="round"/>
+                <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h7m-3.5-3.5v7" stroke-linecap="round"/>
             </svg>
         </div>
         <div class="nav-item" onclick="switchPage('struct', this)">
             <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <path d="M12 3v18m0-18l-4 4m4-4l4 4m-4 14l-4-4m4 4l4-4" stroke-linecap="round"/>
-                <circle cx="12" cy="12" r="3"/>
+                <path d="M12 3v18m0-18l-4 4m4-4l4 4m-4 14l-4-4m4 4l4-4" stroke-linecap="round"/><circle cx="12" cy="12" r="3"/>
             </svg>
         </div>
         <div class="nav-item" onclick="switchPage('plan', this)">
             <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <circle cx="12" cy="12" r="9"/>
-                <path d="M12 7v5l3 2" stroke-linecap="round"/>
+                <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2" stroke-linecap="round"/>
             </svg>
         </div>
     </nav>
@@ -207,7 +198,7 @@
             <div onclick="setTheme('gold')" class="theme-btn btn-gold">Золото</div>
             <div onclick="setTheme('pink')" class="theme-btn btn-pink">Рожевий</div>
         </div>
-        <button onclick="closeAll()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; cursor: pointer;">ЗАКРИТИ</button>
+        <button onclick="handleBack()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; cursor: pointer;">ЗАКРИТИ</button>
         <div style="text-align:center; color:#ff4d4d; margin-top:30px; cursor:pointer; font-size:12px;" onclick="logout()">ВИЙТИ</div>
     </div>
 
@@ -225,7 +216,7 @@
         <label>ІМ'Я</label><input type="text" id="me-fname" oninput="saveMeData()">
         <label>РІВЕНЬ</label>
         <select id="me-level" onchange="updateMeLevelBadge(); saveMeData()"><option value="">Не обрано</option><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
-        <button onclick="document.getElementById('personal-data-screen').style.display='none'" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; cursor: pointer;">НАЗАД</button>
+        <button onclick="handleBack()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; cursor: pointer;">НАЗАД</button>
     </div>
 
     <div id="edit-screen">
@@ -265,6 +256,37 @@
         let user = null, clients = [], editId = null, currentPhoto = null, filterType = 'new', saveTimeout;
         let steps = ["Список", "Бесіда", "Розробка", "Презенти", "Ліфт", "Семінар", "Поліс"];
 
+        // Навігація без виходу з додатка
+        window.history.replaceState({main:true}, "");
+        window.onpopstate = function(e) {
+            if (isAnyScreenOpen()) {
+                closeScreensLogic();
+                window.history.pushState({main:true}, "");
+            }
+        };
+
+        function isAnyScreenOpen() {
+            return document.getElementById('edit-screen').style.display === 'flex' || 
+                   document.getElementById('user-menu').style.display === 'flex' || 
+                   document.getElementById('personal-data-screen').style.display === 'flex';
+        }
+
+        function handleBack() {
+            if (isAnyScreenOpen()) {
+                if (editId) autoSave(true);
+                closeScreensLogic();
+            }
+        }
+
+        function closeScreensLogic() {
+            document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #bg-overlay').forEach(el => el.style.display = 'none');
+            editId = null;
+        }
+
+        function addHistoryPoint() {
+            window.history.pushState({modal:true}, "");
+        }
+
         function switchPage(pageId, el) {
             document.querySelectorAll('.app-container').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
@@ -272,12 +294,7 @@
             el.classList.add('active');
         }
 
-        window.onpopstate = () => { closeAll(); };
-        function closeAll() {
-            if (editId) autoSave(true);
-            document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #bg-overlay').forEach(el => el.style.display = 'none');
-            editId = null;
-        }
+        function closeAll() { handleBack(); }
 
         auth.onAuthStateChanged(async u => {
             if(u) { user = u; document.getElementById('splash').style.display = 'none'; await loadUserConfig(); loadClients(); }
@@ -323,7 +340,7 @@
                 s.innerHTML += `<option value="${i}">${n}</option>`;
                 filtered.forEach(c => {
                     const div = document.createElement('div'); div.className = 'card';
-                    div.onclick = () => { window.history.pushState({edit:true}, ""); openEdit(c.id); };
+                    div.onclick = () => { addHistoryPoint(); openEdit(c.id); };
                     const levelHtml = c.level ? `<div class="card-level">${c.level}</div>` : '';
                     div.innerHTML = `${levelHtml}<div style="font-weight:600; font-size: 16px;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;margin-top:5px">${c.phone||""}</div>`;
                     document.getElementById(`list-${i}`).appendChild(div);
@@ -348,20 +365,20 @@
         function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','phone','pnum','pdate','notes','step','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || (k==='step'?0:"")); document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || ""; currentPhoto = c.photo; document.getElementById('c-photo').style.backgroundImage = currentPhoto ? `url(${currentPhoto})` : 'none'; updateEditLevelBadge(); document.getElementById('edit-screen').style.display = 'flex'; }
         function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
         function updateMeLevelBadge() { document.getElementById('me-level-badge').innerText = document.getElementById('me-level').value; }
-        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); window.history.pushState({edit:true}, ""); openEdit(res.id); }
+        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); addHistoryPoint(); openEdit(res.id); }
         async function editStep(i) { const n = prompt("Назва етапу (залиште пустим для видалення):", steps[i]); if (n === "") { if(confirm("Видалити?")) steps.splice(i, 1); } else if (n) steps[i] = n; await syncSteps(); }
         async function addStep() { const n = prompt("Назва нового:"); if(n) { steps.push(n); await syncSteps(); } }
         async function syncSteps() { await db.collection("users").doc(user.uid).set({steps}, {merge:true}); renderBoard(); }
         function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
         function setFilter(t) { filterType = t; renderBoard(); toggleFilter(); }
-        function showUserMenu() { window.history.pushState({menu:true}, ""); document.getElementById('user-menu').style.display = 'flex'; }
-        function showPersonalData() { window.history.pushState({personal:true}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
+        function showUserMenu() { addHistoryPoint(); document.getElementById('user-menu').style.display = 'flex'; }
+        function showPersonalData() { addHistoryPoint(); document.getElementById('personal-data-screen').style.display = 'flex'; }
         function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); if(user) db.collection("users").doc(user.uid).set({theme: t}, {merge:true}); }
         function handleFile(input) { const r = new FileReader(); r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; autoSave(); }; r.readAsDataURL(input.files[0]); }
         function handleMeFile(input) { const r = new FileReader(); r.onload = async e => { const img = e.target.result; document.getElementById('me-photo').style.backgroundImage = `url(${img})`; document.getElementById('u-avatar').style.backgroundImage = `url(${img})`; await db.collection("users").doc(user.uid).set({myPhoto: img}, {merge:true}); }; r.readAsDataURL(input.files[0]); }
         function login() { auth.signInWithPopup(provider); }
         function logout() { auth.signOut().then(() => location.reload()); }
-        async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAll(); } }
+        async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeScreensLogic(); } }
     </script>
 </body>
 </html>
