@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>SL TIME CRM Emerald 5.0</title>
+    <title>SL TIME CRM Emerald</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%232e0249'/><text x='50%' y='63%' text-anchor='middle' fill='white' font-family='Caveat' font-weight='bold' font-size='55' style='filter:drop-shadow(0 0 10px %23db00ff)'>SL</text></svg>">
@@ -27,7 +27,9 @@
         body.theme-pink { --bg: linear-gradient(180deg, #49022e 0%, #570a3a 50%, #1b0010 100%); --neon-bright: #ff0096; }
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
-        body, html { height: 100%; background: #000; color: var(--accent); overflow: hidden; }
+        
+        /* МАЛЕВИЧ FIX: Прибрано чорний фон з body, повернуто градієнт */
+        body { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
 
         #splash {
             position: fixed; inset: 0; background: #000 !important; z-index: 9999;
@@ -37,19 +39,17 @@
         #splash.hidden { opacity: 0; visibility: hidden; }
         #splash-video { width: 100%; height: 100%; object-fit: cover; }
 
-        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; height: 80px; position: relative; z-index: 200; background: transparent; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; height: 80px; position: relative; z-index: 200; }
         .avatar { width: 42px; height: 42px; border-radius: 50%; background-size: cover; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; }
         .header-title { font-family: 'Caveat', cursive; font-size: 34px; font-weight: 700; color: #fff; transform: rotate(-2deg); text-shadow: 0 0 10px var(--neon-bright); }
-        .header-right { display: flex; align-items: center; gap: 15px; position: relative; }
-        .total-count { font-size: 18px; font-weight: bold; text-shadow: 0 0 10px var(--neon-bright); margin-right: 5px; }
+        .header-right { display: flex; align-items: center; gap: 15px; }
+        .total-count { font-size: 18px; font-weight: bold; text-shadow: 0 0 10px var(--neon-bright); }
 
-        #filter-popup { position: absolute; top: 75px; right: 0; background: rgba(0,0,0,0.95); border-radius: 12px; display: none; flex-direction: column; z-index: 500; border: 1px solid rgba(255,255,255,0.1); width: 150px; }
-        .f-item { padding: 15px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: center; }
-
+        /* ПРОКРУТКА ЯК В 2.0 */
         .board { display: flex; overflow-x: auto; padding: 0; gap: 0; width: 100%; height: calc(100vh - 145px); scroll-snap-type: x mandatory; scroll-behavior: smooth; }
         .column { min-width: 100vw; scroll-snap-align: center; scroll-snap-stop: always; display: flex; flex-direction: column; height: 100%; overflow-y: auto; scrollbar-width: none; padding-bottom: 80px; }
         
-        .col-header-sticky { position: sticky; top: 0; z-index: 100; min-height: 60px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 13px; text-transform: uppercase; padding: 0 20px; border-bottom: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(20px); }
+        .col-header-sticky { position: sticky; top: 0; z-index: 100; min-height: 60px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 13px; text-transform: uppercase; padding: 0 20px; border-bottom: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(20px); background: transparent; }
 
         .card { background: transparent; padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin: 15px 20px 0; cursor: pointer; position: relative; text-shadow: 0 0 5px var(--neon-bright); }
         .card-level { position: absolute; top: 50%; right: 25px; transform: translateY(-50%); font-family: 'Caveat', cursive; font-size: 34px; color: #fff; text-shadow: 0 0 10px var(--neon-bright); }
@@ -57,7 +57,6 @@
         #edit-screen, #user-menu, #me-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 25px; overflow-y: auto; }
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 8999; display: none; backdrop-filter: blur(5px); }
         
-        /* Повернення стрілочок у випадаючих списках */
         input, select { 
             width: 100%; background: transparent !important; border: none !important; 
             border-bottom: 1px solid rgba(255,255,255,0.2) !important; color: white !important; 
@@ -70,14 +69,9 @@
         #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent !important; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2) !important; resize: none; overflow: hidden; padding: 10px 0; line-height: 1.6; font-size: 16px; outline: none; border-radius: 0; }
 
         label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
-        
-        /* Нижня панель - повернуто всі кнопки */
-        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; align-items: center; z-index: 200; backdrop-filter: blur(20px); background: rgba(0,0,0,0.2); }
-        .nav-item { cursor: pointer; opacity: 0.4; transition: 0.3s; }
+        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; align-items: center; z-index: 200; backdrop-filter: blur(20px); }
+        .nav-item { cursor: pointer; opacity: 0.4; }
         .nav-item.active { opacity: 1; filter: drop-shadow(0 0 8px var(--neon-bright)); }
-
-        .page-container { display: none; height: 100%; width: 100%; }
-        .page-active { display: block; }
     </style>
 </head>
 <body class="theme-purple">
@@ -104,11 +98,11 @@
                 <div style="height:2px;width:16px;background:white;margin-bottom:4px;margin-left:6px"></div>
                 <div style="height:2px;width:10px;background:white;margin-left:12px"></div>
             </div>
-            <div id="filter-popup">
-                <div class="f-item" onclick="setFilter('az')">А-Я</div>
-                <div class="f-item" onclick="setFilter('new')">Нові</div>
-                <div class="f-item" onclick="setFilter('old')">Старі</div>
-            </div>
+        </div>
+        <div id="filter-popup" style="position: absolute; top: 75px; right: 20px; background: rgba(0,0,0,0.9); border-radius: 12px; display: none; flex-direction: column; z-index: 300; border: 1px solid rgba(255,255,255,0.1);">
+            <div class="f-item" onclick="setFilter('az')" style="padding: 15px 25px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05);">А-Я</div>
+            <div class="f-item" onclick="setFilter('new')" style="padding: 15px 25px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05);">Нові</div>
+            <div class="f-item" onclick="setFilter('old')" style="padding: 15px 25px; cursor: pointer;">Старі</div>
         </div>
     </header>
 
@@ -116,13 +110,8 @@
         <div class="board" id="main-board"></div>
     </main>
 
-    <main id="page-structure" class="page-container">
-        <div style="display:flex; justify-content:center; align-items:center; height:100%; opacity:0.3;">СТРУКТУРА</div>
-    </main>
-
-    <main id="page-planner" class="page-container">
-        <div style="display:flex; justify-content:center; align-items:center; height:100%; opacity:0.3;">ПЛАНУВАЛЬНИК</div>
-    </main>
+    <main id="page-structure" class="page-container" style="display:none; justify-content: center; align-items: center; height:100%; opacity: 0.3;">СТРУКТУРА</main>
+    <main id="page-planner" class="page-container" style="display:none; justify-content: center; align-items: center; height:100%; opacity: 0.3;">ПЛАНУВАЛЬНИК</main>
 
     <div id="user-menu">
         <h3 style="text-align:center; margin-bottom:30px; letter-spacing:2px;">НАЛАШТУВАННЯ</h3>
@@ -236,13 +225,19 @@
                 });
                 b.appendChild(column);
             });
-            const spacer = document.createElement('div'); spacer.style.minWidth = "100vw"; b.appendChild(spacer);
+            // ДОДАНО: Кнопка "+" в кінці для нових списків (як у 2.0)
+            const addColumn = document.createElement('div');
+            addColumn.className = 'column';
+            addColumn.innerHTML = `<div class="col-header-sticky" style="justify-content:center; cursor:pointer;" onclick="addStep()">
+                <div style="font-size:40px; font-weight:bold; opacity:0.3;">+</div>
+            </div>`;
+            b.appendChild(addColumn);
         }
 
         function switchPage(pId, el) { 
-            document.querySelectorAll('.page-container').forEach(p => p.classList.remove('page-active')); 
+            document.querySelectorAll('.page-container').forEach(p => p.style.display = 'none'); 
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); 
-            document.getElementById('page-'+pId).classList.add('page-active'); 
+            document.getElementById('page-'+pId).style.display = 'block'; 
             el.classList.add('active'); 
         }
 
