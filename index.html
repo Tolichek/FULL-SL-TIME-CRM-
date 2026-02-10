@@ -22,7 +22,6 @@
             --neon-text: #fff;
         }
 
-        /* Налаштування градієнтів тем */
         body.theme-purple { --bg: linear-gradient(180deg, #2e0249 0%, #570a57 50%, #1a1a1b 100%); --card-grad: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); --neon: rgba(219, 0, 255, 0.8); }
         body.theme-graphite { --bg: linear-gradient(180deg, #1a1a1b 0%, #2c2c2e 50%, #000000 100%); --card-grad: linear-gradient(135deg, #3a3a3c 0%, #1a1a1b 100%); --neon: rgba(255, 255, 255, 0.4); }
         body.theme-blue { --bg: linear-gradient(180deg, #021b49 0%, #0a2e57 50%, #010a1b 100%); --card-grad: linear-gradient(135deg, #052661 0%, #021b49 100%); --neon: rgba(0, 150, 255, 0.8); }
@@ -57,7 +56,9 @@
         .board { display: flex; overflow-x: auto; padding: 0 20px 40px; gap: 20px; height: calc(100vh - 80px); scroll-snap-type: x mandatory; }
         .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; gap: 15px; }
         
-        .col-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; padding-bottom: 5px; opacity: 0.8; }
+        /* Пункт 2: Лічильник відсунутий і білий */
+        .col-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; padding-bottom: 5px; opacity: 0.9; }
+        .col-count { margin-left: 10px; color: #fff; font-weight: bold; }
         .add-btn-center { grid-column: 2; cursor: pointer; font-size: 30px; font-weight: bold; padding: 0 10px; }
 
         .card { 
@@ -81,18 +82,26 @@
         .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; font-size: 16px; }
         #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; font-size: 16px; outline: none; }
 
+        /* Пункт 1: Цифра рівня в меню картки */
+        .photo-container { position: relative; width: 110px; height: 110px; margin: 0 auto; }
+        .edit-level-display {
+            position: absolute; top: 50%; left: -60px; transform: translateY(-50%);
+            font-family: 'Caveat', cursive; font-size: 70px; font-weight: bold; color: #fff;
+            text-shadow: 0 0 10px var(--neon), 0 0 20px var(--neon);
+            pointer-events: none; width: 60px; text-align: center;
+        }
+
         .status-msg { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); font-size: 10px; opacity: 0.8; letter-spacing: 2px; font-weight: bold; color: #fff; pointer-events: none; }
 
-        /* Стилі для кнопок вибору теми */
         .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 30px; }
         .theme-btn { padding: 15px; text-align: center; cursor: pointer; border-radius: 10px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; }
         
-        .btn-purple { background: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); box-shadow: 0 0 5px rgba(219, 0, 255, 0.4); }
+        .btn-purple { background: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); }
         .btn-graphite { background: linear-gradient(135deg, #3a3a3c 0%, #1a1a1b 100%); }
-        .btn-blue { background: linear-gradient(135deg, #052661 0%, #021b49 100%); box-shadow: 0 0 5px rgba(0, 150, 255, 0.4); }
-        .btn-green { background: linear-gradient(135deg, #054126 0%, #02331a 100%); box-shadow: 0 0 5px rgba(0, 255, 133, 0.4); }
-        .btn-gold { background: linear-gradient(135deg, #614d05 0%, #443501 100%); box-shadow: 0 0 5px rgba(255, 215, 0, 0.4); color: #fff; }
-        .btn-pink { background: linear-gradient(135deg, #61053d 0%, #49022e 100%); box-shadow: 0 0 5px rgba(255, 0, 150, 0.4); }
+        .btn-blue { background: linear-gradient(135deg, #052661 0%, #021b49 100%); }
+        .btn-green { background: linear-gradient(135deg, #054126 0%, #02331a 100%); }
+        .btn-gold { background: linear-gradient(135deg, #614d05 0%, #443501 100%); }
+        .btn-pink { background: linear-gradient(135deg, #61053d 0%, #49022e 100%); }
     </style>
 </head>
 <body class="theme-purple">
@@ -124,9 +133,7 @@
 
     <div id="user-menu">
         <div style="font-size:18px; font-weight:bold; margin-bottom:30px; text-align:center;">НАЛАШТУВАННЯ</div>
-        
         <button onclick="showPersonalData()" style="padding:15px; background:rgba(255,255,255,0.1); color:white; border:1px solid silver; border-radius:12px; width:100%; font-weight:bold; margin-bottom:30px; cursor:pointer;">ОСОБИСТІ ДАНІ</button>
-
         <label>ТЕМА ОФОРМЛЕННЯ</label>
         <div class="theme-grid">
             <div onclick="setTheme('purple')" class="theme-btn btn-purple">Фіолет</div>
@@ -136,7 +143,6 @@
             <div onclick="setTheme('gold')" class="theme-btn btn-gold">Золото</div>
             <div onclick="setTheme('pink')" class="theme-btn btn-pink">Рожевий</div>
         </div>
-
         <button onclick="closeAll()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; cursor: pointer;">ЗАКРИТИ</button>
         <div style="text-align:center; color:#ff4d4d; margin-top:30px; cursor:pointer; font-size:12px;" onclick="logout()">ВИЙТИ З АКАУНТУ</div>
     </div>
@@ -144,16 +150,17 @@
     <div id="personal-data-screen">
         <div style="font-size:18px; font-weight:bold; margin-bottom:30px; text-align:center;">ОСОБИСТІ ДАНІ</div>
         <div style="text-align:center; margin-bottom: 30px;">
-            <div id="me-photo" style="width:110px; height:110px; border-radius:50%; background:rgba(255,255,255,0.1); margin:0 auto; background-size:cover; background-position:center; border:1px solid rgba(255,255,255,0.2)"></div>
+            <div class="photo-container">
+                <div id="me-photo" style="width:110px; height:110px; border-radius:50%; background:rgba(255,255,255,0.1); background-size:cover; background-position:center; border:1px solid rgba(255,255,255,0.2)"></div>
+                <div id="me-level-badge" class="edit-level-display"></div>
+            </div>
             <p style="font-size:10px; margin-top:10px; opacity:0.5; cursor: pointer;" onclick="document.getElementById('me-upload').click()">ЗМІНИТИ ФОТО</p>
             <input type="file" id="me-upload" hidden onchange="handleMeFile(this)">
         </div>
-        <label>ПРІЗВИЩЕ</label>
-        <input type="text" id="me-lname" oninput="saveMeData()">
-        <label>ІМ'Я</label>
-        <input type="text" id="me-fname" oninput="saveMeData()">
+        <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname" oninput="saveMeData()">
+        <label>ІМ'Я</label><input type="text" id="me-fname" oninput="saveMeData()">
         <label>РІВЕНЬ</label>
-        <select id="me-level" onchange="saveMeData()">
+        <select id="me-level" onchange="updateMeLevelBadge(); saveMeData()">
             <option value="">Не обрано</option>
             <script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script>
         </select>
@@ -161,33 +168,26 @@
     </div>
 
     <div id="edit-screen">
-        <span class="del-top" onclick="removeClient()" style="position: absolute; top: 25px; right: 25px; color: #ff4d4d; font-size: 12px; text-transform: uppercase; cursor: pointer; opacity: 0.8;">Видалити</span>
+        <span onclick="removeClient()" style="position: absolute; top: 25px; right: 25px; color: #ff4d4d; font-size: 12px; text-transform: uppercase; cursor: pointer;">Видалити</span>
         <div style="text-align:center; margin-bottom: 20px;">
-            <div id="c-photo" style="width:110px; height:110px; border-radius:50%; background:rgba(255,255,255,0.1); margin:0 auto; background-size:cover; background-position:center; border:1px solid rgba(255,255,255,0.2)"></div>
+            <div class="photo-container">
+                <div id="c-photo" style="width:110px; height:110px; border-radius:50%; background:rgba(255,255,255,0.1); background-size:cover; background-position:center; border:1px solid rgba(255,255,255,0.2)"></div>
+                <div id="edit-level-badge" class="edit-level-display"></div>
+            </div>
             <p style="font-size:10px; margin-top:10px; opacity:0.5; cursor: pointer;" onclick="document.getElementById('f-upload').click()">ЗМІНИТИ ФОТО</p>
             <input type="file" id="f-upload" hidden onchange="handleFile(this)">
         </div>
-        <label>ЕТАП</label>
-        <select id="e-step" onchange="autoSave()"></select>
-        
-        <label>ПРІЗВИЩЕ</label>
-        <input type="text" id="e-lname" oninput="autoSave()">
-        <label>ІМ'Я</label>
-        <input type="text" id="e-fname" oninput="autoSave()">
-        <label>НОМЕР ТЕЛЕФОНУ</label>
-        <input type="tel" id="e-phone" oninput="autoSave()">
-        
-        <label>НОМЕР ПОЛІСУ</label>
-        <input type="text" id="e-pnum" oninput="autoSave()">
-        <label>ДАТА ПОЛІСУ</label>
-        <input type="date" id="e-pdate" onchange="autoSave()">
-        
+        <label>ЕТАП</label><select id="e-step" onchange="autoSave()"></select>
+        <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname" oninput="autoSave()">
+        <label>ІМ'Я</label><input type="text" id="e-fname" oninput="autoSave()">
+        <label>НОМЕР ТЕЛЕФОНУ</label><input type="tel" id="e-phone" oninput="autoSave()">
+        <label>НОМЕР ПОЛІСУ</label><input type="text" id="e-pnum" oninput="autoSave()">
+        <label>ДАТА ПОЛІСУ</label><input type="date" id="e-pdate" onchange="autoSave()">
         <label>РІВЕНЬ</label>
-        <select id="e-level" onchange="autoSave()">
+        <select id="e-level" onchange="updateEditLevelBadge(); autoSave()">
             <option value="">Не обрано</option>
             <script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script>
         </select>
-
         <label>ПРИМІТКИ</label>
         <div class="notes-wrapper" id="notes-wrap">
             <textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value; autoSave()"></textarea>
@@ -208,28 +208,19 @@
         const auth = firebase.auth(), db = firebase.firestore(), provider = new firebase.auth.GoogleAuthProvider();
 
         let user = null, clients = [], editId = null, currentPhoto = null, filterType = 'new', saveTimeout;
-        let steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Семінар", "Поліс"];
+        let steps = ["Список", "Бесіда", "Розробка", "Презенти", "Ліфт", "Семінар", "Поліс"];
 
-        window.onpopstate = function() {
-            if (document.getElementById('personal-data-screen').style.display === 'flex') { document.getElementById('personal-data-screen').style.display = 'none'; }
-            else if (document.getElementById('edit-screen').style.display === 'flex' || document.getElementById('user-menu').style.display === 'flex') { closeAll(); }
-        };
+        window.onpopstate = () => { closeAll(); };
 
         function closeAll() {
             if (editId) autoSave(true);
-            document.getElementById('edit-screen').style.display = 'none';
-            document.getElementById('user-menu').style.display = 'none';
-            document.getElementById('bg-overlay').style.display = 'none';
+            document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #bg-overlay').forEach(el => el.style.display = 'none');
             editId = null;
         }
 
         auth.onAuthStateChanged(async u => {
-            if(u) { 
-                user = u; 
-                document.getElementById('splash').style.display = 'none';
-                await loadUserConfig();
-                loadClients();
-            } else { document.getElementById('login-ui').style.display = 'block'; }
+            if(u) { user = u; document.getElementById('splash').style.display = 'none'; await loadUserConfig(); loadClients(); }
+            else { document.getElementById('login-ui').style.display = 'block'; }
         });
 
         async function loadUserConfig() {
@@ -242,6 +233,7 @@
             document.getElementById('me-lname').value = data.meLname || "";
             document.getElementById('me-fname').value = data.meFname || "";
             document.getElementById('me-level').value = data.meLevel || "";
+            updateMeLevelBadge();
             setTheme(localStorage.getItem('crm_theme') || data.theme || 'purple');
         }
 
@@ -256,7 +248,6 @@
         function renderBoard() {
             const b = document.getElementById('main-board'), s = document.getElementById('e-step');
             b.innerHTML = ''; s.innerHTML = '';
-            
             let sorted = [...clients];
             if(filterType === 'az') sorted.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
             if(filterType === 'new') sorted.sort((a,b) => b.created - a.created);
@@ -268,14 +259,13 @@
                 col.className = 'column';
                 col.innerHTML = `
                     <div class="col-head">
-                        <div onclick="editStep(${i})" style="cursor:pointer">${n} <span style="opacity:0.4">${filtered.length}</span></div>
+                        <div onclick="editStep(${i})" style="cursor:pointer">${n}<span class="col-count">${filtered.length}</span></div>
                         <div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}${i==steps.length-1?'<span onclick="addStep()">+</span>':''}</div>
                         <div></div>
                     </div>
                     <div id="list-${i}" style="flex:1; overflow-y:auto;"></div>`;
                 b.appendChild(col);
                 s.innerHTML += `<option value="${i}">${n}</option>`;
-
                 filtered.forEach(c => {
                     const div = document.createElement('div'); div.className = 'card';
                     div.onclick = () => { window.history.pushState({edit:true}, ""); openEdit(c.id); };
@@ -293,66 +283,58 @@
             clearTimeout(saveTimeout);
             const save = async () => {
                 const data = {
-                    lname: document.getElementById('e-lname').value,
-                    fname: document.getElementById('e-fname').value,
-                    phone: document.getElementById('e-phone').value,
-                    pnum: document.getElementById('e-pnum').value,
-                    pdate: document.getElementById('e-pdate').value,
-                    notes: document.getElementById('e-notes').value,
-                    level: document.getElementById('e-level').value,
-                    step: parseInt(document.getElementById('e-step').value),
+                    lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value,
+                    phone: document.getElementById('e-phone').value, pnum: document.getElementById('e-pnum').value,
+                    pdate: document.getElementById('e-pdate').value, notes: document.getElementById('e-notes').value,
+                    level: document.getElementById('e-level').value, step: parseInt(document.getElementById('e-step').value),
                     photo: currentPhoto, updated: Date.now()
                 };
                 await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(data, {merge:true});
-                status.innerText = "ЗБЕРЕЖЕНО";
-                setTimeout(() => { status.innerText = ""; }, 500);
+                status.innerText = "ЗБЕРЕЖЕНО"; setTimeout(() => { status.innerText = ""; }, 500);
             };
             if(instant) await save(); else saveTimeout = setTimeout(save, 1000);
         }
 
         async function saveMeData() {
-            const data = {
-                meLname: document.getElementById('me-lname').value,
-                meFname: document.getElementById('me-fname').value,
-                meLevel: document.getElementById('me-level').value
-            };
+            const data = { meLname: document.getElementById('me-lname').value, meFname: document.getElementById('me-fname').value, meLevel: document.getElementById('me-level').value };
             await db.collection("users").doc(user.uid).set(data, {merge:true});
         }
 
         function openEdit(id) {
             editId = id; const c = clients.find(x => x.id === id);
-            document.getElementById('e-lname').value = c.lname || "";
-            document.getElementById('e-fname').value = c.fname || "";
-            document.getElementById('e-phone').value = c.phone || "";
-            document.getElementById('e-pnum').value = c.pnum || "";
-            document.getElementById('e-pdate').value = c.pdate || "";
-            document.getElementById('e-notes').value = c.notes || "";
+            ['lname','fname','phone','pnum','pdate','notes','step','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || (k==='step'?0:""));
             document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || "";
-            document.getElementById('e-step').value = c.step || 0;
-            document.getElementById('e-level').value = c.level || "";
             currentPhoto = c.photo;
             document.getElementById('c-photo').style.backgroundImage = currentPhoto ? `url(${currentPhoto})` : 'none';
+            updateEditLevelBadge();
             document.getElementById('edit-screen').style.display = 'flex';
         }
+
+        function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
+        function updateMeLevelBadge() { document.getElementById('me-level-badge').innerText = document.getElementById('me-level').value; }
 
         async function createCard() {
             const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()});
             window.history.pushState({edit:true}, ""); openEdit(res.id);
         }
 
+        async function editStep(i) {
+            const n = prompt("Назва етапу (залиште пустим для видалення):", steps[i]);
+            if (n === "") { if(confirm("Видалити цей етап?")) steps.splice(i, 1); }
+            else if (n) { steps[i] = n; }
+            await syncSteps();
+        }
+
+        async function addStep() { const n = prompt("Назва нового етапу:"); if(n) { steps.push(n); await syncSteps(); } }
+        async function syncSteps() { await db.collection("users").doc(user.uid).set({steps}, {merge:true}); renderBoard(); }
+
         function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
         function setFilter(t) { filterType = t; renderBoard(); toggleFilter(); }
         function showUserMenu() { window.history.pushState({menu:true}, ""); document.getElementById('user-menu').style.display = 'flex'; }
         function showPersonalData() { window.history.pushState({personal:true}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
-        function setTheme(t) { 
-            document.body.className = 'theme-' + t; 
-            localStorage.setItem('crm_theme', t); 
-            if(user) db.collection("users").doc(user.uid).set({theme: t}, {merge:true});
-        }
+        function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); if(user) db.collection("users").doc(user.uid).set({theme: t}, {merge:true}); }
         function handleFile(input) { const r = new FileReader(); r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; autoSave(); }; r.readAsDataURL(input.files[0]); }
         function handleMeFile(input) { const r = new FileReader(); r.onload = async e => { const img = e.target.result; document.getElementById('me-photo').style.backgroundImage = `url(${img})`; document.getElementById('u-avatar').style.backgroundImage = `url(${img})`; await db.collection("users").doc(user.uid).set({myPhoto: img}, {merge:true}); }; r.readAsDataURL(input.files[0]); }
-        async function addStep() { const n = prompt("Назва етапу:"); if(n) { steps.push(n); syncSteps(); } }
-        async function syncSteps() { await db.collection("users").doc(user.uid).set({steps}, {merge:true}); renderBoard(); }
         function login() { auth.signInWithPopup(provider); }
         function logout() { auth.signOut().then(() => location.reload()); }
         async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAll(); } }
