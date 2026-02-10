@@ -8,7 +8,8 @@
     <title>SL TIME CRM 5.0</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%232e0249'/><circle cx='50' cy='50' r='40' fill='none' stroke='silver' stroke-width='2'/><text x='50%25' y='58%25' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold' font-size='28'>SL</text></svg>">
+
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%232e0249'/><text x='50%' y='63%' text-anchor='middle' fill='white' font-family='Caveat' font-weight='bold' font-size='55' style='filter:drop-shadow(0 0 10px %23db00ff)'>SL</text></svg>">
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -26,49 +27,62 @@
         body.theme-gold { --bg: linear-gradient(180deg, #493602 0%, #57440a 50%, #1a1400 100%); --neon-bright: #ffd700; }
         body.theme-pink { --bg: linear-gradient(180deg, #49022e 0%, #570a3a 50%, #1b0010 100%); --neon-bright: #ff0096; }
         
+        @keyframes pulseLogo { 
+            0% { transform: scale(1); filter: drop-shadow(0 0 10px var(--neon-bright)); } 
+            50% { transform: scale(1.05); filter: drop-shadow(0 0 30px var(--neon-bright)); } 
+            100% { transform: scale(1); filter: drop-shadow(0 0 10px var(--neon-bright)); } 
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
         body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
 
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; height: 80px; position: relative; z-index: 200; }
         .avatar { width: 42px; height: 42px; border-radius: 50%; background-size: cover; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; }
-        .header-title { font-family: 'Caveat', cursive; font-size: 34px; font-weight: 700; transform: rotate(-2deg); text-shadow: 0 0 10px var(--neon-bright); }
+        .header-title { font-family: 'Caveat', cursive; font-size: 34px; font-weight: 700; color: #fff; transform: rotate(-2deg); text-shadow: 0 0 10px var(--neon-bright), 0 0 25px var(--neon-bright); }
+        .header-right { display: flex; align-items: center; gap: 12px; }
         .total-count { font-size: 18px; font-weight: bold; text-shadow: 0 0 10px var(--neon-bright); }
 
-        .board { display: flex; overflow-x: auto; width: 100%; height: calc(100vh - 145px); scroll-snap-type: x mandatory; scrollbar-width: none; }
-        .column { min-width: 100vw; scroll-snap-align: center; display: flex; flex-direction: column; height: 100%; overflow-y: auto; padding-bottom: 80px; }
+        .board { display: flex; overflow-x: auto; padding: 0; gap: 0; width: 100%; height: calc(100vh - 145px); scroll-snap-type: x mandatory; }
+        .column { min-width: 100vw; scroll-snap-align: center; display: flex; flex-direction: column; height: 100%; overflow-y: auto; scrollbar-width: none; padding-bottom: 80px; }
         
         @media (min-width: 1024px) {
-            .board { scroll-snap-type: none; }
-            .column { min-width: 350px; scroll-snap-align: none; }
+            .board { scroll-snap-type: none; cursor: grab; }
+            .column { min-width: 330px; max-width: 350px; flex: 0 0 auto; margin-right: 15px; }
         }
 
-        .col-header-sticky { position: sticky; top: 0; z-index: 100; min-height: 60px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 20px; backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .col-header-sticky { position: sticky; top: 0; z-index: 100; min-height: 60px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 13px; text-transform: uppercase; padding: 0 20px; border-bottom: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(20px); }
 
-        .card { background: transparent; padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin: 15px 20px 0; cursor: pointer; position: relative; }
-        .card-level { position: absolute; top: 50%; right: 25px; transform: translateY(-50%); font-family: 'Caveat', cursive; font-size: 34px; text-shadow: 0 0 10px var(--neon-bright); }
+        .card { background: transparent; padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin: 15px 20px 0; cursor: pointer; position: relative; text-shadow: 0 0 5px var(--neon-bright); }
+        .card-level { position: absolute; top: 50%; right: 25px; transform: translateY(-50%); font-family: 'Caveat', cursive; font-size: 34px; color: #fff; text-shadow: 0 0 10px var(--neon-bright); }
 
         #edit-screen, #user-menu, #me-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 25px; overflow-y: auto; }
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 8999; display: none; backdrop-filter: blur(5px); }
         
-        input, select, textarea { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; border-radius: 0; }
-        label { font-size: 10px; opacity: 0.5; text-transform: uppercase; display: block; }
-
-        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; align-items: center; z-index: 200; backdrop-filter: blur(20px); }
-        .nav-item { cursor: pointer; opacity: 0.4; transition: 0.3s; }
-        .nav-item.active { opacity: 1; filter: drop-shadow(0 0 8px var(--neon-bright)); }
+        @media (min-width: 1024px) {
+            #edit-screen, #me-screen { inset: auto; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 500px; height: 80vh; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
+            #user-menu { inset: 0 auto 0 0; width: 320px; background: rgba(0,0,0,0.4); backdrop-filter: blur(20px); border-right: 1px solid rgba(255,255,255,0.1); }
+        }
 
         .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
-        .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; line-height: 1.6; font-size: 16px; }
-        #e-notes { grid-area: 1 / 1 / 2 / 2; resize: none; overflow: hidden; }
+        .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; line-height: 1.6; font-size: 16px; word-break: break-word; }
+        #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; line-height: 1.6; font-size: 16px; outline: none; border-radius: 0; }
+
+        select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; border-radius: 0; }
+        label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
+        .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; align-items: center; z-index: 200; backdrop-filter: blur(20px); }
+        .nav-item { cursor: pointer; opacity: 0.4; }
+        .nav-item.active { opacity: 1; filter: drop-shadow(0 0 8px var(--neon-bright)); }
+
+        .splash-logo-box { width: 140px; height: 140px; background: #2e0249; border-radius: 25px; display: flex; align-items: center; justify-content: center; border: 2px solid rgba(255,255,255,0.1); animation: pulseLogo 2s infinite ease-in-out; }
     </style>
 </head>
 <body class="theme-purple">
 
     <div id="splash" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-        <div style="width:140px; height:140px; background:#2e0249; border-radius:25px; display:flex; align-items:center; justify-content:center; border:2px solid rgba(255,255,255,0.1);">
-            <span style="font-size:55px; font-family:'Caveat'; color:#fff; text-shadow:0 0 15px var(--neon-bright);">SL</span>
+        <div class="splash-logo-box">
+            <span style="font-size:55px; font-weight:bold; font-family:'Caveat', cursive; color: #fff; text-shadow: 0 0 15px var(--neon-bright); line-height: 1; margin-top: 5px;">SL</span>
         </div>
-        <div id="login-ui" style="display:none; margin-top:50px;"><button onclick="login()" style="background:white;border:none;padding:12px 35px;border-radius:25px;font-weight:bold;cursor:pointer;">УВІЙТИ</button></div>
+        <div id="login-ui" style="display:none; margin-top:50px;"><button onclick="login()" style="background:white;border:none;padding:12px 35px;border-radius:25px;font-weight:bold;cursor:pointer;color:black;">УВІЙТИ</button></div>
     </div>
 
     <div id="bg-overlay" class="overlay" onclick="closeAll()"></div>
@@ -76,46 +90,85 @@
     <header>
         <div class="avatar" id="u-avatar" onclick="showUserMenu()"></div>
         <div class="header-title">SL Time CRM</div>
-        <div id="total-clients" class="total-count">0</div>
+        <div class="header-right">
+            <div id="total-clients" class="total-count">0</div>
+            <div onclick="toggleFilter()" style="cursor:pointer; padding: 5px;">
+                <div style="height:2px;width:22px;background:white;margin-bottom:4px"></div>
+                <div style="height:2px;width:16px;background:white;margin-bottom:4px;margin-left:6px"></div>
+                <div style="height:2px;width:10px;background:white;margin-left:12px"></div>
+            </div>
+        </div>
+        <div id="filter-popup" style="position: absolute; top: 75px; right: 20px; background: rgba(0,0,0,0.9); border-radius: 12px; display: none; flex-direction: column; z-index: 300; border: 1px solid rgba(255,255,255,0.1);">
+            <div class="f-item" onclick="setFilter('az')" style="padding: 15px 25px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05);">А-Я</div>
+            <div class="f-item" onclick="setFilter('new')" style="padding: 15px 25px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05);">Нові</div>
+            <div class="f-item" onclick="setFilter('old')" style="padding: 15px 25px; cursor: pointer;">Старі</div>
+        </div>
     </header>
 
-    <main class="board" id="main-board"></main>
+    <main id="page-crm" class="page-container page-active">
+        <div class="board" id="main-board"></div>
+    </main>
 
-    <div id="edit-screen">
-        <span onclick="removeClient()" style="position:absolute; top:25px; right:25px; color:#ff4d4d; font-size:12px; font-weight:bold; cursor:pointer;">ВИДАЛИТИ</span>
-        <div style="text-align:center; margin-bottom:20px;">
-            <div id="c-photo" style="width:110px; height:110px; border-radius:50%; background-size:cover; border:1px solid rgba(255,255,255,0.2); margin:0 auto; position:relative;">
-                <div id="card-level-display" style="position:absolute; top:50%; left:-65px; transform:translateY(-50%); font-family:'Caveat'; font-size:85px; color:#fff; text-shadow:0 0 25px var(--neon-bright);"></div>
-            </div>
-            <p style="font-size:10px; margin-top:10px; opacity:0.5; cursor:pointer;" onclick="document.getElementById('c-upload').click()">ЗМІНИТИ ФОТО</p>
-        </div>
-        <input type="file" id="c-upload" hidden onchange="handleFile(this)">
-        <label>ЕТАП</label><select id="e-step" onchange="autoSave()"></select>
-        <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname" oninput="autoSave()">
-        <label>ІМ'Я</label><input type="text" id="e-fname" oninput="autoSave()">
-        <label>ТЕЛЕФОН</label><input type="tel" id="e-phone" oninput="autoSave()">
-        <label>РІВЕНЬ</label><select id="e-level-card" onchange="updateCardLevel(); autoSave()"></select>
-        <label>ПРИМІТКИ</label>
-        <div class="notes-wrapper"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value; autoSave()"></textarea></div>
-        <div id="save-status" style="text-align:center; font-size:10px; opacity:0.5; min-height:15px;"></div>
-        <button onclick="closeAll()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; font-weight:bold; color:black;">ГОТОВО</button>
-    </div>
+    <main id="page-structure" class="page-container" style="display:none; justify-content: center; align-items: center; opacity: 0.3;">СТРУКТУРА</main>
+    <main id="page-planner" class="page-container" style="display:none; justify-content: center; align-items: center; opacity: 0.3;">ПЛАНУВАЛЬНИК</main>
 
     <div id="user-menu">
-        <h3 style="text-align:center; margin-bottom:30px;">НАЛАШТУВАННЯ</h3>
-        <label>ТЕМА</label>
+        <h3 style="text-align:center; margin-bottom:30px; letter-spacing:2px;">НАЛАШТУВАННЯ</h3>
+        <button onclick="showMeMenu()" style="width:100%; padding:15px; background:transparent; border:1px solid rgba(255,255,255,0.2); border-radius:12px; color:white; font-weight:bold; margin-bottom:20px; cursor:pointer;">ОСОБИСТІ ДАНІ</button>
+        <label>ТЕМА ОФОРМЛЕННЯ</label>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
             <div onclick="setTheme('purple')" style="padding:15px; background:#2e0249; border-radius:10px; text-align:center; cursor:pointer">Фіолет</div>
             <div onclick="setTheme('graphite')" style="padding:15px; background:#1a1a1b; border-radius:10px; text-align:center; cursor:pointer">Графіт</div>
             <div onclick="setTheme('blue')" style="padding:15px; background:#021b49; border-radius:10px; text-align:center; cursor:pointer">Синій</div>
             <div onclick="setTheme('green')" style="padding:15px; background:#02331a; border-radius:10px; text-align:center; cursor:pointer">Зелений</div>
+            <div onclick="setTheme('gold')" style="padding:15px; background:#493602; border-radius:10px; text-align:center; cursor:pointer">Золото</div>
+            <div onclick="setTheme('pink')" style="padding:15px; background:#49022e; border-radius:10px; text-align:center; cursor:pointer">Рожевий</div>
         </div>
-        <button onclick="logout()" style="margin-top:20px; color:#ff4d4d; background:none; border:none; width:100%; cursor:pointer">Вийти</button>
-        <button onclick="closeAll()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; color:black; cursor:pointer">ЗАКРИТИ</button>
+        <button onclick="logout()" style="margin-top:20px; color:#ff4d4d; background:none; border:none; width:100%; cursor:pointer;">ВИЙТИ</button>
+        <button onclick="closeAll()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; cursor:pointer; color:black;">ЗАКРИТИ</button>
+    </div>
+
+    <div id="me-screen">
+        <div style="text-align:center; margin-bottom:25px;">
+            <div id="me-photo-display" style="width:110px; height:110px; border-radius:50%; background:rgba(255,255,255,0.1); background-size:cover; border:1px solid rgba(255,255,255,0.2); margin:0 auto;"></div>
+            <p style="font-size:10px; margin-top:10px; opacity:0.5; cursor: pointer;" onclick="document.getElementById('me-upload').click()">ЗМІНИТИ ФОТО</p>
+        </div>
+        <input type="file" id="me-upload" hidden onchange="handleMeFile(this)">
+        <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname" oninput="saveMe()">
+        <label>ІМ'Я</label><input type="text" id="me-fname" oninput="saveMe()">
+        <label>РІВЕНЬ</label><select id="me-level" onchange="saveMe()"></select>
+        <button onclick="closeAll()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; color:black; cursor:pointer;">ГОТОВО</button>
+    </div>
+
+    <div id="edit-screen">
+        <span onclick="removeClient()" style="position: absolute; top: 25px; right: 25px; color: #ff4d4d; font-size: 12px; text-transform: uppercase; cursor: pointer; font-weight:bold;">Видалити</span>
+        <div style="text-align:center; margin-bottom:20px;">
+            <div id="c-photo" style="width:110px; height:110px; border-radius:50%; background:rgba(255,255,255,0.1); background-size:cover; border:1px solid rgba(255,255,255,0.2); margin:0 auto; position:relative;">
+                <div id="card-level-display" style="position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Caveat', cursive; font-size: 85px; color: #fff; text-shadow: 0 0 25px var(--neon-bright); line-height: 1;"></div>
+            </div>
+            <p style="font-size:10px; margin-top:10px; opacity:0.5; cursor: pointer;" onclick="document.getElementById('c-upload').click()">ЗМІНИТИ ФОТО</p>
+        </div>
+        <input type="file" id="c-upload" hidden onchange="handleFile(this)">
+        <label>ЕТАП</label><select id="e-step" onchange="autoSave()"></select>
+        <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname" oninput="autoSave()">
+        <label>ІМ'Я</label><input type="text" id="e-fname" oninput="autoSave()">
+        <label>ДАТА НАРОДЖЕННЯ</label><input type="date" id="e-dob" onchange="autoSave()">
+        <label>НОМЕР ТЕЛЕФОНУ</label><input type="tel" id="e-phone" oninput="autoSave()">
+        <label>ПОЛІС (ДАТА ТА №)</label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <input type="date" id="e-policy-date" onchange="autoSave()">
+            <input type="text" id="e-policy-num" placeholder="№ полісу" oninput="autoSave()">
+        </div>
+        <label>РІВЕНЬ</label><select id="e-level-card" onchange="updateCardLevel(); autoSave()"></select>
+        <label>ПРИМІТКИ</label>
+        <div class="notes-wrapper"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value; autoSave()"></textarea></div>
+        <div id="save-status" style="position:fixed; bottom:80px; left:50%; transform:translateX(-50%); font-size:10px; opacity:0.5; min-height:15px;"></div>
     </div>
 
     <nav class="nav-bar">
-        <div class="nav-item active"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg></div>
+        <div class="nav-item active" onclick="switchPage('crm', this)"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z"/></svg></div>
+        <div class="nav-item" onclick="switchPage('structure', this)"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M22 11V3h-7v3H9V3H2v8h7V8h2v10h4v3h7v-8h-7v3h-2V8h2v3h7z"/></svg></div>
+        <div class="nav-item" onclick="switchPage('planner', this)"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10 9.99-4.47 9.99-10S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg></div>
     </nav>
 
     <script>
@@ -123,23 +176,28 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.firestore();
 
-        let user = null, clients = [], editId = null, saveTimeout;
-        const steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Семінар", "Поліс"];
+        let user = null, clients = [], me = { photo: '' }, steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Семінар", "Поліс"], filterType = 'new', editId = null, currentPhoto = null, saveTimeout;
 
-        const fillSelects = () => {
-            const s = document.getElementById('e-step'), l = document.getElementById('e-level-card');
-            s.innerHTML = ''; l.innerHTML = '<option value="">-</option>';
-            steps.forEach((n, i) => s.innerHTML += `<option value="${i}">${n}</option>`);
-            for(let i=1; i<=16; i++) l.innerHTML += `<option value="${i}">${i}</option>`;
-        };
-        fillSelects();
+        function addHistoryPoint() { window.history.pushState({modal: true}, ""); }
+        window.onpopstate = () => { if(document.querySelector('[style*="display: flex"]')) { closeAll(); } };
+
+        const fillLevels = (id) => { const s = document.getElementById(id); s.innerHTML = '<option value="">-</option>'; for(let i=1; i<=16; i++) s.innerHTML += `<option value="${i}">${i}</option>`; };
+        fillLevels('me-level'); fillLevels('e-level-card');
 
         auth.onAuthStateChanged(u => {
             if(u) { user = u; document.getElementById('u-avatar').style.backgroundImage = `url(${u.photoURL})`; document.getElementById('splash').style.display = 'none'; loadData(); }
             else { document.getElementById('login-ui').style.display = 'block'; }
         });
 
-        function loadData() {
+        async function loadData() {
+            const meDoc = await db.collection("users").doc(user.uid).get();
+            if(meDoc.exists && meDoc.data().me) { 
+                me = meDoc.data().me; 
+                document.getElementById('me-lname').value = me.lname||""; 
+                document.getElementById('me-fname').value = me.fname||""; 
+                document.getElementById('me-level').value = me.level||""; 
+                if(me.photo) document.getElementById('me-photo-display').style.backgroundImage = `url(${me.photo})`; 
+            }
             db.collection("users").doc(user.uid).collection("clients").onSnapshot(snap => {
                 clients = []; snap.forEach(d => clients.push({id: d.id, ...d.data()}));
                 document.getElementById('total-clients').innerText = clients.length;
@@ -148,56 +206,43 @@
         }
 
         function renderBoard() {
-            const b = document.getElementById('main-board');
-            b.innerHTML = '';
+            const b = document.getElementById('main-board'), s = document.getElementById('e-step');
+            b.innerHTML = ''; s.innerHTML = '';
+            let sorted = [...clients];
+            if(filterType === 'az') sorted.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
+            if(filterType === 'new') sorted.sort((a,b) => b.created - a.created);
+            if(filterType === 'old') sorted.sort((a,b) => a.created - b.created);
+
             steps.forEach((n, i) => {
-                const col = document.createElement('div'); col.className = 'column';
-                const filtered = clients.filter(c => c.step == i);
-                col.innerHTML = `
+                const filtered = sorted.filter(c => c.step == i);
+                s.innerHTML += `<option value="${i}">${n}</option>`;
+                const column = document.createElement('div'); column.className = 'column';
+                column.innerHTML = `
                     <div class="col-header-sticky">
                         <div></div>
                         <div style="display:flex; align-items:center; gap:10px;"><span>${n}</span><span style="opacity:0.5">${filtered.length}</span></div>
-                        <div style="font-size:28px; font-weight:bold; cursor:pointer; text-align:right" onclick="${i==0?'createCard()':'' }">${i==0?'+':''}</div>
+                        <div style="font-size:28px; font-weight:bold; cursor:pointer; text-align:right" onclick="${i==0?'createCard()':''}">${i==0?'+':''}</div>
                     </div>`;
                 filtered.forEach(c => {
                     const div = document.createElement('div'); div.className = 'card'; div.onclick = () => openEdit(c.id);
-                    div.innerHTML = `<div>${c.lname||"..."} ${c.fname||""}</div><div style="font-size:12px;opacity:0.5">${c.phone||""}</div>${c.level ? `<div class="card-level">${c.level}</div>` : ''}`;
-                    col.appendChild(div);
+                    div.innerHTML = `<div style="font-weight:600">${c.lname||"..."} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;margin-top:5px">${c.phone||""}</div>${c.level ? `<div class="card-level">${c.level}</div>` : ''}`;
+                    column.appendChild(div);
                 });
-                b.appendChild(col);
+                b.appendChild(column);
             });
         }
 
-        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({lname:"", fname:"", step:0, created:Date.now()}); openEdit(res.id); }
-
-        function openEdit(id) {
-            editId = id; const c = clients.find(x => x.id === id);
-            document.getElementById('e-lname').value = c.lname||"";
-            document.getElementById('e-fname').value = c.fname||"";
-            document.getElementById('e-step').value = c.step||0;
-            document.getElementById('e-level-card').value = c.level||"";
-            document.getElementById('e-phone').value = c.phone||"";
-            document.getElementById('e-notes').value = c.notes||"";
-            document.getElementById('e-notes').parentNode.dataset.replicatedValue = c.notes||"";
-            document.getElementById('c-photo').style.backgroundImage = c.photo ? `url(${c.photo})` : 'none';
-            updateCardLevel();
-            document.getElementById('edit-screen').style.display = 'flex';
-            document.getElementById('bg-overlay').style.display = 'block';
-        }
-
-        function autoSave() {
+        async function autoSave() {
             if(!editId) return;
             const status = document.getElementById('save-status'); status.innerText = "ЗБЕРЕЖЕННЯ...";
             clearTimeout(saveTimeout);
             saveTimeout = setTimeout(async () => {
-                const data = {
-                    lname: document.getElementById('e-lname').value,
-                    fname: document.getElementById('e-fname').value,
-                    step: parseInt(document.getElementById('e-step').value),
-                    level: document.getElementById('e-level-card').value,
-                    phone: document.getElementById('e-phone').value,
-                    notes: document.getElementById('e-notes').value,
-                    updated: Date.now()
+                const data = { 
+                    lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, 
+                    level: document.getElementById('e-level-card').value, notes: document.getElementById('e-notes').value, 
+                    dob: document.getElementById('e-dob').value, phone: document.getElementById('e-phone').value, 
+                    policyDate: document.getElementById('e-policy-date').value, policyNum: document.getElementById('e-policy-num').value, 
+                    step: parseInt(document.getElementById('e-step').value), photo: currentPhoto, updated: Date.now() 
                 };
                 await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(data, {merge:true});
                 status.innerText = "ЗБЕРЕЖЕНО";
@@ -205,21 +250,38 @@
             }, 800);
         }
 
+        function openEdit(id) { 
+            addHistoryPoint(); editId = id; const c = clients.find(x => x.id === id); 
+            document.getElementById('e-lname').value = c.lname||""; document.getElementById('e-fname').value = c.fname||""; 
+            document.getElementById('e-notes').value = c.notes||""; document.getElementById('e-notes').parentNode.dataset.replicatedValue = c.notes||"";
+            document.getElementById('e-dob').value = c.dob||""; document.getElementById('e-phone').value = c.phone||""; 
+            document.getElementById('e-policy-date').value = c.policyDate||""; document.getElementById('e-policy-num').value = c.policyNum||""; 
+            document.getElementById('e-level-card').value = c.level||""; document.getElementById('e-step').value = c.step||0; 
+            currentPhoto = c.photo; document.getElementById('c-photo').style.backgroundImage = currentPhoto ? `url(${currentPhoto})` : 'none'; 
+            updateCardLevel(); document.getElementById('edit-screen').style.display='flex'; document.getElementById('bg-overlay').style.display = 'block'; 
+        }
+
+        function saveMe() { db.collection("users").doc(user.uid).set({ me: { lname: document.getElementById('me-lname').value, fname: document.getElementById('me-fname').value, level: document.getElementById('me-level').value, photo: me.photo || '' } }, { merge: true }); }
+        function handleMeFile(input) { const r = new FileReader(); r.onload = e => { me.photo = e.target.result; document.getElementById('me-photo-display').style.backgroundImage = `url(${me.photo})`; saveMe(); }; r.readAsDataURL(input.files[0]); }
+        function handleFile(input) { const r = new FileReader(); r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; autoSave(); }; r.readAsDataURL(input.files[0]); }
         function updateCardLevel() { document.getElementById('card-level-display').innerText = document.getElementById('e-level-card').value || ""; }
-        function closeAll() { document.querySelectorAll('#edit-screen, #user-menu, #bg-overlay').forEach(el => el.style.display = 'none'); editId = null; }
-        function showUserMenu() { document.getElementById('user-menu').style.display = 'flex'; }
-        async function removeClient() { if(confirm("Видалити клієнта?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAll(); } }
+        function switchPage(pId, el) { 
+            document.querySelectorAll('.page-container').forEach(p => p.style.display = 'none'); 
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); 
+            const page = document.getElementById('page-'+pId);
+            page.style.display = (pId === 'crm') ? 'flex' : 'flex';
+            el.classList.add('active'); 
+        }
+        function showUserMenu() { addHistoryPoint(); document.getElementById('user-menu').style.display='flex'; if(window.innerWidth >= 1024) document.getElementById('bg-overlay').style.display = 'block'; }
+        function showMeMenu() { addHistoryPoint(); document.getElementById('me-screen').style.display='flex'; document.getElementById('bg-overlay').style.display = 'block'; }
+        function closeAll() { document.querySelectorAll('#edit-screen, #user-menu, #me-screen, #bg-overlay, #filter-popup').forEach(el => el.style.display = 'none'); editId = null; }
+        function setTheme(t) { document.body.className = 'theme-'+t; localStorage.setItem('crm_theme', t); }
+        function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
+        function setFilter(f) { filterType = f; renderBoard(); toggleFilter(); }
+        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({lname:"", fname:"", step:0, created:Date.now()}); openEdit(res.id); }
+        async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAll(); } }
         function login() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
         function logout() { auth.signOut().then(() => location.reload()); }
-        function setTheme(t) { document.body.className = 'theme-'+t; localStorage.setItem('crm_theme', t); }
-        function handleFile(input) { 
-            const r = new FileReader(); 
-            r.onload = e => { 
-                db.collection("users").doc(user.uid).collection("clients").doc(editId).update({photo: e.target.result}); 
-                document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; 
-            }; 
-            r.readAsDataURL(input.files[0]); 
-        }
 
         const savedTheme = localStorage.getItem('crm_theme');
         if(savedTheme) setTheme(savedTheme);
