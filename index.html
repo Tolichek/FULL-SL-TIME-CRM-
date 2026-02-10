@@ -29,11 +29,8 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
         body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
 
-        /* Splash Screen - Чорний контейнер */
         #splash {
-            position: fixed; inset: 0; 
-            background: #000000 !important; 
-            z-index: 9999;
+            position: fixed; inset: 0; background: #000000 !important; z-index: 9999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: opacity 0.8s ease, visibility 0.8s;
         }
@@ -43,13 +40,13 @@
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; height: 80px; position: relative; z-index: 200; }
         .avatar { width: 42px; height: 42px; border-radius: 50%; background-size: cover; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; }
         .header-title { font-family: 'Caveat', cursive; font-size: 34px; font-weight: 700; color: #fff; transform: rotate(-2deg); text-shadow: 0 0 10px var(--neon-bright); }
+        .header-right { display: flex; align-items: center; gap: 15px; }
         .total-count { font-size: 18px; font-weight: bold; text-shadow: 0 0 10px var(--neon-bright); }
 
         .board { display: flex; overflow-x: auto; padding: 0; gap: 0; width: 100%; height: calc(100vh - 145px); scroll-snap-type: x mandatory; }
         .column { min-width: 100vw; scroll-snap-align: center; display: flex; flex-direction: column; height: 100%; overflow-y: auto; scrollbar-width: none; padding-bottom: 80px; }
         .col-header-sticky { position: sticky; top: 0; z-index: 100; min-height: 60px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 13px; text-transform: uppercase; padding: 0 20px; border-bottom: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(20px); }
 
-        /* ПОВЕРНЕНО З ВЕРСІЇ 2.0 (АЛМАЗ) */
         .card { background: transparent; padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin: 15px 20px 0; cursor: pointer; position: relative; text-shadow: 0 0 5px var(--neon-bright); }
         .card-level { position: absolute; top: 50%; right: 25px; transform: translateY(-50%); font-family: 'Caveat', cursive; font-size: 34px; color: #fff; text-shadow: 0 0 10px var(--neon-bright); }
 
@@ -62,6 +59,8 @@
             padding: 12px 0; margin-bottom: 20px; outline: none !important; font-size: 16px; 
             border-radius: 0 !important; -webkit-appearance: none; appearance: none;
         }
+        textarea { resize: vertical; min-height: 80px; }
+        
         input:-webkit-autofill { -webkit-text-fill-color: white !important; -webkit-box-shadow: 0 0 0px 1000px transparent inset !important; }
         option { background: #2c2c2e; color: white; }
         
@@ -155,7 +154,7 @@
         </div>
         <label>РІВЕНЬ</label><select id="e-level-card" onchange="updateCardLevel(); autoSave()"></select>
         <label>ПРИМІТКИ</label>
-        <textarea id="e-notes" oninput="autoSave()" style="min-height: 100px;"></textarea>
+        <textarea id="e-notes" oninput="autoSave()"></textarea>
         <div id="save-status" style="text-align:center; font-size:10px; opacity:0.5; margin-top:10px;"></div>
     </div>
 
@@ -191,6 +190,7 @@
             }
             db.collection("users").doc(user.uid).collection("clients").onSnapshot(snap => {
                 clients = []; snap.forEach(d => clients.push({id: d.id, ...d.data()}));
+                // ПОВЕРНЕНО: Оновлення лічильника
                 document.getElementById('total-clients').innerText = clients.length;
                 renderBoard();
             });
