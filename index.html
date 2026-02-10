@@ -51,7 +51,6 @@
         
         .header-right { display: flex; flex-direction: column; align-items: center; gap: 5px; }
         
-        /* ВИПРАВЛЕНО: встановлено простий шрифт для лічильника */
         .total-count { 
             font-size: 24px; font-weight: bold; font-family: sans-serif; 
             text-shadow: 0 0 10px var(--neon), 0 0 20px var(--neon); 
@@ -73,8 +72,13 @@
         
         .cards-area { flex: 1; overflow-y: auto; padding-bottom: 0px; } 
 
-        .col-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; padding-bottom: 5px; }
-        .col-count { margin-left: 12px; color: #fff; font-weight: bold; font-size: 14px; }
+        /* ВИПРАВЛЕНО: назви етапів та лічильники тепер без Caveat */
+        .col-head { 
+            display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; 
+            font-size: 14px; text-transform: uppercase; letter-spacing: 1px; padding-bottom: 5px;
+            font-weight: bold; font-family: sans-serif;
+        }
+        .col-count { margin-left: 10px; color: #fff; font-weight: bold; font-size: 16px; }
         .add-btn-center { grid-column: 2; cursor: pointer; font-size: 30px; font-weight: bold; padding: 0 10px; }
 
         .card { 
@@ -82,9 +86,10 @@
             margin-top: 15px; cursor: pointer; position: relative;
             box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon);
         }
+        /* ВИПРАВЛЕНО: збільшено цифри рівнів на картках */
         .card-level { 
             position: absolute; top: 50%; right: 20px; transform: translateY(-50%);
-            font-size: 28px; font-weight: bold; 
+            font-size: 34px; font-weight: bold; 
             font-family: 'Caveat', cursive; color: #fff;
             text-shadow: 0 0 8px var(--neon), 0 0 15px var(--neon);
         }
