@@ -8,7 +8,7 @@
     <title>SL TIME CRM 5.0</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%232e0249'/><text x='50%' y='63%' text-anchor='middle' fill='white' font-family='Caveat' font-weight='bold' font-size='55'>SL</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%232e0249'/><circle cx='50' cy='50' r='40' fill='none' stroke='silver' stroke-width='2'/><text x='50%25' y='58%25' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold' font-size='28'>SL</text></svg>">
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -39,13 +39,13 @@
         
         @media (min-width: 1024px) {
             .board { scroll-snap-type: none; }
-            .column { min-width: 350px; max-width: 350px; scroll-snap-align: none; }
+            .column { min-width: 350px; scroll-snap-align: none; }
         }
 
         .col-header-sticky { position: sticky; top: 0; z-index: 100; min-height: 60px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 20px; backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.1); }
 
-        .card { background: transparent; padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin: 15px 20px 0; cursor: pointer; position: relative; text-shadow: 0 0 5px var(--neon-bright); }
-        .card-level { position: absolute; top: 50%; right: 25px; transform: translateY(-50%); font-family: 'Caveat', cursive; font-size: 34px; color: #fff; text-shadow: 0 0 10px var(--neon-bright); }
+        .card { background: transparent; padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin: 15px 20px 0; cursor: pointer; position: relative; }
+        .card-level { position: absolute; top: 50%; right: 25px; transform: translateY(-50%); font-family: 'Caveat', cursive; font-size: 34px; text-shadow: 0 0 10px var(--neon-bright); }
 
         #edit-screen, #user-menu, #me-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 25px; overflow-y: auto; }
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 8999; display: none; backdrop-filter: blur(5px); }
@@ -54,7 +54,7 @@
         label { font-size: 10px; opacity: 0.5; text-transform: uppercase; display: block; }
 
         .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; align-items: center; z-index: 200; backdrop-filter: blur(20px); }
-        .nav-item { cursor: pointer; opacity: 0.4; }
+        .nav-item { cursor: pointer; opacity: 0.4; transition: 0.3s; }
         .nav-item.active { opacity: 1; filter: drop-shadow(0 0 8px var(--neon-bright)); }
 
         .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
@@ -76,9 +76,7 @@
     <header>
         <div class="avatar" id="u-avatar" onclick="showUserMenu()"></div>
         <div class="header-title">SL Time CRM</div>
-        <div class="header-right" style="display:flex; align-items:center; gap:12px;">
-            <div id="total-clients" class="total-count">0</div>
-        </div>
+        <div id="total-clients" class="total-count">0</div>
     </header>
 
     <main class="board" id="main-board"></main>
@@ -99,19 +97,21 @@
         <label>РІВЕНЬ</label><select id="e-level-card" onchange="updateCardLevel(); autoSave()"></select>
         <label>ПРИМІТКИ</label>
         <div class="notes-wrapper"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value; autoSave()"></textarea></div>
-        <div id="save-status" style="text-align:center; font-size:10px; opacity:0.5;"></div>
+        <div id="save-status" style="text-align:center; font-size:10px; opacity:0.5; min-height:15px;"></div>
         <button onclick="closeAll()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; font-weight:bold; color:black;">ГОТОВО</button>
     </div>
 
     <div id="user-menu">
         <h3 style="text-align:center; margin-bottom:30px;">НАЛАШТУВАННЯ</h3>
-        <button onclick="showMeMenu()" style="width:100%; padding:15px; background:transparent; border:1px solid rgba(255,255,255,0.2); border-radius:12px; color:white; margin-bottom:20px;">ОСОБИСТІ ДАНІ</button>
         <label>ТЕМА</label>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px;">
-            <div onclick="setTheme('purple')" style="padding:15px; background:#2e0249; border-radius:10px; text-align:center;">Фіолет</div>
-            <div onclick="setTheme('graphite')" style="padding:15px; background:#1a1a1b; border-radius:10px; text-align:center;">Графіт</div>
+            <div onclick="setTheme('purple')" style="padding:15px; background:#2e0249; border-radius:10px; text-align:center; cursor:pointer">Фіолет</div>
+            <div onclick="setTheme('graphite')" style="padding:15px; background:#1a1a1b; border-radius:10px; text-align:center; cursor:pointer">Графіт</div>
+            <div onclick="setTheme('blue')" style="padding:15px; background:#021b49; border-radius:10px; text-align:center; cursor:pointer">Синій</div>
+            <div onclick="setTheme('green')" style="padding:15px; background:#02331a; border-radius:10px; text-align:center; cursor:pointer">Зелений</div>
         </div>
-        <button onclick="closeAll()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗАКРИТИ</button>
+        <button onclick="logout()" style="margin-top:20px; color:#ff4d4d; background:none; border:none; width:100%; cursor:pointer">Вийти</button>
+        <button onclick="closeAll()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; color:black; cursor:pointer">ЗАКРИТИ</button>
     </div>
 
     <nav class="nav-bar">
@@ -161,7 +161,7 @@
                     </div>`;
                 filtered.forEach(c => {
                     const div = document.createElement('div'); div.className = 'card'; div.onclick = () => openEdit(c.id);
-                    div.innerHTML = `<div style="font-weight:600">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;margin-top:5px">${c.phone||""}</div>${c.level ? `<div class="card-level">${c.level}</div>` : ''}`;
+                    div.innerHTML = `<div>${c.lname||"..."} ${c.fname||""}</div><div style="font-size:12px;opacity:0.5">${c.phone||""}</div>${c.level ? `<div class="card-level">${c.level}</div>` : ''}`;
                     col.appendChild(div);
                 });
                 b.appendChild(col);
@@ -201,16 +201,26 @@
                 };
                 await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(data, {merge:true});
                 status.innerText = "ЗБЕРЕЖЕНО";
+                setTimeout(() => { if(status.innerText === "ЗБЕРЕЖЕНО") status.innerText = ""; }, 2000);
             }, 800);
         }
 
         function updateCardLevel() { document.getElementById('card-level-display').innerText = document.getElementById('e-level-card').value || ""; }
         function closeAll() { document.querySelectorAll('#edit-screen, #user-menu, #bg-overlay').forEach(el => el.style.display = 'none'); editId = null; }
         function showUserMenu() { document.getElementById('user-menu').style.display = 'flex'; }
-        async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAll(); } }
+        async function removeClient() { if(confirm("Видалити клієнта?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAll(); } }
         function login() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
+        function logout() { auth.signOut().then(() => location.reload()); }
         function setTheme(t) { document.body.className = 'theme-'+t; localStorage.setItem('crm_theme', t); }
-        
+        function handleFile(input) { 
+            const r = new FileReader(); 
+            r.onload = e => { 
+                db.collection("users").doc(user.uid).collection("clients").doc(editId).update({photo: e.target.result}); 
+                document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; 
+            }; 
+            r.readAsDataURL(input.files[0]); 
+        }
+
         const savedTheme = localStorage.getItem('crm_theme');
         if(savedTheme) setTheme(savedTheme);
     </script>
