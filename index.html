@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="uk" style="background: #000 !important;">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -35,18 +35,17 @@
             transition: opacity 0.8s ease, visibility 0.8s;
         }
         #splash.hidden { opacity: 0; visibility: hidden; }
-        #splash-video { width: 100%; height: 100%; object-fit: cover; background: #000; }
+        #splash-video { width: 100%; height: 100%; object-fit: cover; }
 
-        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; height: 80px; position: relative; z-index: 200; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; height: 80px; position: relative; z-index: 200; background: transparent; }
         .avatar { width: 42px; height: 42px; border-radius: 50%; background-size: cover; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; }
         .header-title { font-family: 'Caveat', cursive; font-size: 34px; font-weight: 700; color: #fff; transform: rotate(-2deg); text-shadow: 0 0 10px var(--neon-bright); }
-        .header-right { display: flex; align-items: center; gap: 15px; }
         .total-count { font-size: 18px; font-weight: bold; text-shadow: 0 0 10px var(--neon-bright); }
 
-        /* Посилений магніт списків */
         .board { display: flex; overflow-x: auto; padding: 0; gap: 0; width: 100%; height: calc(100vh - 145px); scroll-snap-type: x mandatory; scroll-behavior: smooth; }
         .column { min-width: 100vw; scroll-snap-align: center; scroll-snap-stop: always; display: flex; flex-direction: column; height: 100%; overflow-y: auto; scrollbar-width: none; padding-bottom: 80px; }
-        .col-header-sticky { position: sticky; top: 0; z-index: 100; min-height: 60px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 13px; text-transform: uppercase; padding: 0 20px; border-bottom: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(20px); }
+        
+        .col-header-sticky { position: sticky; top: 0; z-index: 100; min-height: 60px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 13px; text-transform: uppercase; padding: 0 20px; border-bottom: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(20px); background: transparent; }
 
         .card { background: transparent; padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin: 15px 20px 0; cursor: pointer; position: relative; text-shadow: 0 0 5px var(--neon-bright); }
         .card-level { position: absolute; top: 50%; right: 25px; transform: translateY(-50%); font-family: 'Caveat', cursive; font-size: 34px; color: #fff; text-shadow: 0 0 10px var(--neon-bright); }
@@ -54,15 +53,18 @@
         #edit-screen, #user-menu, #me-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 25px; overflow-y: auto; }
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 8999; display: none; backdrop-filter: blur(5px); }
         
-        input, select, textarea { 
+        input, select { 
             width: 100%; background: transparent !important; border: none !important; 
             border-bottom: 1px solid rgba(255,255,255,0.2) !important; color: white !important; 
             padding: 12px 0; margin-bottom: 20px; outline: none !important; font-size: 16px; 
-            border-radius: 0 !important; -webkit-appearance: none; appearance: none;
+            border-radius: 0 !important; appearance: none; -webkit-appearance: none;
         }
-        textarea { resize: vertical; min-height: 80px; }
-        option { background: #2c2c2e; color: white; }
         
+        /* ПРИМІТКИ ЯК В 2.0 (АЛМАЗ) */
+        .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
+        .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; line-height: 1.6; font-size: 16px; word-break: break-word; }
+        #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent !important; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2) !important; resize: none; overflow: hidden; padding: 10px 0; line-height: 1.6; font-size: 16px; outline: none; border-radius: 0; }
+
         label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
         .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; align-items: center; z-index: 200; backdrop-filter: blur(20px); }
         .nav-item { cursor: pointer; opacity: 0.4; }
@@ -93,11 +95,6 @@
                 <div style="height:2px;width:16px;background:white;margin-bottom:4px;margin-left:6px"></div>
                 <div style="height:2px;width:10px;background:white;margin-left:12px"></div>
             </div>
-        </div>
-        <div id="filter-popup" style="position: absolute; top: 75px; right: 20px; background: rgba(0,0,0,0.9); border-radius: 12px; display: none; flex-direction: column; z-index: 300; border: 1px solid rgba(255,255,255,0.1);">
-            <div class="f-item" onclick="setFilter('az')" style="padding: 15px 25px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05);">А-Я</div>
-            <div class="f-item" onclick="setFilter('new')" style="padding: 15px 25px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05);">Нові</div>
-            <div class="f-item" onclick="setFilter('old')" style="padding: 15px 25px; cursor: pointer;">Старі</div>
         </div>
     </header>
 
@@ -153,14 +150,12 @@
         </div>
         <label>РІВЕНЬ</label><select id="e-level-card" onchange="updateCardLevel(); autoSave()"></select>
         <label>ПРИМІТКИ</label>
-        <textarea id="e-notes" oninput="autoSave()"></textarea>
+        <div class="notes-wrapper"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value; autoSave()"></textarea></div>
         <div id="save-status" style="text-align:center; font-size:10px; opacity:0.5; margin-top:10px;"></div>
     </div>
 
     <nav class="nav-bar">
         <div class="nav-item active"><svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM7 10h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z"/></svg></div>
-        <div class="nav-item"><svg width="24" height="24" viewBox="0 0 24 24" fill="white" style="opacity:0.2"><path d="M22 11V3h-7v3H9V3H2v8h7V8h2v10h4v3h7v-8h-7v3h-2V8h2v3h7z"/></svg></div>
-        <div class="nav-item"><svg width="24" height="24" viewBox="0 0 24 24" fill="white" style="opacity:0.2"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10 9.99-4.47 9.99-10S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg></div>
     </nav>
 
     <script>
@@ -170,15 +165,14 @@
 
         let user = null, clients = [], me = { photo: '' }, steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Семінар", "Поліс"], filterType = 'new', editId = null, currentPhoto = null, saveTimeout;
 
-        // ЛОГІКА КНОПКИ НАЗАД (History API)
         function addHistoryPoint() { window.history.pushState({modal: true}, ""); }
-        window.onpopstate = (e) => { if(document.querySelector('[style*="display: flex"]')) { closeAll(); } };
+        window.onpopstate = () => { if(document.querySelector('[style*="display: flex"]')) { closeAll(); } };
 
         const fillLevels = (id) => { const s = document.getElementById(id); s.innerHTML = '<option value="">-</option>'; for(let i=1; i<=16; i++) s.innerHTML += `<option value="${i}">${i}</option>`; };
         fillLevels('me-level'); fillLevels('e-level-card');
 
         auth.onAuthStateChanged(u => {
-            if(u) { user = u; document.getElementById('u-avatar').style.backgroundImage = `url(${u.photoURL})`; document.getElementById('login-ui').style.display = 'none'; loadData(); }
+            if(u) { user = u; document.getElementById('u-avatar').style.backgroundImage = `url(${u.photoURL})`; document.getElementById('splash').style.display = 'none'; loadData(); }
             else { document.getElementById('login-ui').style.display = 'block'; }
         });
 
@@ -205,7 +199,6 @@
             if(filterType === 'az') sorted.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
             if(filterType === 'new') sorted.sort((a,b) => b.created - a.created);
             if(filterType === 'old') sorted.sort((a,b) => a.created - b.created);
-            
             steps.forEach((n, i) => {
                 const filtered = sorted.filter(c => c.step == i);
                 s.innerHTML += `<option value="${i}">${n}</option>`;
@@ -231,15 +224,32 @@
             }, 1000);
         }
 
-        function openEdit(id) { addHistoryPoint(); editId = id; const c = clients.find(x => x.id === id); document.getElementById('e-lname').value = c.lname||""; document.getElementById('e-fname').value = c.fname||""; document.getElementById('e-notes').value = c.notes||""; document.getElementById('e-dob').value = c.dob||""; document.getElementById('e-phone').value = c.phone||""; document.getElementById('e-policy-date').value = c.policyDate||""; document.getElementById('e-policy-num').value = c.policyNum||""; document.getElementById('e-level-card').value = c.level||""; document.getElementById('e-step').value = c.step||0; currentPhoto = c.photo; document.getElementById('c-photo').style.backgroundImage = currentPhoto ? `url(${currentPhoto})` : 'none'; updateCardLevel(); document.getElementById('edit-screen').style.display='flex'; document.getElementById('bg-overlay').style.display = 'block'; }
-        function closeAll() { document.querySelectorAll('#edit-screen, #user-menu, #me-screen, #bg-overlay, #filter-popup').forEach(el => el.style.display='none'); editId = null; }
+        function openEdit(id) { 
+            addHistoryPoint(); 
+            editId = id; const c = clients.find(x => x.id === id); 
+            document.getElementById('e-lname').value = c.lname||""; 
+            document.getElementById('e-fname').value = c.fname||""; 
+            document.getElementById('e-notes').value = c.notes||""; 
+            document.getElementById('e-notes').parentNode.dataset.replicatedValue = c.notes||""; 
+            document.getElementById('e-dob').value = c.dob||""; 
+            document.getElementById('e-phone').value = c.phone||""; 
+            document.getElementById('e-policy-date').value = c.policyDate||""; 
+            document.getElementById('e-policy-num').value = c.policyNum||""; 
+            document.getElementById('e-level-card').value = c.level||""; 
+            document.getElementById('e-step').value = c.step||0; 
+            currentPhoto = c.photo; 
+            document.getElementById('c-photo').style.backgroundImage = currentPhoto ? `url(${currentPhoto})` : 'none'; 
+            updateCardLevel(); 
+            document.getElementById('edit-screen').style.display='flex'; 
+            document.getElementById('bg-overlay').style.display = 'block'; 
+        }
+
+        function closeAll() { document.querySelectorAll('#edit-screen, #user-menu, #me-screen, #bg-overlay').forEach(el => el.style.display='none'); editId = null; }
         function hideSplash() { document.getElementById('splash').classList.add('hidden'); setTimeout(() => { document.getElementById('splash').style.display = 'none'; }, 800); }
         setTimeout(() => { if(document.getElementById('splash').style.display !== 'none') hideSplash(); }, 4000);
         function showUserMenu() { addHistoryPoint(); document.getElementById('user-menu').style.display='flex'; document.getElementById('bg-overlay').style.display = 'block'; }
         function showMeMenu() { addHistoryPoint(); document.getElementById('me-screen').style.display='flex'; }
         function setTheme(t) { document.body.className = 'theme-'+t; localStorage.setItem('crm_theme', t); }
-        function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
-        function setFilter(f) { filterType = f; renderBoard(); toggleFilter(); }
         async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({lname:"", fname:"", step:0, created:Date.now()}); openEdit(res.id); }
         function login() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
         function updateCardLevel() { document.getElementById('card-level-display').innerText = document.getElementById('e-level-card').value || ""; }
