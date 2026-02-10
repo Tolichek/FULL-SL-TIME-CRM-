@@ -30,7 +30,7 @@
         body.theme-gold { --bg: linear-gradient(180deg, #443501 0%, #755b0a 50%, #1a1401 100%); --card-grad: linear-gradient(135deg, #614d05 0%, #443501 100%); --neon: rgba(255, 215, 0, 0.7); }
         body.theme-pink { --bg: linear-gradient(180deg, #49022e 0%, #570a3a 50%, #1b0110 100%); --card-grad: linear-gradient(135deg, #61053d 0%, #49022e 100%); --neon: rgba(255, 0, 150, 0.8); }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; border: none; outline: none; }
         body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
 
         ::-webkit-scrollbar { display: none; }
@@ -63,22 +63,22 @@
         .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
         .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 28px; font-weight: bold; font-family: 'Caveat', cursive; color: #fff; text-shadow: 0 0 8px var(--neon), 0 0 15px var(--neon); }
 
-        /* Нижній борд прибрано за інструкцією */
+        /* ОЧИЩЕНА ПАНЕЛЬ: Жодних бордерів */
         .bottom-nav { 
             position: fixed; bottom: 0; left: 0; right: 0; height: 55px; 
             background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); 
             display: flex; justify-content: space-around; align-items: center; 
-            z-index: 1000;
+            z-index: 1000; border: none !important; box-shadow: none !important;
         }
-        .nav-item { color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33%; height: 100%; }
+        .nav-item { color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33%; height: 100%; border: none !important; }
         .nav-item.active { opacity: 1; }
         .nav-icon-svg { width: 24px; height: 24px; transition: 0.3s; filter: drop-shadow(0 0 0px var(--neon)); }
         .nav-item.active .nav-icon-svg { filter: drop-shadow(0 0 5px var(--neon)) drop-shadow(0 0 10px var(--neon)); stroke: #fff; }
 
-        #edit-screen, #user-menu, #personal-data-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
+        #edit-screen, #user-menu, #personal-data-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; border: none; }
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 8999; display: none; backdrop-filter: blur(5px); }
 
-        select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
+        select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; border-radius: 0; }
         label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
 
         .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
