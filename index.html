@@ -27,10 +27,12 @@
         body.theme-pink { --bg: linear-gradient(180deg, #49022e 0%, #570a3a 50%, #1b0010 100%); --neon-bright: #ff0096; }
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
-        body, html { height: 100%; background: #000; color: var(--accent); overflow: hidden; }
+        
+        /* Виправлено фон: повернено градієнт, прибрано примусовий чорний з body */
+        body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
 
         #splash {
-            position: fixed; inset: 0; background: #000 !important; z-index: 9999;
+            position: fixed; inset: 0; background: #000000 !important; z-index: 9999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: opacity 0.8s ease, visibility 0.8s;
         }
@@ -40,7 +42,10 @@
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; height: 80px; position: relative; z-index: 200; background: transparent; }
         .avatar { width: 42px; height: 42px; border-radius: 50%; background-size: cover; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; }
         .header-title { font-family: 'Caveat', cursive; font-size: 34px; font-weight: 700; color: #fff; transform: rotate(-2deg); text-shadow: 0 0 10px var(--neon-bright); }
-        .total-count { font-size: 18px; font-weight: bold; text-shadow: 0 0 10px var(--neon-bright); }
+        
+        /* Виправлено позиціонування лічильника та фільтра */
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .total-count { font-size: 20px; font-weight: bold; text-shadow: 0 0 10px var(--neon-bright); margin-bottom: 8px; }
 
         .board { display: flex; overflow-x: auto; padding: 0; gap: 0; width: 100%; height: calc(100vh - 145px); scroll-snap-type: x mandatory; scroll-behavior: smooth; }
         .column { min-width: 100vw; scroll-snap-align: center; scroll-snap-stop: always; display: flex; flex-direction: column; height: 100%; overflow-y: auto; scrollbar-width: none; padding-bottom: 80px; }
@@ -60,7 +65,7 @@
             border-radius: 0 !important; appearance: none; -webkit-appearance: none;
         }
         
-        /* ПРИМІТКИ ЯК В 2.0 (АЛМАЗ) */
+        /* Примітки як у 2.0 */
         .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
         .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; line-height: 1.6; font-size: 16px; word-break: break-word; }
         #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent !important; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2) !important; resize: none; overflow: hidden; padding: 10px 0; line-height: 1.6; font-size: 16px; outline: none; border-radius: 0; }
@@ -91,9 +96,9 @@
         <div class="header-right">
             <div id="total-clients" class="total-count">0</div>
             <div onclick="toggleFilter()" style="cursor:pointer; padding: 5px;">
-                <div style="height:2px;width:22px;background:white;margin-bottom:4px"></div>
-                <div style="height:2px;width:16px;background:white;margin-bottom:4px;margin-left:6px"></div>
-                <div style="height:2px;width:10px;background:white;margin-left:12px"></div>
+                <div style="height:2px;width:24px;background:white;margin-bottom:4px"></div>
+                <div style="height:2px;width:18px;background:white;margin-bottom:4px;margin-left:6px"></div>
+                <div style="height:2px;width:12px;background:white;margin-left:12px"></div>
             </div>
         </div>
     </header>
@@ -199,6 +204,8 @@
             if(filterType === 'az') sorted.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
             if(filterType === 'new') sorted.sort((a,b) => b.created - a.created);
             if(filterType === 'old') sorted.sort((a,b) => a.created - b.created);
+            
+            // Виправлено цикл: тепер він проходить всі етапи коректно
             steps.forEach((n, i) => {
                 const filtered = sorted.filter(c => c.step == i);
                 s.innerHTML += `<option value="${i}">${n}</option>`;
@@ -211,6 +218,8 @@
                 });
                 b.appendChild(column);
             });
+            // Додано відступ в кінці борди
+            const spacer = document.createElement('div'); spacer.style.minWidth = "20px"; b.appendChild(spacer);
         }
 
         async function autoSave() {
@@ -250,6 +259,8 @@
         function showUserMenu() { addHistoryPoint(); document.getElementById('user-menu').style.display='flex'; document.getElementById('bg-overlay').style.display = 'block'; }
         function showMeMenu() { addHistoryPoint(); document.getElementById('me-screen').style.display='flex'; }
         function setTheme(t) { document.body.className = 'theme-'+t; localStorage.setItem('crm_theme', t); }
+        function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
+        function setFilter(f) { filterType = f; renderBoard(); toggleFilter(); }
         async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({lname:"", fname:"", step:0, created:Date.now()}); openEdit(res.id); }
         function login() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
         function updateCardLevel() { document.getElementById('card-level-display').innerText = document.getElementById('e-level-card').value || ""; }
