@@ -42,7 +42,7 @@
         .header-right { display: flex; align-items: center; gap: 12px; }
         .total-count { font-size: 18px; font-weight: bold; text-shadow: 0 0 10px var(--neon-bright); }
 
-        .board { display: flex; overflow-x: auto; padding: 0; gap: 0; width: 100%; height: calc(100vh - 145px); scroll-snap-type: x mandatory; }
+        .board { display: flex; overflow-x: auto; padding: 0; gap: 0; width: 100%; height: calc(100vh - 145px); scroll-snap-type: x mandatory; scrollbar-width: none; }
         .column { min-width: 100vw; scroll-snap-align: center; display: flex; flex-direction: column; height: 100%; overflow-y: auto; scrollbar-width: none; padding-bottom: 80px; }
         
         @media (min-width: 1024px) {
@@ -67,7 +67,9 @@
         .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; line-height: 1.6; font-size: 16px; word-break: break-word; }
         #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; line-height: 1.6; font-size: 16px; outline: none; border-radius: 0; }
 
-        select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; border-radius: 0; }
+        select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; border-radius: 0; appearance: none; -webkit-appearance: none; cursor: pointer; }
+        option { background: #2c2c2e; color: white; }
+
         label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
         .nav-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 65px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-around; align-items: center; z-index: 200; backdrop-filter: blur(20px); }
         .nav-item { cursor: pointer; opacity: 0.4; }
@@ -232,7 +234,20 @@
             });
         }
 
-        async function autoSave() {
+        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({lname:"", fname:"", step:0, created:Date.now()}); openEdit(res.id); }
+
+        function openEdit(id) { 
+            addHistoryPoint(); editId = id; const c = clients.find(x => x.id === id); 
+            document.getElementById('e-lname').value = c.lname||""; document.getElementById('e-fname').value = c.fname||""; 
+            document.getElementById('e-notes').value = c.notes||""; document.getElementById('e-notes').parentNode.dataset.replicatedValue = c.notes||"";
+            document.getElementById('e-dob').value = c.dob||""; document.getElementById('e-phone').value = c.phone||""; 
+            document.getElementById('e-policy-date').value = c.policyDate||""; document.getElementById('e-policy-num').value = c.policyNum||""; 
+            document.getElementById('e-level-card').value = c.level||""; document.getElementById('e-step').value = c.step||0; 
+            currentPhoto = c.photo; document.getElementById('c-photo').style.backgroundImage = currentPhoto ? `url(${currentPhoto})` : 'none'; 
+            updateCardLevel(); document.getElementById('edit-screen').style.display='flex'; document.getElementById('bg-overlay').style.display = 'block'; 
+        }
+
+        function autoSave() {
             if(!editId) return;
             const status = document.getElementById('save-status'); status.innerText = "ЗБЕРЕЖЕННЯ...";
             clearTimeout(saveTimeout);
@@ -250,36 +265,26 @@
             }, 800);
         }
 
-        function openEdit(id) { 
-            addHistoryPoint(); editId = id; const c = clients.find(x => x.id === id); 
-            document.getElementById('e-lname').value = c.lname||""; document.getElementById('e-fname').value = c.fname||""; 
-            document.getElementById('e-notes').value = c.notes||""; document.getElementById('e-notes').parentNode.dataset.replicatedValue = c.notes||"";
-            document.getElementById('e-dob').value = c.dob||""; document.getElementById('e-phone').value = c.phone||""; 
-            document.getElementById('e-policy-date').value = c.policyDate||""; document.getElementById('e-policy-num').value = c.policyNum||""; 
-            document.getElementById('e-level-card').value = c.level||""; document.getElementById('e-step').value = c.step||0; 
-            currentPhoto = c.photo; document.getElementById('c-photo').style.backgroundImage = currentPhoto ? `url(${currentPhoto})` : 'none'; 
-            updateCardLevel(); document.getElementById('edit-screen').style.display='flex'; document.getElementById('bg-overlay').style.display = 'block'; 
-        }
-
-        function saveMe() { db.collection("users").doc(user.uid).set({ me: { lname: document.getElementById('me-lname').value, fname: document.getElementById('me-fname').value, level: document.getElementById('me-level').value, photo: me.photo || '' } }, { merge: true }); }
-        function handleMeFile(input) { const r = new FileReader(); r.onload = e => { me.photo = e.target.result; document.getElementById('me-photo-display').style.backgroundImage = `url(${me.photo})`; saveMe(); }; r.readAsDataURL(input.files[0]); }
-        function handleFile(input) { const r = new FileReader(); r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; autoSave(); }; r.readAsDataURL(input.files[0]); }
         function updateCardLevel() { document.getElementById('card-level-display').innerText = document.getElementById('e-level-card').value || ""; }
+        function closeAll() { document.querySelectorAll('#edit-screen, #user-menu, #me-screen, #bg-overlay, #filter-popup').forEach(el => el.style.display = 'none'); editId = null; }
+        
         function switchPage(pId, el) { 
             document.querySelectorAll('.page-container').forEach(p => p.style.display = 'none'); 
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); 
             const page = document.getElementById('page-'+pId);
-            page.style.display = (pId === 'crm') ? 'flex' : 'flex';
+            if (page) page.style.display = 'flex';
             el.classList.add('active'); 
         }
+
         function showUserMenu() { addHistoryPoint(); document.getElementById('user-menu').style.display='flex'; if(window.innerWidth >= 1024) document.getElementById('bg-overlay').style.display = 'block'; }
         function showMeMenu() { addHistoryPoint(); document.getElementById('me-screen').style.display='flex'; document.getElementById('bg-overlay').style.display = 'block'; }
-        function closeAll() { document.querySelectorAll('#edit-screen, #user-menu, #me-screen, #bg-overlay, #filter-popup').forEach(el => el.style.display = 'none'); editId = null; }
-        function setTheme(t) { document.body.className = 'theme-'+t; localStorage.setItem('crm_theme', t); }
+        function saveMe() { db.collection("users").doc(user.uid).set({ me: { lname: document.getElementById('me-lname').value, fname: document.getElementById('me-fname').value, level: document.getElementById('me-level').value, photo: me.photo || '' } }, { merge: true }); }
+        function handleMeFile(input) { const r = new FileReader(); r.onload = e => { me.photo = e.target.result; document.getElementById('me-photo-display').style.backgroundImage = `url(${me.photo})`; saveMe(); }; r.readAsDataURL(input.files[0]); }
+        function handleFile(input) { const r = new FileReader(); r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; autoSave(); }; r.readAsDataURL(input.files[0]); }
+        async function removeClient() { if(confirm("Видалити клієнта?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAll(); } }
         function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
         function setFilter(f) { filterType = f; renderBoard(); toggleFilter(); }
-        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({lname:"", fname:"", step:0, created:Date.now()}); openEdit(res.id); }
-        async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAll(); } }
+        function setTheme(t) { document.body.className = 'theme-'+t; localStorage.setItem('crm_theme', t); }
         function login() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
         function logout() { auth.signOut().then(() => location.reload()); }
 
