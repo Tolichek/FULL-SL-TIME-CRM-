@@ -148,6 +148,11 @@
                 <div class="f-line l1"></div><div class="f-line l2"></div><div class="f-line l3"></div>
             </div>
         </div>
+        <div id="filter-popup">
+            <div class="f-item" onclick="setFilter('az')">А-Я</div>
+            <div class="f-item" onclick="setFilter('new')">Нові</div>
+            <div class="f-item" onclick="setFilter('old')">Старі</div>
+        </div>
     </header>
 
     <div id="screen-crm" class="app-container active">
@@ -180,16 +185,44 @@
         </div>
     </nav>
 
-    <div id="user-menu">...</div>
-    <div id="personal-data-screen">...</div>
-    <div id="edit-screen">...</div>
+    <div id="user-menu">
+        <div style="font-size:18px; font-weight:bold; margin-bottom:30px; text-align:center;">НАЛАШТУВАННЯ</div>
+        <button onclick="showPersonalData()" style="padding:15px; background:rgba(255,255,255,0.1); color:white; border:1px solid silver; border-radius:12px; width:100%; font-weight:bold; margin-bottom:30px; cursor:pointer;">ОСОБИСТІ ДАНІ</button>
+        <button onclick="closeAll()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; cursor: pointer;">ЗАКРИТИ</button>
+        <div style="text-align:center; color:#ff4d4d; margin-top:30px; cursor:pointer; font-size:12px;" onclick="logout()">ВИЙТИ</div>
+    </div>
+
+    <div id="personal-data-screen">
+        <div style="font-size:18px; font-weight:bold; margin-bottom:30px; text-align:center;">ОСОБИСТІ ДАНІ</div>
+        <button onclick="document.getElementById('personal-data-screen').style.display='none'" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; cursor: pointer;">НАЗАД</button>
+    </div>
+
+    <div id="edit-screen">
+        <span onclick="removeClient()" style="position: absolute; top: 25px; right: 25px; color: #ff4d4d; font-size: 12px; text-transform: uppercase; cursor: pointer;">Видалити</span>
+        <div style="text-align:center; margin-bottom: 20px;">
+            <div class="photo-container">
+                <div id="c-photo" style="width:110px; height:110px; border-radius:50%; background:rgba(255,255,255,0.1); background-size:cover; background-position:center; border:1px solid rgba(255,255,255,0.2)"></div>
+                <div id="edit-level-badge" class="edit-level-display"></div>
+            </div>
+            <p style="font-size:10px; margin-top:10px; opacity:0.5; cursor: pointer;" onclick="document.getElementById('f-upload').click()">ЗМІНИТИ ФОТО</p>
+            <input type="file" id="f-upload" hidden onchange="handleFile(this)">
+        </div>
+        <label>ЕТАП</label><select id="e-step" onchange="autoSave()"></select>
+        <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname" oninput="autoSave()">
+        <label>ІМ'Я</label><input type="text" id="e-fname" oninput="autoSave()">
+        <label>НОМЕР ТЕЛЕФОНУ</label><input type="tel" id="e-phone" oninput="autoSave()">
+        <label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge(); autoSave()"><option value="">Не обрано</option><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <label>ПРИМІТКИ</label>
+        <div class="notes-wrapper" id="notes-wrap"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value; autoSave()"></textarea></div>
+        <div class="status-msg" id="save-status"></div>
+    </div>
 
     <script>
         const firebaseConfig = { apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY", authDomain: "starlife-crm.firebaseapp.com", projectId: "starlife-crm", storageBucket: "starlife-crm.firebasestorage.app", messagingSenderId: "1022280682130", appId: "1:1022280682130:web:3ea517e8b6d22c7787744b" };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.firestore(), provider = new firebase.auth.GoogleAuthProvider();
 
-        let user = null, clients = [], editId = null, filterType = 'new';
+        let user = null, clients = [], editId = null, filterType = 'new', currentPhoto = null;
         let steps = ["Список", "Бесіда", "Розробка", "Презенти", "Ліфт", "Семінар", "Поліс"];
 
         function switchPage(pageId, el) {
@@ -200,10 +233,25 @@
             if(pageId === 'struct') renderStruct();
         }
 
+        window.onpopstate = () => { closeAll(); };
+        function closeAll() {
+            if (editId) autoSave(true);
+            document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #bg-overlay').forEach(el => el.style.display = 'none');
+            editId = null;
+        }
+
         auth.onAuthStateChanged(async u => {
             if(u) { user = u; document.getElementById('splash').style.display = 'none'; await loadUserConfig(); loadClients(); }
             else { document.getElementById('login-ui').style.display = 'block'; }
         });
+
+        async function loadUserConfig() {
+            const doc = await db.collection("users").doc(user.uid).get();
+            const data = doc.data() || {};
+            if(data.steps) steps = data.steps;
+            document.getElementById('u-avatar').style.backgroundImage = `url(${data.myPhoto || user.photoURL})`;
+            setTheme(localStorage.getItem('crm_theme') || data.theme || 'purple');
+        }
 
         function loadClients() {
             db.collection("users").doc(user.uid).collection("clients").onSnapshot(snap => {
@@ -214,26 +262,37 @@
             });
         }
 
+        function renderBoard() {
+            const b = document.getElementById('main-board'), s = document.getElementById('e-step');
+            b.innerHTML = ''; s.innerHTML = '';
+            let sorted = [...clients];
+            if(filterType === 'az') sorted.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
+            if(filterType === 'new') sorted.sort((a,b) => b.created - a.created);
+            if(filterType === 'old') sorted.sort((a,b) => a.created - b.created);
+
+            steps.forEach((n, i) => {
+                const filtered = sorted.filter(c => c.step == i);
+                const col = document.createElement('div');
+                col.className = 'column';
+                col.innerHTML = `<div class="col-head"><div onclick="editStep(${i})" style="cursor:pointer">${n}<span class="col-count">${filtered.length}</span></div><div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}${i==steps.length-1?'<span onclick="addStep()">+</span>':''}</div><div></div></div><div id="list-${i}" class="cards-area"></div>`;
+                b.appendChild(col);
+                s.innerHTML += `<option value="${i}">${n}</option>`;
+                filtered.forEach(c => {
+                    const div = document.createElement('div'); div.className = 'card';
+                    div.onclick = () => { window.history.pushState({edit:true}, ""); openEdit(c.id); };
+                    div.innerHTML = `${c.level ? `<div class="card-level">${c.level}</div>` : ''}<div style="font-weight:600; font-size: 16px;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;margin-top:5px">${c.phone||""}</div>`;
+                    document.getElementById(`list-${i}`).appendChild(div);
+                });
+            });
+        }
+
         function renderStruct() {
             const container = document.getElementById('struct-container');
-            container.innerHTML = '<h2 style="margin: 20px 0; font-size: 18px; opacity: 0.6;">МОЯ ПЕРША ЛІНІЯ</h2>';
-            
-            // Поки що виводимо всіх як першу лінію для тесту інтерфейсу
+            container.innerHTML = '<h2 style="margin: 20px 0; font-size: 14px; opacity: 0.6; font-weight:bold; text-transform:uppercase;">Моя перша лінія</h2>';
             clients.forEach(c => {
                 const item = document.createElement('div');
                 item.className = 'struct-item';
-                item.innerHTML = `
-                    <div class="struct-card" onclick="toggleBranch(this)">
-                        <div class="struct-photo" style="background-image: url(${c.photo || ''})"></div>
-                        <div class="struct-info">
-                            <div class="struct-name">${c.lname || ''} ${c.fname || ''}</div>
-                            <div style="font-size: 12px; opacity: 0.5;">Команда: 0</div>
-                        </div>
-                        <div class="struct-level">${c.level || 0}</div>
-                        <div class="expand-icon">▶</div>
-                    </div>
-                    <div class="struct-children"></div>
-                `;
+                item.innerHTML = `<div class="struct-card" onclick="toggleBranch(this)"><div class="struct-photo" style="background-image: url(${c.photo || ''})"></div><div class="struct-info"><div class="struct-name">${c.lname || ''} ${c.fname || ''}</div><div style="font-size: 12px; opacity: 0.5;">Команда: 0</div></div><div class="struct-level">${c.level || 0}</div><div class="expand-icon" style="margin-left:10px; opacity:0.5;">▶</div></div><div class="struct-children"></div>`;
                 container.appendChild(item);
             });
         }
@@ -245,8 +304,27 @@
             icon.classList.toggle('rotated');
         }
 
-        // Всі інші функції (renderBoard, autoSave, setTheme тощо) залишаються без змін
-        function renderBoard() { /* ... твоя функція без змін ... */ }
+        async function autoSave(instant = false) {
+            if (!editId) return;
+            const status = document.getElementById('save-status');
+            status.innerText = "ЗБЕРЕЖЕННЯ...";
+            const data = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, notes: document.getElementById('e-notes').value, level: document.getElementById('e-level').value, step: parseInt(document.getElementById('e-step').value), photo: currentPhoto, updated: Date.now() };
+            await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(data, {merge:true});
+            status.innerText = "ЗБЕРЕЖЕНО"; setTimeout(() => { status.innerText = ""; }, 500);
+        }
+
+        function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','phone','notes','step','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || (k==='step'?0:"")); document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || ""; currentPhoto = c.photo; document.getElementById('c-photo').style.backgroundImage = currentPhoto ? `url(${currentPhoto})` : 'none'; updateEditLevelBadge(); document.getElementById('edit-screen').style.display = 'flex'; }
+        function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
+        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); openEdit(res.id); }
+        function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
+        function setFilter(t) { filterType = t; renderBoard(); toggleFilter(); }
+        function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); }
+        function showUserMenu() { document.getElementById('user-menu').style.display = 'flex'; }
+        function showPersonalData() { document.getElementById('personal-data-screen').style.display = 'flex'; }
+        function handleFile(input) { const r = new FileReader(); r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; autoSave(); }; r.readAsDataURL(input.files[0]); }
+        function login() { auth.signInWithPopup(provider); }
+        function logout() { auth.signOut().then(() => location.reload()); }
+        async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAll(); } }
     </script>
 </body>
 </html>
