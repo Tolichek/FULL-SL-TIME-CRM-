@@ -50,8 +50,10 @@
         }
         
         .header-right { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        
+        /* ВИПРАВЛЕНО: встановлено простий шрифт для лічильника */
         .total-count { 
-            font-size: 24px; font-weight: bold; font-family: 'Caveat', cursive; 
+            font-size: 24px; font-weight: bold; font-family: sans-serif; 
             text-shadow: 0 0 10px var(--neon), 0 0 20px var(--neon); 
             line-height: 1;
         }
@@ -63,15 +65,12 @@
         #filter-popup { position: absolute; top: 75px; right: 20px; background: rgba(0,0,0,0.9); backdrop-filter: blur(15px); border-radius: 12px; display: none; flex-direction: column; z-index: 100; border: 1px solid rgba(255,255,255,0.1); }
         .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-        /* Змінено висоту, щоб додаток займав весь простір до нижнього борду (80px header + 55px nav = 135px) */
         .app-container { height: calc(100vh - 80px); overflow: hidden; display: none; }
         .app-container.active { display: block; }
 
-        /* Прибрано padding-bottom у board, щоб не було розриву */
         .board { display: flex; overflow-x: auto; padding: 0 20px 55px; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
         .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; gap: 15px; }
         
-        /* Розрив прибрано */
         .cards-area { flex: 1; overflow-y: auto; padding-bottom: 0px; } 
 
         .col-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; padding-bottom: 5px; }
