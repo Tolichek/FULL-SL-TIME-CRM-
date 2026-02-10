@@ -69,8 +69,8 @@
         .board { display: flex; overflow-x: auto; padding: 0 20px 40px; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
         .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; gap: 15px; }
         
-        /* Виправлено: padding-bottom 55px забезпечує нульовий розрив між списком та бордом */
-        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 55px; } 
+        /* Виправлено: картки опущено (padding-bottom: 0px) */
+        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 0px; } 
 
         .col-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; padding-bottom: 5px; }
         .col-count { margin-left: 12px; color: #fff; font-weight: bold; font-size: 14px; }
