@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SL TIME CRM</title>
+    <title>CRM SL TIME 2.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Глибокий темний фон для всього додатку */
+        /* Темна тема та прибирання білого фону */
         body {
-            background-color: #0a0510;
+            background-color: #0d0b14; /* Глибокий темний колір */
             color: #e2e8f0;
             font-family: 'Inter', sans-serif;
             margin: 0;
-            padding: 0;
             overflow-x: hidden;
         }
 
-        /* Контейнер для відео-заставки (Splash Screen) */
+        /* Splash Screen (Заставка) */
         #splash-screen {
             position: fixed;
             top: 0;
@@ -28,8 +28,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 9999;
-            transition: opacity 0.8s ease-out, visibility 0.8s;
+            z-index: 10000;
+            transition: opacity 0.6s ease-out, visibility 0.6s;
         }
 
         #splash-screen.hidden {
@@ -43,99 +43,134 @@
             object-fit: cover;
         }
 
-        /* Стилізація карток та елементів під Dark Mode */
+        /* Скляні картки на темному фоні */
         .glass-card {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
         }
 
-        .nav-item {
-            transition: all 0.3s ease;
-            color: #94a3b8;
-        }
+        /* Навігація */
+        .nav-item { color: #64748b; transition: 0.3s; }
+        .nav-item.active { color: #d946ef; }
 
-        .nav-item.active {
-            color: #c026d3; /* Фіолетовий неон */
-            text-shadow: 0 0 10px rgba(192, 38, 211, 0.5);
-        }
-
-        /* Прибираємо стандартні білі фони */
-        input, select, textarea {
+        /* Стилізація таблиць та інпутів під темний стиль */
+        .custom-table th { color: #94a3b8; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .custom-table td { border-bottom: 1px solid rgba(255,255,255,0.03); }
+        
+        input, select {
             background: rgba(255, 255, 255, 0.05) !important;
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
             color: white !important;
+            border-radius: 10px !important;
         }
+
+        .scroll-hide::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body>
+<body class="scroll-hide">
 
     <div id="splash-screen">
-        <video id="splash-video" autoplay muted playsinline onended="hideSplash()">
-            <source src="" type="video/mp4">
-        </video>
-        <button onclick="hideSplash()" style="position:absolute; bottom:20px; color:rgba(255,255,255,0.3); font-size:12px;">ПРОПУСТИТИ</button>
+        <video id="splash-video" playsinline muted autoplay onended="hideSplash()">
+            <source src="" type="video/mp4"> </video>
+        <button onclick="hideSplash()" style="position:fixed; bottom:30px; color:rgba(255,255,255,0.2); font-size:10px; letter-spacing:2px;">SKIP INTRO</button>
     </div>
 
-    <div class="max-w-md mx-auto min-h-screen pb-20 p-4">
+    <div class="max-w-md mx-auto min-h-screen p-4 pb-24">
         
-        <header class="flex justify-between items-center mb-8 pt-4">
+        <div class="flex justify-between items-center mb-6 pt-2">
             <div>
-                <h1 class="text-2xl font-bold bg-gradient-to-r from-fuchsia-500 to-cyan-500 bg-clip-text text-transparent">SL TIME</h1>
-                <p class="text-xs text-gray-500 tracking-widest uppercase">premium crm</p>
+                <h1 class="text-2xl font-bold tracking-tight text-white">SL TIME</h1>
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    <span class="text-[10px] text-gray-500 uppercase tracking-[0.2em]">Premium System</span>
+                </div>
             </div>
-            <div class="w-10 h-10 rounded-full glass-card flex items-center justify-center border-fuchsia-500/30">
-                <i class="fa-solid fa-user-astronaut text-fuchsia-500"></i>
-            </div>
-        </header>
-
-        <div class="grid grid-cols-2 gap-4 mb-8">
-            <div class="glass-card p-4">
-                <p class="text-gray-400 text-sm mb-1">Клієнти</p>
-                <p class="text-2xl font-bold">128</p>
-            </div>
-            <div class="glass-card p-4">
-                <p class="text-gray-400 text-sm mb-1">Записи</p>
-                <p class="text-2xl font-bold text-cyan-400">12</p>
+            <div class="w-12 h-12 rounded-2xl glass-card flex items-center justify-center border-fuchsia-500/20">
+                <i class="fa-solid fa-bolt-lightning text-fuchsia-500 text-xl"></i>
             </div>
         </div>
 
-        <div class="glass-card p-6 mb-8 text-center border-fuchsia-500/20">
-            <p class="text-gray-300 mb-4">Сьогодні у вас 8 зустрічей</p>
-            <button class="w-full py-4 bg-gradient-to-r from-fuchsia-600 to-purple-700 rounded-xl font-bold shadow-lg shadow-fuchsia-900/20">
-                Додати запис
-            </button>
+        <div class="glass-card p-5 mb-6">
+            <div class="flex justify-between items-end mb-4">
+                <h3 class="text-sm text-gray-400">Активність</h3>
+                <span class="text-xs text-green-400">+12%</span>
+            </div>
+            <canvas id="mainChart" height="120"></canvas>
+        </div>
+
+        <div class="glass-card overflow-hidden">
+            <div class="p-4 border-b border-white/5 flex justify-between items-center">
+                <h3 class="font-semibold">Останні записи</h3>
+                <i class="fa-solid fa-ellipsis text-gray-600"></i>
+            </div>
+            <table class="w-full custom-table">
+                <tbody id="client-list">
+                    </tbody>
+            </table>
         </div>
 
     </div>
 
-    <nav class="fixed bottom-0 left-0 right-0 glass-card mx-4 mb-4 p-4 flex justify-around items-center z-50">
-        <div class="nav-item active text-center">
-            <i class="fa-solid fa-house text-xl"></i>
-        </div>
-        <div class="nav-item text-center">
-            <i class="fa-solid fa-calendar-days text-xl"></i>
-        </div>
-        <div class="nav-item text-center">
-            <i class="fa-solid fa-chart-pie text-xl"></i>
-        </div>
-        <div class="nav-item text-center">
-            <i class="fa-solid fa-gear text-xl"></i>
-        </div>
+    <nav class="fixed bottom-6 left-4 right-4 h-18 glass-card flex justify-around items-center z-50">
+        <div class="nav-item active px-4 py-2"><i class="fa-solid fa-chart-simple text-xl"></i></div>
+        <div class="nav-item px-4 py-2"><i class="fa-solid fa-calendar text-xl"></i></div>
+        <div class="nav-item px-4 py-2"><i class="fa-solid fa-users text-xl"></i></div>
+        <div class="nav-item px-4 py-2"><i class="fa-solid fa-sliders text-xl"></i></div>
     </nav>
 
     <script>
-        // Функція приховування заставки
+        // Графік
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт'],
+                datasets: [{
+                    label: 'Записи',
+                    data: [5, 8, 12, 7, 10],
+                    borderColor: '#d946ef',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: 'rgba(217, 70, 239, 0.05)',
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                plugins: { legend: { display: false } },
+                scales: { 
+                    x: { display: false },
+                    y: { display: false }
+                }
+            }
+        });
+
+        // Клієнти (заглушка для еталону)
+        const clients = [
+            { name: "Олександр", time: "14:00", status: "Очікує" },
+            { name: "Марія", time: "15:30", status: "Виконано" }
+        ];
+
+        document.getElementById('client-list').innerHTML = clients.map(c => `
+            <tr class="text-sm">
+                <td class="p-4 font-medium">${c.name}</td>
+                <td class="p-4 text-gray-500">${c.time}</td>
+                <td class="p-4 text-right">
+                    <span class="px-2 py-1 rounded-md bg-white/5 text-[10px]">${c.status}</span>
+                </td>
+            </tr>
+        `).join('');
+
+        // Логіка Splash Screen
         function hideSplash() {
             const splash = document.getElementById('splash-screen');
             splash.classList.add('hidden');
-            setTimeout(() => {
-                splash.style.display = 'none';
-            }, 800);
+            setTimeout(() => splash.style.display = 'none', 600);
         }
-
-        // Автоматично приховати через 4 секунди, якщо відео не завантажиться
+        
+        // Резервний таймер (4 сек) на випадок відсутності відео
         setTimeout(hideSplash, 4000);
     </script>
 </body>
