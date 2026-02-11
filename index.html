@@ -21,139 +21,92 @@
             --neon: rgba(219, 0, 255, 0.8);
             --neon-text: #fff;
         }
-
         body.theme-purple { --bg: linear-gradient(180deg, #2e0249 0%, #570a57 50%, #1a1a1b 100%); --card-grad: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); --neon: rgba(219, 0, 255, 0.8); }
         body.theme-graphite { --bg: linear-gradient(180deg, #1a1a1b 0%, #2c2c2e 50%, #000000 100%); --card-grad: linear-gradient(135deg, #3a3a3c 0%, #1a1a1b 100%); --neon: rgba(255, 255, 255, 0.4); }
-        body.theme-blue { --bg: linear-gradient(180deg, #021b49 0%, #0a2e57 50%, #010a1b 100%); --card-grad: linear-gradient(135deg, #052661 0%, #021b49 100%); --neon: rgba(0, 150, 255, 0.8); }
-        body.theme-green { --bg: linear-gradient(180deg, #02331a 0%, #0a492e 50%, #01140a 100%); --card-grad: linear-gradient(135deg, #054126 0%, #02331a 100%); --neon: rgba(0, 255, 133, 0.8); }
-        body.theme-gold { --bg: linear-gradient(180deg, #443501 0%, #755b0a 50%, #1a1401 100%); --card-grad: linear-gradient(135deg, #614d05 0%, #443501 100%); --neon: rgba(255, 215, 0, 0.7); }
-        body.theme-pink { --bg: linear-gradient(180deg, #49022e 0%, #570a3a 50%, #1b0110 100%); --card-grad: linear-gradient(135deg, #61053d 0%, #49022e 100%); --neon: rgba(255, 0, 150, 0.8); }
-        
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
         body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
-
-        ::-webkit-scrollbar { display: none; }
-        * { -ms-overflow-style: none; scrollbar-width: none; }
-
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; height: 80px; position: relative; z-index: 10; }
-        .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); }
-        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 28px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 10px #fff, 0 0 20px var(--neon), 0 0 30px var(--neon), 0 0 50px var(--neon); letter-spacing: 1px; }
-        .header-right { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .total-count { font-size: 16px; font-weight: bold; line-height: 1; }
-
+        .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; box-shadow: 0 0 15px var(--neon); }
+        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 28px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 20px var(--neon); }
         .app-container { height: calc(100vh - 80px); overflow: hidden; display: none; }
         .app-container.active { display: block; }
-
         .board { display: flex; overflow-x: auto; padding: 0 20px 55px; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
         .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; gap: 15px; }
         .cards-area { flex: 1; overflow-y: auto; } 
-
-        .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
-        .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 30px; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; color: #fff; text-shadow: 0 0 8px var(--neon), 0 0 15px var(--neon); }
-
+        .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
-        .nav-item { color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33.3%; }
+        .nav-item { color: #fff; opacity: 0.4; width: 33.3%; display: flex; justify-content: center; }
         .nav-item.active { opacity: 1; }
-        .nav-icon-svg { width: 24px; height: 24px; filter: drop-shadow(0 0 0px var(--neon)); transition: 0.3s; }
-        .nav-item.active .nav-icon-svg { filter: drop-shadow(0 0 10px var(--neon)); stroke: #fff; }
-
-        /* Structure Styles */
-        #struct-canvas { width: 100%; height: 100%; overflow: hidden; position: relative; cursor: grab; }
-        #struct-viewport { position: absolute; transform-origin: 0 0; will-change: transform; }
-        #struct-lines { position: absolute; top: 0; left: 0; width: 5000px; height: 5000px; pointer-events: none; }
-        .struct-node { position: absolute; width: 100px; height: 130px; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; z-index: 2; }
-        .node-photo { width: 70px; height: 70px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 2px solid var(--neon); position: relative; background-size: cover; background-position: center; box-shadow: 0 0 15px var(--neon); transition: 0.2s; }
-        .node-photo:active { transform: scale(0.9); }
-        .node-badge { position: absolute; top: -5px; right: -5px; background: #fff; color: #000; font-size: 11px; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; box-shadow: 0 0 10px var(--neon); }
-        .node-name { font-size: 11px; margin-top: 8px; white-space: nowrap; text-align: center; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.9); color: white; }
-        .node-add { width: 22px; height: 22px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; margin-top: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; color: white; }
-
-        #edit-screen, #user-menu, #personal-data-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 8999; display: none; backdrop-filter: blur(5px); }
-        select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
-        label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
+        #edit-screen, #user-menu { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px; overflow-y: auto; }
+        input, select, textarea { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; }
+        /* Structure Demo View */
+        #struct-view { width: 100%; height: 100%; position: relative; overflow: hidden; }
+        .node { position: absolute; width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--neon); background-size: cover; }
     </style>
 </head>
 <body class="theme-purple">
 
-    <div id="splash" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-        <div style="width:160px;height:160px;border:2px solid silver;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:bold;color:white;">SL</div>
-        <div id="login-ui" style="display:none; margin-top:40px;"><button onclick="login()" style="background:white;border:none;padding:12px 30px;border-radius:25px;font-weight:bold;">Увійти через Google</button></div>
+    <div id="splash" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;">
+        <div style="font-size:42px;font-weight:bold;color:white;">SL</div>
     </div>
 
-    <div id="bg-overlay" class="overlay" onclick="closeAll()"></div>
-
     <header>
-        <div class="avatar" id="u-avatar" onclick="showUserMenu()"></div>
+        <div class="avatar" id="u-avatar" onclick="document.getElementById('user-menu').style.display='flex'"></div>
         <div class="header-title">SL Time CRM</div>
-        <div class="header-right">
-            <div id="total-clients" class="total-count">0</div>
-        </div>
+        <div class="header-right"><div id="total-clients" style="font-weight:bold;">0</div></div>
     </header>
 
     <div id="screen-crm" class="app-container active">
         <main class="board" id="main-board"></main>
     </div>
 
-    <div id="screen-struct" class="app-container" style="background: rgba(0,0,0,0.3); position: relative; touch-action: none;">
-        <div id="struct-canvas">
-            <div id="struct-viewport">
-                <svg id="struct-lines"></svg>
-                <div id="struct-nodes"></div>
-            </div>
+    <div id="screen-struct" class="app-container">
+        <div id="struct-view" style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+            <p style="opacity:0.5;">СТРУКТУРА (РЕЖИМ ПЕРЕГЛЯДУ)</p>
+            <div id="tree-container" style="width:100%; height:80%; position:relative;"></div>
         </div>
-        <div onclick="resetStructView()" style="position:absolute; bottom:20px; right:20px; width:44px; height:44px; background:rgba(0,0,0,0.5); border-radius:50%; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.2); z-index:100; font-size:20px;">🎯</div>
     </div>
 
     <div id="screen-plan" class="app-container">
-        <div style="display:flex; align-items:center; justify-content:center; height:100%; opacity:0.3; font-size:20px;">ПЛАНУВАЛЬНИК В РОЗРОБЦІ</div>
+        <div style="display:flex; align-items:center; justify-content:center; height:100%; opacity:0.3;">ПЛАНУВАЛЬНИК</div>
     </div>
 
     <nav class="bottom-nav">
-        <div class="nav-item active" onclick="switchPage('crm', this)">
-            <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h7m-3.5-3.5v7" stroke-linecap="round"/></svg>
-        </div>
-        <div class="nav-item" onclick="switchPage('struct', this)">
-            <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v18m0-18l-4 4m4-4l4 4m-4 14l-4-4m4 4l4-4" stroke-linecap="round"/><circle cx="12" cy="12" r="3"/></svg>
-        </div>
-        <div class="nav-item" onclick="switchPage('plan', this)">
-            <svg class="nav-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2" stroke-linecap="round"/></svg>
-        </div>
+        <div class="nav-item active" onclick="switchPage('crm', this)">СПИСКИ</div>
+        <div class="nav-item" onclick="switchPage('struct', this)">СТРУКТУРА</div>
+        <div class="nav-item" onclick="switchPage('plan', this)">ПЛАН</div>
     </nav>
 
     <div id="edit-screen">
-        <span onclick="removeClient()" style="position: absolute; top: 25px; right: 25px; color: #ff4d4d; font-size: 12px; text-transform: uppercase;">Видалити</span>
-        <div style="text-align:center; margin-bottom: 20px;">
-            <div class="photo-container"><div id="c-photo" style="width:110px; height:110px; border-radius:50%; background-size:cover; border:1px solid rgba(255,255,255,0.2)"></div><div id="edit-level-badge" style="position:absolute; top:50%; left:-65px; font-size:60px; font-weight:bold; text-shadow:0 0 15px var(--neon);"></div></div>
-            <p style="font-size:10px; margin-top:10px; opacity:0.5;" onclick="document.getElementById('f-upload').click()">ЗМІНИТИ ФОТО</p>
-            <input type="file" id="f-upload" hidden onchange="handleFile(this)">
-        </div>
-        <label>ЕТАП</label><select id="e-step" onchange="autoSave()"></select>
         <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname" oninput="autoSave()">
         <label>ІМ'Я</label><input type="text" id="e-fname" oninput="autoSave()">
-        <label>ТЕЛЕФОН</label><input type="tel" id="e-phone" oninput="autoSave()">
-        <label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge(); autoSave()"><option value="">Не обрано</option><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
-        <label>ПРИМІТКИ</label><textarea id="e-notes" style="width:100%; background:transparent; border:1px solid rgba(255,255,255,0.1); color:white; min-height:100px; padding:10px;" oninput="autoSave()"></textarea>
-        <div class="status-msg" id="save-status"></div>
+        <label>ЕТАП</label><select id="e-step" onchange="autoSave()"></select>
+        <button onclick="closeEdit()" style="margin-top:20px; padding:15px; background:white; color:black; border-radius:20px; border:none; font-weight:bold;">ЗАКРИТИ</button>
+    </div>
+
+    <div id="user-menu">
+        <button onclick="logout()" style="color:red; background:none; border:none; margin-top:50px;">ВИЙТИ</button>
+        <button onclick="document.getElementById('user-menu').style.display='none'" style="margin-top:20px; padding:15px; background:white; border-radius:20px; border:none; font-weight:bold;">НАЗАД</button>
     </div>
 
     <script>
         const firebaseConfig = { apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY", authDomain: "starlife-crm.firebaseapp.com", projectId: "starlife-crm", storageBucket: "starlife-crm.firebasestorage.app", messagingSenderId: "1022280682130", appId: "1:1022280682130:web:3ea517e8b6d22c7787744b" };
         firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth(), db = firebase.firestore(), provider = new firebase.auth.GoogleAuthProvider();
+        const auth = firebase.auth(), db = firebase.firestore();
 
-        let user = null, clients = [], editId = null, currentPhoto = null, saveTimeout;
-        let steps = ["Список", "Бесіда", "Розробка", "Презенти", "Ліфт", "Семінар", "Поліс"];
-        let structData = { offset: { x: window.innerWidth / 2, y: 150 }, scale: 1, isDragging: false, lastPos: { x: 0, y: 0 } };
+        let user = null, clients = [], editId = null, saveTimeout;
+        const steps = ["Список", "Бесіда", "Розробка", "Презенти", "Ліфт", "Семінар", "Поліс"];
 
-        auth.onAuthStateChanged(u => { if(u) { user = u; document.getElementById('splash').style.display='none'; loadClients(); } else { document.getElementById('login-ui').style.display='block'; }});
+        auth.onAuthStateChanged(u => {
+            if(u) { user = u; document.getElementById('splash').style.display='none'; loadClients(); }
+            else { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
+        });
 
         function switchPage(pageId, el) {
             document.querySelectorAll('.app-container').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.getElementById('screen-' + pageId).classList.add('active');
             el.classList.add('active');
-            if(pageId === 'struct') setTimeout(initStructure, 100);
         }
 
         function loadClients() {
@@ -161,87 +114,40 @@
                 clients = []; snap.forEach(d => clients.push({id: d.id, ...d.data()}));
                 document.getElementById('total-clients').innerText = clients.length;
                 renderBoard();
-                if(document.getElementById('screen-struct').classList.contains('active')) renderStructure();
             });
         }
 
         function renderBoard() {
-            const b = document.getElementById('main-board'); b.innerHTML = '';
+            const b = document.getElementById('main-board'), s = document.getElementById('e-step');
+            b.innerHTML = ''; s.innerHTML = '';
             steps.forEach((n, i) => {
                 const filtered = clients.filter(c => c.step == i);
                 const col = document.createElement('div'); col.className = 'column';
-                col.innerHTML = `<div class="col-head"><div>${n} <span class="col-count">${filtered.length}</span></div><div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}</div><div></div></div><div class="cards-area" id="list-${i}"></div>`;
+                col.innerHTML = `<div style="font-weight:bold; padding-bottom:10px;">${n} (${filtered.length}) ${i==0?'<span onclick="createCard()" style="float:right; cursor:pointer;">+</span>':''}</div><div class="cards-area" id="list-${i}"></div>`;
                 b.appendChild(col);
+                s.innerHTML += `<option value="${i}">${n}</option>`;
                 filtered.forEach(c => {
                     const div = document.createElement('div'); div.className = 'card'; div.onclick = () => openEdit(c.id);
-                    div.innerHTML = (c.level?`<div class="card-level">${c.level}</div>`:'') + `<div style="font-weight:600;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:12px;">${c.phone||""}</div>`;
+                    div.innerHTML = `<div style="font-weight:bold;">${c.lname||""} ${c.fname||""}</div>`;
                     document.getElementById(`list-${i}`).appendChild(div);
                 });
             });
         }
 
-        // STRUCTURE ENGINE
-        function initStructure() {
-            const canvas = document.getElementById('struct-canvas');
-            canvas.onpointerdown = e => { structData.isDragging = true; structData.lastPos = { x: e.clientX, y: e.clientY }; canvas.setPointerCapture(e.pointerId); };
-            canvas.onpointermove = e => { if (!structData.isDragging) return; structData.offset.x += (e.clientX - structData.lastPos.x); structData.offset.y += (e.clientY - structData.lastPos.y); structData.lastPos = { x: e.clientX, y: e.clientY }; renderStructure(); };
-            canvas.onpointerup = e => { structData.isDragging = false; canvas.releasePointerCapture(e.pointerId); };
-            renderStructure();
+        function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); document.getElementById('e-lname').value = c.lname || ""; document.getElementById('e-fname').value = c.fname || ""; document.getElementById('e-step').value = c.step || 0; document.getElementById('edit-screen').style.display='flex'; }
+        function closeEdit() { document.getElementById('edit-screen').style.display='none'; editId = null; }
+        
+        async function autoSave() {
+            if(!editId) return;
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(async () => {
+                const d = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, step: parseInt(document.getElementById('e-step').value) };
+                await db.collection("users").doc(user.uid).collection("clients").doc(editId).update(d);
+            }, 1000);
         }
 
-        function renderStructure() {
-            const nodes = document.getElementById('struct-nodes'), lines = document.getElementById('struct-lines'), vp = document.getElementById('struct-viewport');
-            vp.style.transform = `translate(${structData.offset.x}px, ${structData.offset.y}px) scale(${structData.scale})`;
-            nodes.innerHTML = ''; lines.innerHTML = '';
-
-            // Головна картка (Я)
-            const meNode = createNode({ id: 'me', lname: 'Я', fname: '(Ти)', level: 9, x: 0, y: 0 });
-            nodes.appendChild(meNode);
-
-            // Партнери з Семінару
-            const partners = clients.filter(c => c.step >= 5);
-            partners.forEach((p, idx) => {
-                // Тимчасове розставлення по колу, якщо немає координат
-                const angle = (idx / partners.length) * Math.PI * 2;
-                const px = p.structX || Math.cos(angle) * 150;
-                const py = p.structY || Math.sin(angle) * 150 + 200;
-                
-                const node = createNode(p, px, py);
-                nodes.appendChild(node);
-                drawConnector(0, 0, px, py);
-            });
-        }
-
-        function createNode(p, x, y) {
-            const div = document.createElement('div'); div.className = 'struct-node';
-            div.style.left = (x || 0) + 'px'; div.style.top = (y || 0) + 'px';
-            div.innerHTML = `<div class="node-photo" style="background-image:url(${p.photo || ''})"><div class="node-badge">${p.level || 0}</div></div><div class="node-name">${p.lname || ''} ${p.fname || ''}</div><div class="node-add" onclick="event.stopPropagation(); createPartner('${p.id}')">+</div>`;
-            div.onclick = () => p.id !== 'me' ? openEdit(p.id) : null;
-            return div;
-        }
-
-        function drawConnector(x1, y1, x2, y2) {
-            const lines = document.getElementById('struct-lines');
-            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-            line.setAttribute("x1", x1); line.setAttribute("y1", y1); line.setAttribute("x2", x2); line.setAttribute("y2", y2);
-            line.setAttribute("stroke", "rgba(255,255,255,0.2)"); line.setAttribute("stroke-width", "1.5"); line.setAttribute("stroke-dasharray", "4");
-            lines.appendChild(line);
-        }
-
-        async function createPartner(parentId) {
-            const name = prompt("Прізвище та Ім'я нового партнера:");
-            if(!name) return;
-            await db.collection("users").doc(user.uid).collection("clients").add({ lname: name, step: 5, parentId: parentId, created: Date.now() });
-        }
-
-        function resetStructView() { structData.offset = { x: window.innerWidth / 2, y: 150 }; renderStructure(); }
-
-        // EDIT & SAVE
-        function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); document.getElementById('e-lname').value = c.lname || ""; document.getElementById('e-fname').value = c.fname || ""; document.getElementById('e-phone').value = c.phone || ""; document.getElementById('e-level').value = c.level || ""; document.getElementById('e-notes').value = c.notes || ""; document.getElementById('c-photo').style.backgroundImage = `url(${c.photo || ''})`; document.getElementById('edit-screen').style.display='flex'; }
-        function closeAll() { document.getElementById('edit-screen').style.display='none'; editId = null; }
-        async function autoSave() { if(!editId) return; const d = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, level: document.getElementById('e-level').value, notes: document.getElementById('e-notes').value }; await db.collection("users").doc(user.uid).collection("clients").doc(editId).update(d); }
         async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({ step: 0, created: Date.now() }); openEdit(res.id); }
-        function handleFile(input) { const reader = new FileReader(); reader.onload = async e => { const img = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${img})`; await db.collection("users").doc(user.uid).collection("clients").doc(editId).update({ photo: img }); }; reader.readAsDataURL(input.files[0]); }
+        function logout() { auth.signOut().then(() => location.reload()); }
     </script>
 </body>
 </html>
