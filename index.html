@@ -37,8 +37,8 @@
         .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); }
         .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 26px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 20px var(--neon); letter-spacing: 0.5px; flex: 1; text-align: center; }
         
-        .header-right { display: flex; align-items: center; gap: 10px; min-width: 60px; justify-content: flex-end; }
-        .total-count { font-size: 16px; font-weight: bold; }
+        .header-right { display: flex; align-items: center; gap: 12px; min-width: 60px; justify-content: flex-end; }
+        .total-count { font-size: 16px; font-weight: bold; line-height: 1; padding-top: 2px; }
         .filter-btn { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; cursor: pointer; width: 25px; }
         .f-line { height: 2px; background: white; border-radius: 2px; }
         .l1 { width: 22px; } .l2 { width: 16px; } .l3 { width: 10px; }
@@ -46,7 +46,6 @@
         #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
         .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-        /* ЕКРАНИ З ПОСИЛЕНИМИ МАГНІТАМИ */
         #main-viewport { 
             display: flex; 
             width: 100vw; 
@@ -55,7 +54,7 @@
             scroll-snap-type: x mandatory; 
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
-            gap: 60px; /* Більший розрив для ефекту столів */
+            gap: 60px;
         }
         .app-container { 
             flex: 0 0 100vw; 
@@ -151,12 +150,12 @@
         <button onclick="showPersonalData()" style="padding:15px; background:rgba(255,255,255,0.1); color:white; border-radius:12px; width:100%; font-weight:bold; margin-bottom:10px; border:1px solid silver;">ОСОБИСТІ ДАНІ</button>
         <label style="margin-top:20px;">ТЕМА ОФОРМЛЕННЯ</label>
         <div class="theme-grid">
-            <div onclick="setTheme('purple')" class="theme-btn btn-purple" style="background:linear-gradient(135deg,#3d0561,#2e0249)">Фіолет</div>
-            <div onclick="setTheme('graphite')" class="theme-btn btn-graphite" style="background:linear-gradient(135deg,#3a3a3c,#1a1a1b)">Графіт</div>
-            <div onclick="setTheme('blue')" class="theme-btn btn-blue" style="background:linear-gradient(135deg,#052661,#021b49)">Синій</div>
-            <div onclick="setTheme('green')" class="theme-btn btn-green" style="background:linear-gradient(135deg,#054126,#02331a)">Зелений</div>
-            <div onclick="setTheme('gold')" class="theme-btn btn-gold" style="background:linear-gradient(135deg,#614d05,#443501)">Золото</div>
-            <div onclick="setTheme('pink')" class="theme-btn btn-pink" style="background:linear-gradient(135deg,#61053d,#49022e)">Рожевий</div>
+            <div onclick="setTheme('purple')" class="theme-btn btn-purple">Фіолет</div>
+            <div onclick="setTheme('graphite')" class="theme-btn btn-graphite">Графіт</div>
+            <div onclick="setTheme('blue')" class="theme-btn btn-blue">Синій</div>
+            <div onclick="setTheme('green')" class="theme-btn btn-green">Зелений</div>
+            <div onclick="setTheme('gold')" class="theme-btn btn-gold">Золото</div>
+            <div onclick="setTheme('pink')" class="theme-btn btn-pink">Рожевий</div>
         </div>
         <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗАКРИТИ</button>
         <div style="text-align:center; color:#ff4d4d; margin-top:30px; cursor:pointer; font-weight:bold;" onclick="logout()">ВИЙТИ</div>
@@ -199,7 +198,6 @@
         const steps = ["Список", "Бесіда", "Розробка", "Презенти", "Ліфт", "Семінар", "Поліс"];
         let currentPath = [];
 
-        // НАВІГАЦІЯ ТА ХЕДЕР
         const vp = document.getElementById('main-viewport');
         vp.addEventListener('scroll', () => {
             const index = Math.round(vp.scrollLeft / (window.innerWidth + 60));
@@ -330,6 +328,7 @@
         function showPersonalData() { window.history.pushState({p:1}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
         function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); if(user) db.collection("users").doc(user.uid).set({theme: t}, {merge:true}); }
         function handleFile(input) { const r = new FileReader(); r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; }; r.readAsDataURL(input.files[0]); }
+        function handleMeFile(input) { const r = new FileReader(); r.onload = async e => { const img = e.target.result; document.getElementById('me-photo').style.backgroundImage = `url(${img})`; document.getElementById('u-avatar').style.backgroundImage = `url(${img})`; await db.collection("users").doc(user.uid).set({myPhoto: img}, {merge:true}); }; r.readAsDataURL(input.files[0]); }
         function login() { auth.signInWithPopup(provider); }
         function logout() { auth.signOut().then(() => location.reload()); }
         async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAllUI(); } }
