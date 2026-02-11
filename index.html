@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>SL TIME CRM 2.2 FINAL</title>
+    <title>SL TIME CRM 2.0 ETALON</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
@@ -32,48 +32,52 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
         body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
 
-        ::-webkit-scrollbar { display: none; }
-        header { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; height: 80px; position: relative; z-index: 1000; }
-        .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); }
-        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 26px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 20px var(--neon); flex: 1; text-align: center; }
+        /* ХЕДЕР - ВИПРАВЛЕНО ЦЕНТРУВАННЯ */
+        header { display: flex; align-items: center; justify-content: space-between; padding: 0 20px; height: 80px; position: relative; z-index: 1000; }
+        .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); flex-shrink: 0; }
+        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 24px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 20px var(--neon); position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap; }
         
-        #header-ctrl { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; cursor: pointer; min-width: 50px; }
-        .total-count { font-size: 14px; font-weight: bold; line-height: 1; opacity: 0.9; }
+        #header-ctrl { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 4px; cursor: pointer; min-width: 44px; flex-shrink: 0; }
+        .total-count { font-size: 14px; font-weight: bold; line-height: 1; opacity: 0.9; margin-bottom: 2px; }
         .f-lines { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; width: 22px; }
         .f-line { height: 2px; background: white; border-radius: 2px; }
-        #header-plus { display: none; font-size: 36px; font-weight: bold; color: white; cursor: pointer; min-width: 50px; text-align: right; line-height: 1; }
+        .l1 { width: 22px; } .l2 { width: 16px; } .l3 { width: 10px; }
+        #header-plus { display: none; font-size: 36px; font-weight: bold; color: white; cursor: pointer; min-width: 44px; text-align: right; }
 
         #main-viewport { display: flex; width: 100vw; height: calc(100vh - 80px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
         .app-container { flex: 0 0 100vw; width: 100vw; height: 100%; scroll-snap-align: start; scroll-snap-stop: always; overflow: hidden; position: relative; }
 
         .board { display: flex; overflow-x: auto; padding: 0 20px 55px; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
         .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; gap: 15px; }
-        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 20px; }
+        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 20px; } 
+        .col-head { display: flex; align-items: center; gap: 10px; font-size: 14px; text-transform: uppercase; font-weight: bold; }
+        .plus-btn { font-size: 26px; font-weight: 900; cursor: pointer; color: var(--accent); }
+
         .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
         .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 30px; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; text-shadow: 0 0 8px var(--neon); }
 
-        /* СТРУКТУРА 4 В РЯД */
+        /* СТРУКТУРА */
         #struct-path { display: none; align-items: center; padding: 0 20px; gap: 10px; overflow-x: auto; height: 50px; flex-shrink: 0; background: rgba(0,0,0,0.1); }
-        .path-dot { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--neon); background-size: cover; background-position: center; flex-shrink: 0; }
-        .struct-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 20px; align-content: start; overflow-y: auto; height: calc(100% - 50px); }
+        .struct-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 10px 20px 20px; align-content: start; overflow-y: auto; flex: 1; }
         .icon-unit { display: flex; flex-direction: column; align-items: center; position: relative; }
-        .icon-img { width: 70px; height: 70px; border-radius: 18px; background: rgba(255,255,255,0.1); background-size: cover; background-position: center; position: relative; }
+        .icon-img { width: 70px; height: 70px; border-radius: 18px; background: rgba(255,255,255,0.1); background-size: cover; background-position: center; position: relative; z-index: 5; }
         .icon-neon-level { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 22px; font-weight: bold; color: #fff; text-shadow: 0 0 8px var(--neon); pointer-events: none !important; user-select: none !important; z-index: 10; }
-        .icon-label { font-size: 10px; margin-top: 14px; font-weight: 600; text-align: center; color: white; width: 100%; white-space: nowrap; overflow: hidden; }
+        .icon-label { font-size: 10px; margin-top: 14px; font-weight: 600; text-align: center; white-space: nowrap; overflow: hidden; width: 100%; }
 
-        .context-menu { position: fixed; display: none; gap: 15px; z-index: 999999 !important; transform: translate(-50%, -50px); }
+        .context-menu { position: fixed; display: none; gap: 15px; z-index: 9999999 !important; transform: translate(-50%, -50px); }
         .ctx-btn { width: 38px; height: 38px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 20px #000; font-size: 18px; color: black; }
-        .shaking { animation: shake 0.3s infinite; }
-        @keyframes shake { 0%{transform:rotate(1deg)} 50%{transform:rotate(-1deg)} 100%{transform:rotate(1deg)} }
+
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
+        .nav-item { color: #fff; opacity: 0.4; font-size: 11px; font-weight: bold; width: 33%; text-align: center; cursor: pointer; }
+        .nav-item.active { opacity: 1; text-shadow: 0 0 10px var(--neon); }
 
         #edit-screen, #user-menu, #personal-data-screen, #partner-select-modal { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
         select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
         label { font-size: 10px; opacity: 0.5; text-transform: uppercase; }
 
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
-        .nav-item { color: #fff; opacity: 0.4; font-size: 11px; font-weight: bold; cursor: pointer; width: 33%; text-align: center; }
-        .nav-item.active { opacity: 1; text-shadow: 0 0 10px var(--neon); }
-
+        .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+        .theme-btn { padding: 16px; text-align: center; cursor: pointer; border-radius: 12px; font-weight: bold; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; color: white; }
+        
         #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
         .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
     </style>
@@ -84,32 +88,20 @@
         <div class="header-title">SL TIME CRM</div>
         <div id="header-ctrl" onclick="toggleFilter()">
             <div id="header-counter" class="total-count">0</div>
-            <div class="f-lines"><div class="f-line l1"></div><div class="f-line l2"></div><div class="f-line l3"></div></div>
+            <div class="f-lines">
+                <div class="f-line l1"></div>
+                <div class="f-line l2"></div>
+                <div class="f-line l3"></div>
+            </div>
         </div>
         <div id="header-plus" onclick="handleStructurePlus()">+</div>
     </header>
 
     <div id="main-viewport">
         <div id="screen-crm" class="app-container"><main class="board" id="main-board"></main></div>
-        <div id="screen-struct" class="app-container" style="display:flex; flex-direction:column;">
-            <div id="struct-path"></div>
-            <div class="struct-grid" id="struct-grid"></div>
-        </div>
-        <div id="screen-plan" class="app-container">
-            <div style="display:flex; align-items:center; justify-content:center; height:100%; opacity:0.3; font-size:20px;">ПЛАН ДІЙ</div>
-        </div>
+        <div id="screen-struct" class="app-container" style="display:flex; flex-direction:column;"><div id="struct-path"></div><div class="struct-grid" id="struct-grid"></div></div>
+        <div id="screen-plan" class="app-container"><div style="display:flex;align-items:center;justify-content:center;height:100%;opacity:0.3;font-size:20px;">ПЛАН ДІЙ</div></div>
     </div>
-
-    <div class="context-menu" id="global-ctx">
-        <div class="ctx-btn" id="ctx-del">🗑️</div>
-        <div class="ctx-btn" id="ctx-info">ℹ️</div>
-    </div>
-
-    <nav class="bottom-nav">
-        <div class="nav-item active" onclick="jumpToPage(0)">СПИСКИ</div>
-        <div class="nav-item" onclick="jumpToPage(1)">СТРУКТУРА</div>
-        <div class="nav-item" onclick="jumpToPage(2)">ПЛАН</div>
-    </nav>
 
     <div id="edit-screen">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
@@ -128,23 +120,22 @@
         <label>ПОЛІС ДАТА</label><input type="date" id="e-pdate">
         <label>ПОЛІС №</label><input type="text" id="e-pnum">
         <label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><option value="">none</option><script>for(let i=1; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
-        <label>ПРИМІТКИ</label><textarea id="e-notes" style="width:100%; background:transparent; border:none; border-bottom:1px solid rgba(255,255,255,0.2); color:white; min-height:100px; padding:10px 0; outline:none;"></textarea>
         <button onclick="manualSave()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ І ВИЙТИ</button>
     </div>
 
     <div id="user-menu">
         <div style="font-size:18px; font-weight:bold; margin-bottom:30px; text-align:center;">НАЛАШТУВАННЯ</div>
         <button onclick="showPersonalData()" style="padding:15px; background:rgba(255,255,255,0.1); color:white; border-radius:12px; width:100%; font-weight:bold; margin-bottom:10px; border:1px solid silver;">ОСОБИСТІ ДАНІ</button>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:20px 0;">
-            <div onclick="setTheme('purple')" style="background:linear-gradient(135deg,#3d0561,#2e0249); padding:16px; border-radius:12px; text-align:center; font-weight:bold;">Фіолет</div>
-            <div onclick="setTheme('graphite')" style="background:linear-gradient(135deg,#3a3a3c,#1a1a1b); padding:16px; border-radius:12px; text-align:center; font-weight:bold;">Графіт</div>
-            <div onclick="setTheme('blue')" style="background:linear-gradient(135deg,#052661,#021b49); padding:16px; border-radius:12px; text-align:center; font-weight:bold;">Синій</div>
-            <div onclick="setTheme('green')" style="background:linear-gradient(135deg,#054126,#02331a); padding:16px; border-radius:12px; text-align:center; font-weight:bold;">Зелений</div>
-            <div onclick="setTheme('gold')" style="background:linear-gradient(135deg,#614d05,#443501); padding:16px; border-radius:12px; text-align:center; font-weight:bold;">Золото</div>
-            <div onclick="setTheme('pink')" style="background:linear-gradient(135deg,#61053d,#49022e); padding:16px; border-radius:12px; text-align:center; font-weight:bold;">Рожевий</div>
+        <div class="theme-grid">
+            <div onclick="setTheme('purple')" class="theme-btn btn-purple" style="background:linear-gradient(135deg,#3d0561,#2e0249);">Фіолет</div>
+            <div onclick="setTheme('graphite')" class="theme-btn btn-graphite" style="background:linear-gradient(135deg,#3a3a3c,#1a1a1b);">Графіт</div>
+            <div onclick="setTheme('blue')" class="theme-btn btn-blue" style="background:linear-gradient(135deg,#052661,#021b49);">Синій</div>
+            <div onclick="setTheme('green')" class="theme-btn btn-green" style="background:linear-gradient(135deg,#054126,#02331a);">Зелений</div>
+            <div onclick="setTheme('gold')" class="theme-btn btn-gold" style="background:linear-gradient(135deg,#614d05,#443501);">Золото</div>
+            <div onclick="setTheme('pink')" class="theme-btn btn-pink" style="background:linear-gradient(135deg,#61053d,#49022e);">Рожевий</div>
         </div>
         <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗАКРИТИ</button>
-        <div onclick="logout()" style="text-align:center; color:#ff4d4d; margin-top:30px; cursor:pointer; font-weight:bold;">ВИЙТИ</div>
+        <div style="text-align:center; color:#ff4d4d; margin-top:30px; cursor:pointer; font-weight:bold;" onclick="logout()">ВИЙТИ</div>
     </div>
 
     <div id="personal-data-screen">
@@ -155,10 +146,15 @@
         <button onclick="saveMeData()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ І ВИЙТИ</button>
     </div>
 
-    <div id="partner-select-modal">
-        <div id="modal-partners-list" style="flex:1; overflow-y:auto; padding-top:20px;"></div>
-        <button onclick="window.history.back()" style="padding:18px; width:100%; border-radius:30px; background:white; color:black; font-weight:bold;">НАЗАД</button>
-    </div>
+    <div class="context-menu" id="global-ctx"><div class="ctx-btn" id="ctx-del">🗑️</div><div class="ctx-btn" id="ctx-info">ℹ️</div></div>
+    <div id="partner-select-modal"><div id="modal-partners-list" style="flex:1; overflow-y:auto; padding-top:20px;"></div><button onclick="window.history.back()" style="padding:18px; width:100%; border-radius:30px; background:white; color:black; font-weight:bold;">НАЗАД</button></div>
+    <div id="filter-popup"><div class="f-item" onclick="setFilter('az')">А-Я</div><div class="f-item" onclick="setFilter('new')">Нові</div><div class="f-item" onclick="setFilter('old')">Старі</div></div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="jumpToPage(0)">СПИСКИ</div>
+        <div class="nav-item" onclick="jumpToPage(1)">СТРУКТУРА</div>
+        <div class="nav-item" onclick="jumpToPage(2)">ПЛАН</div>
+    </nav>
 
     <script>
         const firebaseConfig = { apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY", authDomain: "starlife-crm.firebaseapp.com", projectId: "starlife-crm", storageBucket: "starlife-crm.firebasestorage.app", messagingSenderId: "1022280682130", appId: "1:1022280682130:web:3ea517e8b6d22c7787744b" };
@@ -178,9 +174,13 @@
             updateHeaderCounter();
         });
 
-        function jumpToPage(index) { vp.scrollTo({ left: index * window.innerWidth, behavior: 'smooth' }); }
-        function lock() { window.history.pushState({l:1}, ""); }
-        window.onpopstate = () => { if(editId || document.getElementById('user-menu').style.display==='flex' || document.getElementById('personal-data-screen').style.display==='flex' || document.getElementById('partner-select-modal').style.display==='flex') { closeAllUI(); lock(); } };
+        // КНОПКА НАЗАД - БЛОКУВАННЯ ВИХОДУ
+        function lock() { window.history.pushState({ui:1}, ""); }
+        window.onpopstate = () => {
+            if(editId || document.getElementById('user-menu').style.display==='flex' || document.getElementById('personal-data-screen').style.display==='flex' || document.getElementById('partner-select-modal').style.display==='flex') {
+                closeAllUI(); lock();
+            }
+        };
 
         auth.onAuthStateChanged(async u => { if(u) { user = u; loadUserConfig(); loadClients(); lock(); } else { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); } });
 
@@ -214,7 +214,7 @@
             steps.forEach((n, i) => {
                 const filtered = sorted.filter(c => (c.step || 0) == i);
                 const col = document.createElement('div'); col.className = 'column';
-                col.innerHTML = `<div class="col-head"><div>${n} ${filtered.length}</div><div class="add-btn-center">${i===0?'<span onclick="createCard()">+</span>':''}</div><div></div></div><div class="cards-area" id="list-${i}"></div>`;
+                col.innerHTML = `<div class="col-head"><div>${n} ${filtered.length}</div>${i===0?`<div class="plus-btn" onclick="createCard()">+</div>`:''}</div><div class="cards-area" id="list-${i}"></div>`;
                 b.appendChild(col);
                 s.innerHTML += `<option value="${i}">${n}</option>`;
                 filtered.forEach(c => {
@@ -258,25 +258,25 @@
         function endPress() { clearTimeout(pressTimer); }
         document.addEventListener('touchstart', (e) => { if(!e.target.closest('.icon-unit')){ document.getElementById('global-ctx').style.display = 'none'; document.querySelectorAll('.icon-unit').forEach(el=>el.classList.remove('shaking')); }});
 
-        function handleStructurePlus() { if(currentPath.length === 0) openPartnerSelect(); else createCardForPartner(); }
-        async function createCardForPartner() { const pid = currentPath[currentPath.length-1].id; const res = await db.collection("users").doc(user.uid).collection("clients").add({ step: 6, created: Date.now(), isPartner: true, parentId: pid }); window.history.pushState({e:1}, ""); openEdit(res.id); }
-        function openPartnerSelect() { const list = document.getElementById('modal-partners-list'); list.innerHTML = ''; const cand = clients.filter(c => c.step === 6 && !c.isPartner); if(cand.length === 0) { list.innerHTML = `<div style="text-align:center; opacity:0.5; padding:40px;">У списку СЕМІНАР немає вільних кандидатів</div>`; } else { cand.forEach(c => { const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; gap:15px; color:white;"; row.innerHTML = `<div style="width:44px; height:44px; border-radius:50%; background-size:cover; background-image:url(${c.photo||''})"></div><div>${c.lname} ${c.fname}</div>`; row.onclick = async () => { await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ isPartner: true, parentId: currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me' }); window.history.back(); }; list.appendChild(row); }); } document.getElementById('partner-select-modal').style.display = 'flex'; window.history.pushState({s:1}, ""); }
-
         function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','phone','pnum','pdate','bday','step','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || ""); document.getElementById('c-photo').style.backgroundImage = `url(${c.photo||''})`; updateEditLevelBadge(); document.getElementById('edit-screen').style.display='flex'; }
         function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #partner-select-modal').forEach(el => el.style.display = 'none'); document.getElementById('global-ctx').style.display = 'none'; editId = null; }
         async function manualSave() { if(!editId) return; const d = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, bday: document.getElementById('e-bday').value, pdate: document.getElementById('e-pdate').value, pnum: document.getElementById('e-pnum').value, level: document.getElementById('e-level').value, step: parseInt(document.getElementById('e-step').value), updated: Date.now() }; await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(d, {merge:true}); closeAllUI(); }
         async function saveMeData() { const d = { meLname: document.getElementById('me-lname').value, meFname: document.getElementById('me-fname').value, meLevel: document.getElementById('me-level').value }; await db.collection("users").doc(user.uid).set(d, {merge:true}); closeAllUI(); }
         async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); window.history.pushState({e:1}, ""); openEdit(res.id); }
-        function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
         function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); if(user) db.collection("users").doc(user.uid).set({theme: t}, {merge:true}); }
         function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
         function setFilter(t) { filterType = t; renderBoard(); toggleFilter(); }
+        function jumpToPage(idx) { vp.scrollTo({ left: idx * window.innerWidth, behavior: 'smooth' }); }
         function showUserMenu() { window.history.pushState({m:1}, ""); document.getElementById('user-menu').style.display = 'flex'; }
         function showPersonalData() { window.history.pushState({p:1}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
+        function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
         function updateHeaderCounter() { document.getElementById('header-counter').innerText = clients.length; }
         async function removeFromStruct(id) { if(confirm("Видалити зі структури?")) { await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ isPartner: false, parentId: null }); closeAllUI(); }}
         async function removeClient() { if(confirm("Видалити картку?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAllUI(); } }
         function logout() { auth.signOut().then(()=>location.reload()); }
+        function handleStructurePlus() { if(currentPath.length === 0) openPartnerSelect(); else createCardForPartner(); }
+        async function createCardForPartner() { const pid = currentPath[currentPath.length-1].id; const res = await db.collection("users").doc(user.uid).collection("clients").add({ step: 6, created: Date.now(), isPartner: true, parentId: pid }); window.history.pushState({e:1}, ""); openEdit(res.id); }
+        function openPartnerSelect() { const list = document.getElementById('modal-partners-list'); list.innerHTML = ''; const cand = clients.filter(c => c.step === 6 && !c.isPartner); if(cand.length === 0) { list.innerHTML = `<div style="text-align:center; opacity:0.5; padding:40px;">У списку СЕМІНАР немає вільних кандидатів</div>`; } else { cand.forEach(c => { const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; gap:15px; color:white;"; row.innerHTML = `<div style="width:44px; height:44px; border-radius:50%; background-size:cover; background-image:url(${c.photo||''})"></div><div>${c.lname} ${c.fname}</div>`; row.onclick = async () => { await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ isPartner: true, parentId: currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me' }); window.history.back(); }; list.appendChild(row); }); } document.getElementById('partner-select-modal').style.display = 'flex'; window.history.pushState({s:1}, ""); }
         function uploadPhoto(type) {
             const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*';
             input.onchange = e => {
