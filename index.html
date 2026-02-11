@@ -37,9 +37,10 @@
         .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); }
         .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 26px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 20px var(--neon); letter-spacing: 0.5px; flex: 1; text-align: center; }
         
-        .header-right { display: flex; align-items: center; gap: 12px; min-width: 60px; justify-content: flex-end; }
-        .total-count { font-size: 16px; font-weight: bold; line-height: 1; padding-top: 2px; }
-        .filter-btn { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; cursor: pointer; width: 25px; }
+        /* ЛІЧИЛЬНИК НА ФІЛЬТРІ */
+        .filter-btn { display: flex; align-items: center; gap: 10px; cursor: pointer; height: 44px; padding-left: 10px; }
+        .total-count { font-size: 16px; font-weight: bold; }
+        .f-lines { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; width: 25px; }
         .f-line { height: 2px; background: white; border-radius: 2px; }
         .l1 { width: 22px; } .l2 { width: 16px; } .l3 { width: 10px; }
 
@@ -69,7 +70,6 @@
         .board { display: flex; overflow-x: auto; padding: 0 20px 55px; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
         .column { min-width: calc(100vw - 40px); scroll-snap-align: center; scroll-snap-stop: always; display: flex; flex-direction: column; gap: 15px; }
         .cards-area { flex: 1; overflow-y: auto; padding-bottom: 20px; } 
-        
         .col-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 14px; text-transform: uppercase; font-weight: bold; }
         .add-btn-center { grid-column: 2; cursor: pointer; font-size: 30px; font-weight: bold; padding: 0 10px; }
 
@@ -94,8 +94,16 @@
         
         .photo-container { position: relative; width: 110px; height: 110px; margin: 0 auto; }
         .edit-level-display { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon); width: 60px; text-align: center; }
+        
+        /* ТЕМИ З ЗАЛИВКОЮ */
         .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
-        .theme-btn { padding: 16px; text-align: center; cursor: pointer; border-radius: 12px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.15); text-transform: uppercase; }
+        .theme-btn { padding: 16px; text-align: center; cursor: pointer; border-radius: 12px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; color: white; }
+        .btn-purple { background: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); }
+        .btn-graphite { background: linear-gradient(135deg, #3a3a3c 0%, #1a1a1b 100%); }
+        .btn-blue { background: linear-gradient(135deg, #052661 0%, #021b49 100%); }
+        .btn-green { background: linear-gradient(135deg, #054126 0%, #02331a 100%); }
+        .btn-gold { background: linear-gradient(135deg, #614d05 0%, #443501 100%); }
+        .btn-pink { background: linear-gradient(135deg, #61053d 0%, #49022e 100%); }
     </style>
 </head>
 <body class="theme-purple">
@@ -112,9 +120,9 @@
     <header id="app-header">
         <div class="avatar" id="u-avatar" onclick="showUserMenu()"></div>
         <div class="header-title">SL Time CRM</div>
-        <div class="header-right" id="header-ctrl">
+        <div id="header-ctrl" class="filter-btn" onclick="toggleFilter()">
             <div id="header-counter" class="total-count">0</div>
-            <div id="h-filter" class="filter-btn" onclick="toggleFilter()">
+            <div class="f-lines">
                 <div class="f-line l1"></div><div class="f-line l2"></div><div class="f-line l3"></div>
             </div>
         </div>
@@ -184,11 +192,6 @@
         <button onclick="manualSave()" style="margin-top:20px; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ ТА ВИЙТИ</button>
     </div>
 
-    <div id="partner-select-modal">
-        <div id="modal-partners-list" style="flex:1; overflow-y:auto;"></div>
-        <button onclick="window.history.back()" style="padding:18px; width:100%; border-radius:30px; background:white; color:black;">НАЗАД</button>
-    </div>
-
     <script>
         const firebaseConfig = { apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY", authDomain: "starlife-crm.firebaseapp.com", projectId: "starlife-crm", storageBucket: "starlife-crm.firebasestorage.app", messagingSenderId: "1022280682130", appId: "1:1022280682130:web:3ea517e8b6d22c7787744b" };
         firebase.initializeApp(firebaseConfig);
@@ -215,16 +218,11 @@
             updateHeaderCounter();
         });
 
-        function jumpToPage(index) {
-            vp.scrollTo({ left: index * (window.innerWidth + 60), behavior: 'smooth' });
-        }
-
+        function jumpToPage(index) { vp.scrollTo({ left: index * (window.innerWidth + 60), behavior: 'smooth' }); }
         function lock() { window.history.pushState({l:1}, ""); }
         window.onload = lock;
         window.onpopstate = () => {
-            if (editId || document.getElementById('user-menu').style.display==='flex' || document.getElementById('partner-select-modal').style.display==='flex' || document.getElementById('personal-data-screen').style.display==='flex') {
-                closeAllUI(); lock(); return;
-            }
+            if (editId || document.getElementById('user-menu').style.display==='flex' || document.getElementById('personal-data-screen').style.display==='flex') { closeAllUI(); lock(); return; }
             if (currentPath.length > 0) { currentPath.pop(); renderStructure(); lock(); return; }
             if (vp.scrollLeft > 0) { jumpToPage(0); lock(); return; }
             lock();
@@ -304,21 +302,10 @@
             grid.innerHTML += `<div class="icon-unit"><div style="width:80px;height:80px;border-radius:20px;border:2px dashed rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:40px;color:rgba(255,255,255,0.2);" onclick="openPartnerSelect()">+</div><div class="icon-label">Додати</div></div>`;
         }
 
-        function openPartnerSelect() {
-            const list = document.getElementById('modal-partners-list'); list.innerHTML = '';
-            clients.filter(c => c.step === 5 && !c.isPartner).forEach(c => {
-                const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:10px; display:flex; align-items:center; gap:15px; color:white;";
-                row.innerHTML = `<div style="width:40px;height:40px;border-radius:50%;background-size:cover;background-image:url(${c.photo||''})"></div><div>${c.lname} ${c.fname}</div>`;
-                row.onclick = async () => { await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ isPartner: true, parentId: currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me' }); window.history.back(); };
-                list.appendChild(row);
-            });
-            document.getElementById('partner-select-modal').style.display = 'flex'; window.history.pushState({s:1}, "");
-        }
-
         async function manualSave() { if(!editId) return; const data = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, pnum: document.getElementById('e-pnum').value, pdate: document.getElementById('e-pdate').value, notes: document.getElementById('e-notes').value, level: document.getElementById('e-level').value, step: parseInt(document.getElementById('e-step').value), photo: currentPhoto, updated: Date.now() }; await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(data, {merge:true}); closeAllUI(); }
         async function saveMeData() { const data = { meLname: document.getElementById('me-lname').value, meFname: document.getElementById('me-fname').value, meLevel: document.getElementById('me-level').value }; await db.collection("users").doc(user.uid).set(data, {merge:true}); closeAllUI(); }
         function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','phone','pnum','pdate','notes','step','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || (k==='step'?0:"")); document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || ""; currentPhoto = c.photo; document.getElementById('c-photo').style.backgroundImage = `url(${currentPhoto||''})`; updateEditLevelBadge(); document.getElementById('edit-screen').style.display='flex'; }
-        function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #partner-select-modal').forEach(el => el.style.display = 'none'); editId = null; }
+        function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen').forEach(el => el.style.display = 'none'); editId = null; }
         function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
         function updateMeLevelBadge() { document.getElementById('me-level-badge').innerText = document.getElementById('me-level').value; }
         async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); window.history.pushState({e:1}, ""); openEdit(res.id); }
@@ -328,11 +315,7 @@
         function showPersonalData() { window.history.pushState({p:1}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
         function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); if(user) db.collection("users").doc(user.uid).set({theme: t}, {merge:true}); }
         function handleFile(input) { const r = new FileReader(); r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; }; r.readAsDataURL(input.files[0]); }
-        function handleMeFile(input) { const r = new FileReader(); r.onload = async e => { const img = e.target.result; document.getElementById('me-photo').style.backgroundImage = `url(${img})`; document.getElementById('u-avatar').style.backgroundImage = `url(${img})`; await db.collection("users").doc(user.uid).set({myPhoto: img}, {merge:true}); }; r.readAsDataURL(input.files[0]); }
-        function login() { auth.signInWithPopup(provider); }
         function logout() { auth.signOut().then(() => location.reload()); }
-        async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAllUI(); } }
-        async function removeFromStruct(id) { if(confirm("Прибрати?")) await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ isPartner: false, parentId: null }); }
     </script>
 </body>
 </html>
