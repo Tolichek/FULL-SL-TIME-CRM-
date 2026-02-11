@@ -47,7 +47,6 @@
         #main-viewport { display: flex; width: 100vw; height: calc(100vh - 80px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; gap: 60px; }
         .app-container { flex: 0 0 100vw; width: 100vw; height: 100%; scroll-snap-align: start; scroll-snap-stop: always; overflow: hidden; position: relative; }
 
-        /* СПИСКИ */
         .board { display: flex; overflow-x: auto; padding: 0 20px 55px; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
         .column { min-width: calc(100vw - 40px); scroll-snap-align: center; scroll-snap-stop: always; display: flex; flex-direction: column; gap: 15px; }
         .cards-area { flex: 1; overflow-y: auto; padding-bottom: 20px; } 
@@ -56,18 +55,20 @@
         .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
         .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 30px; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; color: #fff; text-shadow: 0 0 8px var(--neon); }
 
-        /* СТРУКТУРА */
         #struct-path { display: none; align-items: center; padding: 0 20px; gap: 10px; overflow-x: auto; height: 50px; background: rgba(0,0,0,0.1); border-bottom: 1px solid rgba(255,255,255,0.05); }
         .path-dot { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--neon); background-size: cover; background-position: center; flex-shrink: 0; cursor: pointer; }
         .struct-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 20px; align-content: start; overflow-y: auto; height: calc(100% - 50px); }
-        .icon-unit { display: flex; flex-direction: column; align-items: center; position: relative; transition: transform 0.2s; }
+        
+        .icon-unit { display: flex; flex-direction: column; align-items: center; position: relative; }
         .icon-img { width: 70px; height: 70px; border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); background-size: cover; background-position: center; position: relative; }
-        .icon-neon-level { position: absolute; top: 5px; right: 5px; font-family: 'Montserrat Alternates', sans-serif; font-size: 18px; font-weight: bold; color: #fff; text-shadow: 0 0 8px var(--neon); pointer-events: none; }
-        .icon-label { font-size: 10px; margin-top: 6px; font-weight: 600; text-align: center; color: white; text-shadow: 0 2px 4px #000; overflow: hidden; width: 100%; white-space: nowrap; }
+        
+        /* НЕОНОВИЙ РІВЕНЬ ПО ЦЕНТРУ ВНИЗУ (ЗАХОДИТЬ НА 1/2) */
+        .icon-neon-level { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 22px; font-weight: bold; color: #fff; text-shadow: 0 0 8px var(--neon); pointer-events: none; z-index: 10; }
+        .icon-label { font-size: 10px; margin-top: 14px; font-weight: 600; text-align: center; color: white; text-shadow: 0 2px 4px #000; overflow: hidden; width: 100%; white-space: nowrap; }
 
-        /* LONG PRESS MENU */
-        .context-menu { position: absolute; top: -40px; left: 50%; transform: translateX(-50%); display: none; gap: 10px; z-index: 100; }
-        .ctx-btn { width: 32px; height: 32px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,0,0,0.5); font-size: 14px; color: black; }
+        /* КОНТЕКСТНЕ МЕНЮ - НАЙВИЩИЙ ШАР */
+        .context-menu { position: absolute; top: -45px; left: 50%; transform: translateX(-50%); display: none; gap: 12px; z-index: 9999; }
+        .ctx-btn { width: 34px; height: 34px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.6); font-size: 16px; color: black; border: none; }
         .icon-unit.shaking { animation: shake 0.3s infinite; }
         @keyframes shake { 0% { transform: rotate(1deg); } 50% { transform: rotate(-1deg); } 100% { transform: rotate(1deg); } }
 
@@ -75,7 +76,7 @@
         .nav-item { color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33%; height: 100%; font-size: 11px; font-weight: bold; }
         .nav-item.active { opacity: 1; text-shadow: 0 0 10px var(--neon); }
 
-        #edit-screen, #user-menu, #partner-select-modal { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
+        #edit-screen, #user-menu, #personal-data-screen, #partner-select-modal { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
         select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
         label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
         .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
@@ -93,11 +94,6 @@
         if(st) document.body.className = 'theme-' + st;
     </script>
 
-    <div id="splash" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-        <div style="width:160px;height:160px;border:2px solid silver;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:bold;color:white;">SL</div>
-        <div id="login-ui" style="display:none; margin-top:40px;"><button onclick="login()" style="background:white;border:none;padding:12px 30px;border-radius:25px;font-weight:bold;">Увійти через Google</button></div>
-    </div>
-
     <header id="app-header">
         <div class="avatar" id="u-avatar" onclick="showUserMenu()"></div>
         <div class="header-title">SL Time CRM</div>
@@ -107,12 +103,6 @@
         </div>
         <div id="header-plus" onclick="handleStructurePlus()">+</div>
     </header>
-
-    <div id="filter-popup">
-        <div class="f-item" onclick="setFilter('az')">А-Я</div>
-        <div class="f-item" onclick="setFilter('new')">Нові</div>
-        <div class="f-item" onclick="setFilter('old')">Старі</div>
-    </div>
 
     <div id="main-viewport">
         <div id="screen-crm" class="app-container"><main class="board" id="main-board"></main></div>
@@ -150,12 +140,6 @@
         <button onclick="window.history.back()" style="padding:18px; width:100%; border-radius:30px; background:white; color:black; font-weight:bold; border:none;">НАЗАД</button>
     </div>
 
-    <div id="user-menu">
-        <div style="font-size:18px; font-weight:bold; margin-bottom:30px; text-align:center;">НАЛАШТУВАННЯ</div>
-        <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗАКРИТИ</button>
-        <div style="text-align:center; color:#ff4d4d; margin-top:30px; cursor:pointer; font-weight:bold;" onclick="logout()">ВИЙТИ</div>
-    </div>
-
     <script>
         const firebaseConfig = { apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY", authDomain: "starlife-crm.firebaseapp.com", projectId: "starlife-crm", storageBucket: "starlife-crm.firebasestorage.app", messagingSenderId: "1022280682130", appId: "1:1022280682130:web:3ea517e8b6d22c7787744b" };
         firebase.initializeApp(firebaseConfig);
@@ -178,9 +162,7 @@
 
         function jumpToPage(index) { vp.scrollTo({ left: index * (window.innerWidth + 60), behavior: 'smooth' }); }
 
-        auth.onAuthStateChanged(async u => { if(u) { user = u; document.getElementById('splash').style.display = 'none'; loadUserConfig(); loadClients(); } else { document.getElementById('login-ui').style.display = 'block'; } });
-
-        async function loadUserConfig() { const doc = await db.collection("users").doc(user.uid).get(); const d = doc.data() || {}; document.getElementById('u-avatar').style.backgroundImage = `url(${d.myPhoto || user.photoURL})`; }
+        auth.onAuthStateChanged(async u => { if(u) { user = u; loadClients(); } });
 
         function loadClients() {
             db.collection("users").doc(user.uid).collection("clients").onSnapshot(snap => {
@@ -193,13 +175,8 @@
 
         function renderBoard() {
             const b = document.getElementById('main-board'); if(!b) return;
-            const s = document.getElementById('e-step'); s.innerHTML = '';
-            b.innerHTML = '';
+            const s = document.getElementById('e-step'); s.innerHTML = ''; b.innerHTML = '';
             let sorted = [...clients];
-            if(filterType === 'az') sorted.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
-            if(filterType === 'new') sorted.sort((a,b) => b.created - a.created);
-            if(filterType === 'old') sorted.sort((a,b) => a.created - b.created);
-
             steps.forEach((n, i) => {
                 const filtered = sorted.filter(c => (c.step || 0) == i);
                 const col = document.createElement('div'); col.className = 'column';
@@ -231,7 +208,7 @@
             const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
             clients.filter(c => c.isPartner && (c.parentId || 'me') === pid).forEach(p => {
                 const box = document.createElement('div'); box.className = 'icon-unit';
-                box.innerHTML = `<div class="context-menu" id="ctx-${p.id}"><div class="ctx-btn" onclick="event.stopPropagation(); removeFromStruct('${p.id}')">🗑️</div><div class="ctx-btn" onclick="event.stopPropagation(); openEdit('${p.id}')">ℹ️</div></div><div class="icon-img" style="background-image:url(${p.photo || ''})" ontouchstart="startPress(event, '${p.id}')" ontouchend="endPress(event, '${p.id}')" onclick="if(!this.parentElement.classList.contains('shaking')) { currentPath.push({id:'${p.id}', photo:'${p.photo||''}'}); renderStructure(); }"><div class="icon-neon-level">${p.level || 0}</div></div><div class="icon-label">${p.lname || '...'}</div>`;
+                box.innerHTML = `<div class="context-menu" id="ctx-${p.id}"><div class="ctx-btn" onclick="event.stopPropagation(); removeFromStruct('${p.id}')">🗑️</div><div class="ctx-btn" onclick="event.stopPropagation(); openEdit('${p.id}')">ℹ️</div></div><div class="icon-img" style="background-image:url(${p.photo || ''})" ontouchstart="startPress(event, '${p.id}')" ontouchend="endPress()" onclick="if(!this.parentElement.classList.contains('shaking')) { currentPath.push({id:'${p.id}', photo:'${p.photo||''}'}); renderStructure(); }"><div class="icon-neon-level">${p.level || 0}</div></div><div class="icon-label">${p.lname || '...'}</div>`;
                 grid.appendChild(box);
             });
         }
@@ -241,19 +218,16 @@
         document.addEventListener('touchstart', (e) => { if (!e.target.closest('.icon-unit')) { document.querySelectorAll('.icon-unit').forEach(el => el.classList.remove('shaking')); document.querySelectorAll('.context-menu').forEach(el => el.style.display = 'none'); } });
 
         function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','phone','pnum','pdate','notes','step','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || (k==='step'?0:"")); document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || ""; document.getElementById('c-photo').style.backgroundImage = `url(${c.photo||''})`; updateEditLevelBadge(); document.getElementById('edit-screen').style.display='flex'; }
-        function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #partner-select-modal').forEach(el => el.style.display = 'none'); editId = null; }
+        function closeAllUI() { document.querySelectorAll('#edit-screen, #partner-select-modal').forEach(el => el.style.display = 'none'); editId = null; }
         async function manualSave() { if(!editId) return; const data = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, pnum: document.getElementById('e-pnum').value, pdate: document.getElementById('e-pdate').value, notes: document.getElementById('e-notes').value, level: document.getElementById('e-level').value, step: parseInt(document.getElementById('e-step').value), updated: Date.now() }; await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(data, {merge:true}); closeAllUI(); }
         async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); openEdit(res.id); }
         function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
         function updateHeaderCounter() { const idx = Math.round(vp.scrollLeft/(window.innerWidth+60)); const pid = currentPath.length>0 ? currentPath[currentPath.length-1].id : 'me'; document.getElementById('header-counter').innerText = (idx===1) ? clients.filter(c => c.isPartner && (c.parentId||'me')===pid).length : clients.length; }
         function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
         function setFilter(t) { filterType = t; renderBoard(); toggleFilter(); }
-        function showUserMenu() { document.getElementById('user-menu').style.display = 'flex'; }
-        function openPartnerSelect() { const list = document.getElementById('modal-partners-list'); list.innerHTML = ''; clients.filter(c => c.step === 6 && !c.isPartner).forEach(c => { const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; gap:15px; color:white;"; row.innerHTML = `<div style="width:44px; height:44px; border-radius:50%; background-size:cover; background-image:url(${c.photo||''})"></div><div style="font-weight:bold;">${c.lname} ${c.fname}</div>`; row.onclick = async () => { await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ isPartner: true, parentId: currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me' }); window.history.back(); }; list.appendChild(row); }); document.getElementById('partner-select-modal').style.display = 'flex'; window.history.pushState({s:1}, ""); }
+        function openPartnerSelect() { const list = document.getElementById('modal-partners-list'); list.innerHTML = ''; const candidates = clients.filter(c => c.step === 6 && !c.isPartner); if(candidates.length === 0) { list.innerHTML = `<div style="text-align:center; opacity:0.5; padding:40px;">У списку СЕМІНАР немає вільних кандидатів</div>`; } else { candidates.forEach(c => { const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; gap:15px; color:white;"; row.innerHTML = `<div style="width:44px; height:44px; border-radius:50%; background-size:cover; background-image:url(${c.photo||''})"></div><div style="font-weight:bold;">${c.lname} ${c.fname}</div>`; row.onclick = async () => { await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ isPartner: true, parentId: currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me' }); window.history.back(); }; list.appendChild(row); }); } document.getElementById('partner-select-modal').style.display = 'flex'; window.history.pushState({s:1}, ""); }
         async function removeFromStruct(id) { if(confirm("Видалити зі структури?")) await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ isPartner: false, parentId: null }); }
-        function login() { auth.signInWithPopup(provider); }
-        function logout() { auth.signOut().then(() => location.reload()); }
-        async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAllUI(); } }
+        function login() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
     </script>
 </body>
 </html>
