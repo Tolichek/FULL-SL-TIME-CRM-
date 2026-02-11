@@ -35,7 +35,7 @@
         ::-webkit-scrollbar { display: none; }
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; height: 80px; position: relative; z-index: 100; }
         .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); }
-        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 28px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 10px #fff, 0 0 20px var(--neon); letter-spacing: 1px; }
+        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 28px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 10px #fff, 0 0 20px var(--neon), 0 0 30px var(--neon), 0 0 50px var(--neon); letter-spacing: 1px; }
         .total-count { font-size: 16px; font-weight: bold; line-height: 1; }
         .filter-btn { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; cursor: pointer; width: 30px; margin-top: 5px; }
         .f-line { height: 2px; background: white; border-radius: 2px; }
@@ -45,16 +45,18 @@
 
         .app-container { height: calc(100vh - 80px); overflow: hidden; display: none; }
         .app-container.active { display: block; }
+
+        /* СПИСКИ */
         .board { display: flex; overflow-x: auto; padding: 0 20px 55px; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
         .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; gap: 15px; }
         .cards-area { flex: 1; overflow-y: auto; padding-bottom: 0px; } 
-        .col-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; padding-bottom: 5px; font-weight: bold; }
+        .col-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; padding-bottom: 5px; font-weight: bold; font-family: sans-serif; }
         .col-count { margin-left: 10px; color: #fff; font-weight: bold; font-size: 16px; }
         .add-btn-center { grid-column: 2; cursor: pointer; font-size: 30px; font-weight: bold; padding: 0 10px; }
         .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
-        .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 30px; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; color: #fff; text-shadow: 0 0 8px var(--neon); }
+        .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 30px; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; color: #fff; text-shadow: 0 0 8px var(--neon), 0 0 15px var(--neon); }
 
-        /* СТРУКТУРА - ФІКСОВАНЕ НАМИСТО */
+        /* СТРУКТУРА */
         #struct-path { display: none; align-items: center; padding: 0 20px; gap: 10px; overflow-x: auto; height: 50px; background: rgba(0,0,0,0.1); border-bottom: 1px solid rgba(255,255,255,0.05); }
         .path-dot { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--neon); background-size: cover; background-position: center; flex-shrink: 0; cursor: pointer; }
         .struct-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 20px 25px; overflow-y: auto; align-content: start; height: calc(100% - 50px); }
@@ -82,10 +84,6 @@
         .photo-container { position: relative; width: 110px; height: 110px; margin: 0 auto; }
         .edit-level-display { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon); pointer-events: none; width: 60px; text-align: center; }
         .status-msg { position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%); font-size: 10px; opacity: 0.8; letter-spacing: 2px; font-weight: bold; color: #fff; pointer-events: none; z-index: 1001; }
-        .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 30px; }
-        .theme-btn { padding: 15px; text-align: center; cursor: pointer; border-radius: 10px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; }
-        .btn-purple { background: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); }
-        .btn-graphite { background: linear-gradient(135deg, #3a3a3c 0%, #1a1a1b 100%); }
     </style>
 </head>
 <body class="theme-purple">
@@ -148,15 +146,12 @@
     <div id="user-menu">
         <div style="font-size:18px; font-weight:bold; margin-bottom:30px; text-align:center;">НАЛАШТУВАННЯ</div>
         <button onclick="showPersonalData()" style="padding:15px; background:rgba(255,255,255,0.1); color:white; border:1px solid silver; border-radius:12px; width:100%; font-weight:bold; margin-bottom:30px; cursor:pointer;">ОСОБИСТІ ДАНІ</button>
-        <label>ТЕМА ОФОРМЛЕННЯ</label>
-        <div class="theme-grid">
-            <div onclick="setTheme('purple')" class="theme-btn btn-purple">Фіолет</div>
-            <div onclick="setTheme('graphite')" class="theme-btn btn-graphite">Графіт</div>
-        </div>
         <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; cursor: pointer;">ЗАКРИТИ</button>
+        <div style="text-align:center; color:#ff4d4d; margin-top:30px; cursor:pointer; font-size:12px;" onclick="logout()">ВИЙТИ</div>
     </div>
 
     <div id="personal-data-screen">
+        <div style="font-size:18px; font-weight:bold; margin-bottom:30px; text-align:center;">ОСОБИСТІ ДАНІ</div>
         <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname" oninput="saveMeData()">
         <label>ІМ'Я</label><input type="text" id="me-fname" oninput="saveMeData()">
         <label>РІВЕНЬ</label><select id="me-level" onchange="updateMeLevelBadge(); saveMeData()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
@@ -165,11 +160,20 @@
 
     <div id="edit-screen">
         <span onclick="removeClient()" style="position: absolute; top: 25px; right: 25px; color: #ff4d4d; font-size: 12px; text-transform: uppercase; cursor: pointer;">Видалити</span>
+        <div style="text-align:center; margin-bottom: 20px;">
+            <div class="photo-container"><div id="c-photo" style="width:110px; height:110px; border-radius:50%; background:rgba(255,255,255,0.1); background-size:cover; background-position:center; border:1px solid rgba(255,255,255,0.2)"></div><div id="edit-level-badge" class="edit-level-display"></div></div>
+            <p style="font-size:10px; margin-top:10px; opacity:0.5; cursor: pointer;" onclick="document.getElementById('f-upload').click()">ЗМІНИТИ ФОТО</p>
+            <input type="file" id="f-upload" hidden onchange="handleFile(this)">
+        </div>
         <label>ЕТАП</label><select id="e-step" onchange="autoSave()"></select>
         <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname" oninput="autoSave()">
         <label>ІМ'Я</label><input type="text" id="e-fname" oninput="autoSave()">
-        <label>РІВЕНЬ</label><select id="e-level" onchange="autoSave()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
-        <button onclick="window.history.back()" style="margin-top:20px; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗАКРИТИ</button>
+        <label>НОМЕР ТЕЛЕФОНУ</label><input type="tel" id="e-phone" oninput="autoSave()">
+        <label>НОМЕР ПОЛІСУ</label><input type="text" id="e-pnum" oninput="autoSave()">
+        <label>ДАТА ПОЛІСУ</label><input type="date" id="e-pdate" onchange="autoSave()">
+        <label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge(); autoSave()"><option value="">Не обрано</option><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <label>ПРИМІТКИ</label><div class="notes-wrapper" id="notes-wrap"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value; autoSave()"></textarea></div>
+        <div class="status-msg" id="save-status"></div>
     </div>
 
     <script>
@@ -181,32 +185,25 @@
         let steps = ["Список", "Бесіда", "Розробка", "Презенти", "Ліфт", "Семінар", "Поліс"];
         let currentPath = [];
 
-        // ІНІЦІАЛІЗАЦІЯ ЗАХИСТУ ВІД ВИХОДУ
-        window.onload = () => {
-            window.history.pushState({home:true}, "");
-        };
+        window.onload = () => { window.history.pushState({home:true}, ""); };
 
         window.onpopstate = (e) => {
-            // Якщо відкрита анкета або меню - закриваємо
             if (editId || document.getElementById('user-menu').style.display === 'flex' || document.getElementById('partner-select-modal').style.display === 'flex' || document.getElementById('personal-data-screen').style.display === 'flex') {
                 closeAll();
-                window.history.pushState({home:true}, ""); // Підтримуємо заглушку
+                window.history.pushState({home:true}, "");
                 return;
             }
-            // Якщо в глибині структури - йдемо на рівень вгору
             if (currentPath.length > 0) {
                 currentPath.pop();
                 renderStructure();
                 window.history.pushState({home:true}, "");
                 return;
             }
-            // Якщо на головному столі структури - в Списки
             if (document.getElementById('screen-struct').classList.contains('active')) {
                 switchPage('crm', document.querySelector('.nav-item[onclick*="crm"]'));
                 window.history.pushState({home:true}, "");
                 return;
             }
-            // Заглушка, щоб не викидало зі Списків
             window.history.pushState({home:true}, "");
         };
 
@@ -229,12 +226,6 @@
             }
         }
 
-        function closeAll() {
-            if (editId) autoSave(true);
-            document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #bg-overlay, #partner-select-modal').forEach(el => el.style.display = 'none');
-            editId = null;
-        }
-
         auth.onAuthStateChanged(async u => {
             if(u) { user = u; document.getElementById('splash').style.display = 'none'; await loadUserConfig(); loadClients(); }
             else { document.getElementById('login-ui').style.display = 'block'; }
@@ -246,6 +237,7 @@
             if(data.steps) steps = data.steps;
             const photo = data.myPhoto || user.photoURL;
             document.getElementById('u-avatar').style.backgroundImage = `url(${photo})`;
+            setTheme(localStorage.getItem('crm_theme') || data.theme || 'purple');
         }
 
         function loadClients() {
@@ -272,6 +264,10 @@
             const b = document.getElementById('main-board'), s = document.getElementById('e-step');
             b.innerHTML = ''; s.innerHTML = '';
             let sorted = [...clients];
+            if(filterType === 'az') sorted.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
+            if(filterType === 'new') sorted.sort((a,b) => b.created - a.created);
+            if(filterType === 'old') sorted.sort((a,b) => a.created - b.created);
+
             steps.forEach((n, i) => {
                 const filtered = sorted.filter(c => c.step == i);
                 const col = document.createElement('div'); col.className = 'column';
@@ -280,7 +276,7 @@
                 s.innerHTML += `<option value="${i}">${n}</option>`;
                 filtered.forEach(c => {
                     const div = document.createElement('div'); div.className = 'card'; div.onclick = () => { window.history.pushState({edit:true}, ""); openEdit(c.id); };
-                    div.innerHTML = (c.level ? `<div class="card-level">${c.level}</div>` : '') + `<div style="font-weight:600; font-size: 16px;">${c.lname||""} ${c.fname||""}</div>`;
+                    div.innerHTML = (c.level ? `<div class="card-level">${c.level}</div>` : '') + `<div style="font-weight:600; font-size: 16px;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;margin-top:5px">${c.phone||""}</div>`;
                     document.getElementById(`list-${i}`).appendChild(div);
                 });
             });
@@ -326,13 +322,35 @@
         }
 
         async function removeFromStruct(id) { if(confirm("Прибрати?")) await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ isPartner: false, parentId: null }); }
-        async function autoSave(instant = false) { if (!editId) return; clearTimeout(saveTimeout); const save = async () => { const data = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, level: document.getElementById('e-level').value, step: parseInt(document.getElementById('e-step').value) }; await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(data, {merge:true}); }; if(instant) await save(); else saveTimeout = setTimeout(save, 1000); }
-        function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','step','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || (k==='step'?0:"")); document.getElementById('edit-screen').style.display = 'flex'; }
-        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); openEdit(res.id); }
+
+        async function autoSave(instant = false) { 
+            if (!editId) return; 
+            const status = document.getElementById('save-status');
+            status.innerText = "ЗБЕРЕЖЕННЯ...";
+            clearTimeout(saveTimeout); 
+            const save = async () => { 
+                const data = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, pnum: document.getElementById('e-pnum').value, pdate: document.getElementById('e-pdate').value, notes: document.getElementById('e-notes').value, level: document.getElementById('e-level').value, step: parseInt(document.getElementById('e-step').value), photo: currentPhoto, updated: Date.now() }; 
+                await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(data, {merge:true}); 
+                status.innerText = "ЗБЕРЕЖЕНО"; setTimeout(() => status.innerText = "", 500);
+            }; 
+            if(instant) await save(); else saveTimeout = setTimeout(save, 1000); 
+        }
+
+        function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','phone','pnum','pdate','notes','step','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || (k==='step'?0:"")); document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || ""; currentPhoto = c.photo; document.getElementById('c-photo').style.backgroundImage = currentPhoto ? `url(${currentPhoto})` : 'none'; updateEditLevelBadge(); document.getElementById('edit-screen').style.display = 'flex'; }
+        function closeAll() { if (editId) autoSave(true); document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #bg-overlay, #partner-select-modal').forEach(el => el.style.display = 'none'); editId = null; }
+        function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
+        function updateMeLevelBadge() { document.getElementById('me-level-badge').innerText = document.getElementById('me-level').value; }
+        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); window.history.pushState({edit:true}, ""); openEdit(res.id); }
+        async function editStep(i) { const n = prompt("Назва етапу:", steps[i]); if (n === "") { if(confirm("Видалити?")) steps.splice(i, 1); } else if (n) steps[i] = n; await syncSteps(); }
+        async function addStep() { const n = prompt("Назва нового:"); if(n) { steps.push(n); await syncSteps(); } }
+        async function syncSteps() { await db.collection("users").doc(user.uid).set({steps}, {merge:true}); renderBoard(); }
+        function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
+        function setFilter(t) { filterType = t; renderBoard(); toggleFilter(); }
         function showUserMenu() { window.history.pushState({menu:true}, ""); document.getElementById('user-menu').style.display = 'flex'; }
         function showPersonalData() { window.history.pushState({personal:true}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
         function setTheme(t) { document.body.className = 'theme-' + t; if(user) db.collection("users").doc(user.uid).set({theme: t}, {merge:true}); }
-        function login() { auth.signInWithPopup(provider); }
+        function handleFile(input) { const r = new FileReader(); r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; autoSave(); }; r.readAsDataURL(input.files[0]); }
+        function saveMeData() { const data = { meLname: document.getElementById('me-lname').value, meFname: document.getElementById('me-fname').value, meLevel: document.getElementById('me-level').value }; db.collection("users").doc(user.uid).set(data, {merge:true}); }
         function logout() { auth.signOut().then(() => location.reload()); }
     </script>
 </body>
