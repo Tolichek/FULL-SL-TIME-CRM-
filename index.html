@@ -33,20 +33,20 @@
         body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
 
         ::-webkit-scrollbar { display: none; }
-        header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; height: 80px; position: relative; z-index: 1000; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; height: 80px; position: relative; z-index: 1000; }
         .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); }
-        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 28px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 20px var(--neon); letter-spacing: 1px; }
+        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 26px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 20px var(--neon); letter-spacing: 0.5px; flex: 1; text-align: center; }
         
-        .header-right { display: flex; align-items: center; gap: 15px; transition: opacity 0.3s; }
+        .header-right { display: flex; align-items: center; gap: 10px; min-width: 60px; justify-content: flex-end; }
         .total-count { font-size: 16px; font-weight: bold; }
-        .filter-btn { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; cursor: pointer; width: 30px; }
+        .filter-btn { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; cursor: pointer; width: 25px; }
         .f-line { height: 2px; background: white; border-radius: 2px; }
         .l1 { width: 22px; } .l2 { width: 16px; } .l3 { width: 10px; }
 
-        #filter-popup { position: absolute; top: 75px; right: 20px; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
+        #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
         .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-        /* СКРОЛЕР КОНТЕЙНЕРІВ (ЕКРАНИ ТЕЛЕФОНУ) */
+        /* ЕКРАНИ З ПОСИЛЕНИМИ МАГНІТАМИ */
         #main-viewport { 
             display: flex; 
             width: 100vw; 
@@ -55,20 +55,20 @@
             scroll-snap-type: x mandatory; 
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
-            gap: 40px; /* Повітряний простір між столами */
+            gap: 60px; /* Більший розрив для ефекту столів */
         }
         .app-container { 
             flex: 0 0 100vw; 
             width: 100vw; 
             height: 100%; 
             scroll-snap-align: start; 
+            scroll-snap-stop: always;
             overflow: hidden;
             position: relative;
         }
 
-        /* МАГНІТ ДЛЯ СПИСКІВ */
         .board { display: flex; overflow-x: auto; padding: 0 20px 55px; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
-        .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; gap: 15px; }
+        .column { min-width: calc(100vw - 40px); scroll-snap-align: center; scroll-snap-stop: always; display: flex; flex-direction: column; gap: 15px; }
         .cards-area { flex: 1; overflow-y: auto; padding-bottom: 20px; } 
         
         .col-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 14px; text-transform: uppercase; font-weight: bold; }
@@ -77,28 +77,26 @@
         .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
         .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 30px; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; color: #fff; text-shadow: 0 0 8px var(--neon); }
 
-        /* СТРУКТУРА */
         #struct-path { display: none; align-items: center; padding: 0 20px; gap: 10px; overflow-x: auto; height: 50px; background: rgba(0,0,0,0.1); border-bottom: 1px solid rgba(255,255,255,0.05); }
         .path-dot { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--neon); background-size: cover; background-position: center; flex-shrink: 0; cursor: pointer; }
         .struct-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 20px 25px; overflow-y: auto; align-content: start; height: calc(100% - 50px); }
         
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.7); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
-        .nav-item { color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33%; height: 100%; font-size: 12px; font-weight: bold; }
+        .nav-item { color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33%; height: 100%; font-size: 11px; font-weight: bold; }
         .nav-item.active { opacity: 1; text-shadow: 0 0 10px var(--neon); }
 
         #edit-screen, #user-menu, #personal-data-screen, #partner-select-modal { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
         select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
         label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
         
-        /* ПРИМІТКИ ЯКІ ТЯГНУТЬСЯ */
         .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
         .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; font-size: 16px; }
         #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; font-size: 16px; outline: none; }
         
         .photo-container { position: relative; width: 110px; height: 110px; margin: 0 auto; }
         .edit-level-display { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon); width: 60px; text-align: center; }
-        .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
-        .theme-btn { padding: 15px; text-align: center; cursor: pointer; border-radius: 10px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; }
+        .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+        .theme-btn { padding: 16px; text-align: center; cursor: pointer; border-radius: 12px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.15); text-transform: uppercase; }
     </style>
 </head>
 <body class="theme-purple">
@@ -112,10 +110,10 @@
         <div id="login-ui" style="display:none; margin-top:40px;"><button onclick="login()" style="background:white;border:none;padding:12px 30px;border-radius:25px;font-weight:bold;">Увійти через Google</button></div>
     </div>
 
-    <header>
+    <header id="app-header">
         <div class="avatar" id="u-avatar" onclick="showUserMenu()"></div>
         <div class="header-title">SL Time CRM</div>
-        <div class="header-right" id="header-controls">
+        <div class="header-right" id="header-ctrl">
             <div id="header-counter" class="total-count">0</div>
             <div id="h-filter" class="filter-btn" onclick="toggleFilter()">
                 <div class="f-line l1"></div><div class="f-line l2"></div><div class="f-line l3"></div>
@@ -149,16 +147,19 @@
     </nav>
 
     <div id="user-menu">
+        <div style="font-size:18px; font-weight:bold; margin-bottom:30px; text-align:center;">НАЛАШТУВАННЯ</div>
         <button onclick="showPersonalData()" style="padding:15px; background:rgba(255,255,255,0.1); color:white; border-radius:12px; width:100%; font-weight:bold; margin-bottom:10px; border:1px solid silver;">ОСОБИСТІ ДАНІ</button>
+        <label style="margin-top:20px;">ТЕМА ОФОРМЛЕННЯ</label>
         <div class="theme-grid">
-            <div onclick="setTheme('purple')" class="theme-btn btn-purple">Фіолет</div>
-            <div onclick="setTheme('graphite')" class="theme-btn btn-graphite">Графіт</div>
-            <div onclick="setTheme('blue')" class="theme-btn btn-blue">Синій</div>
-            <div onclick="setTheme('green')" class="theme-btn btn-green">Зелений</div>
-            <div onclick="setTheme('gold')" class="theme-btn btn-gold">Золото</div>
-            <div onclick="setTheme('pink')" class="theme-btn btn-pink">Рожевий</div>
+            <div onclick="setTheme('purple')" class="theme-btn btn-purple" style="background:linear-gradient(135deg,#3d0561,#2e0249)">Фіолет</div>
+            <div onclick="setTheme('graphite')" class="theme-btn btn-graphite" style="background:linear-gradient(135deg,#3a3a3c,#1a1a1b)">Графіт</div>
+            <div onclick="setTheme('blue')" class="theme-btn btn-blue" style="background:linear-gradient(135deg,#052661,#021b49)">Синій</div>
+            <div onclick="setTheme('green')" class="theme-btn btn-green" style="background:linear-gradient(135deg,#054126,#02331a)">Зелений</div>
+            <div onclick="setTheme('gold')" class="theme-btn btn-gold" style="background:linear-gradient(135deg,#614d05,#443501)">Золото</div>
+            <div onclick="setTheme('pink')" class="theme-btn btn-pink" style="background:linear-gradient(135deg,#61053d,#49022e)">Рожевий</div>
         </div>
-        <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗАКРИТИ</button>
+        <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗАКРИТИ</button>
+        <div style="text-align:center; color:#ff4d4d; margin-top:30px; cursor:pointer; font-weight:bold;" onclick="logout()">ВИЙТИ</div>
     </div>
 
     <div id="personal-data-screen">
@@ -166,7 +167,7 @@
         <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname">
         <label>ІМ'Я</label><input type="text" id="me-fname">
         <label>РІВЕНЬ</label><select id="me-level" onchange="updateMeLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
-        <button onclick="saveMeData()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ</button>
+        <button onclick="saveMeData()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ ТА ВИЙТИ</button>
     </div>
 
     <div id="edit-screen">
@@ -198,30 +199,26 @@
         const steps = ["Список", "Бесіда", "Розробка", "Презенти", "Ліфт", "Семінар", "Поліс"];
         let currentPath = [];
 
-        // НАВІГАЦІЯ
+        // НАВІГАЦІЯ ТА ХЕДЕР
         const vp = document.getElementById('main-viewport');
         vp.addEventListener('scroll', () => {
-            const index = Math.round(vp.scrollLeft / (window.innerWidth + 40));
+            const index = Math.round(vp.scrollLeft / (window.innerWidth + 60));
             document.querySelectorAll('.nav-item').forEach((btn, i) => btn.classList.toggle('active', i === index));
             
-            // КЕРУВАННЯ ХЕДЕРОМ
-            const controls = document.getElementById('header-controls');
+            const ctrl = document.getElementById('header-ctrl');
             const pathBar = document.getElementById('struct-path');
             if(index === 1) {
-                controls.style.opacity = '0';
-                controls.style.pointerEvents = 'none';
-                pathBar.style.display = 'flex';
-                renderStructure();
+                ctrl.style.opacity = '0'; ctrl.style.pointerEvents = 'none';
+                pathBar.style.display = 'flex'; renderStructure();
             } else {
-                controls.style.opacity = '1';
-                controls.style.pointerEvents = 'auto';
+                ctrl.style.opacity = '1'; ctrl.style.pointerEvents = 'auto';
                 pathBar.style.display = 'none';
             }
             updateHeaderCounter();
         });
 
         function jumpToPage(index) {
-            vp.scrollTo({ left: index * (window.innerWidth + 40), behavior: 'smooth' });
+            vp.scrollTo({ left: index * (window.innerWidth + 60), behavior: 'smooth' });
         }
 
         function lock() { window.history.pushState({l:1}, ""); }
@@ -240,8 +237,9 @@
         async function loadUserConfig() {
             const doc = await db.collection("users").doc(user.uid).get();
             const data = doc.data() || {};
-            document.getElementById('u-avatar').style.backgroundImage = `url(${data.myPhoto || user.photoURL})`;
-            document.getElementById('me-photo').style.backgroundImage = `url(${data.myPhoto || user.photoURL})`;
+            const photo = data.myPhoto || user.photoURL;
+            document.getElementById('u-avatar').style.backgroundImage = `url(${photo})`;
+            document.getElementById('me-photo').style.backgroundImage = `url(${photo})`;
             document.getElementById('me-lname').value = data.meLname || "";
             document.getElementById('me-fname').value = data.meFname || "";
             document.getElementById('me-level').value = data.meLevel || "";
@@ -252,13 +250,12 @@
         function loadClients() {
             db.collection("users").doc(user.uid).collection("clients").onSnapshot(snap => {
                 clients = []; snap.forEach(d => clients.push({id: d.id, ...d.data()}));
-                renderBoard();
-                updateHeaderCounter();
+                renderBoard(); updateHeaderCounter();
             });
         }
 
         function updateHeaderCounter() {
-            const index = Math.round(vp.scrollLeft / (window.innerWidth + 40));
+            const index = Math.round(vp.scrollLeft / (window.innerWidth + 60));
             const counter = document.getElementById('header-counter');
             if(index === 1) {
                 const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
@@ -277,7 +274,7 @@
             steps.forEach((n, i) => {
                 const filtered = sorted.filter(c => c.step == i);
                 const col = document.createElement('div'); col.className = 'column';
-                col.innerHTML = `<div class="col-head"><div>${n}<span class="col-count" style="margin-left:10px; font-size:16px;">${filtered.length}</span></div><div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}</div><div></div></div><div id="list-${i}" class="cards-area"></div>`;
+                col.innerHTML = `<div class="col-head"><div>${n}<span style="margin-left:10px; font-size:16px;">${filtered.length}</span></div><div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}</div><div></div></div><div id="list-${i}" class="cards-area"></div>`;
                 b.appendChild(col);
                 s.innerHTML += `<option value="${i}">${n}</option>`;
                 filtered.forEach(c => {
@@ -333,7 +330,6 @@
         function showPersonalData() { window.history.pushState({p:1}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
         function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); if(user) db.collection("users").doc(user.uid).set({theme: t}, {merge:true}); }
         function handleFile(input) { const r = new FileReader(); r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; }; r.readAsDataURL(input.files[0]); }
-        function handleMeFile(input) { const r = new FileReader(); r.onload = async e => { const img = e.target.result; document.getElementById('me-photo').style.backgroundImage = `url(${img})`; document.getElementById('u-avatar').style.backgroundImage = `url(${img})`; await db.collection("users").doc(user.uid).set({myPhoto: img}, {merge:true}); }; r.readAsDataURL(input.files[0]); }
         function login() { auth.signInWithPopup(provider); }
         function logout() { auth.signOut().then(() => location.reload()); }
         async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAllUI(); } }
