@@ -43,6 +43,9 @@
         .f-line { height: 2px; background: white; border-radius: 2px; }
         .l1 { width: 22px; } .l2 { width: 16px; } .l3 { width: 10px; }
 
+        /* КНОПКА ПЛЮС ДЛЯ СТРУКТУРИ В ХЕДЕРІ */
+        #header-plus { display: none; font-size: 36px; font-weight: bold; color: white; cursor: pointer; min-width: 50px; text-align: right; line-height: 1; }
+
         #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
         .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
@@ -107,12 +110,15 @@
     <header id="app-header">
         <div class="avatar" id="u-avatar" onclick="showUserMenu()"></div>
         <div class="header-title">SL Time CRM</div>
+        
         <div id="header-ctrl" onclick="toggleFilter()">
             <div id="header-counter" class="total-count">0</div>
             <div class="f-lines">
                 <div class="f-line l1"></div><div class="f-line l2"></div><div class="f-line l3"></div>
             </div>
         </div>
+
+        <div id="header-plus" onclick="openPartnerSelect()">+</div>
     </header>
 
     <div id="filter-popup">
@@ -198,12 +204,17 @@
             document.querySelectorAll('.nav-item').forEach((btn, i) => btn.classList.toggle('active', i === index));
             
             const ctrl = document.getElementById('header-ctrl');
+            const plus = document.getElementById('header-plus');
             const pathBar = document.getElementById('struct-path');
-            if(index === 1) {
-                ctrl.style.opacity = '0'; ctrl.style.pointerEvents = 'none';
-                pathBar.style.display = 'flex'; renderStructure();
-            } else {
-                ctrl.style.opacity = '1'; ctrl.style.pointerEvents = 'auto';
+            
+            if(index === 1) { // СТРУКТУРА
+                ctrl.style.display = 'none';
+                plus.style.display = 'block';
+                pathBar.style.display = 'flex'; 
+                renderStructure();
+            } else { // СПИСКИ або ПЛАН
+                ctrl.style.display = 'flex';
+                plus.style.display = 'none';
                 pathBar.style.display = 'none';
             }
             updateHeaderCounter();
@@ -293,27 +304,20 @@
                 box.innerHTML = `<div class="icon-img" style="background-image:url(${p.photo || ''})" onclick="currentPath.push({id:'${p.id}', photo:'${p.photo||''}'}); renderStructure();"><div class="icon-badge">${p.level || 0}</div><div class="icon-minus" onclick="event.stopPropagation(); removeFromStruct('${p.id}')">−</div></div><div class="icon-label">${p.lname || ''}</div><div class="icon-opt" onclick="window.history.pushState({e:1}, ''); openEdit('${p.id}')">⚙️</div>`;
                 grid.appendChild(box);
             });
-            grid.innerHTML += `<div class="icon-unit"><div style="width:80px;height:80px;border-radius:20px;border:2px dashed rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:40px;color:rgba(255,255,255,0.2);" onclick="openPartnerSelect()">+</div><div class="icon-label">Додати</div></div>`;
         }
 
-        // НОВА ЛОГІКА ПІДБОРУ ЛЮДЕЙ ЗІ СПИСКУ СЕМІНАР
         function openPartnerSelect() {
             const list = document.getElementById('modal-partners-list'); list.innerHTML = '';
-            // Шукаємо людей на етапі СЕМІНАР (індекс 6), які ще не в структурі
             const candidates = clients.filter(c => c.step === 6 && !c.isPartner);
-            
             if(candidates.length === 0) {
-                list.innerHTML = `<div style="text-align:center; opacity:0.5; padding:40px;">У списку СЕМІНАР немає вільних кандидатів</div>`;
+                list.innerHTML = `<div style="text-align:center; opacity:0.5; padding:40px;">У списку СЕМІНАР немає кандидатів</div>`;
             } else {
                 candidates.forEach(c => {
                     const row = document.createElement('div'); 
                     row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; gap:15px; color:white; border:1px solid rgba(255,255,255,0.1);";
                     row.innerHTML = `<div style="width:44px; height:44px; border-radius:50%; background-size:cover; background-position:center; background-image:url(${c.photo||''})"></div><div style="font-weight:bold;">${c.lname || ''} ${c.fname || ''}</div>`;
                     row.onclick = async () => { 
-                        await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ 
-                            isPartner: true, 
-                            parentId: currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me' 
-                        }); 
+                        await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ isPartner: true, parentId: currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me' }); 
                         window.history.back(); 
                     };
                     list.appendChild(row);
