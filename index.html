@@ -50,12 +50,7 @@
         }
         
         .header-right { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        
-        /* ОНОВЛЕНО: Розмір 16px та прибрано сяйво */
-        .total-count { 
-            font-size: 16px; font-weight: bold; font-family: sans-serif; 
-            line-height: 1;
-        }
+        .total-count { font-size: 16px; font-weight: bold; font-family: sans-serif; line-height: 1; }
 
         .filter-btn { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; cursor: pointer; width: 30px; margin-top: 5px; }
         .f-line { height: 2px; background: white; border-radius: 2px; }
@@ -99,15 +94,20 @@
             display: flex; justify-content: space-around; align-items: center; 
             z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1);
         }
-        .nav-item { 
-            color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33%; height: 100%;
-        }
-        .nav-item.active { 
-            opacity: 1; 
-        }
-        
+        .nav-item { color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33%; height: 100%; }
+        .nav-item.active { opacity: 1; }
         .nav-icon-svg { width: 24px; height: 24px; transition: 0.3s; filter: drop-shadow(0 0 0px var(--neon)); }
         .nav-item.active .nav-icon-svg { filter: drop-shadow(0 0 5px var(--neon)) drop-shadow(0 0 10px var(--neon)); stroke: #fff; }
+
+        /* Styles for Structure Space */
+        #struct-canvas { width: 100%; height: 100%; overflow: hidden; position: relative; cursor: grab; }
+        #struct-viewport { position: absolute; transform-origin: 0 0; will-change: transform; }
+        #struct-lines { position: absolute; top: 0; left: 0; width: 5000px; height: 5000px; pointer-events: none; }
+        .struct-node { position: absolute; width: 100px; height: 120px; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; z-index: 2; cursor: pointer; }
+        .node-photo { width: 70px; height: 70px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 2px solid var(--neon); position: relative; background-size: cover; background-position: center; box-shadow: 0 0 15px var(--neon); }
+        .node-badge { position: absolute; top: -5px; right: -5px; background: #fff; color: #000; font-size: 12px; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; box-shadow: 0 0 10px var(--neon); }
+        .node-name { font-size: 11px; margin-top: 8px; white-space: nowrap; text-align: center; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+        .node-add { width: 20px; height: 20px; background: rgba(255,255,255,0.2); border-radius: 50%; margin-top: 5px; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; }
 
         #edit-screen, #user-menu, #personal-data-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
         .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 8999; display: none; backdrop-filter: blur(5px); }
@@ -120,16 +120,8 @@
         #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; font-size: 16px; outline: none; }
 
         .photo-container { position: relative; width: 110px; height: 110px; margin: 0 auto; }
-        
-        .edit-level-display {
-            position: absolute; top: 50%; left: -65px; transform: translateY(-50%);
-            font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff;
-            text-shadow: 0 0 15px var(--neon), 0 0 25px var(--neon);
-            pointer-events: none; width: 60px; text-align: center;
-        }
-
+        .edit-level-display { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon), 0 0 25px var(--neon); pointer-events: none; width: 60px; text-align: center; }
         .status-msg { position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%); font-size: 10px; opacity: 0.8; letter-spacing: 2px; font-weight: bold; color: #fff; pointer-events: none; z-index: 1001; }
-
         .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 30px; }
         .theme-btn { padding: 15px; text-align: center; cursor: pointer; border-radius: 10px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; }
         .btn-purple { background: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); }
@@ -169,8 +161,14 @@
         <main class="board" id="main-board"></main>
     </div>
 
-    <div id="screen-struct" class="app-container">
-        <div style="display:flex; align-items:center; justify-content:center; height:100%; opacity:0.3; font-size:20px;">СТРУКТУРА В РОЗРОБЦІ</div>
+    <div id="screen-struct" class="app-container" style="background: rgba(0,0,0,0.2); position: relative; touch-action: none;">
+        <div id="struct-canvas">
+            <div id="struct-viewport">
+                <svg id="struct-lines"></svg>
+                <div id="struct-nodes"></div>
+            </div>
+        </div>
+        <div onclick="resetStructView()" style="position:absolute; bottom:20px; right:20px; width:44px; height:44px; background:rgba(0,0,0,0.5); border-radius:50%; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.2); z-index:100; font-size:20px;">🎯</div>
     </div>
 
     <div id="screen-plan" class="app-container">
@@ -270,11 +268,25 @@
         let user = null, clients = [], editId = null, currentPhoto = null, filterType = 'new', saveTimeout;
         let steps = ["Список", "Бесіда", "Розробка", "Презенти", "Ліфт", "Семінар", "Поліс"];
 
+        // Structure Logic Data
+        let structData = {
+            offset: { x: window.innerWidth / 2, y: 150 },
+            scale: 1, isDragging: false, lastPos: { x: 0, y: 0 }
+        };
+        const demoPartners = [
+            { id: 'me', name: 'Я (Ти)', level: 5, x: 0, y: 0, parentId: null, photo: '' },
+            { id: 'p1', name: 'Олександр В.', level: 1, x: -130, y: 160, parentId: 'me', photo: '' },
+            { id: 'p2', name: 'Марія К.', level: 2, x: 130, y: 160, parentId: 'me', photo: '' },
+            { id: 'p3', name: 'Дмитро Л.', level: 1, x: 60, y: 320, parentId: 'p2', photo: '' },
+            { id: 'p4', name: 'Олена П.', level: 1, x: 200, y: 320, parentId: 'p2', photo: '' }
+        ];
+
         function switchPage(pageId, el) {
             document.querySelectorAll('.app-container').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.getElementById('screen-' + pageId).classList.add('active');
             el.classList.add('active');
+            if(pageId === 'struct') setTimeout(initStructure, 100);
         }
 
         window.onpopstate = () => { closeAll(); };
@@ -335,6 +347,54 @@
                 });
             });
         }
+
+        // Structure Canvas Functions
+        function initStructure() {
+            const canvas = document.getElementById('struct-canvas');
+            canvas.onpointerdown = (e) => {
+                structData.isDragging = true;
+                structData.lastPos = { x: e.clientX, y: e.clientY };
+                canvas.setPointerCapture(e.pointerId);
+            };
+            canvas.onpointermove = (e) => {
+                if (!structData.isDragging) return;
+                structData.offset.x += (e.clientX - structData.lastPos.x);
+                structData.offset.y += (e.clientY - structData.lastPos.y);
+                structData.lastPos = { x: e.clientX, y: e.clientY };
+                renderStructure();
+            };
+            canvas.onpointerup = (e) => { structData.isDragging = false; canvas.releasePointerCapture(e.pointerId); };
+            canvas.onwheel = (e) => {
+                e.preventDefault();
+                structData.scale = Math.min(Math.max(0.3, structData.scale - e.deltaY * 0.001), 2);
+                renderStructure();
+            };
+            renderStructure();
+        }
+
+        function renderStructure() {
+            const vp = document.getElementById('struct-viewport'), nodes = document.getElementById('struct-nodes'), lines = document.getElementById('struct-lines');
+            vp.style.transform = `translate(${structData.offset.x}px, ${structData.offset.y}px) scale(${structData.scale})`;
+            nodes.innerHTML = ''; lines.innerHTML = '';
+            demoPartners.forEach(p => {
+                const node = document.createElement('div');
+                node.className = 'struct-node';
+                node.style.left = p.x + 'px'; node.style.top = p.y + 'px';
+                node.innerHTML = `<div class="node-photo" style="background-image:url(${p.photo})"><div class="node-badge">${p.level}</div></div><div class="node-name">${p.name}</div><div class="node-add">+</div>`;
+                nodes.appendChild(node);
+                if (p.parentId) {
+                    const parent = demoPartners.find(x => x.id === p.parentId);
+                    if (parent) {
+                        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                        line.setAttribute("x1", parent.x); line.setAttribute("y1", parent.y);
+                        line.setAttribute("x2", p.x); line.setAttribute("y2", p.y);
+                        line.setAttribute("stroke", "rgba(255,255,255,0.3)"); line.setAttribute("stroke-width", "1.5"); line.setAttribute("stroke-dasharray", "4");
+                        lines.appendChild(line);
+                    }
+                }
+            });
+        }
+        function resetStructView() { structData.offset = { x: window.innerWidth / 2, y: 150 }; structData.scale = 1; renderStructure(); }
 
         async function autoSave(instant = false) {
             if (!editId) return;
