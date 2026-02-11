@@ -37,9 +37,9 @@
         .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); }
         .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 26px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 20px var(--neon); letter-spacing: 0.5px; flex: 1; text-align: center; }
         
-        /* ОБ'ЄДНАНИЙ ФІЛЬТР ТА ЛІЧИЛЬНИК */
-        #header-ctrl { display: flex; align-items: center; gap: 8px; cursor: pointer; min-width: 60px; justify-content: flex-end; height: 44px; transition: opacity 0.3s; }
-        .total-count { font-size: 16px; font-weight: bold; line-height: 1; }
+        /* ЛІЧИЛЬНИК НАД ФІЛЬТРОМ */
+        #header-ctrl { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; cursor: pointer; min-width: 50px; height: 44px; transition: opacity 0.3s; }
+        .total-count { font-size: 14px; font-weight: bold; line-height: 1; opacity: 0.9; }
         .f-lines { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; width: 22px; }
         .f-line { height: 2px; background: white; border-radius: 2px; }
         .l1 { width: 22px; } .l2 { width: 16px; } .l3 { width: 10px; }
@@ -47,26 +47,8 @@
         #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
         .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
-        /* В'ЮПОРТ ТА СТОЛИ */
-        #main-viewport { 
-            display: flex; 
-            width: 100vw; 
-            height: calc(100vh - 80px); 
-            overflow-x: auto; 
-            scroll-snap-type: x mandatory; 
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
-            gap: 60px;
-        }
-        .app-container { 
-            flex: 0 0 100vw; 
-            width: 100vw; 
-            height: 100%; 
-            scroll-snap-align: start; 
-            scroll-snap-stop: always;
-            overflow: hidden;
-            position: relative;
-        }
+        #main-viewport { display: flex; width: 100vw; height: calc(100vh - 80px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; gap: 60px; }
+        .app-container { flex: 0 0 100vw; width: 100vw; height: 100%; scroll-snap-align: start; scroll-snap-stop: always; overflow: hidden; position: relative; }
 
         .board { display: flex; overflow-x: auto; padding: 0 20px 55px; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
         .column { min-width: calc(100vw - 40px); scroll-snap-align: center; scroll-snap-stop: always; display: flex; flex-direction: column; gap: 15px; }
@@ -80,7 +62,7 @@
         #struct-path { display: none; align-items: center; padding: 0 20px; gap: 10px; overflow-x: auto; height: 50px; background: rgba(0,0,0,0.1); border-bottom: 1px solid rgba(255,255,255,0.05); }
         .path-dot { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--neon); background-size: cover; background-position: center; flex-shrink: 0; cursor: pointer; }
         .struct-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 20px 25px; overflow-y: auto; align-content: start; height: calc(100% - 50px); }
-        
+
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.7); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
         .nav-item { color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33%; height: 100%; font-size: 11px; font-weight: bold; }
         .nav-item.active { opacity: 1; text-shadow: 0 0 10px var(--neon); }
@@ -88,15 +70,14 @@
         #edit-screen, #user-menu, #personal-data-screen, #partner-select-modal { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
         select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
         label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
-        
+
         .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
         .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; font-size: 16px; }
         #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; font-size: 16px; outline: none; }
         
         .photo-container { position: relative; width: 110px; height: 110px; margin: 0 auto; }
         .edit-level-display { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon); width: 60px; text-align: center; }
-        
-        /* КНОПКИ ТЕМ З ЗАЛИВКОЮ */
+
         .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
         .theme-btn { padding: 16px; text-align: center; cursor: pointer; border-radius: 12px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; color: white; }
         .btn-purple { background: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); }
@@ -193,6 +174,11 @@
         <button onclick="manualSave()" style="margin-top:20px; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ ТА ВИЙТИ</button>
     </div>
 
+    <div id="partner-select-modal">
+        <div id="modal-partners-list" style="flex:1; overflow-y:auto;"></div>
+        <button onclick="window.history.back()" style="padding:18px; width:100%; border-radius:30px; background:white; color:black;">НАЗАД</button>
+    </div>
+
     <script>
         const firebaseConfig = { apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY", authDomain: "starlife-crm.firebaseapp.com", projectId: "starlife-crm", storageBucket: "starlife-crm.firebasestorage.app", messagingSenderId: "1022280682130", appId: "1:1022280682130:web:3ea517e8b6d22c7787744b" };
         firebase.initializeApp(firebaseConfig);
@@ -223,7 +209,9 @@
         function lock() { window.history.pushState({l:1}, ""); }
         window.onload = lock;
         window.onpopstate = () => {
-            if (editId || document.getElementById('user-menu').style.display==='flex' || document.getElementById('personal-data-screen').style.display==='flex') { closeAllUI(); lock(); return; }
+            if (editId || document.getElementById('user-menu').style.display==='flex' || document.getElementById('partner-select-modal').style.display==='flex' || document.getElementById('personal-data-screen').style.display==='flex') {
+                closeAllUI(); lock(); return;
+            }
             if (currentPath.length > 0) { currentPath.pop(); renderStructure(); lock(); return; }
             if (vp.scrollLeft > 0) { jumpToPage(0); lock(); return; }
             lock();
@@ -306,7 +294,7 @@
         async function manualSave() { if(!editId) return; const data = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, pnum: document.getElementById('e-pnum').value, pdate: document.getElementById('e-pdate').value, notes: document.getElementById('e-notes').value, level: document.getElementById('e-level').value, step: parseInt(document.getElementById('e-step').value), photo: currentPhoto, updated: Date.now() }; await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(data, {merge:true}); closeAllUI(); }
         async function saveMeData() { const data = { meLname: document.getElementById('me-lname').value, meFname: document.getElementById('me-fname').value, meLevel: document.getElementById('me-level').value }; await db.collection("users").doc(user.uid).set(data, {merge:true}); closeAllUI(); }
         function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','phone','pnum','pdate','notes','step','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || (k==='step'?0:"")); document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || ""; currentPhoto = c.photo; document.getElementById('c-photo').style.backgroundImage = `url(${currentPhoto||''})`; updateEditLevelBadge(); document.getElementById('edit-screen').style.display='flex'; }
-        function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen').forEach(el => el.style.display = 'none'); editId = null; }
+        function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #partner-select-modal').forEach(el => el.style.display = 'none'); editId = null; }
         function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
         function updateMeLevelBadge() { document.getElementById('me-level-badge').innerText = document.getElementById('me-level').value; }
         async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); window.history.pushState({e:1}, ""); openEdit(res.id); }
@@ -316,6 +304,8 @@
         function showPersonalData() { window.history.pushState({p:1}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
         function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); if(user) db.collection("users").doc(user.uid).set({theme: t}, {merge:true}); }
         function handleFile(input) { const r = new FileReader(); r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; }; r.readAsDataURL(input.files[0]); }
+        function handleMeFile(input) { const r = new FileReader(); r.onload = async e => { const img = e.target.result; document.getElementById('me-photo').style.backgroundImage = `url(${img})`; document.getElementById('u-avatar').style.backgroundImage = `url(${img})`; await db.collection("users").doc(user.uid).set({myPhoto: img}, {merge:true}); }; r.readAsDataURL(input.files[0]); }
+        function login() { auth.signInWithPopup(provider); }
         function logout() { auth.signOut().then(() => location.reload()); }
         async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAllUI(); } }
         async function removeFromStruct(id) { if(confirm("Прибрати?")) await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ isPartner: false, parentId: null }); }
