@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>SL TIME CRM 2.1</title>
+    <title>SL TIME CRM 2.1 FINAL</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
@@ -32,59 +32,55 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
         body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
 
-        ::-webkit-scrollbar { display: none; }
         header { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; height: 80px; position: relative; z-index: 1000; }
-        .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); }
-        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 26px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 20px var(--neon); letter-spacing: 0.5px; flex: 1; text-align: center; }
+        .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; }
+        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 26px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 20px var(--neon); flex: 1; text-align: center; }
         
-        #header-ctrl { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; cursor: pointer; min-width: 50px; height: 44px; transition: opacity 0.3s; }
-        .total-count { font-size: 14px; font-weight: bold; line-height: 1; opacity: 0.9; }
+        #header-ctrl { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; cursor: pointer; min-width: 50px; height: 44px; }
+        .total-count { font-size: 14px; font-weight: bold; line-height: 1; }
         .f-lines { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; width: 22px; }
         .f-line { height: 2px; background: white; border-radius: 2px; }
         .l1 { width: 22px; } .l2 { width: 16px; } .l3 { width: 10px; }
-        #header-plus { display: none; font-size: 36px; font-weight: bold; color: white; cursor: pointer; min-width: 50px; text-align: right; line-height: 1; }
+        #header-plus { display: none; font-size: 36px; font-weight: bold; color: white; cursor: pointer; min-width: 50px; text-align: right; }
 
-        #main-viewport { display: flex; width: 100vw; height: calc(100vh - 80px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; gap: 60px; }
-        .app-container { flex: 0 0 100vw; width: 100vw; height: 100%; scroll-snap-align: start; scroll-snap-stop: always; overflow: hidden; position: relative; }
+        #main-viewport { display: flex; width: 100vw; height: calc(100vh - 80px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+        .app-container { flex: 0 0 100vw; width: 100vw; height: 100%; scroll-snap-align: start; overflow: hidden; position: relative; }
 
         .board { display: flex; overflow-x: auto; padding: 0 20px 55px; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
-        .column { min-width: calc(100vw - 40px); scroll-snap-align: center; scroll-snap-stop: always; display: flex; flex-direction: column; gap: 15px; }
+        .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; gap: 15px; }
         .cards-area { flex: 1; overflow-y: auto; padding-bottom: 20px; } 
-        .col-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 14px; text-transform: uppercase; font-weight: bold; margin-bottom: 5px; }
-        .add-btn-center { grid-column: 2; cursor: pointer; font-size: 30px; font-weight: bold; padding: 0 10px; }
-        .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
-        .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 30px; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; color: #fff; text-shadow: 0 0 8px var(--neon); }
+        .col-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 14px; text-transform: uppercase; font-weight: bold; }
+        .add-btn-center { grid-column: 2; cursor: pointer; font-size: 30px; font-weight: bold; }
 
-        #struct-path { display: none; align-items: center; padding: 0 20px; gap: 10px; overflow-x: auto; height: 50px; background: rgba(0,0,0,0.1); border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .path-dot { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--neon); background-size: cover; background-position: center; flex-shrink: 0; cursor: pointer; }
+        .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
+        .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 30px; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; text-shadow: 0 0 8px var(--neon); }
+
+        #struct-path { display: none; align-items: center; padding: 0 20px; gap: 10px; overflow-x: auto; height: 50px; background: rgba(0,0,0,0.1); }
+        .path-dot { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--neon); background-size: cover; background-position: center; flex-shrink: 0; }
         .struct-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 20px; align-content: start; overflow-y: auto; height: calc(100% - 50px); }
-        
         .icon-unit { display: flex; flex-direction: column; align-items: center; position: relative; }
-        .icon-img { width: 70px; height: 70px; border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); background-size: cover; background-position: center; position: relative; }
-        
-        /* НЕОНОВИЙ РІВЕНЬ ПО ЦЕНТРУ ВНИЗУ (ЗАХОДИТЬ НА 1/2) */
-        .icon-neon-level { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 22px; font-weight: bold; color: #fff; text-shadow: 0 0 8px var(--neon); pointer-events: none; z-index: 10; }
-        .icon-label { font-size: 10px; margin-top: 14px; font-weight: 600; text-align: center; color: white; text-shadow: 0 2px 4px #000; overflow: hidden; width: 100%; white-space: nowrap; }
+        .icon-img { width: 70px; height: 70px; border-radius: 18px; background: rgba(255,255,255,0.1); background-size: cover; background-position: center; position: relative; }
+        .icon-neon-level { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 22px; font-weight: bold; color: #fff; text-shadow: 0 0 8px var(--neon); pointer-events: none !important; z-index: 10; }
+        .icon-label { font-size: 10px; margin-top: 14px; font-weight: 600; text-align: center; }
 
-        /* КОНТЕКСТНЕ МЕНЮ - НАЙВИЩИЙ ШАР */
-        .context-menu { position: absolute; top: -45px; left: 50%; transform: translateX(-50%); display: none; gap: 12px; z-index: 9999; }
-        .ctx-btn { width: 34px; height: 34px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.6); font-size: 16px; color: black; border: none; }
-        .icon-unit.shaking { animation: shake 0.3s infinite; }
-        @keyframes shake { 0% { transform: rotate(1deg); } 50% { transform: rotate(-1deg); } 100% { transform: rotate(1deg); } }
+        .context-menu { position: absolute; top: -45px; left: 50%; transform: translateX(-50%); display: none; gap: 12px; z-index: 99999; }
+        .ctx-btn { width: 34px; height: 34px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px #000; font-size: 16px; color: black; }
+        .shaking { animation: shake 0.3s infinite; }
+        @keyframes shake { 0%{transform:rotate(1deg)} 50%{transform:rotate(-1deg)} 100%{transform:rotate(1deg)} }
 
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.7); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
-        .nav-item { color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33%; height: 100%; font-size: 11px; font-weight: bold; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
+        .nav-item { color: #fff; opacity: 0.4; font-size: 11px; font-weight: bold; text-align: center; width: 33%; }
         .nav-item.active { opacity: 1; text-shadow: 0 0 10px var(--neon); }
 
         #edit-screen, #user-menu, #personal-data-screen, #partner-select-modal { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
         select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
-        label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
+        label { font-size: 10px; opacity: 0.5; text-transform: uppercase; }
         .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
-        .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; font-size: 16px; }
-        #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; font-size: 16px; outline: none; }
+        .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; }
+        #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; outline: none; }
         .edit-level-display { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon); width: 60px; text-align: center; }
 
-        #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
+        #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
         .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
@@ -104,6 +100,12 @@
         <div id="header-plus" onclick="handleStructurePlus()">+</div>
     </header>
 
+    <div id="filter-popup">
+        <div class="f-item" onclick="setFilter('az')">А-Я</div>
+        <div class="f-item" onclick="setFilter('new')">Нові</div>
+        <div class="f-item" onclick="setFilter('old')">Старі</div>
+    </div>
+
     <div id="main-viewport">
         <div id="screen-crm" class="app-container"><main class="board" id="main-board"></main></div>
         <div id="screen-struct" class="app-container">
@@ -116,14 +118,29 @@
     </div>
 
     <nav class="bottom-nav">
-        <div class="nav-item active" id="btn-0" onclick="jumpToPage(0)">СПИСКИ</div>
-        <div class="nav-item" id="btn-1" onclick="jumpToPage(1)">СТРУКТУРА</div>
-        <div class="nav-item" id="btn-2" onclick="jumpToPage(2)">ПЛАН</div>
+        <div class="nav-item active" onclick="jumpToPage(0)">СПИСКИ</div>
+        <div class="nav-item" onclick="jumpToPage(1)">СТРУКТУРА</div>
+        <div class="nav-item" onclick="jumpToPage(2)">ПЛАН</div>
     </nav>
 
+    <div id="user-menu">
+        <div style="font-size:18px; font-weight:bold; margin-bottom:30px; text-align:center;">НАЛАШТУВАННЯ</div>
+        <button onclick="showPersonalData()" style="padding:15px; background:rgba(255,255,255,0.1); color:white; border-radius:12px; width:100%; font-weight:bold; margin-bottom:10px; border:1px solid silver;">ОСОБИСТІ ДАНІ</button>
+        <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗАКРИТИ</button>
+        <div style="text-align:center; color:#ff4d4d; margin-top:30px; cursor:pointer;" onclick="logout()">ВИЙТИ</div>
+    </div>
+
+    <div id="personal-data-screen" style="position:fixed; inset:0; background:var(--bg); z-index:9500; display:none; flex-direction:column; padding:20px 25px 100px; overflow-y:auto;">
+        <div style="width:110px; height:110px; border-radius:50%; background-size:cover; margin:0 auto 30px;" id="me-photo"></div>
+        <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname">
+        <label>ІМ'Я</label><input type="text" id="me-fname">
+        <label>РІВЕНЬ</label><select id="me-level"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <button onclick="saveMeData()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ</button>
+    </div>
+
     <div id="edit-screen">
-        <span onclick="removeClient()" style="position: absolute; top: 25px; right: 25px; color: #ff4d4d; font-size: 12px; text-transform: uppercase; cursor: pointer;">Видалити</span>
-        <div class="photo-container" style="position:relative; width:110px; height:110px; margin:0 auto;"><div id="c-photo" style="width:110px; height:110px; border-radius:50%; background-size:cover; border:1px solid silver;"></div><div id="edit-level-badge" class="edit-level-display"></div></div>
+        <span onclick="removeClient()" style="position: absolute; top: 25px; right: 25px; color: #ff4d4d; font-size: 12px; cursor: pointer;">Видалити</span>
+        <div style="width:110px; height:110px; border-radius:50%; background-size:cover; margin:0 auto 30px; border:1px solid silver;" id="c-photo"></div>
         <label>ЕТАП</label><select id="e-step"></select>
         <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname">
         <label>ІМ'Я</label><input type="text" id="e-fname">
@@ -132,27 +149,25 @@
         <label>ДАТА</label><input type="date" id="e-pdate">
         <label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
         <label>ПРИМІТКИ</label><div class="notes-wrapper" id="notes-wrap"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value"></textarea></div>
-        <button onclick="manualSave()" style="margin-top:20px; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ ТА ВИЙТИ</button>
+        <button onclick="manualSave()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ</button>
     </div>
 
     <div id="partner-select-modal">
         <div id="modal-partners-list" style="flex:1; overflow-y:auto; padding-top:20px;"></div>
-        <button onclick="window.history.back()" style="padding:18px; width:100%; border-radius:30px; background:white; color:black; font-weight:bold; border:none;">НАЗАД</button>
+        <button onclick="window.history.back()" style="padding:18px; width:100%; border-radius:30px; background:white; color:black; font-weight:bold;">НАЗАД</button>
     </div>
 
     <script>
         const firebaseConfig = { apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY", authDomain: "starlife-crm.firebaseapp.com", projectId: "starlife-crm", storageBucket: "starlife-crm.firebasestorage.app", messagingSenderId: "1022280682130", appId: "1:1022280682130:web:3ea517e8b6d22c7787744b" };
         firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth(), db = firebase.firestore(), provider = new firebase.auth.GoogleAuthProvider();
+        const auth = firebase.auth(), db = firebase.firestore();
 
-        let user = null, clients = [], editId = null, filterType = 'new';
+        let user = null, clients = [], editId = null, filterType = 'new', currentPath = [], pressTimer = null;
         const steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Поліс", "Семінар"];
-        let currentPath = [];
-        let pressTimer = null;
 
         const vp = document.getElementById('main-viewport');
         vp.addEventListener('scroll', () => {
-            const index = Math.round(vp.scrollLeft / (window.innerWidth + 60));
+            const index = Math.round(vp.scrollLeft / window.innerWidth);
             document.querySelectorAll('.nav-item').forEach((btn, i) => btn.classList.toggle('active', i === index));
             const ctrl = document.getElementById('header-ctrl'), plus = document.getElementById('header-plus'), pathBar = document.getElementById('struct-path');
             if(index === 1) { ctrl.style.display = 'none'; plus.style.display = 'block'; pathBar.style.display = 'flex'; renderStructure(); }
@@ -160,46 +175,55 @@
             updateHeaderCounter();
         });
 
-        function jumpToPage(index) { vp.scrollTo({ left: index * (window.innerWidth + 60), behavior: 'smooth' }); }
+        function jumpToPage(index) { vp.scrollTo({ left: index * window.innerWidth, behavior: 'smooth' }); }
+        function lock() { window.history.pushState({l:1}, ""); }
+        window.onpopstate = () => { if(editId || document.getElementById('user-menu').style.display==='flex' || document.getElementById('partner-select-modal').style.display==='flex' || document.getElementById('personal-data-screen').style.display==='flex') { closeAllUI(); lock(); } };
 
-        auth.onAuthStateChanged(async u => { if(u) { user = u; loadClients(); } });
+        auth.onAuthStateChanged(async u => { if(u) { user = u; loadUserConfig(); loadClients(); lock(); } else { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); } });
+
+        async function loadUserConfig() {
+            const doc = await db.collection("users").doc(user.uid).get();
+            const d = doc.data() || {};
+            document.getElementById('u-avatar').style.backgroundImage = `url(${d.myPhoto || user.photoURL})`;
+            document.getElementById('me-photo').style.backgroundImage = `url(${d.myPhoto || user.photoURL})`;
+            document.getElementById('me-lname').value = d.meLname || "";
+            document.getElementById('me-fname').value = d.meFname || "";
+            document.getElementById('me-level').value = d.meLevel || "0";
+        }
 
         function loadClients() {
             db.collection("users").doc(user.uid).collection("clients").onSnapshot(snap => {
                 clients = []; snap.forEach(d => clients.push({id: d.id, ...d.data()}));
-                renderBoard();
-                if(Math.round(vp.scrollLeft/(window.innerWidth + 60)) === 1) renderStructure();
-                updateHeaderCounter();
+                renderBoard(); updateHeaderCounter();
             });
         }
 
         function renderBoard() {
-            const b = document.getElementById('main-board'); if(!b) return;
-            const s = document.getElementById('e-step'); s.innerHTML = ''; b.innerHTML = '';
+            const b = document.getElementById('main-board'); b.innerHTML = '';
+            const s = document.getElementById('e-step'); s.innerHTML = '';
             let sorted = [...clients];
+            if(filterType === 'az') sorted.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
+            if(filterType === 'new') sorted.sort((a,b) => b.created - a.created);
+            if(filterType === 'old') sorted.sort((a,b) => a.created - b.created);
+
             steps.forEach((n, i) => {
                 const filtered = sorted.filter(c => (c.step || 0) == i);
                 const col = document.createElement('div'); col.className = 'column';
-                col.innerHTML = `<div class="col-head"><div>${n} <span style="font-size:16px;">${filtered.length}</span></div><div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}</div><div></div></div><div class="cards-area" id="list-${i}"></div>`;
+                col.innerHTML = `<div class="col-head"><div>${n} ${filtered.length}</div><div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}</div><div></div></div><div class="cards-area" id="list-${i}"></div>`;
                 b.appendChild(col);
                 s.innerHTML += `<option value="${i}">${n}</option>`;
-                const list = document.getElementById(`list-${i}`);
                 filtered.forEach(c => {
                     const div = document.createElement('div'); div.className = 'card';
                     div.onclick = () => { window.history.pushState({e:1}, ""); openEdit(c.id); };
-                    const levelHtml = c.level ? `<div class="card-level">${c.level}</div>` : '';
-                    div.innerHTML = `${levelHtml}<div style="font-weight:600; font-size:16px;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;margin-top:5px">${c.phone||""}</div>`;
-                    list.appendChild(div);
+                    div.innerHTML = (c.level ? `<div class="card-level">${c.level}</div>` : '') + `<div style="font-weight:600;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;">${c.phone||""}</div>`;
+                    document.getElementById(`list-${i}`).appendChild(div);
                 });
             });
         }
 
-        function handleStructurePlus() { if (currentPath.length === 0) openPartnerSelect(); else createCardForPartner(); }
-        async function createCardForPartner() { const pid = currentPath[currentPath.length - 1].id; const res = await db.collection("users").doc(user.uid).collection("clients").add({ step: 6, created: Date.now(), isPartner: true, parentId: pid }); window.history.pushState({e:1}, ""); openEdit(res.id); }
-
         function renderStructure() {
             const grid = document.getElementById('struct-grid'), pathBar = document.getElementById('struct-path');
-            if(!grid || !pathBar) return; grid.innerHTML = ''; pathBar.innerHTML = '';
+            grid.innerHTML = ''; pathBar.innerHTML = '';
             currentPath.forEach((p, idx) => {
                 const dot = document.createElement('div'); dot.className = 'path-dot'; dot.style.backgroundImage = `url(${p.photo || ''})`;
                 dot.onclick = () => { currentPath = currentPath.slice(0, idx + 1); renderStructure(); };
@@ -213,21 +237,27 @@
             });
         }
 
-        function startPress(e, id) { pressTimer = setTimeout(() => { document.querySelectorAll('.icon-unit').forEach(el => el.classList.remove('shaking')); document.querySelectorAll('.context-menu').forEach(el => el.style.display = 'none'); const unit = document.getElementById('ctx-'+id).parentElement; unit.classList.add('shaking'); document.getElementById('ctx-'+id).style.display = 'flex'; if (window.navigator.vibrate) window.navigator.vibrate(50); }, 500); }
+        function startPress(e, id) { pressTimer = setTimeout(() => { document.querySelectorAll('.icon-unit').forEach(el => el.classList.remove('shaking')); document.querySelectorAll('.context-menu').forEach(el => el.style.display = 'none'); const unit = document.getElementById('ctx-'+id).parentElement; unit.classList.add('shaking'); document.getElementById('ctx-'+id).style.display = 'flex'; if(window.navigator.vibrate) window.navigator.vibrate(50); }, 500); }
         function endPress() { clearTimeout(pressTimer); }
-        document.addEventListener('touchstart', (e) => { if (!e.target.closest('.icon-unit')) { document.querySelectorAll('.icon-unit').forEach(el => el.classList.remove('shaking')); document.querySelectorAll('.context-menu').forEach(el => el.style.display = 'none'); } });
+        document.addEventListener('touchstart', (e) => { if(!e.target.closest('.icon-unit')) { document.querySelectorAll('.icon-unit').forEach(el => el.classList.remove('shaking')); document.querySelectorAll('.context-menu').forEach(el => el.style.display = 'none'); } });
 
-        function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','phone','pnum','pdate','notes','step','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || (k==='step'?0:"")); document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || ""; document.getElementById('c-photo').style.backgroundImage = `url(${c.photo||''})`; updateEditLevelBadge(); document.getElementById('edit-screen').style.display='flex'; }
-        function closeAllUI() { document.querySelectorAll('#edit-screen, #partner-select-modal').forEach(el => el.style.display = 'none'); editId = null; }
-        async function manualSave() { if(!editId) return; const data = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, pnum: document.getElementById('e-pnum').value, pdate: document.getElementById('e-pdate').value, notes: document.getElementById('e-notes').value, level: document.getElementById('e-level').value, step: parseInt(document.getElementById('e-step').value), updated: Date.now() }; await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(data, {merge:true}); closeAllUI(); }
-        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); openEdit(res.id); }
-        function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
-        function updateHeaderCounter() { const idx = Math.round(vp.scrollLeft/(window.innerWidth+60)); const pid = currentPath.length>0 ? currentPath[currentPath.length-1].id : 'me'; document.getElementById('header-counter').innerText = (idx===1) ? clients.filter(c => c.isPartner && (c.parentId||'me')===pid).length : clients.length; }
+        function handleStructurePlus() { if(currentPath.length === 0) openPartnerSelect(); else createCardForPartner(); }
+        async function createCardForPartner() { const pid = currentPath[currentPath.length - 1].id; const res = await db.collection("users").doc(user.uid).collection("clients").add({ step: 6, created: Date.now(), isPartner: true, parentId: pid }); window.history.pushState({e:1}, ""); openEdit(res.id); }
+        function openPartnerSelect() { const list = document.getElementById('modal-partners-list'); list.innerHTML = ''; const cand = clients.filter(c => c.step === 6 && !c.isPartner); if(cand.length === 0) { list.innerHTML = `<div style="text-align:center; opacity:0.5; padding:40px;">У списку СЕМІНАР немає вільних кандидатів</div>`; } else { cand.forEach(c => { const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; gap:15px; color:white;"; row.innerHTML = `<div style="width:44px; height:44px; border-radius:50%; background-size:cover; background-image:url(${c.photo||''})"></div><div>${c.lname} ${c.fname}</div>`; row.onclick = async () => { await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ isPartner: true, parentId: currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me' }); window.history.back(); }; list.appendChild(row); }); } document.getElementById('partner-select-modal').style.display = 'flex'; window.history.pushState({s:1}, ""); }
+
+        function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','phone','pnum','pdate','notes','step','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || ""); document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || ""; document.getElementById('c-photo').style.backgroundImage = `url(${c.photo||''})`; document.getElementById('edit-screen').style.display='flex'; }
+        function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #partner-select-modal').forEach(el => el.style.display = 'none'); editId = null; }
+        async function manualSave() { if(!editId) return; const d = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, pnum: document.getElementById('e-pnum').value, pdate: document.getElementById('e-pdate').value, notes: document.getElementById('e-notes').value, level: document.getElementById('e-level').value, step: parseInt(document.getElementById('e-step').value), updated: Date.now() }; await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(d, {merge:true}); closeAllUI(); }
+        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); window.history.pushState({e:1}, ""); openEdit(res.id); }
+        async function saveMeData() { const d = { meLname: document.getElementById('me-lname').value, meFname: document.getElementById('me-fname').value, meLevel: document.getElementById('me-level').value }; await db.collection("users").doc(user.uid).set(d, {merge:true}); closeAllUI(); }
+        function showUserMenu() { window.history.pushState({m:1}, ""); document.getElementById('user-menu').style.display = 'flex'; }
+        function showPersonalData() { window.history.pushState({p:1}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
         function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
         function setFilter(t) { filterType = t; renderBoard(); toggleFilter(); }
-        function openPartnerSelect() { const list = document.getElementById('modal-partners-list'); list.innerHTML = ''; const candidates = clients.filter(c => c.step === 6 && !c.isPartner); if(candidates.length === 0) { list.innerHTML = `<div style="text-align:center; opacity:0.5; padding:40px;">У списку СЕМІНАР немає вільних кандидатів</div>`; } else { candidates.forEach(c => { const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; gap:15px; color:white;"; row.innerHTML = `<div style="width:44px; height:44px; border-radius:50%; background-size:cover; background-image:url(${c.photo||''})"></div><div style="font-weight:bold;">${c.lname} ${c.fname}</div>`; row.onclick = async () => { await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ isPartner: true, parentId: currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me' }); window.history.back(); }; list.appendChild(row); }); } document.getElementById('partner-select-modal').style.display = 'flex'; window.history.pushState({s:1}, ""); }
+        function updateHeaderCounter() { const idx = Math.round(vp.scrollLeft/window.innerWidth); const pid = currentPath.length>0 ? currentPath[currentPath.length-1].id : 'me'; document.getElementById('header-counter').innerText = (idx===1) ? clients.filter(c => c.isPartner && (c.parentId||'me')===pid).length : clients.length; }
         async function removeFromStruct(id) { if(confirm("Видалити зі структури?")) await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ isPartner: false, parentId: null }); }
-        function login() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
+        async function removeClient() { if(confirm("Видалити картку?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAllUI(); } }
+        function logout() { auth.signOut().then(()=>location.reload()); }
     </script>
 </body>
 </html>
