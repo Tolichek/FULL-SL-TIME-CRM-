@@ -35,8 +35,8 @@
         ::-webkit-scrollbar { display: none; }
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; height: 80px; position: relative; z-index: 100; }
         .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); }
-        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 28px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 10px #fff, 0 0 20px var(--neon); letter-spacing: 1px; }
-        .total-count { font-size: 16px; font-weight: bold; line-height: 1; }
+        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 28px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 20px var(--neon); letter-spacing: 1px; }
+        .total-count { font-size: 16px; font-weight: bold; }
 
         .app-container { height: calc(100vh - 80px); overflow: hidden; display: none; }
         .app-container.active { display: block; }
@@ -47,7 +47,7 @@
         .cards-area { flex: 1; overflow-y: auto; } 
         .col-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 14px; text-transform: uppercase; font-weight: bold; }
         .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
-        .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 30px; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; color: #fff; text-shadow: 0 0 8px var(--neon); }
+        .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 30px; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; text-shadow: 0 0 8px var(--neon); }
 
         /* СТРУКТУРА */
         #struct-path { display: none; align-items: center; padding: 0 20px; gap: 10px; overflow-x: auto; height: 50px; background: rgba(0,0,0,0.1); border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -55,18 +55,21 @@
         .struct-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 20px 25px; overflow-y: auto; align-content: start; height: calc(100% - 50px); }
         .icon-unit { display: flex; flex-direction: column; align-items: center; position: relative; }
         .icon-img { width: 80px; height: 80px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); background-size: cover; background-position: center; position: relative; }
-        .icon-badge { position: absolute; top: -8px; right: -8px; background: #ff3b30; color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; border: 2px solid white; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .icon-badge { position: absolute; top: -8px; right: -8px; background: #ff3b30; color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; border: 2px solid white; }
         .icon-label { font-size: 11px; margin-top: 8px; font-weight: 600; text-align: center; color: white; text-shadow: 0 2px 4px #000; overflow: hidden; width: 100%; white-space: nowrap; }
         .icon-opt { position: absolute; bottom: 38px; right: 2px; background: rgba(0,0,0,0.6); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 1px solid rgba(255,255,255,0.3); }
         .icon-minus { position: absolute; top: -5px; left: -5px; width: 20px; height: 20px; background: #000; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; border: 1px solid #fff; z-index: 5; }
 
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
-        .nav-item { color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33%; height: 100%; }
+        .nav-item { color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33%; }
         .nav-item.active { opacity: 1; }
 
-        #edit-screen, #user-menu, #personal-data-screen, #partner-select-modal { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
-        input, select { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
-        label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
+        #edit-screen, #user-menu, #partner-select-modal { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
+        select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
+        label { font-size: 10px; opacity: 0.5; text-transform: uppercase; }
+        .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
+        .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; font-size: 16px; }
+        #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; font-size: 16px; outline: none; }
         .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 30px; }
         .theme-btn { padding: 15px; text-align: center; cursor: pointer; border-radius: 10px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; }
         .btn-purple { background: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); }
@@ -105,6 +108,20 @@
         <div class="nav-item" id="nav-plan" onclick="switchPage('plan', this)">ПЛАН</div>
     </nav>
 
+    <div id="edit-screen">
+        <span onclick="removeClient()" style="position: absolute; top: 25px; right: 25px; color: #ff4d4d; font-size: 12px; text-transform: uppercase; cursor: pointer;">Видалити</span>
+        <div id="c-photo" style="width:110px; height:110px; border-radius:50%; background-size:cover; border:1px solid rgba(255,255,255,0.2); margin:0 auto 20px;"></div>
+        <label>ЕТАП</label><select id="e-step" onchange="autoSave()"></select>
+        <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname" oninput="autoSave()">
+        <label>ІМ'Я</label><input type="text" id="e-fname" oninput="autoSave()">
+        <label>ТЕЛЕФОН</label><input type="tel" id="e-phone" oninput="autoSave()">
+        <label>ПОЛІС №</label><input type="text" id="e-pnum" oninput="autoSave()">
+        <label>ДАТА</label><input type="date" id="e-pdate" onchange="autoSave()">
+        <label>РІВЕНЬ</label><select id="e-level" onchange="autoSave()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <label>ПРИМІТКИ</label><div class="notes-wrapper" id="notes-wrap"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value; autoSave()"></textarea></div>
+        <button onclick="window.history.back()" style="margin-top:20px; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none;">ЗАКРИТИ</button>
+    </div>
+
     <div id="partner-select-modal">
         <h2 style="margin-bottom:20px; font-weight:bold;">Додати партнера</h2>
         <div id="modal-partners-list" style="flex:1; overflow-y:auto;"></div>
@@ -125,13 +142,6 @@
         <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; cursor: pointer;">ЗАКРИТИ</button>
     </div>
 
-    <div id="edit-screen">
-        <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname" oninput="autoSave()">
-        <label>ІМ'Я</label><input type="text" id="e-fname" oninput="autoSave()">
-        <label>ЕТАП</label><select id="e-step" onchange="autoSave()"></select>
-        <button onclick="window.history.back()" style="margin-top:20px; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗАКРИТИ</button>
-    </div>
-
     <script>
         const firebaseConfig = { apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY", authDomain: "starlife-crm.firebaseapp.com", projectId: "starlife-crm", storageBucket: "starlife-crm.firebasestorage.app", messagingSenderId: "1022280682130", appId: "1:1022280682130:web:3ea517e8b6d22c7787744b" };
         firebase.initializeApp(firebaseConfig);
@@ -141,20 +151,20 @@
         const steps = ["Список", "Бесіда", "Розробка", "Презенти", "Ліфт", "Семінар", "Поліс"];
         let currentPath = [];
 
-        // НАВІГАЦІЯ ТА ЗАХИСТ
-        function lockBack() { window.history.pushState({locked:true}, ""); }
-        window.onload = lockBack;
-        window.onpopstate = (e) => {
-            if (editId || document.getElementById('user-menu').style.display === 'flex' || document.getElementById('partner-select-modal').style.display === 'flex') {
-                closeAll(); lockBack(); return;
+        // НАВІГАЦІЯ ТА ЗАХИСТ ВІД ВИХОДУ
+        function lock() { window.history.pushState({l:1}, ""); }
+        window.onload = lock;
+        window.onpopstate = () => {
+            if (editId || document.getElementById('user-menu').style.display==='flex' || document.getElementById('partner-select-modal').style.display==='flex') {
+                closeAll(); lock(); return;
             }
             if (currentPath.length > 0) {
-                currentPath.pop(); renderStructure(); lockBack(); return;
+                currentPath.pop(); renderStructure(); lock(); return;
             }
             if (document.getElementById('screen-struct').classList.contains('active')) {
-                switchPage('crm', document.getElementById('nav-crm')); lockBack(); return;
+                switchPage('crm', document.getElementById('nav-crm')); lock(); return;
             }
-            lockBack();
+            lock();
         };
 
         function switchPage(pageId, el) {
@@ -170,10 +180,10 @@
         // СВАЙП ПЕРЕХІД
         const board = document.getElementById('main-board');
         board.addEventListener('scroll', () => {
-            const maxScroll = board.scrollWidth - board.clientWidth;
-            if (board.scrollLeft > maxScroll + 30) { 
+            const max = board.scrollWidth - board.clientWidth;
+            if (board.scrollLeft > max + 40) { 
                 switchPage('struct', document.getElementById('nav-struct'));
-                board.scrollLeft = maxScroll; 
+                board.scrollLeft = max; 
             }
         });
 
@@ -213,7 +223,7 @@
                 b.appendChild(col);
                 s.innerHTML += `<option value="${i}">${n}</option>`;
                 filtered.forEach(c => {
-                    const div = document.createElement('div'); div.className = 'card'; div.onclick = () => { window.history.pushState({edit:true}, ""); openEdit(c.id); };
+                    const div = document.createElement('div'); div.className = 'card'; div.onclick = () => { window.history.pushState({e:1}, ""); openEdit(c.id); };
                     div.innerHTML = (c.level ? `<div class="card-level">${c.level}</div>` : '') + `<div style="font-weight:600;">${c.lname||""} ${c.fname||""}</div>`;
                     document.getElementById(`list-${i}`).appendChild(div);
                 });
@@ -228,7 +238,7 @@
                 dot.style.backgroundImage = `url(${p.photo || ''})`;
                 dot.onclick = () => { currentPath = currentPath.slice(0, idx + 1); renderStructure(); };
                 pathBar.appendChild(dot);
-                if(idx < currentPath.length - 1) pathBar.innerHTML += `<div style="opacity:0.3; color:white; font-size:12px;">→</div>`;
+                if(idx < currentPath.length - 1) pathBar.innerHTML += `<div style="opacity:0.3; color:white;">→</div>`;
             });
             const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
             const partners = clients.filter(c => c.isPartner && (c.parentId || 'me') === pid);
@@ -240,11 +250,11 @@
                         <div class="icon-badge">${p.level || 0}</div>
                         <div class="icon-minus" onclick="event.stopPropagation(); removeFromStruct('${p.id}')">−</div>
                     </div>
-                    <div class="icon-label" onclick="window.history.pushState({edit:true}, ''); openEdit('${p.id}')">${p.lname || ''} ⚙️</div>
+                    <div class="icon-label" onclick="window.history.pushState({e:1}, ''); openEdit('${p.id}')">${p.lname || ''} ⚙️</div>
                 `;
                 grid.appendChild(box);
             });
-            grid.innerHTML += `<div class="icon-unit"><div class="struct-add-box" onclick="openPartnerSelect()">+</div><div class="icon-label">Додати</div></div>`;
+            grid.innerHTML += `<div class="icon-unit"><div style="width:80px;height:80px;border-radius:20px;border:2px dashed rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:40px;color:rgba(255,255,255,0.2);" onclick="openPartnerSelect()">+</div><div class="icon-label">Додати</div></div>`;
         }
 
         function openPartnerSelect() {
@@ -255,16 +265,17 @@
                 row.onclick = async () => { await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ isPartner: true, parentId: currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me' }); window.history.back(); };
                 list.appendChild(row);
             });
-            document.getElementById('partner-select-modal').style.display = 'flex'; window.history.pushState({select:true}, "");
+            document.getElementById('partner-select-modal').style.display = 'flex'; window.history.pushState({s:1}, "");
         }
 
         async function removeFromStruct(id) { if(confirm("Прибрати?")) await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ isPartner: false, parentId: null }); }
-        function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','step'].forEach(k => document.getElementById('e-'+k).value = c[k] || (k==='step'?0:"")); document.getElementById('edit-screen').style.display = 'flex'; }
+        function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','phone','pnum','pdate','notes','step','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || (k==='step'?0:"")); document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || ""; document.getElementById('c-photo').style.backgroundImage = `url(${c.photo || ''})`; document.getElementById('edit-screen').style.display = 'flex'; }
         function closeAll() { if (editId) autoSave(true); document.querySelectorAll('#edit-screen, #user-menu, #partner-select-modal').forEach(el => el.style.display = 'none'); editId = null; }
-        async function autoSave(instant = false) { if (!editId) return; clearTimeout(saveTimeout); const save = async () => { const data = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, step: parseInt(document.getElementById('e-step').value) }; await db.collection("users").doc(user.uid).collection("clients").doc(editId).update(data); }; if(instant) await save(); else saveTimeout = setTimeout(save, 1000); }
+        async function autoSave(instant = false) { if (!editId) return; clearTimeout(saveTimeout); const save = async () => { const data = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, pnum: document.getElementById('e-pnum').value, pdate: document.getElementById('e-pdate').value, notes: document.getElementById('e-notes').value, level: document.getElementById('e-level').value, step: parseInt(document.getElementById('e-step').value) }; await db.collection("users").doc(user.uid).collection("clients").doc(editId).update(data); }; if(instant) await save(); else saveTimeout = setTimeout(save, 1000); }
         async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); openEdit(res.id); }
-        function showUserMenu() { window.history.pushState({menu:true}, ""); document.getElementById('user-menu').style.display = 'flex'; }
+        function showUserMenu() { window.history.pushState({m:1}, ""); document.getElementById('user-menu').style.display = 'flex'; }
         function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); if(user) db.collection("users").doc(user.uid).set({theme: t}, {merge:true}); }
+        function logout() { auth.signOut().then(() => location.reload()); }
     </script>
 </body>
 </html>
