@@ -80,7 +80,6 @@
         
         .photo-container { position: relative; width: 110px; height: 110px; margin: 0 auto; }
         .edit-level-display { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon); pointer-events: none; width: 60px; text-align: center; }
-        .status-msg { position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%); font-size: 10px; opacity: 0.8; letter-spacing: 2px; font-weight: bold; color: #fff; pointer-events: none; z-index: 1001; }
         
         .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 30px; }
         .theme-btn { padding: 15px; text-align: center; cursor: pointer; border-radius: 10px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; }
@@ -94,7 +93,6 @@
 </head>
 <body class="theme-purple">
     <script>
-        // МИТТЄВЕ ПЕРЕФАРБУВАННЯ
         const savedTheme = localStorage.getItem('crm_theme');
         if(savedTheme) document.body.className = 'theme-' + savedTheme;
     </script>
@@ -103,8 +101,6 @@
         <div style="width:160px;height:160px;border:2px solid silver;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:bold;color:white;">SL</div>
         <div id="login-ui" style="display:none; margin-top:40px;"><button onclick="login()" style="background:white;border:none;padding:12px 30px;border-radius:25px;font-weight:bold;">Увійти через Google</button></div>
     </div>
-
-    <div id="bg-overlay" class="overlay" onclick="closeAll()"></div>
 
     <header>
         <div class="avatar" id="u-avatar" onclick="showUserMenu()"></div>
@@ -165,10 +161,10 @@
             <p style="font-size:10px; margin-top:10px; opacity:0.5; cursor: pointer;" onclick="document.getElementById('me-upload').click()">ЗМІНИТИ ФОТО</p>
             <input type="file" id="me-upload" hidden onchange="handleMeFile(this)">
         </div>
-        <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname" oninput="saveMeData()">
-        <label>ІМ'Я</label><input type="text" id="me-fname" oninput="saveMeData()">
-        <label>РІВЕНЬ</label><select id="me-level" onchange="updateMeLevelBadge(); saveMeData()"><option value="">Не обрано</option><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
-        <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold;">НАЗАД</button>
+        <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname">
+        <label>ІМ'Я</label><input type="text" id="me-fname">
+        <label>РІВЕНЬ</label><select id="me-level" onchange="updateMeLevelBadge()"><option value="">Не обрано</option><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <button onclick="saveMeData()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ ТА ВИЙТИ</button>
     </div>
 
     <div id="edit-screen">
@@ -178,15 +174,15 @@
             <p style="font-size:10px; margin-top:10px; opacity:0.5; cursor: pointer;" onclick="document.getElementById('f-upload').click()">ЗМІНИТИ ФОТО</p>
             <input type="file" id="f-upload" hidden onchange="handleFile(this)">
         </div>
-        <label>ЕТАП</label><select id="e-step" onchange="autoSave()"></select>
-        <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname" oninput="autoSave()">
-        <label>ІМ'Я</label><input type="text" id="e-fname" oninput="autoSave()">
-        <label>НОМЕР ТЕЛЕФОНУ</label><input type="tel" id="e-phone" oninput="autoSave()">
-        <label>НОМЕР ПОЛІСУ</label><input type="text" id="e-pnum" oninput="autoSave()">
-        <label>ДАТА ПОЛІСУ</label><input type="date" id="e-pdate" onchange="autoSave()">
-        <label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge(); autoSave()"><option value="">Не обрано</option><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
-        <label>ПРИМІТКИ</label><div class="notes-wrapper" id="notes-wrap"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value; autoSave()"></textarea></div>
-        <div class="status-msg" id="save-status"></div>
+        <label>ЕТАП</label><select id="e-step"></select>
+        <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname">
+        <label>ІМ'Я</label><input type="text" id="e-fname">
+        <label>НОМЕР ТЕЛЕФОНУ</label><input type="tel" id="e-phone">
+        <label>НОМЕР ПОЛІСУ</label><input type="text" id="e-pnum">
+        <label>ДАТА ПОЛІСУ</label><input type="date" id="e-pdate">
+        <label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><option value="">Не обрано</option><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <label>ПРИМІТКИ</label><div class="notes-wrapper" id="notes-wrap"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value"></textarea></div>
+        <button onclick="manualSave()" style="margin-top:20px; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none;">ЗБЕРЕЖТИ ТА ВИЙТИ</button>
     </div>
 
     <div id="partner-select-modal">
@@ -200,7 +196,7 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.firestore(), provider = new firebase.auth.GoogleAuthProvider();
 
-        let user = null, clients = [], editId = null, currentPhoto = null, filterType = 'new', saveTimeout;
+        let user = null, clients = [], editId = null, currentPhoto = null, filterType = 'new';
         let steps = ["Список", "Бесіда", "Розробка", "Презенти", "Ліфт", "Семінар", "Поліс"];
         let currentPath = [];
 
@@ -208,7 +204,7 @@
         window.onload = lock;
         window.onpopstate = () => {
             if (editId || document.getElementById('user-menu').style.display==='flex' || document.getElementById('partner-select-modal').style.display==='flex' || document.getElementById('personal-data-screen').style.display==='flex') {
-                closeAll(); lock(); return;
+                closeAllUI(); lock(); return;
             }
             if (currentPath.length > 0) {
                 currentPath.pop(); renderStructure(); lock(); return;
@@ -224,27 +220,15 @@
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.getElementById('screen-' + pageId).classList.add('active');
             el.classList.add('active');
-            
-            const pathBar = document.getElementById('struct-path');
-            const hFilter = document.getElementById('h-filter');
-            if(pageId === 'struct') {
-                pathBar.style.display = 'flex';
-                hFilter.style.display = 'none';
-                renderStructure();
-            } else {
-                pathBar.style.display = 'none';
-                hFilter.style.display = 'flex';
-                updateHeaderCounter();
-            }
+            document.getElementById('struct-path').style.display = (pageId === 'struct') ? 'flex' : 'none';
+            if(pageId === 'struct') renderStructure();
+            updateHeaderCounter();
         }
 
         const board = document.getElementById('main-board');
         board.addEventListener('scroll', () => {
             const max = board.scrollWidth - board.clientWidth;
-            if (board.scrollLeft > max + 60) { 
-                switchPage('struct', document.getElementById('nav-struct'));
-                board.scrollLeft = max; 
-            }
+            if (board.scrollLeft > max + 60) { switchPage('struct', document.getElementById('nav-struct')); board.scrollLeft = max; }
         });
 
         auth.onAuthStateChanged(async u => {
@@ -348,35 +332,55 @@
 
         async function removeFromStruct(id) { if(confirm("Прибрати?")) await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ isPartner: false, parentId: null }); }
         
-        async function autoSave(instant = false) { 
-            if (!editId) return; 
-            const status = document.getElementById('save-status');
-            status.innerText = "ЗБЕРЕЖЕННЯ...";
-            clearTimeout(saveTimeout); 
-            const save = async () => { 
-                const data = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, pnum: document.getElementById('e-pnum').value, pdate: document.getElementById('e-pdate').value, notes: document.getElementById('e-notes').value, level: document.getElementById('e-level').value, step: parseInt(document.getElementById('e-step').value), photo: currentPhoto, updated: Date.now() }; 
-                await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(data, {merge:true}); 
-                status.innerText = "ЗБЕРЕЖЕНО"; setTimeout(() => status.innerText = "", 500);
-            }; 
-            if(instant) await save(); else saveTimeout = setTimeout(save, 1000); 
+        // НОВЕ РУЧНЕ ЗБЕРЕЖЕННЯ
+        async function manualSave() {
+            if (!editId) return;
+            const data = { 
+                lname: document.getElementById('e-lname').value, 
+                fname: document.getElementById('e-fname').value, 
+                phone: document.getElementById('e-phone').value, 
+                pnum: document.getElementById('e-pnum').value, 
+                pdate: document.getElementById('e-pdate').value, 
+                notes: document.getElementById('e-notes').value, 
+                level: document.getElementById('e-level').value, 
+                step: parseInt(document.getElementById('e-step').value), 
+                photo: currentPhoto, 
+                updated: Date.now() 
+            };
+            await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(data, {merge:true});
+            closeAllUI();
+        }
+
+        async function saveMeData() {
+            const data = { 
+                meLname: document.getElementById('me-lname').value, 
+                meFname: document.getElementById('me-fname').value, 
+                meLevel: document.getElementById('me-level').value 
+            };
+            await db.collection("users").doc(user.uid).set(data, {merge:true});
+            closeAllUI();
         }
 
         function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','phone','pnum','pdate','notes','step','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || (k==='step'?0:"")); document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || ""; currentPhoto = c.photo; document.getElementById('c-photo').style.backgroundImage = currentPhoto ? `url(${currentPhoto})` : 'none'; updateEditLevelBadge(); document.getElementById('edit-screen').style.display = 'flex'; }
-        function closeAll() { if (editId) autoSave(true); document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #bg-overlay, #partner-select-modal').forEach(el => el.style.display = 'none'); editId = null; }
+        
+        function closeAllUI() { 
+            document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #partner-select-modal').forEach(el => el.style.display = 'none'); 
+            editId = null; 
+        }
+
         function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
         function updateMeLevelBadge() { document.getElementById('me-level-badge').innerText = document.getElementById('me-level').value; }
         async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); window.history.pushState({e:1}, ""); openEdit(res.id); }
-        async function saveMeData() { const data = { meLname: document.getElementById('me-lname').value, meFname: document.getElementById('me-fname').value, meLevel: document.getElementById('me-level').value }; await db.collection("users").doc(user.uid).set(data, {merge:true}); }
         function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
         function setFilter(t) { filterType = t; renderBoard(); toggleFilter(); }
         function showUserMenu() { window.history.pushState({m:1}, ""); document.getElementById('user-menu').style.display = 'flex'; }
         function showPersonalData() { window.history.pushState({p:1}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
         function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); if(user) db.collection("users").doc(user.uid).set({theme: t}, {merge:true}); }
-        function handleFile(input) { const r = new FileReader(); r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; autoSave(); }; r.readAsDataURL(input.files[0]); }
+        function handleFile(input) { const r = new FileReader(); r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; }; r.readAsDataURL(input.files[0]); }
         function handleMeFile(input) { const r = new FileReader(); r.onload = async e => { const img = e.target.result; document.getElementById('me-photo').style.backgroundImage = `url(${img})`; document.getElementById('u-avatar').style.backgroundImage = `url(${img})`; await db.collection("users").doc(user.uid).set({myPhoto: img}, {merge:true}); }; r.readAsDataURL(input.files[0]); }
         function login() { auth.signInWithPopup(provider); }
         function logout() { auth.signOut().then(() => location.reload()); }
-        async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAll(); } }
+        async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAllUI(); } }
     </script>
 </body>
 </html>
