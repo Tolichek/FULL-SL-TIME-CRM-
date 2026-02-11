@@ -38,7 +38,7 @@
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; height: 80px; position: relative; z-index: 10; }
         .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); }
         .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 28px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 10px #fff, 0 0 20px var(--neon), 0 0 30px var(--neon), 0 0 50px var(--neon); letter-spacing: 1px; }
-        .total-count { font-size: 16px; font-weight: bold; font-family: sans-serif; line-height: 1; }
+        .total-count { font-size: 16px; font-weight: bold; line-height: 1; }
         .filter-btn { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; cursor: pointer; width: 30px; margin-top: 5px; }
         .f-line { height: 2px; background: white; border-radius: 2px; }
         .l1 { width: 22px; } .l2 { width: 16px; } .l3 { width: 10px; }
@@ -56,14 +56,14 @@
         .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
         .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 30px; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; color: #fff; text-shadow: 0 0 8px var(--neon), 0 0 15px var(--neon); }
 
-        /* СТРУКТУРА - СПЕЦИФІЧНІ СТИЛІ */
+        /* СТРУКТУРА */
         #struct-path { display: none; align-items: center; padding: 10px 20px; gap: 10px; overflow-x: auto; min-height: 60px; background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.1); }
         .path-dot { width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid var(--neon); background-size: cover; background-position: center; flex-shrink: 0; cursor: pointer; }
         .struct-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 25px; overflow-y: auto; align-content: start; height: calc(100% - 60px); }
         .icon-unit { display: flex; flex-direction: column; align-items: center; position: relative; }
         .icon-img { width: 80px; height: 80px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); background-size: cover; background-position: center; position: relative; }
         .icon-badge { position: absolute; top: -8px; right: -8px; background: #ff3b30; color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; border: 2px solid white; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-        .icon-name { font-size: 11px; margin-top: 8px; font-weight: 600; text-align: center; color: white; text-shadow: 0 2px 4px #000; overflow: hidden; text-overflow: ellipsis; width: 100%; white-space: nowrap; }
+        .icon-label { font-size: 11px; margin-top: 8px; font-weight: 600; text-align: center; color: white; text-shadow: 0 2px 4px #000; overflow: hidden; text-overflow: ellipsis; width: 100%; white-space: nowrap; }
         .icon-opt { position: absolute; bottom: 38px; right: 2px; background: rgba(0,0,0,0.6); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 1px solid rgba(255,255,255,0.3); }
         .icon-minus { position: absolute; top: -5px; left: -5px; width: 20px; height: 20px; background: #000; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; border: 1px solid #fff; z-index: 5; }
         .struct-add-box { width: 80px; height: 80px; border-radius: 20px; border: 2px dashed rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 40px; color: rgba(255,255,255,0.2); cursor: pointer; }
@@ -108,7 +108,7 @@
         <div class="header-title">SL Time CRM</div>
         <div class="header-right">
             <div id="total-clients" class="total-count">0</div>
-            <div class="filter-btn" onclick="toggleFilter()">
+            <div id="h-filter" class="filter-btn" onclick="toggleFilter()">
                 <div class="f-line l1"></div><div class="f-line l2"></div><div class="f-line l3"></div>
             </div>
         </div>
@@ -176,7 +176,8 @@
         </div>
         <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname" oninput="saveMeData()">
         <label>ІМ'Я</label><input type="text" id="me-fname" oninput="saveMeData()">
-        <label>РІВЕНЬ</label><select id="me-level" onchange="updateMeLevelBadge(); saveMeData()"><option value="">Не обрано</option><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <label>РІВЕНЬ</label>
+        <select id="me-level" onchange="updateMeLevelBadge(); saveMeData()"><option value="">Не обрано</option><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
         <button onclick="document.getElementById('personal-data-screen').style.display='none'" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; cursor: pointer;">НАЗАД</button>
     </div>
 
@@ -194,8 +195,7 @@
         <label>НОМЕР ПОЛІСУ</label><input type="text" id="e-pnum" oninput="autoSave()">
         <label>ДАТА ПОЛІСУ</label><input type="date" id="e-pdate" onchange="autoSave()">
         <label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge(); autoSave()"><option value="">Не обрано</option><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
-        <label>ПРИМІТКИ</label>
-        <div class="notes-wrapper" id="notes-wrap"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value; autoSave()"></textarea></div>
+        <label>ПРИМІТКИ</label><div class="notes-wrapper" id="notes-wrap"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value; autoSave()"></textarea></div>
         <div class="status-msg" id="save-status"></div>
     </div>
 
@@ -206,15 +206,25 @@
 
         let user = null, clients = [], editId = null, currentPhoto = null, filterType = 'new', saveTimeout;
         let steps = ["Список", "Бесіда", "Розробка", "Презенти", "Ліфт", "Семінар", "Поліс"];
-        let currentPath = []; // Намисто для структури
+        let currentPath = [];
 
         function switchPage(pageId, el) {
             document.querySelectorAll('.app-container').forEach(c => c.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             document.getElementById('screen-' + pageId).classList.add('active');
             el.classList.add('active');
-            document.getElementById('struct-path').style.display = (pageId === 'struct') ? 'flex' : 'none';
-            if(pageId === 'struct') renderStructure();
+            
+            // Налаштування для СТРУКТУРИ
+            const pathBar = document.getElementById('struct-path');
+            const hFilter = document.getElementById('h-filter');
+            if(pageId === 'struct') {
+                pathBar.style.display = 'flex';
+                hFilter.style.display = 'none';
+                renderStructure();
+            } else {
+                pathBar.style.display = 'none';
+                hFilter.style.display = 'flex';
+            }
         }
 
         window.onpopstate = () => { closeAll(); };
@@ -283,19 +293,13 @@
             const pathBar = document.getElementById('struct-path');
             grid.innerHTML = ''; pathBar.innerHTML = '';
 
-            // Намисто
-            const myDot = document.createElement('div');
-            myDot.className = 'path-dot';
-            myDot.style.backgroundImage = document.getElementById('u-avatar').style.backgroundImage;
-            myDot.onclick = () => { currentPath = []; renderStructure(); };
-            pathBar.appendChild(myDot);
-
+            // Намисто починається безпосередньо з партнерів (фотка Я є в хедері)
             currentPath.forEach((p, idx) => {
-                pathBar.innerHTML += `<div style="color:white; opacity:0.3;">→</div>`;
                 const dot = document.createElement('div'); dot.className = 'path-dot';
                 dot.style.backgroundImage = `url(${p.photo || ''})`;
                 dot.onclick = () => { currentPath = currentPath.slice(0, idx + 1); renderStructure(); };
                 pathBar.appendChild(dot);
+                if(idx < currentPath.length - 1) pathBar.innerHTML += `<div style="opacity:0.3; color:white; font-size:12px;">→</div>`;
             });
 
             const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
@@ -313,7 +317,6 @@
                 `;
                 grid.appendChild(box);
             });
-
             grid.innerHTML += `<div class="icon-unit"><div class="struct-add-box" onclick="openPartnerSelect()">+</div><div class="icon-label">Додати</div></div>`;
         }
 
@@ -321,7 +324,7 @@
             const list = document.getElementById('modal-partners-list'); list.innerHTML = '';
             const potential = clients.filter(c => c.step === 5 && !c.isPartner);
             potential.forEach(c => {
-                const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:10px; display:flex; align-items:center; gap:15px;";
+                const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:10px; display:flex; align-items:center; gap:15px; color:white;";
                 row.innerHTML = `<div style="width:40px;height:40px;border-radius:50%;background-size:cover;background-image:url(${c.photo||''})"></div><div>${c.lname} ${c.fname}</div>`;
                 row.onclick = async () => {
                     await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ isPartner: true, parentId: currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me' });
@@ -332,22 +335,10 @@
             document.getElementById('partner-select-modal').style.display = 'flex';
         }
 
-        async function removeFromStruct(id) { if(confirm("Прибрати партнера зі структури?")) await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ isPartner: false, parentId: null }); }
+        async function removeFromStruct(id) { if(confirm("Прибрати зі структури?")) await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ isPartner: false, parentId: null }); }
 
-        // --- СТАНДАРТНІ ФУНКЦІЇ ---
-        async function autoSave(instant = false) {
-            if (!editId) return;
-            const status = document.getElementById('save-status');
-            status.innerText = "ЗБЕРЕЖЕННЯ...";
-            clearTimeout(saveTimeout);
-            const save = async () => {
-                const data = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, pnum: document.getElementById('e-pnum').value, pdate: document.getElementById('e-pdate').value, notes: document.getElementById('e-notes').value, level: document.getElementById('e-level').value, step: parseInt(document.getElementById('e-step').value), photo: currentPhoto, updated: Date.now() };
-                await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(data, {merge:true});
-                status.innerText = "ЗБЕРЕЖЕНО"; setTimeout(() => { status.innerText = ""; }, 500);
-            };
-            if(instant) await save(); else saveTimeout = setTimeout(save, 1000);
-        }
-
+        // --- ОРИГІНАЛЬНІ ФУНКЦІЇ ---
+        async function autoSave(instant = false) { if (!editId) return; clearTimeout(saveTimeout); const save = async () => { const data = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, pnum: document.getElementById('e-pnum').value, pdate: document.getElementById('e-pdate').value, notes: document.getElementById('e-notes').value, level: document.getElementById('e-level').value, step: parseInt(document.getElementById('e-step').value), photo: currentPhoto, updated: Date.now() }; await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(data, {merge:true}); }; if(instant) await save(); else saveTimeout = setTimeout(save, 1000); }
         async function saveMeData() { const data = { meLname: document.getElementById('me-lname').value, meFname: document.getElementById('me-fname').value, meLevel: document.getElementById('me-level').value }; await db.collection("users").doc(user.uid).set(data, {merge:true}); }
         function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','phone','pnum','pdate','notes','step','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || (k==='step'?0:"")); document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || ""; currentPhoto = c.photo; document.getElementById('c-photo').style.backgroundImage = currentPhoto ? `url(${currentPhoto})` : 'none'; updateEditLevelBadge(); document.getElementById('edit-screen').style.display = 'flex'; }
         function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
