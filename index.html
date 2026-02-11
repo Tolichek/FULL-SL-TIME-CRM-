@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>SL TIME CRM 2.0 ETALON</title>
+    <title>SL TIME CRM 2.2 FINAL</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
@@ -41,49 +41,44 @@
         .total-count { font-size: 14px; font-weight: bold; line-height: 1; opacity: 0.9; }
         .f-lines { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; width: 22px; }
         .f-line { height: 2px; background: white; border-radius: 2px; }
+        #header-plus { display: none; font-size: 36px; font-weight: bold; color: white; cursor: pointer; min-width: 50px; text-align: right; line-height: 1; }
 
         #main-viewport { display: flex; width: 100vw; height: calc(100vh - 80px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
         .app-container { flex: 0 0 100vw; width: 100vw; height: 100%; scroll-snap-align: start; scroll-snap-stop: always; overflow: hidden; position: relative; }
 
         .board { display: flex; overflow-x: auto; padding: 0 20px 55px; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
-        .column { min-width: calc(100vw - 40px); scroll-snap-align: center; scroll-snap-stop: always; display: flex; flex-direction: column; gap: 15px; }
-        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 20px; } 
-        .col-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 14px; text-transform: uppercase; font-weight: bold; }
-        .add-btn-center { grid-column: 2; cursor: pointer; font-size: 30px; font-weight: bold; padding: 0 10px; }
+        .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; gap: 15px; }
+        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 20px; }
+        .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
+        .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 30px; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; text-shadow: 0 0 8px var(--neon); }
 
-        .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
-        .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 30px; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; color: #fff; text-shadow: 0 0 8px var(--neon); }
+        /* СТРУКТУРА 4 В РЯД */
+        #struct-path { display: none; align-items: center; padding: 0 20px; gap: 10px; overflow-x: auto; height: 50px; flex-shrink: 0; background: rgba(0,0,0,0.1); }
+        .path-dot { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid var(--neon); background-size: cover; background-position: center; flex-shrink: 0; }
+        .struct-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 20px; align-content: start; overflow-y: auto; height: calc(100% - 50px); }
+        .icon-unit { display: flex; flex-direction: column; align-items: center; position: relative; }
+        .icon-img { width: 70px; height: 70px; border-radius: 18px; background: rgba(255,255,255,0.1); background-size: cover; background-position: center; position: relative; }
+        .icon-neon-level { position: absolute; bottom: -12px; left: 50%; transform: translateX(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 22px; font-weight: bold; color: #fff; text-shadow: 0 0 8px var(--neon); pointer-events: none !important; user-select: none !important; z-index: 10; }
+        .icon-label { font-size: 10px; margin-top: 14px; font-weight: 600; text-align: center; color: white; width: 100%; white-space: nowrap; overflow: hidden; }
 
-        .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
-        .theme-btn { padding: 16px; text-align: center; cursor: pointer; border-radius: 12px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; color: white; }
-        .btn-purple { background: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); }
-        .btn-graphite { background: linear-gradient(135deg, #3a3a3c 0%, #1a1a1b 100%); }
-        .btn-blue { background: linear-gradient(135deg, #052661 0%, #021b49 100%); }
-        .btn-green { background: linear-gradient(135deg, #054126 0%, #02331a 100%); }
-        .btn-gold { background: linear-gradient(135deg, #614d05 0%, #443501 100%); }
-        .btn-pink { background: linear-gradient(135deg, #61053d 0%, #49022e 100%); }
+        .context-menu { position: fixed; display: none; gap: 15px; z-index: 999999 !important; transform: translate(-50%, -50px); }
+        .ctx-btn { width: 38px; height: 38px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 20px #000; font-size: 18px; color: black; }
+        .shaking { animation: shake 0.3s infinite; }
+        @keyframes shake { 0%{transform:rotate(1deg)} 50%{transform:rotate(-1deg)} 100%{transform:rotate(1deg)} }
 
-        #edit-screen, #user-menu, #personal-data-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
+        #edit-screen, #user-menu, #personal-data-screen, #partner-select-modal { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
         select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
         label { font-size: 10px; opacity: 0.5; text-transform: uppercase; }
 
-        .photo-container { position: relative; width: 110px; height: 110px; margin: 0 auto 30px; }
-        .edit-level-display { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 70px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon); width: 60px; text-align: center; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
+        .nav-item { color: #fff; opacity: 0.4; font-size: 11px; font-weight: bold; cursor: pointer; width: 33%; text-align: center; }
+        .nav-item.active { opacity: 1; text-shadow: 0 0 10px var(--neon); }
 
         #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
         .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
-
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
-        .nav-item { color: #fff; opacity: 0.4; font-size: 11px; font-weight: bold; cursor: pointer; }
-        .nav-item.active { opacity: 1; text-shadow: 0 0 10px var(--neon); }
     </style>
 </head>
 <body class="theme-purple">
-    <script>
-        const st = localStorage.getItem('crm_theme');
-        if(st) document.body.className = 'theme-' + st;
-    </script>
-
     <header id="app-header">
         <div class="avatar" id="u-avatar" onclick="showUserMenu()"></div>
         <div class="header-title">SL TIME CRM</div>
@@ -91,12 +86,23 @@
             <div id="header-counter" class="total-count">0</div>
             <div class="f-lines"><div class="f-line l1"></div><div class="f-line l2"></div><div class="f-line l3"></div></div>
         </div>
+        <div id="header-plus" onclick="handleStructurePlus()">+</div>
     </header>
 
     <div id="main-viewport">
         <div id="screen-crm" class="app-container"><main class="board" id="main-board"></main></div>
-        <div id="screen-struct" class="app-container"><div style="display:flex;align-items:center;justify-content:center;height:100%;opacity:0.3;font-size:20px;">СТРУКТУРА</div></div>
-        <div id="screen-plan" class="app-container"><div style="display:flex;align-items:center;justify-content:center;height:100%;opacity:0.3;font-size:20px;">ПЛАН ДІЙ</div></div>
+        <div id="screen-struct" class="app-container" style="display:flex; flex-direction:column;">
+            <div id="struct-path"></div>
+            <div class="struct-grid" id="struct-grid"></div>
+        </div>
+        <div id="screen-plan" class="app-container">
+            <div style="display:flex; align-items:center; justify-content:center; height:100%; opacity:0.3; font-size:20px;">ПЛАН ДІЙ</div>
+        </div>
+    </div>
+
+    <div class="context-menu" id="global-ctx">
+        <div class="ctx-btn" id="ctx-del">🗑️</div>
+        <div class="ctx-btn" id="ctx-info">ℹ️</div>
     </div>
 
     <nav class="bottom-nav">
@@ -110,12 +116,10 @@
             <span style="opacity:0.5; font-size:12px;">МЕНЮ КАРТКИ</span>
             <span onclick="removeClient()" style="color:#ff4d4d; font-size:12px; font-weight:bold; cursor:pointer;">ВИДАЛИТИ</span>
         </div>
-        
-        <div class="photo-container" onclick="uploadPhoto('client')">
+        <div style="position:relative; width:110px; height:110px; margin:0 auto 30px;" onclick="uploadPhoto('client')">
             <div id="c-photo" style="width:110px; height:110px; border-radius:50%; background-size:cover; border:1px solid silver; background-position:center;"></div>
-            <div id="edit-level-badge" class="edit-level-display"></div>
+            <div id="edit-level-badge" style="position:absolute; top:50%; left:-65px; transform:translateY(-50%); font-family:'Montserrat Alternates'; font-size:70px; font-weight:bold; color:#fff; text-shadow:0 0 15px var(--neon);"></div>
         </div>
-
         <label>ЕТАП</label><select id="e-step"></select>
         <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname">
         <label>ІМ'Я</label><input type="text" id="e-fname">
@@ -123,48 +127,37 @@
         <label>НОМЕР ТЕЛЕФОНУ</label><input type="tel" id="e-phone">
         <label>ПОЛІС ДАТА</label><input type="date" id="e-pdate">
         <label>ПОЛІС №</label><input type="text" id="e-pnum">
-        <label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()">
-            <option value="">none</option>
-            <script>for(let i=1; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script>
-        </select>
-        
-        <button onclick="manualSave()" style="margin-top:20px; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕГТИ І ВИЙТИ</button>
+        <label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><option value="">none</option><script>for(let i=1; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <label>ПРИМІТКИ</label><textarea id="e-notes" style="width:100%; background:transparent; border:none; border-bottom:1px solid rgba(255,255,255,0.2); color:white; min-height:100px; padding:10px 0; outline:none;"></textarea>
+        <button onclick="manualSave()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ І ВИЙТИ</button>
     </div>
 
     <div id="user-menu">
         <div style="font-size:18px; font-weight:bold; margin-bottom:30px; text-align:center;">НАЛАШТУВАННЯ</div>
         <button onclick="showPersonalData()" style="padding:15px; background:rgba(255,255,255,0.1); color:white; border-radius:12px; width:100%; font-weight:bold; margin-bottom:10px; border:1px solid silver;">ОСОБИСТІ ДАНІ</button>
-        
-        <label style="margin-top:20px;">ТЕМА ОФОРМЛЕННЯ</label>
-        <div class="theme-grid">
-            <div onclick="setTheme('purple')" class="theme-btn btn-purple">Фіолет</div>
-            <div onclick="setTheme('graphite')" class="theme-btn btn-graphite">Графіт</div>
-            <div onclick="setTheme('blue')" class="theme-btn btn-blue">Синій</div>
-            <div onclick="setTheme('green')" class="theme-btn btn-green">Зелений</div>
-            <div onclick="setTheme('gold')" class="theme-btn btn-gold">Золото</div>
-            <div onclick="setTheme('pink')" class="theme-btn btn-pink">Рожевий</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:20px 0;">
+            <div onclick="setTheme('purple')" style="background:linear-gradient(135deg,#3d0561,#2e0249); padding:16px; border-radius:12px; text-align:center; font-weight:bold;">Фіолет</div>
+            <div onclick="setTheme('graphite')" style="background:linear-gradient(135deg,#3a3a3c,#1a1a1b); padding:16px; border-radius:12px; text-align:center; font-weight:bold;">Графіт</div>
+            <div onclick="setTheme('blue')" style="background:linear-gradient(135deg,#052661,#021b49); padding:16px; border-radius:12px; text-align:center; font-weight:bold;">Синій</div>
+            <div onclick="setTheme('green')" style="background:linear-gradient(135deg,#054126,#02331a); padding:16px; border-radius:12px; text-align:center; font-weight:bold;">Зелений</div>
+            <div onclick="setTheme('gold')" style="background:linear-gradient(135deg,#614d05,#443501); padding:16px; border-radius:12px; text-align:center; font-weight:bold;">Золото</div>
+            <div onclick="setTheme('pink')" style="background:linear-gradient(135deg,#61053d,#49022e); padding:16px; border-radius:12px; text-align:center; font-weight:bold;">Рожевий</div>
         </div>
-        
         <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗАКРИТИ</button>
-        <div style="text-align:center; color:#ff4d4d; margin-top:30px; cursor:pointer; font-weight:bold;" onclick="logout()">ВИЙТИ</div>
+        <div onclick="logout()" style="text-align:center; color:#ff4d4d; margin-top:30px; cursor:pointer; font-weight:bold;">ВИЙТИ</div>
     </div>
 
     <div id="personal-data-screen">
-        <div class="photo-container" onclick="uploadPhoto('me')">
-            <div id="me-photo" style="width:110px; height:110px; border-radius:50%; background-size:cover; border:2px solid var(--neon);"></div>
-        </div>
+        <div style="width:110px; height:110px; border-radius:50%; background-size:cover; margin:0 auto 30px; border:2px solid var(--neon);" id="me-photo" onclick="uploadPhoto('me')"></div>
         <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname">
         <label>ІМ'Я</label><input type="text" id="me-fname">
-        <label>РІВЕНЬ</label><select id="me-level">
-            <script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script>
-        </select>
-        <button onclick="saveMeData()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ</button>
+        <label>РІВЕНЬ</label><select id="me-level"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <button onclick="saveMeData()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ І ВИЙТИ</button>
     </div>
 
-    <div id="filter-popup">
-        <div class="f-item" onclick="setFilter('az')">А-Я</div>
-        <div class="f-item" onclick="setFilter('new')">Нові</div>
-        <div class="f-item" onclick="setFilter('old')">Старі</div>
+    <div id="partner-select-modal">
+        <div id="modal-partners-list" style="flex:1; overflow-y:auto; padding-top:20px;"></div>
+        <button onclick="window.history.back()" style="padding:18px; width:100%; border-radius:30px; background:white; color:black; font-weight:bold;">НАЗАД</button>
     </div>
 
     <script>
@@ -172,18 +165,22 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.firestore();
 
-        let user = null, clients = [], editId = null, filterType = 'new';
+        let user = null, clients = [], editId = null, filterType = 'new', currentPath = [], pressTimer = null;
         const steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Поліс", "Семінар"];
 
         const vp = document.getElementById('main-viewport');
         vp.addEventListener('scroll', () => {
             const index = Math.round(vp.scrollLeft / window.innerWidth);
             document.querySelectorAll('.nav-item').forEach((btn, i) => btn.classList.toggle('active', i === index));
+            const ctrl = document.getElementById('header-ctrl'), plus = document.getElementById('header-plus'), pathBar = document.getElementById('struct-path');
+            if(index === 1) { ctrl.style.display = 'none'; plus.style.display = 'block'; pathBar.style.display = 'flex'; renderStructure(); }
+            else { ctrl.style.display = 'flex'; plus.style.display = 'none'; pathBar.style.display = 'none'; renderBoard(); }
+            updateHeaderCounter();
         });
 
         function jumpToPage(index) { vp.scrollTo({ left: index * window.innerWidth, behavior: 'smooth' }); }
         function lock() { window.history.pushState({l:1}, ""); }
-        window.onpopstate = () => { if(editId || document.getElementById('user-menu').style.display==='flex' || document.getElementById('personal-data-screen').style.display==='flex') { closeAllUI(); lock(); } };
+        window.onpopstate = () => { if(editId || document.getElementById('user-menu').style.display==='flex' || document.getElementById('personal-data-screen').style.display==='flex' || document.getElementById('partner-select-modal').style.display==='flex') { closeAllUI(); lock(); } };
 
         auth.onAuthStateChanged(async u => { if(u) { user = u; loadUserConfig(); loadClients(); lock(); } else { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); } });
 
@@ -202,6 +199,7 @@
             db.collection("users").doc(user.uid).collection("clients").onSnapshot(snap => {
                 clients = []; snap.forEach(d => clients.push({id: d.id, ...d.data()}));
                 renderBoard(); updateHeaderCounter();
+                if(Math.round(vp.scrollLeft/window.innerWidth)===1) renderStructure();
             });
         }
 
@@ -228,60 +226,65 @@
             });
         }
 
-        function openEdit(id) {
-            editId = id; const c = clients.find(x => x.id === id);
-            ['lname','fname','phone','pnum','pdate','bday','step','level'].forEach(k => {
-                document.getElementById('e-'+k).value = c[k] || (k==='step'?0:"");
+        function renderStructure() {
+            const grid = document.getElementById('struct-grid'), pathBar = document.getElementById('struct-path');
+            grid.innerHTML = ''; pathBar.innerHTML = '';
+            currentPath.forEach((p, idx) => {
+                const dot = document.createElement('div'); dot.className = 'path-dot'; dot.style.backgroundImage = `url(${p.photo || ''})`;
+                dot.onclick = () => { currentPath = currentPath.slice(0, idx + 1); renderStructure(); };
+                pathBar.appendChild(dot);
             });
-            document.getElementById('c-photo').style.backgroundImage = `url(${c.photo||''})`;
-            updateEditLevelBadge();
-            document.getElementById('edit-screen').style.display='flex';
+            const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
+            clients.filter(c => c.isPartner && (c.parentId || 'me') === pid).forEach(p => {
+                const box = document.createElement('div'); box.className = 'icon-unit';
+                box.innerHTML = `<div class="icon-img" style="background-image:url(${p.photo || ''})" ontouchstart="startPress(event, '${p.id}')" ontouchend="endPress()" onclick="if(!this.parentElement.classList.contains('shaking')){currentPath.push({id:'${p.id}',photo:'${p.photo||''}'});renderStructure();}">
+                    <div class="icon-neon-level">${p.level || 0}</div>
+                </div><div class="icon-label">${p.lname || '...'}</div>`;
+                grid.appendChild(box);
+            });
         }
 
-        function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
-        function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen').forEach(el => el.style.display = 'none'); editId = null; }
-        
-        async function manualSave() {
-            if(!editId) return;
-            const d = { 
-                lname: document.getElementById('e-lname').value, 
-                fname: document.getElementById('e-fname').value, 
-                phone: document.getElementById('e-phone').value, 
-                bday: document.getElementById('e-bday').value,
-                pdate: document.getElementById('e-pdate').value,
-                pnum: document.getElementById('e-pnum').value,
-                level: document.getElementById('e-level').value, 
-                step: parseInt(document.getElementById('e-step').value), 
-                updated: Date.now() 
-            };
-            await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(d, {merge:true});
-            closeAllUI();
+        function startPress(e, id) {
+            const rect = e.target.getBoundingClientRect();
+            pressTimer = setTimeout(() => {
+                const ctx = document.getElementById('global-ctx');
+                ctx.style.display = 'flex'; ctx.style.left = (rect.left + rect.width/2) + 'px'; ctx.style.top = rect.top + 'px';
+                e.target.parentElement.classList.add('shaking');
+                document.getElementById('ctx-del').onclick = () => removeFromStruct(id);
+                document.getElementById('ctx-info').onclick = () => openEdit(id);
+                if(window.navigator.vibrate) window.navigator.vibrate(50);
+            }, 500);
         }
+        function endPress() { clearTimeout(pressTimer); }
+        document.addEventListener('touchstart', (e) => { if(!e.target.closest('.icon-unit')){ document.getElementById('global-ctx').style.display = 'none'; document.querySelectorAll('.icon-unit').forEach(el=>el.classList.remove('shaking')); }});
 
-        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); window.history.pushState({e:1}, ""); openEdit(res.id); }
+        function handleStructurePlus() { if(currentPath.length === 0) openPartnerSelect(); else createCardForPartner(); }
+        async function createCardForPartner() { const pid = currentPath[currentPath.length-1].id; const res = await db.collection("users").doc(user.uid).collection("clients").add({ step: 6, created: Date.now(), isPartner: true, parentId: pid }); window.history.pushState({e:1}, ""); openEdit(res.id); }
+        function openPartnerSelect() { const list = document.getElementById('modal-partners-list'); list.innerHTML = ''; const cand = clients.filter(c => c.step === 6 && !c.isPartner); if(cand.length === 0) { list.innerHTML = `<div style="text-align:center; opacity:0.5; padding:40px;">У списку СЕМІНАР немає вільних кандидатів</div>`; } else { cand.forEach(c => { const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; gap:15px; color:white;"; row.innerHTML = `<div style="width:44px; height:44px; border-radius:50%; background-size:cover; background-image:url(${c.photo||''})"></div><div>${c.lname} ${c.fname}</div>`; row.onclick = async () => { await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ isPartner: true, parentId: currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me' }); window.history.back(); }; list.appendChild(row); }); } document.getElementById('partner-select-modal').style.display = 'flex'; window.history.pushState({s:1}, ""); }
+
+        function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','phone','pnum','pdate','bday','step','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || ""); document.getElementById('c-photo').style.backgroundImage = `url(${c.photo||''})`; updateEditLevelBadge(); document.getElementById('edit-screen').style.display='flex'; }
+        function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #partner-select-modal').forEach(el => el.style.display = 'none'); document.getElementById('global-ctx').style.display = 'none'; editId = null; }
+        async function manualSave() { if(!editId) return; const d = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, bday: document.getElementById('e-bday').value, pdate: document.getElementById('e-pdate').value, pnum: document.getElementById('e-pnum').value, level: document.getElementById('e-level').value, step: parseInt(document.getElementById('e-step').value), updated: Date.now() }; await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(d, {merge:true}); closeAllUI(); }
         async function saveMeData() { const d = { meLname: document.getElementById('me-lname').value, meFname: document.getElementById('me-fname').value, meLevel: document.getElementById('me-level').value }; await db.collection("users").doc(user.uid).set(d, {merge:true}); closeAllUI(); }
-        function showUserMenu() { window.history.pushState({m:1}, ""); document.getElementById('user-menu').style.display = 'flex'; }
-        function showPersonalData() { window.history.pushState({p:1}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
+        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); window.history.pushState({e:1}, ""); openEdit(res.id); }
+        function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
+        function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); if(user) db.collection("users").doc(user.uid).set({theme: t}, {merge:true}); }
         function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
         function setFilter(t) { filterType = t; renderBoard(); toggleFilter(); }
-        function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); if(user) db.collection("users").doc(user.uid).set({theme: t}, {merge:true}); }
+        function showUserMenu() { window.history.pushState({m:1}, ""); document.getElementById('user-menu').style.display = 'flex'; }
+        function showPersonalData() { window.history.pushState({p:1}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
         function updateHeaderCounter() { document.getElementById('header-counter').innerText = clients.length; }
+        async function removeFromStruct(id) { if(confirm("Видалити зі структури?")) { await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ isPartner: false, parentId: null }); closeAllUI(); }}
         async function removeClient() { if(confirm("Видалити картку?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAllUI(); } }
         function logout() { auth.signOut().then(()=>location.reload()); }
-        
         function uploadPhoto(type) {
             const input = document.createElement('input'); input.type = 'file'; input.accept = 'image/*';
             input.onchange = e => {
                 const file = e.target.files[0]; const reader = new FileReader();
                 reader.onload = async () => {
                     const base64 = reader.result;
-                    if(type === 'me') {
-                        document.getElementById('me-photo').style.backgroundImage = `url(${base64})`;
-                        await db.collection("users").doc(user.uid).set({myPhoto: base64}, {merge:true});
-                    } else {
-                        document.getElementById('c-photo').style.backgroundImage = `url(${base64})`;
-                        await db.collection("users").doc(user.uid).collection("clients").doc(editId).update({photo: base64});
-                    }
+                    if(type === 'me') { document.getElementById('me-photo').style.backgroundImage = `url(${base64})`; await db.collection("users").doc(user.uid).set({myPhoto: base64}, {merge:true}); }
+                    else { document.getElementById('c-photo').style.backgroundImage = `url(${base64})`; await db.collection("users").doc(user.uid).collection("clients").doc(editId).update({photo: base64}); }
                 };
                 reader.readAsDataURL(file);
             };
