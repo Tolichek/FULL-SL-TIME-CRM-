@@ -37,16 +37,17 @@
         .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); }
         .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 26px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 20px var(--neon); letter-spacing: 0.5px; flex: 1; text-align: center; }
         
-        /* ЛІЧИЛЬНИК НА ФІЛЬТРІ */
-        .filter-btn { display: flex; align-items: center; gap: 10px; cursor: pointer; height: 44px; padding-left: 10px; }
-        .total-count { font-size: 16px; font-weight: bold; }
-        .f-lines { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; width: 25px; }
+        /* ОБ'ЄДНАНИЙ ФІЛЬТР ТА ЛІЧИЛЬНИК */
+        #header-ctrl { display: flex; align-items: center; gap: 8px; cursor: pointer; min-width: 60px; justify-content: flex-end; height: 44px; transition: opacity 0.3s; }
+        .total-count { font-size: 16px; font-weight: bold; line-height: 1; }
+        .f-lines { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; width: 22px; }
         .f-line { height: 2px; background: white; border-radius: 2px; }
         .l1 { width: 22px; } .l2 { width: 16px; } .l3 { width: 10px; }
 
         #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
         .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
 
+        /* В'ЮПОРТ ТА СТОЛИ */
         #main-viewport { 
             display: flex; 
             width: 100vw; 
@@ -95,7 +96,7 @@
         .photo-container { position: relative; width: 110px; height: 110px; margin: 0 auto; }
         .edit-level-display { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon); width: 60px; text-align: center; }
         
-        /* ТЕМИ З ЗАЛИВКОЮ */
+        /* КНОПКИ ТЕМ З ЗАЛИВКОЮ */
         .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
         .theme-btn { padding: 16px; text-align: center; cursor: pointer; border-radius: 12px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; color: white; }
         .btn-purple { background: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); }
@@ -120,7 +121,7 @@
     <header id="app-header">
         <div class="avatar" id="u-avatar" onclick="showUserMenu()"></div>
         <div class="header-title">SL Time CRM</div>
-        <div id="header-ctrl" class="filter-btn" onclick="toggleFilter()">
+        <div id="header-ctrl" onclick="toggleFilter()">
             <div id="header-counter" class="total-count">0</div>
             <div class="f-lines">
                 <div class="f-line l1"></div><div class="f-line l2"></div><div class="f-line l3"></div>
@@ -316,6 +317,8 @@
         function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); if(user) db.collection("users").doc(user.uid).set({theme: t}, {merge:true}); }
         function handleFile(input) { const r = new FileReader(); r.onload = e => { currentPhoto = e.target.result; document.getElementById('c-photo').style.backgroundImage = `url(${e.target.result})`; }; r.readAsDataURL(input.files[0]); }
         function logout() { auth.signOut().then(() => location.reload()); }
+        async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAllUI(); } }
+        async function removeFromStruct(id) { if(confirm("Прибрати?")) await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ isPartner: false, parentId: null }); }
     </script>
 </body>
 </html>
