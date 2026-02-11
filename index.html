@@ -22,19 +22,25 @@
             --neon-text: #fff;
         }
 
-        body.theme-purple { --bg: var(--bg); --card-grad: var(--card-grad); --neon: rgba(219, 0, 255, 0.8); }
+        body.theme-purple { --bg: linear-gradient(180deg, #2e0249 0%, #570a57 50%, #1a1a1b 100%); --card-grad: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); --neon: rgba(219, 0, 255, 0.8); }
         body.theme-graphite { --bg: linear-gradient(180deg, #1a1a1b 0%, #2c2c2e 50%, #000000 100%); --card-grad: linear-gradient(135deg, #3a3a3c 0%, #1a1a1b 100%); --neon: rgba(255, 255, 255, 0.4); }
+        body.theme-blue { --bg: linear-gradient(180deg, #021b49 0%, #0a2e57 50%, #010a1b 100%); --card-grad: linear-gradient(135deg, #052661 0%, #021b49 100%); --neon: rgba(0, 150, 255, 0.8); }
+        body.theme-green { --bg: linear-gradient(180deg, #02331a 0%, #0a492e 50%, #01140a 100%); --card-grad: linear-gradient(135deg, #054126 0%, #02331a 100%); --neon: rgba(0, 255, 133, 0.8); }
+        body.theme-gold { --bg: linear-gradient(180deg, #443501 0%, #755b0a 50%, #1a1401 100%); --card-grad: linear-gradient(135deg, #614d05 0%, #443501 100%); --neon: rgba(255, 215, 0, 0.7); }
+        body.theme-pink { --bg: linear-gradient(180deg, #49022e 0%, #570a3a 50%, #1b0110 100%); --card-grad: linear-gradient(135deg, #61053d 0%, #49022e 100%); --neon: rgba(255, 0, 150, 0.8); }
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
         body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
 
         header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; height: 80px; position: relative; z-index: 10; }
         .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); }
-        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 28px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 20px var(--neon); letter-spacing: 1px; }
+        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 28px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 10px #fff, 0 0 20px var(--neon); letter-spacing: 1px; }
+        .total-count { font-size: 16px; font-weight: bold; line-height: 1; }
 
-        /* СПИСКИ */
         .app-container { height: calc(100vh - 80px); overflow: hidden; display: none; }
         .app-container.active { display: block; }
+
+        /* СПИСКИ */
         .board { display: flex; overflow-x: auto; padding: 0 20px 55px; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
         .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; gap: 15px; }
         .cards-area { flex: 1; overflow-y: auto; } 
@@ -42,23 +48,23 @@
         .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
         .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 30px; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; text-shadow: 0 0 8px var(--neon); }
 
-        /* СТРУКТУРА */
+        /* СТРУКТУРА - НОВИЙ БЛОК */
         #struct-path { display: none; align-items: center; padding: 10px 20px; gap: 10px; overflow-x: auto; min-height: 60px; background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .path-step { width: 34px; height: 34px; border-radius: 50%; background-size: cover; border: 1.5px solid var(--neon); flex-shrink: 0; }
+        .path-step { width: 34px; height: 34px; border-radius: 50%; background-size: cover; border: 1.5px solid var(--neon); flex-shrink: 0; cursor: pointer; }
         .struct-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 25px; overflow-y: auto; align-content: start; flex: 1; }
         .icon-box { display: flex; flex-direction: column; align-items: center; position: relative; }
         .icon-img { width: 80px; height: 80px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); background-size: cover; background-position: center; position: relative; }
         .icon-badge { position: absolute; top: -8px; right: -8px; background: #ff3b30; color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; border: 2px solid white; }
         .icon-label { font-size: 11px; margin-top: 8px; font-weight: 600; text-align: center; color: white; text-shadow: 0 2px 4px #000; overflow: hidden; text-overflow: ellipsis; width: 100%; white-space: nowrap; }
-        .icon-gear { position: absolute; bottom: 38px; right: 2px; background: rgba(0,0,0,0.6); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12px; border: 1px solid rgba(255,255,255,0.3); }
 
+        /* ПАНЕЛІ */
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
         .nav-item { color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; width: 33%; }
         .nav-item.active { opacity: 1; }
+        .nav-icon-svg { width: 24px; height: 24px; transition: 0.3s; filter: drop-shadow(0 0 5px var(--neon)); }
 
         #edit-screen, #user-menu, #partner-select-modal { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
         input, select { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; }
-        label { font-size: 10px; opacity: 0.5; text-transform: uppercase; }
     </style>
 </head>
 <body class="theme-purple">
@@ -66,7 +72,7 @@
     <header>
         <div class="avatar" id="u-avatar" onclick="showUserMenu()"></div>
         <div class="header-title">SL Time CRM</div>
-        <div class="header-right"><div id="total-clients" style="font-weight:bold;">0</div></div>
+        <div class="header-right"><div id="total-clients" class="total-count">0</div></div>
     </header>
 
     <div id="struct-path"></div>
@@ -90,27 +96,24 @@
     </nav>
 
     <div id="partner-select-modal">
-        <h2 style="margin-bottom:20px;">Додати партнера</h2>
-        <div id="modal-partners-list" style="flex:1; overflow-y:auto;"></div>
-        <button onclick="document.getElementById('partner-select-modal').style.display='none'" style="margin-top:20px; padding:18px; width:100%; border-radius:30px;">СКАСУВАТИ</button>
+        <h2 style="margin-bottom:20px;">Додати в бізнес</h2>
+        <div id="modal-partners-list"></div>
+        <button onclick="document.getElementById('partner-select-modal').style.display='none'" style="margin-top:20px; padding:15px; width:100%; border-radius:20px;">НАЗАД</button>
     </div>
 
     <div id="edit-screen">
-        <span onclick="removeClient()" style="position: absolute; top: 25px; right: 25px; color: #ff4d4d; font-size: 12px; text-transform: uppercase;">Видалити</span>
         <div style="text-align:center; margin-bottom: 20px;">
-            <div class="photo-container"><div id="c-photo" style="width:110px; height:110px; border-radius:50%; background-size:cover; border:1px solid rgba(255,255,255,0.2); margin: 0 auto;"></div></div>
-            <p style="font-size:10px; margin-top:10px; opacity:0.5;" onclick="document.getElementById('f-upload').click()">ЗМІНИТИ ФОТО</p>
-            <input type="file" id="f-upload" hidden onchange="handleFile(this)">
+            <div id="c-photo" style="width:110px; height:110px; border-radius:50%; background-size:cover; border:1px solid rgba(255,255,255,0.2); margin:0 auto;"></div>
         </div>
         <label>ЕТАП</label><select id="e-step" onchange="autoSave()"></select>
         <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname" oninput="autoSave()">
         <label>ІМ'Я</label><input type="text" id="e-fname" oninput="autoSave()">
-        <label>НОМЕР ТЕЛЕФОНУ</label><input type="tel" id="e-phone" oninput="autoSave()">
-        <label>НОМЕР ПОЛІСУ</label><input type="text" id="e-pnum" oninput="autoSave()">
-        <label>ДАТА ПОЛІСУ</label><input type="date" id="e-pdate" onchange="autoSave()">
+        <label>ТЕЛЕФОН</label><input type="tel" id="e-phone" oninput="autoSave()">
+        <label>ПОЛІС №</label><input type="text" id="e-pnum" oninput="autoSave()">
+        <label>ДАТА</label><input type="date" id="e-pdate" onchange="autoSave()">
         <label>РІВЕНЬ</label><select id="e-level" onchange="autoSave()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
         <label>ПРИМІТКИ</label><textarea id="e-notes" style="width:100%; height:100px; background:none; color:white; border:1px solid rgba(255,255,255,0.2); padding:10px;" oninput="autoSave()"></textarea>
-        <button onclick="closeAll()" style="margin-top:20px; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗАКРИТИ</button>
+        <button onclick="closeAll()" style="margin-top:20px; padding:15px; background:white; color:black; border-radius:25px; width:100%; font-weight:bold;">ЗАКРИТИ</button>
     </div>
 
     <script>
@@ -119,7 +122,7 @@
         const auth = firebase.auth(), db = firebase.firestore();
 
         let user = null, clients = [], editId = null, saveTimeout;
-        const steps = ["Список", "Бесіда", "Розробка", "Презенти", "Ліфт", "Семінар", "Поліс"];
+        let steps = ["Список", "Бесіда", "Розробка", "Презенти", "Ліфт", "Семінар", "Поліс"];
         let currentPath = [];
 
         auth.onAuthStateChanged(async u => { if(u) { user = u; loadClients(); } else { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); } });
@@ -159,17 +162,18 @@
             });
         }
 
+        // --- ЛОГІКА СТРУКТУРИ ---
         function renderStructure() {
             const grid = document.getElementById('struct-grid'), pathBar = document.getElementById('struct-path');
             grid.innerHTML = ''; pathBar.innerHTML = '';
             
             const myDot = document.createElement('div'); myDot.className = 'path-step';
-            myDot.style.backgroundImage = document.getElementById('u-avatar').style.backgroundImage;
+            myDot.style.backgroundImage = `url(${auth.currentUser.photoURL})`;
             myDot.onclick = () => { currentPath = []; renderStructure(); };
             pathBar.appendChild(myDot);
 
             currentPath.forEach((p, idx) => {
-                pathBar.innerHTML += `<div style="opacity:0.3; color:white;">→</div>`;
+                pathBar.innerHTML += `<div style="color:white; opacity:0.3;">→</div>`;
                 const dot = document.createElement('div'); dot.className = 'path-step';
                 dot.style.backgroundImage = `url(${p.photo || ''})`;
                 dot.onclick = () => { currentPath = currentPath.slice(0, idx + 1); renderStructure(); };
@@ -185,7 +189,6 @@
                         <div class="icon-badge">${p.level || 0}</div>
                     </div>
                     <div class="icon-label" onclick="openEdit('${p.id}')">${p.lname || ''} ⚙️</div>
-                    <div style="position:absolute; top:-5px; left:-5px; font-size:20px; color:white;" onclick="removeFromStruct('${p.id}')">−</div>
                 `;
                 grid.appendChild(box);
             });
@@ -196,8 +199,8 @@
             const list = document.getElementById('modal-partners-list'); list.innerHTML = '';
             const potential = clients.filter(c => c.step === 5 && !c.isPartner);
             potential.forEach(c => {
-                const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:10px; display:flex; align-items:center; gap:15px;";
-                row.innerHTML = `<div style="width:40px;height:40px;border-radius:50%;background-size:cover;background-image:url(${c.photo||''})"></div><div>${c.lname} ${c.fname}</div>`;
+                const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:10px; color:white;";
+                row.innerText = `${c.lname} ${c.fname}`;
                 row.onclick = async () => {
                     await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ isPartner: true, parentId: currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me' });
                     document.getElementById('partner-select-modal').style.display = 'none';
@@ -207,7 +210,6 @@
             document.getElementById('partner-select-modal').style.display = 'flex';
         }
 
-        async function removeFromStruct(id) { if(confirm("Прибрати зі структури?")) await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ isPartner: false, parentId: null }); }
         function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','phone','pnum','pdate','notes','step','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || (k==='step'?0:"")); document.getElementById('c-photo').style.backgroundImage = `url(${c.photo || ''})`; document.getElementById('edit-screen').style.display = 'flex'; }
         function closeAll() { if (editId) autoSave(true); document.querySelectorAll('#edit-screen, #partner-select-modal').forEach(el => el.style.display = 'none'); editId = null; }
         async function autoSave(instant = false) { if (!editId) return; clearTimeout(saveTimeout); const save = async () => { const data = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, pnum: document.getElementById('e-pnum').value, pdate: document.getElementById('e-pdate').value, notes: document.getElementById('e-notes').value, level: document.getElementById('e-level').value, step: parseInt(document.getElementById('e-step').value) }; await db.collection("users").doc(user.uid).collection("clients").doc(editId).update(data); }; if(instant) await save(); else saveTimeout = setTimeout(save, 1000); }
