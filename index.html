@@ -70,12 +70,10 @@
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
         .nav-item { color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33%; height: 100%; }
         .nav-item.active { opacity: 1; }
-        .nav-icon-svg { width: 24px; height: 24px; transition: 0.3s; filter: drop-shadow(0 0 5px var(--neon)); }
 
         #edit-screen, #user-menu, #personal-data-screen, #partner-select-modal { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
-        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 8999; display: none; backdrop-filter: blur(5px); }
         select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
-        label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
+        label { font-size: 10px; opacity: 0.5; text-transform: uppercase; }
         .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
         .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; font-size: 16px; }
         #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; font-size: 16px; outline: none; }
@@ -95,6 +93,11 @@
     </style>
 </head>
 <body class="theme-purple">
+    <script>
+        // МИТТЄВЕ ПЕРЕФАРБУВАННЯ
+        const savedTheme = localStorage.getItem('crm_theme');
+        if(savedTheme) document.body.className = 'theme-' + savedTheme;
+    </script>
 
     <div id="splash" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;">
         <div style="width:160px;height:160px;border:2px solid silver;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:bold;color:white;">SL</div>
@@ -130,7 +133,7 @@
     </div>
 
     <div id="screen-plan" class="app-container">
-        <div style="display:flex; align-items:center; justify-content:center; height:100%; opacity:0.3; font-size:20px;">ПЛАНУВАЛЬНИК В РОЗРОБЦІ</div>
+        <div style="display:flex; align-items:center; justify-content:center; height:100%; opacity:0.3; font-size:20px;">ПЛАН ДІЙ</div>
     </div>
 
     <nav class="bottom-nav">
@@ -238,7 +241,7 @@
         const board = document.getElementById('main-board');
         board.addEventListener('scroll', () => {
             const max = board.scrollWidth - board.clientWidth;
-            if (board.scrollLeft > max + 50) { 
+            if (board.scrollLeft > max + 60) { 
                 switchPage('struct', document.getElementById('nav-struct'));
                 board.scrollLeft = max; 
             }
