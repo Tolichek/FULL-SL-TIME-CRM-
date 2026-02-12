@@ -32,25 +32,34 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
         body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
 
+        ::-webkit-scrollbar { display: none; }
         header { display: flex; justify-content: space-between; align-items: center; padding: 0 15px; height: 80px; position: relative; z-index: 1000; background: transparent; }
         .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); flex-shrink: 0; }
-        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 26px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 20px var(--neon); flex: 1; text-align: center; white-space: nowrap; margin-left: 50px; }
+        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 6vw; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 20px var(--neon); flex: 1; text-align: center; white-space: nowrap; }
+        @media screen and (min-width: 450px) { .header-title { font-size: 26px; } }
 
-        #main-viewport { display: flex; width: 100vw; height: calc(100vh - 80px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
-        .app-container { flex: 0 0 100vw; width: 100vw; height: 100%; scroll-snap-align: start; overflow: hidden; position: relative; }
+        #header-ctrl { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; cursor: pointer; min-width: 50px; height: 44px; flex-shrink: 0; }
+        .total-count { font-size: 14px; font-weight: bold; line-height: 1; opacity: 0.9; }
+        .f-lines { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; width: 22px; }
+        .f-line { height: 2px; background: white; border-radius: 2px; }
+        .l1 { width: 22px; } .l2 { width: 16px; } .l3 { width: 10px; }
+        #header-plus { display: none; font-size: 36px; font-weight: bold; color: white; cursor: pointer; min-width: 50px; text-align: right; line-height: 1; flex-shrink: 0; }
 
-        /* СПИСКИ */
-        .board { display: flex; overflow-x: auto; padding: 10px 20px 55px; gap: 20px; height: 100%; }
-        .column { min-width: calc(100vw - 40px); display: flex; flex-direction: column; gap: 15px; }
-        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 20px; }
-        .col-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 14px; font-weight: bold; text-transform: uppercase; }
-        .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
-        .card-level { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 30px; font-family: 'Montserrat Alternates'; text-shadow: 0 0 8px var(--neon); }
+        #main-viewport { display: flex; width: 100vw; height: calc(100vh - 80px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; gap: 60px; }
+        .app-container { flex: 0 0 100vw; width: 100vw; height: 100%; scroll-snap-align: start; scroll-snap-stop: always; overflow: hidden; position: relative; }
 
-        /* НОВІ ІКОНКИ ПАРТНЕРА */
-        .struct-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 80px 10px 20px; overflow-y: auto; align-content: start; height: 100%; }
+        .board { display: flex; overflow-x: auto; padding: 10px 20px 55px; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
+        .column { min-width: calc(100vw - 40px); scroll-snap-align: center; scroll-snap-stop: always; display: flex; flex-direction: column; gap: 15px; }
+        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 20px; } 
+        .col-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 14px; text-transform: uppercase; font-weight: bold; }
+        .add-btn-center { grid-column: 2; cursor: pointer; font-size: 30px; font-weight: bold; padding: 0 10px; }
+
+        .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
+        .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 30px; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; color: #fff; text-shadow: 0 0 8px var(--neon); }
+
+        /* ІКОНКИ СТРУКТУРИ */
+        .struct-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 75px 10px 20px; overflow-y: auto; align-content: start; height: 100%; }
         .icon-unit { display: flex; flex-direction: column; align-items: center; position: relative; height: 140px; }
-        
         .sphere { 
             position: absolute; width: 30px; height: 30px; border-radius: 50%; 
             background: radial-gradient(circle at 30% 30%, #fff 0%, rgba(255,255,255,0.2) 20%, var(--neon) 60%, rgba(0,0,0,0.5) 100%);
@@ -59,52 +68,55 @@
             z-index: 10; font-size: 12px; font-weight: bold; color: white; border: 0.5px solid rgba(255,255,255,0.4);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        
         .level-sphere { top: -15px; left: 50%; transform: translateX(-50%); }
         .opt-sphere { display: none; top: 40px; left: 50%; }
         .del-sphere { display: none; top: 40px; left: 50%; }
-
         .icon-unit.menu-open .opt-sphere { display: flex; transform: translate(-150%, 45%); }
         .icon-unit.menu-open .del-sphere { display: flex; transform: translate(50%, 45%); }
 
-        .photo-sphere { width: 75px; height: 75px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); box-shadow: 0 0 15px var(--neon); z-index: 5; }
-        .icon-label { margin-top: 20px; font-size: 10px; font-weight: bold; text-align: center; color: white; text-transform: uppercase; width: 100%; display: flex; flex-direction: column; }
+        .photo-sphere { width: 75px; height: 75px; border-radius: 50%; background-size: cover; background-position: center; border: 2px solid rgba(255,255,255,0.4); box-shadow: 0 0 15px var(--neon); z-index: 5; cursor: pointer; }
+        .icon-label { margin-top: 15px; font-size: 10px; font-weight: bold; color: white; text-align: center; display: flex; flex-direction: column; width: 100%; text-transform: uppercase; }
         .icon-label span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* UI (Версія 2.2) */
-        #struct-path { position: absolute; top: 0; left: 0; right: 0; display: none; align-items: center; padding: 0 20px; height: 50px; z-index: 500; gap: 10px; overflow-x: auto; }
-        .path-dot { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid white; background-size: cover; flex-shrink: 0; }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
-        .nav-item { color: #fff; opacity: 0.4; font-size: 11px; font-weight: bold; cursor: pointer; }
+        #struct-path { position: absolute; top: 0; left: 0; right: 0; display: none; align-items: center; padding: 0 20px; gap: 10px; overflow-x: auto; height: 50px; background: transparent; z-index: 500; }
+        .path-dot { width: 32px; height: 32px; border-radius: 50%; background-size: cover; background-position: center; border: 1.5px solid white; flex-shrink: 0; }
+
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.7); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
+        .nav-item { color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33%; height: 100%; font-size: 11px; font-weight: bold; }
         .nav-item.active { opacity: 1; text-shadow: 0 0 10px var(--neon); }
-        
+
         #edit-screen, #user-menu, #personal-data-screen, #partner-select-modal { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
         select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
         label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
+        
         .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
         .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; font-size: 16px; }
         #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; font-size: 16px; outline: none; }
+
         .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
-        .theme-btn { padding: 16px; text-align: center; border-radius: 12px; font-weight: bold; border: 1px solid rgba(255,255,255,0.2); color: white; text-transform: uppercase; font-size: 12px; }
+        .theme-btn { padding: 16px; text-align: center; border-radius: 12px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; color: white; }
     </style>
 </head>
 <body class="theme-purple">
+    <script>
+        const st = localStorage.getItem('crm_theme');
+        if(st) document.body.className = 'theme-' + st;
+    </script>
+
     <header id="app-header">
         <div class="avatar" id="u-avatar" onclick="showUserMenu()"></div>
-        <div class="header-title">SL Time CRM</div>
-        <div id="header-ctrl" onclick="toggleFilter()" style="display:flex; flex-direction:column; align-items:flex-end; cursor:pointer">
-            <div id="header-counter" style="font-size:14px; font-weight:bold">0</div>
-            <div style="width:22px; height:2px; background:white; margin:2px 0"></div>
-            <div style="width:16px; height:2px; background:white; margin:2px 0"></div>
-            <div style="width:10px; height:2px; background:white"></div>
+        <div class="header-title" style="margin-left:50px;">SL Time CRM</div>
+        <div id="header-ctrl" onclick="toggleFilter()">
+            <div id="header-counter" class="total-count">0</div>
+            <div class="f-lines"><div class="f-line l1"></div><div class="f-line l2"></div><div class="f-line l3"></div></div>
         </div>
-        <div id="header-plus" onclick="handleAddPartner()" style="display:none; font-size:32px; font-weight:bold">+</div>
+        <div id="header-plus" onclick="handleAddPartner()">+</div>
     </header>
 
     <div id="main-viewport">
         <div id="screen-crm" class="app-container"><main class="board" id="main-board"></main></div>
         <div id="screen-struct" class="app-container"><div id="struct-path"></div><div class="struct-grid" id="struct-grid"></div></div>
-        <div id="screen-plan" class="app-container"></div>
+        <div id="screen-plan" class="app-container"><div style="display:flex; align-items:center; justify-content:center; height:100%; opacity:0.3; font-size:20px;">ПЛАН ДІЙ</div></div>
     </div>
 
     <nav class="bottom-nav">
@@ -118,26 +130,23 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.firestore(), provider = new firebase.auth.GoogleAuthProvider();
 
-        let user = null, clients = [], editId = null, currentPath = [], longPressTimer = null, currentPhotoBase64 = null;
-        const steps = ["Список", "Бесіда", "Розробка", "Презентиція", "Ліфт", "Поліс", "Семінар"];
+        let user = null, clients = [], editId = null, filterType = 'new', currentPhotoBase64 = null;
+        const steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Поліс", "Семінар"];
+        let currentPath = [], longPressTimer = null;
 
         const vp = document.getElementById('main-viewport');
         vp.addEventListener('scroll', () => {
-            const idx = Math.round(vp.scrollLeft / window.innerWidth);
-            document.querySelectorAll('.nav-item').forEach((btn, i) => btn.classList.toggle('active', i === idx));
-            document.getElementById('header-ctrl').style.display = idx === 1 ? 'none' : 'flex';
-            document.getElementById('header-plus').style.display = idx === 1 ? 'block' : 'none';
-            document.getElementById('struct-path').style.display = idx === 1 ? 'flex' : 'none';
-            if(idx === 1) renderStructure();
+            const index = Math.round(vp.scrollLeft / (window.innerWidth + 60));
+            document.querySelectorAll('.nav-item').forEach((btn, i) => btn.classList.toggle('active', i === index));
+            const ctrl = document.getElementById('header-ctrl'), plus = document.getElementById('header-plus'), pathBar = document.getElementById('struct-path');
+            if(index === 1) { ctrl.style.display = 'none'; plus.style.display = 'block'; pathBar.style.display = 'flex'; renderStructure(); }
+            else { ctrl.style.display = 'flex'; plus.style.display = 'none'; pathBar.style.display = 'none'; }
             updateHeaderCounter();
         });
 
-        function jumpToPage(i) { vp.scrollTo({ left: i * window.innerWidth, behavior: 'smooth' }); }
+        function jumpToPage(i) { vp.scrollTo({ left: i * (window.innerWidth + 60), behavior: 'smooth' }); }
 
-        auth.onAuthStateChanged(async u => { 
-            if(u) { user = u; document.getElementById('splash').style.display='none'; await loadUserConfig(); loadClients(); } 
-            else { auth.signInWithPopup(provider); } 
-        });
+        auth.onAuthStateChanged(async u => { if(u) { user = u; await loadUserConfig(); loadClients(); } else { auth.signInWithPopup(provider); } });
 
         async function loadUserConfig() {
             const doc = await db.collection("users").doc(user.uid).get();
@@ -149,29 +158,29 @@
         function loadClients() {
             db.collection("users").doc(user.uid).collection("clients").onSnapshot(snap => {
                 clients = []; snap.forEach(d => clients.push({id: d.id, ...d.data()}));
-                renderBoard(); updateHeaderCounter();
+                renderBoard(); updateHeaderCounter(); if(Math.round(vp.scrollLeft/(window.innerWidth+60)) === 1) renderStructure();
             });
         }
 
         function updateHeaderCounter() {
-            const idx = Math.round(vp.scrollLeft / window.innerWidth);
+            const idx = Math.round(vp.scrollLeft / (window.innerWidth + 60));
             const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
-            const count = idx === 1 ? clients.filter(c => c.isPartner && (c.parentId || 'me') === pid).length : clients.filter(c => !c.isStructureOnly).length;
-            document.getElementById('header-counter').innerText = count;
+            document.getElementById('header-counter').innerText = idx === 1 ? clients.filter(c => c.isPartner && (c.parentId || 'me') === pid).length : clients.filter(c => !c.isStructureOnly).length;
         }
 
         function renderBoard() {
-            const b = document.getElementById('main-board');
-            b.innerHTML = '';
+            const b = document.getElementById('main-board'), s = document.getElementById('e-step');
+            b.innerHTML = ''; s.innerHTML = '';
+            let filtered = clients.filter(c => !c.isStructureOnly);
             steps.forEach((n, i) => {
-                const sc = clients.filter(c => c.step == i && !c.isStructureOnly);
+                const sc = filtered.filter(c => c.step == i);
                 const col = document.createElement('div'); col.className = 'column';
-                col.innerHTML = `<div class="col-head"><div>${n}&nbsp;&nbsp;<span>${sc.length}</span></div><div onclick="${i==0?'createCard()':''}" style="font-size:24px">${i==0?'+':''}</div><div></div></div><div class="cards-area" id="list-${i}"></div>`;
-                b.appendChild(col);
+                col.innerHTML = `<div class="col-head"><div>${n}&nbsp;&nbsp;&nbsp;&nbsp;<span>${sc.length}</span></div><div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}</div><div></div></div><div id="list-${i}" class="cards-area"></div>`;
+                b.appendChild(col); s.innerHTML += `<option value="${i}">${n}</option>`;
                 sc.forEach(c => {
                     const div = document.createElement('div'); div.className = 'card';
                     div.onclick = () => openEdit(c.id);
-                    div.innerHTML = `<div class="card-level">${c.level || 0}</div><div style="font-weight:600">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px">${c.phone||""}</div>`;
+                    div.innerHTML = (c.level ? `<div class="card-level">${c.level}</div>` : '') + `<div style="font-weight:600;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;">${c.phone||""}</div>`;
                     document.getElementById(`list-${i}`).appendChild(div);
                 });
             });
@@ -180,28 +189,19 @@
         function renderStructure() {
             const grid = document.getElementById('struct-grid'), pathBar = document.getElementById('struct-path');
             grid.innerHTML = ''; pathBar.innerHTML = '';
-            currentPath.forEach((p, i) => {
+            currentPath.forEach((p, idx) => {
                 const dot = document.createElement('div'); dot.className = 'path-dot'; dot.style.backgroundImage = `url(${p.photo || ''})`;
-                dot.onclick = () => { currentPath = currentPath.slice(0, i + 1); renderStructure(); };
+                dot.onclick = () => { currentPath = currentPath.slice(0, idx + 1); renderStructure(); };
                 pathBar.appendChild(dot);
             });
             const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
             clients.filter(c => c.isPartner && (c.parentId || 'me') === pid).forEach(p => {
                 const unit = document.createElement('div'); unit.className = 'icon-unit';
-                unit.innerHTML = `
-                    <div class="sphere level-sphere">${p.level || 0}</div>
-                    <div class="sphere opt-sphere" onclick="event.stopPropagation(); openEdit('${p.id}')">⚙️</div>
-                    <div class="sphere del-sphere" onclick="event.stopPropagation(); removeFromStruct('${p.id}')">✕</div>
-                    <div class="photo-sphere" style="background-image:url(${p.photo || ''})"></div>
-                    <div class="icon-label"><span>${p.lname || ''}</span><span>${p.fname || ''}</span></div>
-                `;
+                unit.innerHTML = `<div class="sphere level-sphere">${p.level || 0}</div><div class="sphere opt-sphere" onclick="event.stopPropagation(); openEdit('${p.id}')">⚙️</div><div class="sphere del-sphere" onclick="event.stopPropagation(); removeFromStruct('${p.id}')">✕</div><div class="photo-sphere" style="background-image:url(${p.photo || ''})"></div><div class="icon-label"><span>${p.lname || ''}</span><span>${p.fname || ''}</span></div>`;
                 const ph = unit.querySelector('.photo-sphere');
                 ph.onmousedown = ph.ontouchstart = () => { longPressTimer = setTimeout(() => unit.classList.add('menu-open'), 600); };
                 ph.onmouseup = ph.ontouchend = () => clearTimeout(longPressTimer);
-                ph.onclick = () => {
-                    if(!unit.classList.contains('menu-open')) { currentPath.push({id:p.id, photo:p.photo}); renderStructure(); }
-                    else unit.classList.remove('menu-open');
-                };
+                ph.onclick = () => { if(!unit.classList.contains('menu-open')) { currentPath.push({id:p.id, photo:p.photo}); renderStructure(); } else unit.classList.remove('menu-open'); };
                 grid.appendChild(unit);
             });
         }
@@ -209,10 +209,26 @@
         function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); }
         function showUserMenu() { document.getElementById('user-menu').style.display = 'flex'; }
         function openEdit(id) { editId = id; document.getElementById('edit-screen').style.display='flex'; }
-        function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu').forEach(el => el.style.display = 'none'); editId = null; }
+        function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #partner-select-modal').forEach(el => el.style.display = 'none'); editId = null; }
         async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); openEdit(res.id); }
     </script>
 
-    <div id="splash" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:none;"></div>
+    <div id="user-menu">
+        <div class="theme-grid">
+            <div onclick="setTheme('purple')" style="background:linear-gradient(135deg,#3d0561,#2e0249)" class="theme-btn">Фіолет</div>
+            <div onclick="setTheme('graphite')" style="background:linear-gradient(135deg,#3a3a3c,#1a1a1b)" class="theme-btn">Графіт</div>
+            <div onclick="setTheme('blue')" style="background:linear-gradient(135deg,#052661,#021b49)" class="theme-btn">Синій</div>
+            <div onclick="setTheme('green')" style="background:linear-gradient(135deg,#054126,#02331a)" class="theme-btn">Зелений</div>
+            <div onclick="setTheme('gold')" style="background:linear-gradient(135deg,#614d05,#443501)" class="theme-btn">Золото</div>
+            <div onclick="setTheme('pink')" style="background:linear-gradient(135deg,#61053d,#49022e)" class="theme-btn">Рожевий</div>
+        </div>
+        <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none;">ЗАКРИТИ</button>
+    </div>
+
+    <div id="edit-screen">
+        <div id="step-wrapper"><label>ЕТАП</label><select id="e-step"></select></div>
+        <div class="notes-wrapper" id="notes-wrap"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value"></textarea></div>
+        <button onclick="closeAllUI()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none;">ЗАКРИТИ</button>
+    </div>
 </body>
 </html>
