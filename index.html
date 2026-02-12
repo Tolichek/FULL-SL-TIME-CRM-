@@ -33,11 +33,9 @@
         body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
 
         ::-webkit-scrollbar { display: none; }
-        
         header { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; height: 80px; position: relative; z-index: 1000; }
         .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); }
         .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 26px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 20px var(--neon); letter-spacing: 0.5px; flex: 1; text-align: center; white-space: nowrap; }
-        
         #header-ctrl { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; cursor: pointer; min-width: 50px; height: 44px; }
         .total-count { font-size: 14px; font-weight: bold; line-height: 1; opacity: 0.9; }
         .f-lines { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; width: 22px; }
@@ -61,15 +59,11 @@
         .path-dot { width: 30px; height: 30px; border-radius: 50%; background-size: cover; background-position: center; border: 1px solid white; flex-shrink: 0; }
 
         .struct-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 60px 10px 20px; overflow-y: auto; align-content: start; height: 100%; }
-
         .icon-unit { display: flex; flex-direction: column; align-items: center; position: relative; }
-        .icon-img { width: 75px; height: 75px; border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); background-size: cover; background-position: center; position: relative; }
+        .icon-img { width: 75px; height: 75px; border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); background-size: cover; background-position: center; position: relative; cursor: pointer; }
         .icon-badge { position: absolute; top: -6px; right: -6px; background: #ff3b30; color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; border: 2px solid white; }
-        
-        /* ІМ'Я ТА ПРІЗВИЩЕ ОДНЕ ПІД ОДНИМ */
         .icon-label { font-size: 10px; margin-top: 4px; font-weight: 600; text-align: center; color: white; text-shadow: 0 2px 4px #000; width: 100%; display: flex; flex-direction: column; line-height: 1.1; }
         .icon-label span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100%; }
-
         .icon-minus { position: absolute; bottom: 0; right: -4px; background: #ff4d4d; color: white; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 1px solid white; font-size: 12px; }
         .icon-opt { position: absolute; bottom: 0; left: -4px; font-size: 14px; background: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
 
@@ -80,14 +74,8 @@
         #edit-screen, #user-menu, #personal-data-screen, #partner-select-modal { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
         select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
         label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
-        .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
-        .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; font-size: 16px; }
-        #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; font-size: 16px; outline: none; }
-        
-        /* КЛИКАБЕЛЬНЕ ФОТО */
         .photo-container { position: relative; width: 110px; height: 110px; margin: 0 auto; cursor: pointer; }
         .edit-level-display { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon); width: 60px; text-align: center; }
-
         #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
         .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
@@ -114,12 +102,9 @@
     <header id="app-header">
         <div class="avatar" id="u-avatar" onclick="showUserMenu()"></div>
         <div class="header-title">SL Time CRM</div>
-        
         <div id="header-ctrl" onclick="toggleFilter()">
             <div id="header-counter" class="total-count">0</div>
-            <div class="f-lines">
-                <div class="f-line l1"></div><div class="f-line l2"></div><div class="f-line l3"></div>
-            </div>
+            <div class="f-lines"><div class="f-line l1"></div><div class="f-line l2"></div><div class="f-line l3"></div></div>
         </div>
         <div id="header-plus" onclick="handleAddPartner()">+</div>
     </header>
@@ -167,8 +152,11 @@
             <div id="edit-level-badge" class="edit-level-display"></div>
             <input type="file" id="file-client" hidden accept="image/*" onchange="uploadPhoto(this, 'client')">
         </div>
-        <label>ЕТАП</label><select id="e-step"></select><label>ПРІЗВИЩЕ</label><input type="text" id="e-lname"><label>ІМ'Я</label><input type="text" id="e-fname"><label>ТЕЛЕФОН</label><input type="tel" id="e-phone"><label>ПОЛІС №</label><input type="text" id="e-pnum"><label>ДАТА</label><input type="date" id="e-pdate"><label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select><label>ПРИМІТКИ</label>
-        <div class="notes-wrapper" id="notes-wrap"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value"></textarea></div>
+        <div id="step-field-wrapper">
+            <label>ЕТАП</label><select id="e-step"></select>
+        </div>
+        <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname"><label>ІМ'Я</label><input type="text" id="e-fname"><label>ТЕЛЕФОН</label><input type="tel" id="e-phone"><label>ПОЛІС №</label><input type="text" id="e-pnum"><label>ДАТА</label><input type="date" id="e-pdate"><label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select><label>ПРИМІТКИ</label>
+        <textarea id="e-notes" style="width:100%; background:transparent; color:white; border:none; border-bottom:1px solid rgba(255,255,255,0.2); min-height:80px; margin-bottom:30px; outline:none;"></textarea>
         <button onclick="manualSave()" style="margin-top:20px; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ ТА ВИЙТИ</button>
     </div>
 
@@ -233,13 +221,14 @@
             if(index === 1) {
                 const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
                 counter.innerText = clients.filter(c => c.isPartner && (c.parentId || 'me') === pid).length;
-            } else { counter.innerText = clients.length; }
+            } else { counter.innerText = clients.filter(c => !c.isStructureOnly).length; }
         }
 
         function renderBoard() {
             const b = document.getElementById('main-board'), s = document.getElementById('e-step');
             b.innerHTML = ''; s.innerHTML = '';
-            let sorted = [...clients];
+            // Фільтруємо, щоб не було партнерів суто зі структури
+            let sorted = clients.filter(c => !c.isStructureOnly);
             if(filterType === 'az') sorted.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
             if(filterType === 'new') sorted.sort((a,b) => b.created - a.created);
             if(filterType === 'old') sorted.sort((a,b) => a.created - b.created);
@@ -276,28 +265,25 @@
         }
 
         function handleAddPartner() {
-            if (currentPath.length === 0) { openPartnerSelect(); }
-            else { createCardForStruct(); }
+            if (currentPath.length === 0) openPartnerSelect();
+            else createCardForStruct();
         }
 
         async function createCardForStruct() {
             const pid = currentPath[currentPath.length - 1].id;
             const res = await db.collection("users").doc(user.uid).collection("clients").add({
-                step: 6,
                 isPartner: true,
                 parentId: pid,
+                isStructureOnly: true, // Мітка для ізоляції від списків
                 created: Date.now()
             });
-            window.history.pushState({e:1}, "");
-            openEdit(res.id);
+            window.history.pushState({e:1}, ""); openEdit(res.id);
         }
 
         function openPartnerSelect() {
             const list = document.getElementById('modal-partners-list'); list.innerHTML = '';
-            const candidates = clients.filter(c => c.step === 6 && !c.isPartner);
-            if(candidates.length === 0) { 
-                list.innerHTML = `<div style="text-align:center; opacity:0.5; padding:40px;">В списку СЕМІНАР більше нема кандидатів</div>`; 
-            } 
+            const candidates = clients.filter(c => c.step === 6 && !c.isPartner && !c.isStructureOnly);
+            if(candidates.length === 0) { list.innerHTML = `<div style="text-align:center; opacity:0.5; padding:40px;">В списку СЕМІНАР більше нема кандидатів</div>`; } 
             else {
                 candidates.forEach(c => {
                     const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; gap:15px; color:white; border:1px solid rgba(255,255,255,0.1);";
@@ -309,7 +295,6 @@
             document.getElementById('partner-select-modal').style.display = 'flex'; window.history.pushState({s:1}, "");
         }
 
-        // ЗАВАНТАЖЕННЯ ФОТО
         function uploadPhoto(input, type) {
             const file = input.files[0]; if(!file) return;
             const reader = new FileReader();
@@ -331,9 +316,10 @@
                 pdate: document.getElementById('e-pdate').value, 
                 notes: document.getElementById('e-notes').value, 
                 level: document.getElementById('e-level').value, 
-                step: parseInt(document.getElementById('e-step').value), 
                 updated: Date.now() 
             }; 
+            const stepField = document.getElementById('e-step');
+            if (stepField.offsetParent !== null) data.step = parseInt(stepField.value);
             if(currentPhotoBase64) data.photo = currentPhotoBase64;
             await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(data, {merge:true}); 
             currentPhotoBase64 = null; closeAllUI(); 
@@ -350,7 +336,22 @@
             currentPhotoBase64 = null; closeAllUI(); 
         }
 
-        function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','phone','pnum','pdate','notes','step','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || (k==='step'?0:"")); document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || ""; document.getElementById('c-photo').style.backgroundImage = `url(${c.photo||''})`; updateEditLevelBadge(); document.getElementById('edit-screen').style.display='flex'; }
+        function openEdit(id) { 
+            editId = id; const c = clients.find(x => x.id === id); 
+            ['lname','fname','phone','pnum','pdate','notes','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || "");
+            
+            // Логіка відображення поля ЕТАП
+            const stepWrap = document.getElementById('step-field-wrapper');
+            if (c.isStructureOnly) { stepWrap.style.display = 'none'; } 
+            else { 
+                stepWrap.style.display = 'block';
+                document.getElementById('e-step').value = c.step || 0;
+            }
+            
+            document.getElementById('c-photo').style.backgroundImage = `url(${c.photo||''})`; 
+            updateEditLevelBadge(); document.getElementById('edit-screen').style.display='flex'; 
+        }
+
         function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #partner-select-modal').forEach(el => el.style.display = 'none'); editId = null; currentPhotoBase64 = null; }
         function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
         function updateMeLevelBadge() { document.getElementById('me-level-badge').innerText = document.getElementById('me-level').value; }
@@ -363,7 +364,7 @@
         function login() { auth.signInWithPopup(provider); }
         function logout() { auth.signOut().then(() => location.reload()); }
         async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAllUI(); } }
-        async function removeFromStruct(id) { if(confirm("Прибрати?")) await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ isPartner: false, parentId: null }); }
+        async function removeFromStruct(id) { if(confirm("Прибрати?")) await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ isPartner: false, parentId: null, isStructureOnly: false }); }
     </script>
 </body>
 </html>
