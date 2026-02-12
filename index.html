@@ -57,38 +57,18 @@
         .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
         .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 30px; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; color: #fff; text-shadow: 0 0 8px var(--neon); }
 
-        /* ПРОЗОРА ПАНЕЛЬ КРИХТ */
-        #struct-path { 
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            display: none; 
-            align-items: center; 
-            padding: 0 20px; 
-            gap: 10px; 
-            overflow-x: auto; 
-            height: 50px; 
-            background: transparent; 
-            z-index: 500;
-        }
-        
+        #struct-path { position: absolute; top: 0; left: 0; right: 0; display: none; align-items: center; padding: 0 20px; gap: 10px; overflow-x: auto; height: 50px; background: transparent; z-index: 500; }
         .path-dot { width: 30px; height: 30px; border-radius: 50%; background-size: cover; background-position: center; border: 1px solid white; flex-shrink: 0; }
 
-        .struct-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 20px; 
-            padding: 60px 25px 20px; 
-            overflow-y: auto; 
-            align-content: start; 
-            height: 100%;
-        }
+        /* 4 ІКОНКИ В РЯД */
+        .struct-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 60px 15px 20px; overflow-y: auto; align-content: start; height: 100%; }
 
         .icon-unit { display: flex; flex-direction: column; align-items: center; position: relative; }
-        .icon-img { width: 80px; height: 80px; border-radius: 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); background-size: cover; background-position: center; position: relative; }
-        .icon-badge { position: absolute; top: -8px; right: -8px; background: #ff3b30; color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; border: 2px solid white; }
-        .icon-label { font-size: 11px; margin-top: 8px; font-weight: 600; text-align: center; color: white; text-shadow: 0 2px 4px #000; overflow: hidden; width: 100%; white-space: nowrap; }
-        .icon-minus { position: absolute; bottom: 0; right: -5px; background: #ff4d4d; color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 1px solid white; font-size: 14px; }
-        .icon-opt { position: absolute; bottom: 0; left: -5px; font-size: 16px; background: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }
+        .icon-img { width: 75px; height: 75px; border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); background-size: cover; background-position: center; position: relative; }
+        .icon-badge { position: absolute; top: -6px; right: -6px; background: #ff3b30; color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; border: 2px solid white; }
+        .icon-label { font-size: 10px; margin-top: 6px; font-weight: 600; text-align: center; color: white; text-shadow: 0 2px 4px #000; overflow: hidden; width: 100%; white-space: nowrap; }
+        .icon-minus { position: absolute; bottom: 0; right: -4px; background: #ff4d4d; color: white; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 1px solid white; font-size: 12px; }
+        .icon-opt { position: absolute; bottom: 0; left: -4px; font-size: 14px; background: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
 
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.7); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
         .nav-item { color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33%; height: 100%; font-size: 11px; font-weight: bold; }
@@ -97,17 +77,13 @@
         #edit-screen, #user-menu, #personal-data-screen, #partner-select-modal { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
         select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
         label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
-
         .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
         .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; font-size: 16px; }
         #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; font-size: 16px; outline: none; }
-        
         .photo-container { position: relative; width: 110px; height: 110px; margin: 0 auto; }
         .edit-level-display { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon); width: 60px; text-align: center; }
-
         #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
         .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
-
         .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
         .theme-btn { padding: 16px; text-align: center; cursor: pointer; border-radius: 12px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; color: white; }
         .btn-purple { background: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); }
@@ -139,7 +115,7 @@
                 <div class="f-line l1"></div><div class="f-line l2"></div><div class="f-line l3"></div>
             </div>
         </div>
-        <div id="header-plus" onclick="openPartnerSelect()">+</div>
+        <div id="header-plus" onclick="handleAddPartner()">+</div>
     </header>
 
     <div id="filter-popup">
@@ -149,16 +125,9 @@
     </div>
 
     <div id="main-viewport">
-        <div id="screen-crm" class="app-container">
-            <main class="board" id="main-board"></main>
-        </div>
-        <div id="screen-struct" class="app-container">
-            <div id="struct-path"></div>
-            <div class="struct-grid" id="struct-grid"></div>
-        </div>
-        <div id="screen-plan" class="app-container">
-            <div style="display:flex; align-items:center; justify-content:center; height:100%; opacity:0.3; font-size:20px;">ПЛАН ДІЙ</div>
-        </div>
+        <div id="screen-crm" class="app-container"><main class="board" id="main-board"></main></div>
+        <div id="screen-struct" class="app-container"><div id="struct-path"></div><div class="struct-grid" id="struct-grid"></div></div>
+        <div id="screen-plan" class="app-container"><div style="display:flex; align-items:center; justify-content:center; height:100%; opacity:0.3; font-size:20px;">ПЛАН ДІЙ</div></div>
     </div>
 
     <nav class="bottom-nav">
@@ -170,37 +139,21 @@
     <div id="user-menu">
         <div style="font-size:18px; font-weight:bold; margin-bottom:30px; text-align:center;">НАЛАШТУВАННЯ</div>
         <button onclick="showPersonalData()" style="padding:15px; background:rgba(255,255,255,0.1); color:white; border-radius:12px; width:100%; font-weight:bold; margin-bottom:10px; border:1px solid silver;">ОСОБИСТІ ДАНІ</button>
-        <div class="theme-grid">
-            <div onclick="setTheme('purple')" class="theme-btn btn-purple">Фіолет</div>
-            <div onclick="setTheme('graphite')" class="theme-btn btn-graphite">Графіт</div>
-            <div onclick="setTheme('blue')" class="theme-btn btn-blue">Синій</div>
-            <div onclick="setTheme('green')" class="theme-btn btn-green">Зелений</div>
-            <div onclick="setTheme('gold')" class="theme-btn btn-gold">Золото</div>
-            <div onclick="setTheme('pink')" class="theme-btn btn-pink">Рожевий</div>
-        </div>
+        <div class="theme-grid"><div onclick="setTheme('purple')" class="theme-btn btn-purple">Фіолет</div><div onclick="setTheme('graphite')" class="theme-btn btn-graphite">Графіт</div><div onclick="setTheme('blue')" class="theme-btn btn-blue">Синій</div><div onclick="setTheme('green')" class="theme-btn btn-green">Зелений</div><div onclick="setTheme('gold')" class="theme-btn btn-gold">Золото</div><div onclick="setTheme('pink')" class="theme-btn btn-pink">Рожевий</div></div>
         <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗАКРИТИ</button>
         <div style="text-align:center; color:#ff4d4d; margin-top:30px; cursor:pointer; font-weight:bold;" onclick="logout()">ВИЙТИ</div>
     </div>
 
     <div id="personal-data-screen">
         <div class="photo-container"><div id="me-photo" style="width:110px; height:110px; border-radius:50%; background-size:cover;"></div><div id="me-level-badge" class="edit-level-display"></div></div>
-        <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname">
-        <label>ІМ'Я</label><input type="text" id="me-fname">
-        <label>РІВЕНЬ</label><select id="me-level" onchange="updateMeLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname"><label>ІМ'Я</label><input type="text" id="me-fname"><label>РІВЕНЬ</label><select id="me-level" onchange="updateMeLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
         <button onclick="saveMeData()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ ТА ВИЙТИ</button>
     </div>
 
     <div id="edit-screen">
         <span onclick="removeClient()" style="position: absolute; top: 25px; right: 25px; color: #ff4d4d; font-size: 12px; text-transform: uppercase; cursor: pointer;">Видалити</span>
         <div class="photo-container"><div id="c-photo" style="width:110px; height:110px; border-radius:50%; background-size:cover; border:1px solid silver;"></div><div id="edit-level-badge" class="edit-level-display"></div></div>
-        <label>ЕТАП</label><select id="e-step"></select>
-        <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname">
-        <label>ІМ'Я</label><input type="text" id="e-fname">
-        <label>ТЕЛЕФОН</label><input type="tel" id="e-phone">
-        <label>ПОЛІС №</label><input type="text" id="e-pnum">
-        <label>ДАТА</label><input type="date" id="e-pdate">
-        <label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
-        <label>ПРИМІТКИ</label>
+        <label>ЕТАП</label><select id="e-step"></select><label>ПРІЗВИЩЕ</label><input type="text" id="e-lname"><label>ІМ'Я</label><input type="text" id="e-fname"><label>ТЕЛЕФОН</label><input type="tel" id="e-phone"><label>ПОЛІС №</label><input type="text" id="e-pnum"><label>ДАТА</label><input type="date" id="e-pdate"><label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select><label>ПРИМІТКИ</label>
         <div class="notes-wrapper" id="notes-wrap"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value"></textarea></div>
         <button onclick="manualSave()" style="margin-top:20px; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ ТА ВИЙТИ</button>
     </div>
@@ -233,9 +186,7 @@
         function lock() { window.history.pushState({l:1}, ""); }
         window.onload = lock;
         window.onpopstate = () => {
-            if (editId || document.getElementById('user-menu').style.display==='flex' || document.getElementById('partner-select-modal').style.display==='flex' || document.getElementById('personal-data-screen').style.display==='flex') {
-                closeAllUI(); lock(); return;
-            }
+            if (editId || document.getElementById('user-menu').style.display==='flex' || document.getElementById('partner-select-modal').style.display==='flex' || document.getElementById('personal-data-screen').style.display==='flex') { closeAllUI(); lock(); return; }
             if (currentPath.length > 0) { currentPath.pop(); renderStructure(); lock(); return; }
             if (vp.scrollLeft > 0) { jumpToPage(0); lock(); return; }
             lock();
@@ -252,15 +203,13 @@
             document.getElementById('me-lname').value = data.meLname || "";
             document.getElementById('me-fname').value = data.meFname || "";
             document.getElementById('me-level').value = data.meLevel || "";
-            updateMeLevelBadge();
-            setTheme(localStorage.getItem('crm_theme') || data.theme || 'purple');
+            updateMeLevelBadge(); setTheme(localStorage.getItem('crm_theme') || data.theme || 'purple');
         }
 
         function loadClients() {
             db.collection("users").doc(user.uid).collection("clients").onSnapshot(snap => {
                 clients = []; snap.forEach(d => clients.push({id: d.id, ...d.data()}));
-                renderBoard(); updateHeaderCounter();
-                if(Math.round(vp.scrollLeft/(window.innerWidth + 60)) === 1) renderStructure();
+                renderBoard(); updateHeaderCounter(); if(Math.round(vp.scrollLeft/(window.innerWidth + 60)) === 1) renderStructure();
             });
         }
 
@@ -280,13 +229,11 @@
             if(filterType === 'az') sorted.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
             if(filterType === 'new') sorted.sort((a,b) => b.created - a.created);
             if(filterType === 'old') sorted.sort((a,b) => a.created - b.created);
-
             steps.forEach((n, i) => {
                 const filtered = sorted.filter(c => c.step == i);
                 const col = document.createElement('div'); col.className = 'column';
                 col.innerHTML = `<div class="col-head"><div>${n}<span style="margin-left:10px; font-size:16px;">${filtered.length}</span></div><div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}</div><div></div></div><div id="list-${i}" class="cards-area"></div>`;
-                b.appendChild(col);
-                s.innerHTML += `<option value="${i}">${n}</option>`;
+                b.appendChild(col); s.innerHTML += `<option value="${i}">${n}</option>`;
                 filtered.forEach(c => {
                     const div = document.createElement('div'); div.className = 'card';
                     div.onclick = () => { window.history.pushState({e:1}, ""); openEdit(c.id); };
@@ -314,16 +261,33 @@
             });
         }
 
+        // ЛОГІКА ДОДАВАННЯ ПАРТНЕРА
+        function handleAddPartner() {
+            if (currentPath.length === 0) { openPartnerSelect(); } // Для першої лінії (me) - вибір з семінару
+            else { createCardForStruct(); } // Для 2, 3, 4 ліній - створення нової картки
+        }
+
+        async function createCardForStruct() {
+            const pid = currentPath[currentPath.length - 1].id;
+            const res = await db.collection("users").doc(user.uid).collection("clients").add({
+                step: 6, // Одразу на етап семінару
+                isPartner: true,
+                parentId: pid,
+                created: Date.now()
+            });
+            window.history.pushState({e:1}, "");
+            openEdit(res.id);
+        }
+
         function openPartnerSelect() {
             const list = document.getElementById('modal-partners-list'); list.innerHTML = '';
             const candidates = clients.filter(c => c.step === 6 && !c.isPartner);
             if(candidates.length === 0) { list.innerHTML = `<div style="text-align:center; opacity:0.5; padding:40px;">У списку СЕМІНАР немає кандидатів</div>`; } 
             else {
                 candidates.forEach(c => {
-                    const row = document.createElement('div'); 
-                    row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; gap:15px; color:white; border:1px solid rgba(255,255,255,0.1);";
+                    const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; gap:15px; color:white; border:1px solid rgba(255,255,255,0.1);";
                     row.innerHTML = `<div style="width:44px; height:44px; border-radius:50%; background-size:cover; background-position:center; background-image:url(${c.photo||''})"></div><div style="font-weight:bold;">${c.lname || ''} ${c.fname || ''}</div>`;
-                    row.onclick = async () => { await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ isPartner: true, parentId: currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me' }); window.history.back(); };
+                    row.onclick = async () => { await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ isPartner: true, parentId: 'me' }); window.history.back(); };
                     list.appendChild(row);
                 });
             }
