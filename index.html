@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>SL TIME CRM 2.6</title>
+    <title>SL TIME CRM 2.1</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
@@ -35,7 +35,7 @@
         ::-webkit-scrollbar { display: none; }
         header { display: flex; justify-content: space-between; align-items: center; padding: 0 15px; height: 80px; position: relative; z-index: 1000; background: transparent; }
         .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); flex-shrink: 0; }
-        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 6vw; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 20px var(--neon); flex: 1; text-align: center; white-space: nowrap; }
+        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 6vw; max-font-size: 26px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 20px var(--neon); letter-spacing: 0.5px; flex: 1; text-align: center; white-space: nowrap; overflow: visible; }
         @media screen and (min-width: 450px) { .header-title { font-size: 26px; } }
 
         #header-ctrl { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; cursor: pointer; min-width: 50px; height: 44px; flex-shrink: 0; }
@@ -57,9 +57,10 @@
         .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
         .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 30px; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; color: #fff; text-shadow: 0 0 8px var(--neon); }
 
-        /* ІКОНКИ СТРУКТУРИ */
-        .struct-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 75px 10px 20px; overflow-y: auto; align-content: start; height: 100%; }
+        /* --- НОВІ ІКОНКИ --- */
+        .struct-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 80px 10px 20px; overflow-y: auto; align-content: start; height: 100%; }
         .icon-unit { display: flex; flex-direction: column; align-items: center; position: relative; height: 140px; }
+        
         .sphere { 
             position: absolute; width: 30px; height: 30px; border-radius: 50%; 
             background: radial-gradient(circle at 30% 30%, #fff 0%, rgba(255,255,255,0.2) 20%, var(--neon) 60%, rgba(0,0,0,0.5) 100%);
@@ -71,11 +72,12 @@
         .level-sphere { top: -15px; left: 50%; transform: translateX(-50%); }
         .opt-sphere { display: none; top: 40px; left: 50%; }
         .del-sphere { display: none; top: 40px; left: 50%; }
+
         .icon-unit.menu-open .opt-sphere { display: flex; transform: translate(-150%, 45%); }
         .icon-unit.menu-open .del-sphere { display: flex; transform: translate(50%, 45%); }
 
         .photo-sphere { width: 75px; height: 75px; border-radius: 50%; background-size: cover; background-position: center; border: 2px solid rgba(255,255,255,0.4); box-shadow: 0 0 15px var(--neon); z-index: 5; cursor: pointer; }
-        .icon-label { margin-top: 15px; font-size: 10px; font-weight: bold; color: white; text-align: center; display: flex; flex-direction: column; width: 100%; text-transform: uppercase; }
+        .icon-label { margin-top: 15px; font-size: 10px; font-weight: bold; text-align: center; color: white; text-transform: uppercase; width: 100%; display: flex; flex-direction: column; }
         .icon-label span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
         #struct-path { position: absolute; top: 0; left: 0; right: 0; display: none; align-items: center; padding: 0 20px; gap: 10px; overflow-x: auto; height: 50px; background: transparent; z-index: 500; }
@@ -93,8 +95,19 @@
         .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; font-size: 16px; }
         #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; font-size: 16px; outline: none; }
 
+        .photo-container { position: relative; width: 110px; height: 110px; margin: 0 auto; cursor: pointer; }
+        .edit-level-display { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon); width: 60px; text-align: center; }
+        #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
+        .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
         .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
-        .theme-btn { padding: 16px; text-align: center; border-radius: 12px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; color: white; }
+        .theme-btn { padding: 16px; text-align: center; cursor: pointer; border-radius: 12px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; color: white; }
+        .btn-purple { background: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); }
+        .btn-graphite { background: linear-gradient(135deg, #3a3a3c 0%, #1a1a1b 100%); }
+        .btn-blue { background: linear-gradient(135deg, #052661 0%, #021b49 100%); }
+        .btn-green { background: linear-gradient(135deg, #054126 0%, #02331a 100%); }
+        .btn-gold { background: linear-gradient(135deg, #614d05 0%, #443501 100%); }
+        .btn-pink { background: linear-gradient(135deg, #61053d 0%, #49022e 100%); }
     </style>
 </head>
 <body class="theme-purple">
@@ -103,15 +116,26 @@
         if(st) document.body.className = 'theme-' + st;
     </script>
 
+    <div id="splash" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+        <div style="width:160px;height:160px;border:2px solid silver;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:bold;color:white;">SL</div>
+        <div id="login-ui" style="display:none; margin-top:40px;"><button onclick="login()" style="background:white;border:none;padding:12px 30px;border-radius:25px;font-weight:bold;">Увійти через Google</button></div>
+    </div>
+
     <header id="app-header">
         <div class="avatar" id="u-avatar" onclick="showUserMenu()"></div>
-        <div class="header-title" style="margin-left:50px;">SL Time CRM</div>
+        <div class="header-title">SL Time CRM</div>
         <div id="header-ctrl" onclick="toggleFilter()">
             <div id="header-counter" class="total-count">0</div>
             <div class="f-lines"><div class="f-line l1"></div><div class="f-line l2"></div><div class="f-line l3"></div></div>
         </div>
         <div id="header-plus" onclick="handleAddPartner()">+</div>
     </header>
+
+    <div id="filter-popup">
+        <div class="f-item" onclick="setFilter('az')">А-Я</div>
+        <div class="f-item" onclick="setFilter('new')">Нові</div>
+        <div class="f-item" onclick="setFilter('old')">Старі</div>
+    </div>
 
     <div id="main-viewport">
         <div id="screen-crm" class="app-container"><main class="board" id="main-board"></main></div>
@@ -120,10 +144,55 @@
     </div>
 
     <nav class="bottom-nav">
-        <div class="nav-item active" onclick="jumpToPage(0)">СПИСКИ</div>
-        <div class="nav-item" onclick="jumpToPage(1)">СТРУКТУРА</div>
-        <div class="nav-item" onclick="jumpToPage(2)">ПЛАН</div>
+        <div class="nav-item active" id="btn-0" onclick="jumpToPage(0)">СПИСКИ</div>
+        <div class="nav-item" id="btn-1" onclick="jumpToPage(1)">СТРУКТУРА</div>
+        <div class="nav-item" id="btn-2" onclick="jumpToPage(2)">ПЛАН</div>
     </nav>
+
+    <div id="user-menu">
+        <div style="font-size:18px; font-weight:bold; margin-bottom:30px; text-align:center;">НАЛАШТУВАННЯ</div>
+        <button onclick="showPersonalData()" style="padding:15px; background:rgba(255,255,255,0.1); color:white; border-radius:12px; width:100%; font-weight:bold; margin-bottom:10px; border:1px solid silver;">ОСОБИСТІ ДАНІ</button>
+        <div class="theme-grid">
+            <div onclick="setTheme('purple')" class="theme-btn btn-purple">Фіолет</div>
+            <div onclick="setTheme('graphite')" class="theme-btn btn-graphite">Графіт</div>
+            <div onclick="setTheme('blue')" class="theme-btn btn-blue">Синій</div>
+            <div onclick="setTheme('green')" class="theme-btn btn-green">Зелений</div>
+            <div onclick="setTheme('gold')" class="theme-btn btn-gold">Золото</div>
+            <div onclick="setTheme('pink')" class="theme-btn btn-pink">Рожевий</div>
+        </div>
+        <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗАКРИТИ</button>
+        <div style="text-align:center; color:#ff4d4d; margin-top:30px; cursor:pointer; font-weight:bold;" onclick="logout()">ВИЙТИ</div>
+    </div>
+
+    <div id="personal-data-screen">
+        <div class="photo-container" onclick="document.getElementById('file-me').click()">
+            <div id="me-photo" style="width:110px; height:110px; border-radius:50%; background-size:cover;"></div>
+            <div id="me-level-badge" class="edit-level-display"></div>
+            <input type="file" id="file-me" hidden accept="image/*" onchange="uploadPhoto(this, 'me')">
+        </div>
+        <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname"><label>ІМ'Я</label><input type="text" id="me-fname"><label>РІВЕНЬ</label><select id="me-level" onchange="updateMeLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <button onclick="saveMeData()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ ТА ВИЙТИ</button>
+    </div>
+
+    <div id="edit-screen">
+        <span onclick="removeClient()" style="position: absolute; top: 25px; right: 25px; color: #ff4d4d; font-size: 12px; text-transform: uppercase; cursor: pointer;">Видалити</span>
+        <div class="photo-container" onclick="document.getElementById('file-client').click()">
+            <div id="c-photo" style="width:110px; height:110px; border-radius:50%; background-size:cover; border:1px solid silver;"></div>
+            <div id="edit-level-badge" class="edit-level-display"></div>
+            <input type="file" id="file-client" hidden accept="image/*" onchange="uploadPhoto(this, 'client')">
+        </div>
+        <div id="step-wrapper">
+            <label>ЕТАП</label><select id="e-step"></select>
+        </div>
+        <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname"><label>ІМ'Я</label><input type="text" id="e-fname"><label>ТЕЛЕФОН</label><input type="tel" id="e-phone"><label>ПОЛІС №</label><input type="text" id="e-pnum"><label>ДАТА</label><input type="date" id="e-pdate"><label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select><label>ПРИМІТКИ</label>
+        <div class="notes-wrapper" id="notes-wrap"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value"></textarea></div>
+        <button onclick="manualSave()" style="margin-top:20px; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ ТА ВИЙТИ</button>
+    </div>
+
+    <div id="partner-select-modal">
+        <div id="modal-partners-list" style="flex:1; overflow-y:auto; padding-top:20px;"></div>
+        <button onclick="window.history.back()" style="padding:18px; width:100%; border-radius:30px; background:white; color:black; font-weight:bold; border:none;">НАЗАД</button>
+    </div>
 
     <script>
         const firebaseConfig = { apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY", authDomain: "starlife-crm.firebaseapp.com", projectId: "starlife-crm", storageBucket: "starlife-crm.firebasestorage.app", messagingSenderId: "1022280682130", appId: "1:1022280682130:web:3ea517e8b6d22c7787744b" };
@@ -144,42 +213,63 @@
             updateHeaderCounter();
         });
 
-        function jumpToPage(i) { vp.scrollTo({ left: i * (window.innerWidth + 60), behavior: 'smooth' }); }
+        function jumpToPage(index) { vp.scrollTo({ left: index * (window.innerWidth + 60), behavior: 'smooth' }); }
+        function lock() { window.history.pushState({l:1}, ""); }
+        window.onload = lock;
+        window.onpopstate = () => {
+            if (editId || document.getElementById('user-menu').style.display==='flex' || document.getElementById('partner-select-modal').style.display==='flex' || document.getElementById('personal-data-screen').style.display==='flex') { closeAllUI(); lock(); return; }
+            if (currentPath.length > 0) { currentPath.pop(); renderStructure(); lock(); return; }
+            if (vp.scrollLeft > 0) { jumpToPage(0); lock(); return; }
+            lock();
+        };
 
-        auth.onAuthStateChanged(async u => { if(u) { user = u; await loadUserConfig(); loadClients(); } else { auth.signInWithPopup(provider); } });
+        auth.onAuthStateChanged(async u => { if(u) { user = u; document.getElementById('splash').style.display = 'none'; await loadUserConfig(); loadClients(); lock(); } else { document.getElementById('login-ui').style.display = 'block'; } });
 
         async function loadUserConfig() {
             const doc = await db.collection("users").doc(user.uid).get();
             const data = doc.data() || {};
-            document.getElementById('u-avatar').style.backgroundImage = `url(${data.myPhoto || user.photoURL})`;
-            setTheme(localStorage.getItem('crm_theme') || data.theme || 'purple');
+            const photo = data.myPhoto || user.photoURL;
+            document.getElementById('u-avatar').style.backgroundImage = `url(${photo})`;
+            document.getElementById('me-photo').style.backgroundImage = `url(${photo})`;
+            document.getElementById('me-lname').value = data.meLname || "";
+            document.getElementById('me-fname').value = data.meFname || "";
+            document.getElementById('me-level').value = data.meLevel || "";
+            updateMeLevelBadge();
+            const theme = localStorage.getItem('crm_theme') || data.theme || 'purple';
+            document.body.className = 'theme-' + theme;
         }
 
         function loadClients() {
             db.collection("users").doc(user.uid).collection("clients").onSnapshot(snap => {
                 clients = []; snap.forEach(d => clients.push({id: d.id, ...d.data()}));
-                renderBoard(); updateHeaderCounter(); if(Math.round(vp.scrollLeft/(window.innerWidth+60)) === 1) renderStructure();
+                renderBoard(); updateHeaderCounter(); if(Math.round(vp.scrollLeft/(window.innerWidth + 60)) === 1) renderStructure();
             });
         }
 
         function updateHeaderCounter() {
-            const idx = Math.round(vp.scrollLeft / (window.innerWidth + 60));
-            const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
-            document.getElementById('header-counter').innerText = idx === 1 ? clients.filter(c => c.isPartner && (c.parentId || 'me') === pid).length : clients.filter(c => !c.isStructureOnly).length;
+            const index = Math.round(vp.scrollLeft / (window.innerWidth + 60));
+            const counter = document.getElementById('header-counter');
+            if(index === 1) {
+                const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
+                counter.innerText = clients.filter(c => c.isPartner && (c.parentId || 'me') === pid).length;
+            } else { counter.innerText = clients.filter(c => !c.isStructureOnly).length; }
         }
 
         function renderBoard() {
             const b = document.getElementById('main-board'), s = document.getElementById('e-step');
             b.innerHTML = ''; s.innerHTML = '';
             let filtered = clients.filter(c => !c.isStructureOnly);
+            if(filterType === 'az') filtered.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
+            if(filterType === 'new') filtered.sort((a,b) => b.created - a.created);
+            if(filterType === 'old') filtered.sort((a,b) => a.created - b.created);
             steps.forEach((n, i) => {
-                const sc = filtered.filter(c => c.step == i);
+                const stepClients = filtered.filter(c => c.step == i);
                 const col = document.createElement('div'); col.className = 'column';
-                col.innerHTML = `<div class="col-head"><div>${n}&nbsp;&nbsp;&nbsp;&nbsp;<span>${sc.length}</span></div><div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}</div><div></div></div><div id="list-${i}" class="cards-area"></div>`;
+                col.innerHTML = `<div class="col-head"><div>${n}&nbsp;&nbsp;&nbsp;&nbsp;<span>${stepClients.length}</span></div><div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}</div><div></div></div><div id="list-${i}" class="cards-area"></div>`;
                 b.appendChild(col); s.innerHTML += `<option value="${i}">${n}</option>`;
-                sc.forEach(c => {
+                stepClients.forEach(c => {
                     const div = document.createElement('div'); div.className = 'card';
-                    div.onclick = () => openEdit(c.id);
+                    div.onclick = () => { window.history.pushState({e:1}, ""); openEdit(c.id); };
                     div.innerHTML = (c.level ? `<div class="card-level">${c.level}</div>` : '') + `<div style="font-weight:600;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;">${c.phone||""}</div>`;
                     document.getElementById(`list-${i}`).appendChild(div);
                 });
@@ -197,38 +287,99 @@
             const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
             clients.filter(c => c.isPartner && (c.parentId || 'me') === pid).forEach(p => {
                 const unit = document.createElement('div'); unit.className = 'icon-unit';
-                unit.innerHTML = `<div class="sphere level-sphere">${p.level || 0}</div><div class="sphere opt-sphere" onclick="event.stopPropagation(); openEdit('${p.id}')">⚙️</div><div class="sphere del-sphere" onclick="event.stopPropagation(); removeFromStruct('${p.id}')">✕</div><div class="photo-sphere" style="background-image:url(${p.photo || ''})"></div><div class="icon-label"><span>${p.lname || ''}</span><span>${p.fname || ''}</span></div>`;
+                unit.innerHTML = `
+                    <div class="sphere level-sphere">${p.level || 0}</div>
+                    <div class="sphere opt-sphere" onclick="event.stopPropagation(); openEdit('${p.id}')">⚙️</div>
+                    <div class="sphere del-sphere" onclick="event.stopPropagation(); removeFromStruct('${p.id}')">✕</div>
+                    <div class="photo-sphere" style="background-image:url(${p.photo || ''})"></div>
+                    <div class="icon-label"><span>${p.lname || ''}</span><span>${p.fname || ''}</span></div>
+                `;
                 const ph = unit.querySelector('.photo-sphere');
                 ph.onmousedown = ph.ontouchstart = () => { longPressTimer = setTimeout(() => unit.classList.add('menu-open'), 600); };
                 ph.onmouseup = ph.ontouchend = () => clearTimeout(longPressTimer);
-                ph.onclick = () => { if(!unit.classList.contains('menu-open')) { currentPath.push({id:p.id, photo:p.photo}); renderStructure(); } else unit.classList.remove('menu-open'); };
+                ph.onclick = () => {
+                    if(!unit.classList.contains('menu-open')) { currentPath.push({id:p.id, photo:p.photo}); renderStructure(); }
+                    else unit.classList.remove('menu-open');
+                };
                 grid.appendChild(unit);
             });
         }
 
-        function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); }
-        function showUserMenu() { document.getElementById('user-menu').style.display = 'flex'; }
-        function openEdit(id) { editId = id; document.getElementById('edit-screen').style.display='flex'; }
-        function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #partner-select-modal').forEach(el => el.style.display = 'none'); editId = null; }
-        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); openEdit(res.id); }
+        function handleAddPartner() {
+            if (currentPath.length === 0) openPartnerSelect();
+            else createCardForStruct();
+        }
+
+        async function createCardForStruct() {
+            const pid = currentPath[currentPath.length - 1].id;
+            const res = await db.collection("users").doc(user.uid).collection("clients").add({ isPartner: true, parentId: pid, isStructureOnly: true, created: Date.now() });
+            window.history.pushState({e:1}, ""); openEdit(res.id);
+        }
+
+        function openPartnerSelect() {
+            const list = document.getElementById('modal-partners-list'); list.innerHTML = '';
+            const candidates = clients.filter(c => c.step === 6 && !c.isPartner && !c.isStructureOnly);
+            if(candidates.length === 0) { list.innerHTML = `<div style="text-align:center; opacity:0.5; padding:40px;">В списку СЕМІНАР більше нема кандидатів</div>`; } 
+            else {
+                candidates.forEach(c => {
+                    const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; gap:15px; border:1px solid rgba(255,255,255,0.1);";
+                    row.innerHTML = `<div style="width:44px; height:44px; border-radius:50%; background-size:cover; background-image:url(${c.photo||''})"></div><div>${c.lname || ''} ${c.fname || ''}</div>`;
+                    row.onclick = async () => { await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ isPartner: true, parentId: 'me' }); window.history.back(); };
+                    list.appendChild(row);
+                });
+            }
+            document.getElementById('partner-select-modal').style.display = 'flex'; window.history.pushState({s:1}, "");
+        }
+
+        function uploadPhoto(input, type) {
+            const file = input.files[0]; if(!file) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                currentPhotoBase64 = e.target.result;
+                document.getElementById(type === 'me' ? 'me-photo' : 'c-photo').style.backgroundImage = `url(${currentPhotoBase64})`;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function manualSave() { 
+            if(!editId) return; 
+            const data = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, pnum: document.getElementById('e-pnum').value, pdate: document.getElementById('e-pdate').value, notes: document.getElementById('e-notes').value, level: document.getElementById('e-level').value, updated: Date.now() }; 
+            const stepField = document.getElementById('e-step'); if (stepField.offsetParent) data.step = parseInt(stepField.value);
+            if(currentPhotoBase64) data.photo = currentPhotoBase64;
+            await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(data, {merge:true}); 
+            currentPhotoBase64 = null; closeAllUI(); 
+        }
+
+        async function saveMeData() { 
+            const data = { meLname: document.getElementById('me-lname').value, meFname: document.getElementById('me-fname').value, meLevel: document.getElementById('me-level').value }; 
+            if(currentPhotoBase64) data.myPhoto = currentPhotoBase64;
+            await db.collection("users").doc(user.uid).set(data, {merge:true}); 
+            currentPhotoBase64 = null; closeAllUI(); 
+        }
+
+        function openEdit(id) { 
+            editId = id; const c = clients.find(x => x.id === id); 
+            ['lname','fname','phone','pnum','pdate','notes','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || "");
+            document.getElementById('step-wrapper').style.display = c.isStructureOnly ? 'none' : 'block';
+            if (!c.isStructureOnly) document.getElementById('e-step').value = c.step || 0;
+            document.getElementById('c-photo').style.backgroundImage = `url(${c.photo||''})`; 
+            document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || "";
+            updateEditLevelBadge(); document.getElementById('edit-screen').style.display='flex'; 
+        }
+
+        function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #partner-select-modal').forEach(el => el.style.display = 'none'); editId = null; currentPhotoBase64 = null; }
+        function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
+        function updateMeLevelBadge() { document.getElementById('me-level-badge').innerText = document.getElementById('me-level').value; }
+        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); window.history.pushState({e:1}, ""); openEdit(res.id); }
+        function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
+        function setFilter(t) { filterType = t; renderBoard(); toggleFilter(); }
+        function showUserMenu() { window.history.pushState({m:1}, ""); document.getElementById('user-menu').style.display = 'flex'; }
+        function showPersonalData() { window.history.pushState({p:1}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
+        function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); if(user) db.collection("users").doc(user.uid).set({theme: t}, {merge:true}); }
+        function logout() { auth.signOut().then(() => location.reload()); }
+        function login() { auth.signInWithPopup(provider); }
+        async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAllUI(); } }
+        async function removeFromStruct(id) { if(confirm("Прибрати?")) await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ isPartner: false, parentId: null, isStructureOnly: false }); }
     </script>
-
-    <div id="user-menu">
-        <div class="theme-grid">
-            <div onclick="setTheme('purple')" style="background:linear-gradient(135deg,#3d0561,#2e0249)" class="theme-btn">Фіолет</div>
-            <div onclick="setTheme('graphite')" style="background:linear-gradient(135deg,#3a3a3c,#1a1a1b)" class="theme-btn">Графіт</div>
-            <div onclick="setTheme('blue')" style="background:linear-gradient(135deg,#052661,#021b49)" class="theme-btn">Синій</div>
-            <div onclick="setTheme('green')" style="background:linear-gradient(135deg,#054126,#02331a)" class="theme-btn">Зелений</div>
-            <div onclick="setTheme('gold')" style="background:linear-gradient(135deg,#614d05,#443501)" class="theme-btn">Золото</div>
-            <div onclick="setTheme('pink')" style="background:linear-gradient(135deg,#61053d,#49022e)" class="theme-btn">Рожевий</div>
-        </div>
-        <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none;">ЗАКРИТИ</button>
-    </div>
-
-    <div id="edit-screen">
-        <div id="step-wrapper"><label>ЕТАП</label><select id="e-step"></select></div>
-        <div class="notes-wrapper" id="notes-wrap"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value"></textarea></div>
-        <button onclick="closeAllUI()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none;">ЗАКРИТИ</button>
-    </div>
 </body>
 </html>
