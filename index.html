@@ -77,15 +77,6 @@
         .photo-container { position: relative; width: 110px; height: 110px; margin: 0 auto; cursor: pointer; }
         .edit-level-display { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon); width: 60px; text-align: center; }
         #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
-        .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
-        .theme-btn { padding: 16px; text-align: center; cursor: pointer; border-radius: 12px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; color: white; }
-        .btn-purple { background: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); }
-        .btn-graphite { background: linear-gradient(135deg, #3a3a3c 0%, #1a1a1b 100%); }
-        .btn-blue { background: linear-gradient(135deg, #052661 0%, #021b49 100%); }
-        .btn-green { background: linear-gradient(135deg, #054126 0%, #02331a 100%); }
-        .btn-gold { background: linear-gradient(135deg, #614d05 0%, #443501 100%); }
-        .btn-pink { background: linear-gradient(135deg, #61053d 0%, #49022e 100%); }
     </style>
 </head>
 <body class="theme-purple">
@@ -128,9 +119,7 @@
     </nav>
 
     <div id="user-menu">
-        <div style="font-size:18px; font-weight:bold; margin-bottom:30px; text-align:center;">НАЛАШТУВАННЯ</div>
         <button onclick="showPersonalData()" style="padding:15px; background:rgba(255,255,255,0.1); color:white; border-radius:12px; width:100%; font-weight:bold; margin-bottom:10px; border:1px solid silver;">ОСОБИСТІ ДАНІ</button>
-        <div class="theme-grid"><div onclick="setTheme('purple')" class="theme-btn btn-purple">Фіолет</div><div onclick="setTheme('graphite')" class="theme-btn btn-graphite">Графіт</div><div onclick="setTheme('blue')" class="theme-btn btn-blue">Синій</div><div onclick="setTheme('green')" class="theme-btn btn-green">Зелений</div><div onclick="setTheme('gold')" class="theme-btn btn-gold">Золото</div><div onclick="setTheme('pink')" class="theme-btn btn-pink">Рожевий</div></div>
         <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗАКРИТИ</button>
         <div style="text-align:center; color:#ff4d4d; margin-top:30px; cursor:pointer; font-weight:bold;" onclick="logout()">ВИЙТИ</div>
     </div>
@@ -152,11 +141,11 @@
             <div id="edit-level-badge" class="edit-level-display"></div>
             <input type="file" id="file-client" hidden accept="image/*" onchange="uploadPhoto(this, 'client')">
         </div>
-        <div id="step-field-wrapper">
+        <div id="step-wrapper">
             <label>ЕТАП</label><select id="e-step"></select>
         </div>
         <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname"><label>ІМ'Я</label><input type="text" id="e-fname"><label>ТЕЛЕФОН</label><input type="tel" id="e-phone"><label>ПОЛІС №</label><input type="text" id="e-pnum"><label>ДАТА</label><input type="date" id="e-pdate"><label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select><label>ПРИМІТКИ</label>
-        <textarea id="e-notes" style="width:100%; background:transparent; color:white; border:none; border-bottom:1px solid rgba(255,255,255,0.2); min-height:80px; margin-bottom:30px; outline:none;"></textarea>
+        <textarea id="e-notes" style="width:100%; background:transparent; color:white; border:none; border-bottom:1px solid rgba(255,255,255,0.2); min-height:80px; outline:none;"></textarea>
         <button onclick="manualSave()" style="margin-top:20px; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ ТА ВИЙТИ</button>
     </div>
 
@@ -205,7 +194,7 @@
             document.getElementById('me-lname').value = data.meLname || "";
             document.getElementById('me-fname').value = data.meFname || "";
             document.getElementById('me-level').value = data.meLevel || "";
-            updateMeLevelBadge(); setTheme(localStorage.getItem('crm_theme') || data.theme || 'purple');
+            updateMeLevelBadge();
         }
 
         function loadClients() {
@@ -227,21 +216,19 @@
         function renderBoard() {
             const b = document.getElementById('main-board'), s = document.getElementById('e-step');
             b.innerHTML = ''; s.innerHTML = '';
-            // Фільтруємо, щоб не було партнерів суто зі структури
-            let sorted = clients.filter(c => !c.isStructureOnly);
-            if(filterType === 'az') sorted.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
-            if(filterType === 'new') sorted.sort((a,b) => b.created - a.created);
-            if(filterType === 'old') sorted.sort((a,b) => a.created - b.created);
+            let filteredClients = clients.filter(c => !c.isStructureOnly);
+            if(filterType === 'az') filteredClients.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
+            if(filterType === 'new') filteredClients.sort((a,b) => b.created - a.created);
+            if(filterType === 'old') filteredClients.sort((a,b) => a.created - b.created);
             steps.forEach((n, i) => {
-                const filtered = sorted.filter(c => c.step == i);
+                const stepClients = filteredClients.filter(c => c.step == i);
                 const col = document.createElement('div'); col.className = 'column';
-                col.innerHTML = `<div class="col-head"><div>${n}<span style="margin-left:10px; font-size:16px;">${filtered.length}</span></div><div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}</div><div></div></div><div id="list-${i}" class="cards-area"></div>`;
+                col.innerHTML = `<div class="col-head"><div>${n}<span>${stepClients.length}</span></div><div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}</div><div></div></div><div id="list-${i}" class="cards-area"></div>`;
                 b.appendChild(col); s.innerHTML += `<option value="${i}">${n}</option>`;
-                filtered.forEach(c => {
+                stepClients.forEach(c => {
                     const div = document.createElement('div'); div.className = 'card';
                     div.onclick = () => { window.history.pushState({e:1}, ""); openEdit(c.id); };
-                    const levelHtml = c.level ? `<div class="card-level">${c.level}</div>` : '';
-                    div.innerHTML = `${levelHtml}<div style="font-weight:600; font-size: 16px;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;margin-top:5px">${c.phone||""}</div>`;
+                    div.innerHTML = (c.level ? `<div class="card-level">${c.level}</div>` : '') + `<div style="font-weight:600;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;">${c.phone||""}</div>`;
                     document.getElementById(`list-${i}`).appendChild(div);
                 });
             });
@@ -256,8 +243,7 @@
                 pathBar.appendChild(dot);
             });
             const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
-            const partners = clients.filter(c => c.isPartner && (c.parentId || 'me') === pid);
-            partners.forEach(p => {
+            clients.filter(c => c.isPartner && (c.parentId || 'me') === pid).forEach(p => {
                 const box = document.createElement('div'); box.className = 'icon-unit';
                 box.innerHTML = `<div class="icon-img" style="background-image:url(${p.photo || ''})" onclick="currentPath.push({id:'${p.id}', photo:'${p.photo||''}'}); renderStructure();"><div class="icon-badge">${p.level || 0}</div><div class="icon-minus" onclick="event.stopPropagation(); removeFromStruct('${p.id}')">−</div></div><div class="icon-label"><span>${p.lname || ''}</span><span>${p.fname || ''}</span></div><div class="icon-opt" onclick="window.history.pushState({e:1}, ''); openEdit('${p.id}')">⚙️</div>`;
                 grid.appendChild(box);
@@ -271,12 +257,7 @@
 
         async function createCardForStruct() {
             const pid = currentPath[currentPath.length - 1].id;
-            const res = await db.collection("users").doc(user.uid).collection("clients").add({
-                isPartner: true,
-                parentId: pid,
-                isStructureOnly: true, // Мітка для ізоляції від списків
-                created: Date.now()
-            });
+            const res = await db.collection("users").doc(user.uid).collection("clients").add({ isPartner: true, parentId: pid, isStructureOnly: true, created: Date.now() });
             window.history.pushState({e:1}, ""); openEdit(res.id);
         }
 
@@ -286,8 +267,8 @@
             if(candidates.length === 0) { list.innerHTML = `<div style="text-align:center; opacity:0.5; padding:40px;">В списку СЕМІНАР більше нема кандидатів</div>`; } 
             else {
                 candidates.forEach(c => {
-                    const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; gap:15px; color:white; border:1px solid rgba(255,255,255,0.1);";
-                    row.innerHTML = `<div style="width:44px; height:44px; border-radius:50%; background-size:cover; background-position:center; background-image:url(${c.photo||''})"></div><div style="font-weight:bold;">${c.lname || ''} ${c.fname || ''}</div>`;
+                    const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; gap:15px; border:1px solid rgba(255,255,255,0.1);";
+                    row.innerHTML = `<div style="width:44px; height:44px; border-radius:50%; background-size:cover; background-image:url(${c.photo||''})"></div><div>${c.lname || ''} ${c.fname || ''}</div>`;
                     row.onclick = async () => { await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ isPartner: true, parentId: 'me' }); window.history.back(); };
                     list.appendChild(row);
                 });
@@ -300,37 +281,22 @@
             const reader = new FileReader();
             reader.onload = e => {
                 currentPhotoBase64 = e.target.result;
-                const targetId = type === 'me' ? 'me-photo' : 'c-photo';
-                document.getElementById(targetId).style.backgroundImage = `url(${currentPhotoBase64})`;
+                document.getElementById(type === 'me' ? 'me-photo' : 'c-photo').style.backgroundImage = `url(${currentPhotoBase64})`;
             };
             reader.readAsDataURL(file);
         }
 
         async function manualSave() { 
             if(!editId) return; 
-            const data = { 
-                lname: document.getElementById('e-lname').value, 
-                fname: document.getElementById('e-fname').value, 
-                phone: document.getElementById('e-phone').value, 
-                pnum: document.getElementById('e-pnum').value, 
-                pdate: document.getElementById('e-pdate').value, 
-                notes: document.getElementById('e-notes').value, 
-                level: document.getElementById('e-level').value, 
-                updated: Date.now() 
-            }; 
-            const stepField = document.getElementById('e-step');
-            if (stepField.offsetParent !== null) data.step = parseInt(stepField.value);
+            const data = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, pnum: document.getElementById('e-pnum').value, pdate: document.getElementById('e-pdate').value, notes: document.getElementById('e-notes').value, level: document.getElementById('e-level').value, updated: Date.now() }; 
+            const stepField = document.getElementById('e-step'); if (stepField.offsetParent) data.step = parseInt(stepField.value);
             if(currentPhotoBase64) data.photo = currentPhotoBase64;
             await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(data, {merge:true}); 
             currentPhotoBase64 = null; closeAllUI(); 
         }
 
         async function saveMeData() { 
-            const data = { 
-                meLname: document.getElementById('me-lname').value, 
-                meFname: document.getElementById('me-fname').value, 
-                meLevel: document.getElementById('me-level').value 
-            }; 
+            const data = { meLname: document.getElementById('me-lname').value, meFname: document.getElementById('me-fname').value, meLevel: document.getElementById('me-level').value }; 
             if(currentPhotoBase64) data.myPhoto = currentPhotoBase64;
             await db.collection("users").doc(user.uid).set(data, {merge:true}); 
             currentPhotoBase64 = null; closeAllUI(); 
@@ -339,15 +305,8 @@
         function openEdit(id) { 
             editId = id; const c = clients.find(x => x.id === id); 
             ['lname','fname','phone','pnum','pdate','notes','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || "");
-            
-            // Логіка відображення поля ЕТАП
-            const stepWrap = document.getElementById('step-field-wrapper');
-            if (c.isStructureOnly) { stepWrap.style.display = 'none'; } 
-            else { 
-                stepWrap.style.display = 'block';
-                document.getElementById('e-step').value = c.step || 0;
-            }
-            
+            document.getElementById('step-wrapper').style.display = c.isStructureOnly ? 'none' : 'block';
+            if (!c.isStructureOnly) document.getElementById('e-step').value = c.step || 0;
             document.getElementById('c-photo').style.backgroundImage = `url(${c.photo||''})`; 
             updateEditLevelBadge(); document.getElementById('edit-screen').style.display='flex'; 
         }
@@ -360,9 +319,8 @@
         function setFilter(t) { filterType = t; renderBoard(); toggleFilter(); }
         function showUserMenu() { window.history.pushState({m:1}, ""); document.getElementById('user-menu').style.display = 'flex'; }
         function showPersonalData() { window.history.pushState({p:1}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
-        function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); if(user) db.collection("users").doc(user.uid).set({theme: t}, {merge:true}); }
-        function login() { auth.signInWithPopup(provider); }
         function logout() { auth.signOut().then(() => location.reload()); }
+        function login() { auth.signInWithPopup(provider); }
         async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAllUI(); } }
         async function removeFromStruct(id) { if(confirm("Прибрати?")) await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ isPartner: false, parentId: null, isStructureOnly: false }); }
     </script>
