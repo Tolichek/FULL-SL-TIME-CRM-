@@ -33,13 +33,38 @@
         body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
 
         ::-webkit-scrollbar { display: none; }
-        header { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; height: 80px; position: relative; z-index: 1000; gap: 10px; }
         
-        /* ВИПРАВЛЕНИЙ АВАТАР */
+        /* ПРОЗОРИЙ ФОН ТА ЦЕНТРУВАННЯ */
+        header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 0 15px; 
+            height: 80px; 
+            position: relative; 
+            z-index: 1000; 
+            background: transparent;
+        }
+
         .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); flex-shrink: 0; }
         
-        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 26px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 20px var(--neon); letter-spacing: 0.5px; flex: 1; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        /* ВМІЩЕННЯ ВИВІСКИ БЕЗ ОБРІЗАННЯ */
+        .header-title { 
+            font-family: 'Montserrat Alternates', sans-serif; 
+            font-size: 6vw; /* Адаптивний розмір */
+            max-font-size: 26px;
+            font-weight: 700; 
+            color: var(--neon-text); 
+            text-shadow: 0 0 20px var(--neon); 
+            letter-spacing: 0.5px; 
+            flex: 1; 
+            text-align: center; 
+            white-space: nowrap; 
+            overflow: visible;
+        }
         
+        @media screen and (min-width: 450px) { .header-title { font-size: 26px; } }
+
         #header-ctrl { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; cursor: pointer; min-width: 50px; height: 44px; flex-shrink: 0; }
         .total-count { font-size: 14px; font-weight: bold; line-height: 1; opacity: 0.9; }
         .f-lines { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; width: 22px; }
@@ -253,7 +278,6 @@
             steps.forEach((n, i) => {
                 const stepClients = filtered.filter(c => c.step == i);
                 const col = document.createElement('div'); col.className = 'column';
-                /* 4 ПРОБІЛИ МІЖ НАЗВОЮ ТА ЛІЧИЛЬНИКОМ */
                 col.innerHTML = `<div class="col-head"><div>${n}&nbsp;&nbsp;&nbsp;&nbsp;<span>${stepClients.length}</span></div><div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}</div><div></div></div><div id="list-${i}" class="cards-area"></div>`;
                 b.appendChild(col); s.innerHTML += `<option value="${i}">${n}</option>`;
                 stepClients.forEach(c => {
