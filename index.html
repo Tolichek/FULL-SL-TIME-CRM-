@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>SL TIME CRM 2.7.1</title>
+    <title>SL TIME CRM 2.7.2</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
@@ -52,7 +52,6 @@
             font-size: 6vw; 
             font-weight: 700; 
             color: var(--neon-text); 
-            /* ВИВІСКА ПІДКЛЮЧЕНА */
             text-shadow: 0 0 10px var(--neon), 0 0 20px var(--neon), 0 0 40px var(--neon); 
             letter-spacing: 0.5px; 
             flex: 1; 
@@ -88,13 +87,15 @@
         .struct-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 80px 10px 20px; overflow-y: auto; align-content: start; height: 100%; }
         .icon-unit { display: flex; flex-direction: column; align-items: center; position: relative; height: 140px; }
         
+        /* КУЛЬКА ТА ЗБІЛЬШЕНА ЦИФРА РІВНЯ */
         .sphere { 
             position: absolute; width: 30px; height: 30px; border-radius: 50%; 
             background: radial-gradient(circle at 30% 30%, #fff 0%, rgba(255,255,255,0.2) 20%, var(--neon) 60%, rgba(0,0,0,0.5) 100%);
             display: flex; align-items: center; justify-content: center; 
             box-shadow: inset -1px -1px 4px rgba(0,0,0,0.6), 0 4px 10px rgba(0,0,0,0.4); 
-            z-index: 10; font-size: 12px; font-weight: bold; color: white; border: 0.5px solid rgba(255,255,255,0.4);
+            z-index: 10; font-size: 15px; font-weight: bold; color: white; border: 0.5px solid rgba(255,255,255,0.4);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            line-height: 0;
         }
         .level-sphere { top: -15px; left: 50%; transform: translateX(-50%); }
         .opt-sphere { display: none; top: 40px; left: 50%; }
@@ -125,12 +126,6 @@
 
         .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
         .theme-btn { padding: 16px; text-align: center; cursor: pointer; border-radius: 12px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; color: white; }
-        .btn-purple { background: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); }
-        .btn-graphite { background: linear-gradient(135deg, #3a3a3c 0%, #1a1a1b 100%); }
-        .btn-blue { background: linear-gradient(135deg, #052661 0%, #021b49 100%); }
-        .btn-green { background: linear-gradient(135deg, #054126 0%, #02331a 100%); }
-        .btn-gold { background: linear-gradient(135deg, #614d05 0%, #443501 100%); }
-        .btn-pink { background: linear-gradient(135deg, #61053d 0%, #49022e 100%); }
     </style>
 </head>
 <body class="theme-purple">
@@ -176,12 +171,12 @@
         <div style="font-size:18px; font-weight:bold; margin-bottom:30px; text-align:center;">НАЛАШТУВАННЯ</div>
         <button onclick="showPersonalData()" style="padding:15px; background:rgba(255,255,255,0.1); color:white; border-radius:12px; width:100%; font-weight:bold; margin-bottom:10px; border:1px solid silver;">ОСОБИСТІ ДАНІ</button>
         <div class="theme-grid">
-            <div onclick="setTheme('purple')" class="theme-btn btn-purple">Фіолет</div>
-            <div onclick="setTheme('graphite')" class="theme-btn btn-graphite">Графіт</div>
-            <div onclick="setTheme('blue')" class="theme-btn btn-blue">Синій</div>
-            <div onclick="setTheme('green')" class="theme-btn btn-green">Зелений</div>
-            <div onclick="setTheme('gold')" class="theme-btn btn-gold">Золото</div>
-            <div onclick="setTheme('pink')" class="theme-btn btn-pink">Рожевий</div>
+            <div onclick="setTheme('purple')" style="background:linear-gradient(135deg,#3d0561,#2e0249)" class="theme-btn">Фіолет</div>
+            <div onclick="setTheme('graphite')" style="background:linear-gradient(135deg,#3a3a3c,#1a1a1b)" class="theme-btn">Графіт</div>
+            <div onclick="setTheme('blue')" style="background:linear-gradient(135deg,#052661,#021b49)" class="theme-btn">Синій</div>
+            <div onclick="setTheme('green')" style="background:linear-gradient(135deg,#054126,#02331a)" class="theme-btn">Зелений</div>
+            <div onclick="setTheme('gold')" style="background:linear-gradient(135deg,#614d05,#443501)" class="theme-btn">Золото</div>
+            <div onclick="setTheme('pink')" style="background:linear-gradient(135deg,#61053d,#49022e)" class="theme-btn">Рожевий</div>
         </div>
         <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗАКРИТИ</button>
         <div style="text-align:center; color:#ff4d4d; margin-top:30px; cursor:pointer; font-weight:bold;" onclick="logout()">ВИЙТИ</div>
@@ -256,7 +251,8 @@
             document.getElementById('me-fname').value = data.meFname || "";
             document.getElementById('me-level').value = data.meLevel || "";
             updateMeLevelBadge();
-            setTheme(localStorage.getItem('crm_theme') || data.theme || 'purple');
+            const theme = localStorage.getItem('crm_theme') || data.theme || 'purple';
+            document.body.className = 'theme-' + theme;
         }
 
         function loadClients() {
