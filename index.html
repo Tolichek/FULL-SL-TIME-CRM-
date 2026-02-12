@@ -35,7 +35,10 @@
         ::-webkit-scrollbar { display: none; }
         header { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; height: 80px; position: relative; z-index: 1000; }
         .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); }
+        
+        /* ЦЕНТРУВАННЯ ВИВІСКИ */
         .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 26px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 20px var(--neon); letter-spacing: 0.5px; flex: 1; text-align: center; white-space: nowrap; }
+        
         #header-ctrl { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; cursor: pointer; min-width: 50px; height: 44px; }
         .total-count { font-size: 14px; font-weight: bold; line-height: 1; opacity: 0.9; }
         .f-lines { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; width: 22px; }
@@ -74,9 +77,25 @@
         #edit-screen, #user-menu, #personal-data-screen, #partner-select-modal { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
         select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
         label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
+        
+        /* ПРИМІТКИ ПО ЕТАЛОНУ */
+        .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
+        .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; font-size: 16px; }
+        #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; font-size: 16px; outline: none; }
+
         .photo-container { position: relative; width: 110px; height: 110px; margin: 0 auto; cursor: pointer; }
         .edit-level-display { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon); width: 60px; text-align: center; }
         #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
+        
+        /* 6 ТЕМ З ЗАЛИВКОЮ */
+        .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+        .theme-btn { padding: 16px; text-align: center; cursor: pointer; border-radius: 12px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; color: white; }
+        .btn-purple { background: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); }
+        .btn-graphite { background: linear-gradient(135deg, #3a3a3c 0%, #1a1a1b 100%); }
+        .btn-blue { background: linear-gradient(135deg, #052661 0%, #021b49 100%); }
+        .btn-green { background: linear-gradient(135deg, #054126 0%, #02331a 100%); }
+        .btn-gold { background: linear-gradient(135deg, #614d05 0%, #443501 100%); }
+        .btn-pink { background: linear-gradient(135deg, #61053d 0%, #49022e 100%); }
     </style>
 </head>
 <body class="theme-purple">
@@ -92,7 +111,7 @@
 
     <header id="app-header">
         <div class="avatar" id="u-avatar" onclick="showUserMenu()"></div>
-        <div class="header-title">SL Time CRM</div>
+        <div class="header-title" style="margin-left:50px;">SL Time CRM</div>
         <div id="header-ctrl" onclick="toggleFilter()">
             <div id="header-counter" class="total-count">0</div>
             <div class="f-lines"><div class="f-line l1"></div><div class="f-line l2"></div><div class="f-line l3"></div></div>
@@ -119,7 +138,16 @@
     </nav>
 
     <div id="user-menu">
+        <div style="font-size:18px; font-weight:bold; margin-bottom:30px; text-align:center;">НАЛАШТУВАННЯ</div>
         <button onclick="showPersonalData()" style="padding:15px; background:rgba(255,255,255,0.1); color:white; border-radius:12px; width:100%; font-weight:bold; margin-bottom:10px; border:1px solid silver;">ОСОБИСТІ ДАНІ</button>
+        <div class="theme-grid">
+            <div onclick="setTheme('purple')" class="theme-btn btn-purple">Фіолет</div>
+            <div onclick="setTheme('graphite')" class="theme-btn btn-graphite">Графіт</div>
+            <div onclick="setTheme('blue')" class="theme-btn btn-blue">Синій</div>
+            <div onclick="setTheme('green')" class="theme-btn btn-green">Зелений</div>
+            <div onclick="setTheme('gold')" class="theme-btn btn-gold">Золото</div>
+            <div onclick="setTheme('pink')" class="theme-btn btn-pink">Рожевий</div>
+        </div>
         <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗАКРИТИ</button>
         <div style="text-align:center; color:#ff4d4d; margin-top:30px; cursor:pointer; font-weight:bold;" onclick="logout()">ВИЙТИ</div>
     </div>
@@ -144,8 +172,9 @@
         <div id="step-wrapper">
             <label>ЕТАП</label><select id="e-step"></select>
         </div>
-        <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname"><label>ІМ'Я</label><input type="text" id="e-fname"><label>ТЕЛЕФОН</label><input type="tel" id="e-phone"><label>ПОЛІС №</label><input type="text" id="e-pnum"><label>ДАТА</label><input type="date" id="e-pdate"><label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select><label>ПРИМІТКИ</label>
-        <textarea id="e-notes" style="width:100%; background:transparent; color:white; border:none; border-bottom:1px solid rgba(255,255,255,0.2); min-height:80px; outline:none;"></textarea>
+        <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname"><label>ІМ'Я</label><input type="text" id="e-fname"><label>ТЕЛЕФОН</label><input type="tel" id="e-phone"><label>ПОЛІС №</label><input type="text" id="e-pnum"><label>ДАТА</label><input type="date" id="e-pdate"><label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <label>ПРИМІТКИ</label>
+        <div class="notes-wrapper" id="notes-wrap"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value"></textarea></div>
         <button onclick="manualSave()" style="margin-top:20px; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ ТА ВИЙТИ</button>
     </div>
 
@@ -195,6 +224,8 @@
             document.getElementById('me-fname').value = data.meFname || "";
             document.getElementById('me-level').value = data.meLevel || "";
             updateMeLevelBadge();
+            const theme = localStorage.getItem('crm_theme') || data.theme || 'purple';
+            document.body.className = 'theme-' + theme;
         }
 
         function loadClients() {
@@ -216,12 +247,12 @@
         function renderBoard() {
             const b = document.getElementById('main-board'), s = document.getElementById('e-step');
             b.innerHTML = ''; s.innerHTML = '';
-            let filteredClients = clients.filter(c => !c.isStructureOnly);
-            if(filterType === 'az') filteredClients.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
-            if(filterType === 'new') filteredClients.sort((a,b) => b.created - a.created);
-            if(filterType === 'old') filteredClients.sort((a,b) => a.created - b.created);
+            let filtered = clients.filter(c => !c.isStructureOnly);
+            if(filterType === 'az') filtered.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
+            if(filterType === 'new') filtered.sort((a,b) => b.created - a.created);
+            if(filterType === 'old') filtered.sort((a,b) => a.created - b.created);
             steps.forEach((n, i) => {
-                const stepClients = filteredClients.filter(c => c.step == i);
+                const stepClients = filtered.filter(c => c.step == i);
                 const col = document.createElement('div'); col.className = 'column';
                 col.innerHTML = `<div class="col-head"><div>${n}<span>${stepClients.length}</span></div><div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}</div><div></div></div><div id="list-${i}" class="cards-area"></div>`;
                 b.appendChild(col); s.innerHTML += `<option value="${i}">${n}</option>`;
@@ -308,6 +339,7 @@
             document.getElementById('step-wrapper').style.display = c.isStructureOnly ? 'none' : 'block';
             if (!c.isStructureOnly) document.getElementById('e-step').value = c.step || 0;
             document.getElementById('c-photo').style.backgroundImage = `url(${c.photo||''})`; 
+            document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || "";
             updateEditLevelBadge(); document.getElementById('edit-screen').style.display='flex'; 
         }
 
@@ -319,6 +351,7 @@
         function setFilter(t) { filterType = t; renderBoard(); toggleFilter(); }
         function showUserMenu() { window.history.pushState({m:1}, ""); document.getElementById('user-menu').style.display = 'flex'; }
         function showPersonalData() { window.history.pushState({p:1}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
+        function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); if(user) db.collection("users").doc(user.uid).set({theme: t}, {merge:true}); }
         function logout() { auth.signOut().then(() => location.reload()); }
         function login() { auth.signInWithPopup(provider); }
         async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAllUI(); } }
