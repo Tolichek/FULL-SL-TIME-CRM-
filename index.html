@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>SL TIME CRM 2.1</title>
+    <title>SL TIME CRM 2.3</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
-
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -20,107 +19,83 @@
             --accent: #ffffff;
             --neon: rgba(219, 0, 255, 0.8);
             --neon-text: #fff;
+            --sphere-grad: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.1) 20%, var(--neon) 60%, rgba(0,0,0,0.4) 100%);
         }
 
-        body.theme-purple { --bg: linear-gradient(180deg, #2e0249 0%, #570a57 50%, #1a1a1b 100%); --card-grad: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); --neon: rgba(219, 0, 255, 0.8); }
-        body.theme-graphite { --bg: linear-gradient(180deg, #1a1a1b 0%, #2c2c2e 50%, #000000 100%); --card-grad: linear-gradient(135deg, #3a3a3c 0%, #1a1a1b 100%); --neon: rgba(255, 255, 255, 0.4); }
-        body.theme-blue { --bg: linear-gradient(180deg, #021b49 0%, #0a2e57 50%, #010a1b 100%); --card-grad: linear-gradient(135deg, #052661 0%, #021b49 100%); --neon: rgba(0, 150, 255, 0.8); }
-        body.theme-green { --bg: linear-gradient(180deg, #02331a 0%, #0a492e 50%, #01140a 100%); --card-grad: linear-gradient(135deg, #054126 0%, #02331a 100%); --neon: rgba(0, 255, 133, 0.8); }
-        body.theme-gold { --bg: linear-gradient(180deg, #443501 0%, #755b0a 50%, #1a1401 100%); --card-grad: linear-gradient(135deg, #614d05 0%, #443501 100%); --neon: rgba(255, 215, 0, 0.7); }
-        body.theme-pink { --bg: linear-gradient(180deg, #49022e 0%, #570a3a 50%, #1b0110 100%); --card-grad: linear-gradient(135deg, #61053d 0%, #49022e 100%); --neon: rgba(255, 0, 150, 0.8); }
+        body.theme-purple { --bg: linear-gradient(180deg, #2e0249 0%, #570a57 50%, #1a1a1b 100%); --neon: rgba(219, 0, 255, 0.8); }
+        body.theme-graphite { --bg: linear-gradient(180deg, #1a1a1b 0%, #2c2c2e 50%, #000000 100%); --neon: rgba(255, 255, 255, 0.4); }
+        body.theme-blue { --bg: linear-gradient(180deg, #021b49 0%, #0a2e57 50%, #010a1b 100%); --neon: rgba(0, 150, 255, 0.8); }
+        body.theme-green { --bg: linear-gradient(180deg, #02331a 0%, #0a492e 50%, #01140a 100%); --neon: rgba(0, 255, 133, 0.8); }
+        body.theme-gold { --bg: linear-gradient(180deg, #443501 0%, #755b0a 50%, #1a1401 100%); --neon: rgba(255, 215, 0, 0.7); }
+        body.theme-pink { --bg: linear-gradient(180deg, #49022e 0%, #570a3a 50%, #1b0110 100%); --neon: rgba(255, 0, 150, 0.8); }
         
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; user-select: none; }
         body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
-
         ::-webkit-scrollbar { display: none; }
-        
-        /* ПРОЗОРИЙ ФОН ТА ЦЕНТРУВАННЯ */
-        header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 0 15px; 
-            height: 80px; 
-            position: relative; 
-            z-index: 1000; 
-            background: transparent;
-        }
-
+        header { display: flex; justify-content: space-between; align-items: center; padding: 0 20px; height: 80px; position: relative; z-index: 1000; gap: 10px; }
         .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); flex-shrink: 0; }
-        
-        /* ВМІЩЕННЯ ВИВІСКИ БЕЗ ОБРІЗАННЯ */
-        .header-title { 
-            font-family: 'Montserrat Alternates', sans-serif; 
-            font-size: 6vw; /* Адаптивний розмір */
-            max-font-size: 26px;
-            font-weight: 700; 
-            color: var(--neon-text); 
-            text-shadow: 0 0 20px var(--neon); 
-            letter-spacing: 0.5px; 
-            flex: 1; 
-            text-align: center; 
-            white-space: nowrap; 
-            overflow: visible;
-        }
-        
-        @media screen and (min-width: 450px) { .header-title { font-size: 26px; } }
-
-        #header-ctrl { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; cursor: pointer; min-width: 50px; height: 44px; flex-shrink: 0; }
-        .total-count { font-size: 14px; font-weight: bold; line-height: 1; opacity: 0.9; }
+        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 24px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 20px var(--neon); flex: 1; text-align: center; white-space: nowrap; }
+        #header-ctrl { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; cursor: pointer; min-width: 50px; height: 44px; }
+        .total-count { font-size: 14px; font-weight: bold; opacity: 0.9; }
         .f-lines { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; width: 22px; }
         .f-line { height: 2px; background: white; border-radius: 2px; }
         .l1 { width: 22px; } .l2 { width: 16px; } .l3 { width: 10px; }
-        #header-plus { display: none; font-size: 36px; font-weight: bold; color: white; cursor: pointer; min-width: 50px; text-align: right; line-height: 1; flex-shrink: 0; }
+        #header-plus { display: none; font-size: 36px; font-weight: bold; color: white; cursor: pointer; min-width: 50px; text-align: right; }
 
-        #main-viewport { display: flex; width: 100vw; height: calc(100vh - 80px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; gap: 60px; }
-        .app-container { flex: 0 0 100vw; width: 100vw; height: 100%; scroll-snap-align: start; scroll-snap-stop: always; overflow: hidden; position: relative; }
+        #main-viewport { display: flex; width: 100vw; height: calc(100vh - 80px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
+        .app-container { flex: 0 0 100vw; width: 100vw; height: 100%; scroll-snap-align: start; overflow: hidden; position: relative; }
 
+        /* CRM CARDS */
         .board { display: flex; overflow-x: auto; padding: 10px 20px 55px; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
-        .column { min-width: calc(100vw - 40px); scroll-snap-align: center; scroll-snap-stop: always; display: flex; flex-direction: column; gap: 15px; }
-        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 20px; } 
-        .col-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 14px; text-transform: uppercase; font-weight: bold; }
-        .add-btn-center { grid-column: 2; cursor: pointer; font-size: 30px; font-weight: bold; padding: 0 10px; }
+        .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; gap: 15px; }
+        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 20px; }
+        .col-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 14px; font-weight: bold; text-transform: uppercase; }
+        .card { background: var(--card-grad); padding: 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
+        .card-level { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 28px; font-family: 'Montserrat Alternates'; text-shadow: 0 0 8px var(--neon); }
 
-        .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
-        .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 30px; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; color: #fff; text-shadow: 0 0 8px var(--neon); }
+        /* STRUCTURE ICONS 2.3 */
+        #struct-path { position: absolute; top: 0; left: 0; right: 0; display: none; align-items: center; padding: 0 20px; height: 50px; z-index: 500; overflow-x: auto; gap: 10px; }
+        .path-dot { width: 30px; height: 30px; border-radius: 50%; border: 1px solid white; background-size: cover; background-position: center; flex-shrink: 0; }
+        .struct-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 70px 10px 20px; overflow-y: auto; align-content: start; height: 100%; }
+        
+        .icon-unit { display: flex; flex-direction: column; align-items: center; position: relative; height: 140px; }
+        .photo-sphere { width: 70px; height: 70px; border-radius: 50%; background-size: cover; background-position: center; position: relative; box-shadow: 0 0 15px var(--neon); border: 2px solid rgba(255,255,255,0.2); z-index: 2; transition: transform 0.2s; }
+        
+        /* СФЕРИ */
+        .sphere { 
+            position: absolute; width: 28px; height: 28px; border-radius: 50%; 
+            background: var(--sphere-grad); display: flex; align-items: center; justify-content: center; 
+            box-shadow: inset -2px -2px 6px rgba(0,0,0,0.4), 0 4px 10px rgba(0,0,0,0.5); 
+            z-index: 3; font-size: 12px; font-weight: bold; color: white; border: 0.5px solid rgba(255,255,255,0.3);
+        }
+        
+        .level-sphere { top: -10px; left: 50%; transform: translateX(-50%); }
+        .opt-sphere { bottom: 0; left: 50%; transform: translate(-140%, 100%); display: none; animation: popInLeft 0.3s forwards; font-size: 14px; }
+        .del-sphere { bottom: 0; left: 50%; transform: translate(40%, 100%); display: none; animation: popInRight 0.3s forwards; font-size: 16px; }
 
-        #struct-path { position: absolute; top: 0; left: 0; right: 0; display: none; align-items: center; padding: 0 20px; gap: 10px; overflow-x: auto; height: 50px; background: transparent; z-index: 500; }
-        .path-dot { width: 30px; height: 30px; border-radius: 50%; background-size: cover; background-position: center; border: 1px solid white; flex-shrink: 0; }
+        @keyframes popInLeft { from { transform: translate(-50%, -50%) scale(0); opacity: 0; } to { transform: translate(-140%, 10%) scale(1); opacity: 1; } }
+        @keyframes popInRight { from { transform: translate(-50%, -50%) scale(0); opacity: 0; } to { transform: translate(40%, 10%) scale(1); opacity: 1; } }
 
-        .struct-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 60px 10px 20px; overflow-y: auto; align-content: start; height: 100%; }
-        .icon-unit { display: flex; flex-direction: column; align-items: center; position: relative; }
-        .icon-img { width: 75px; height: 75px; border-radius: 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); background-size: cover; background-position: center; position: relative; cursor: pointer; }
-        .icon-badge { position: absolute; top: -6px; right: -6px; background: #ff3b30; color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; border: 2px solid white; }
-        .icon-label { font-size: 10px; margin-top: 4px; font-weight: 600; text-align: center; color: white; text-shadow: 0 2px 4px #000; width: 100%; display: flex; flex-direction: column; line-height: 1.1; }
-        .icon-label span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width: 100%; }
-        .icon-minus { position: absolute; bottom: 0; right: -4px; background: #ff4d4d; color: white; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 1px solid white; font-size: 12px; }
-        .icon-opt { position: absolute; bottom: 0; left: -4px; font-size: 14px; background: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
+        .icon-label { margin-top: 15px; font-size: 10px; font-weight: bold; text-align: center; color: white; display: flex; flex-direction: column; gap: 2px; text-transform: uppercase; width: 100%; }
+        .icon-label span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.7); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
-        .nav-item { color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33%; height: 100%; font-size: 11px; font-weight: bold; }
+        /* NAV & SCREENS */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.75); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
+        .nav-item { color: #fff; opacity: 0.4; font-size: 11px; font-weight: bold; }
         .nav-item.active { opacity: 1; text-shadow: 0 0 10px var(--neon); }
 
         #edit-screen, #user-menu, #personal-data-screen, #partner-select-modal { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
         select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
         label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
-        .photo-container { position: relative; width: 110px; height: 110px; margin: 0 auto; cursor: pointer; }
-        .edit-level-display { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon); width: 60px; text-align: center; }
-        
         .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
         .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; font-size: 16px; }
         #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; font-size: 16px; outline: none; }
-
-        #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
+        .photo-container { position: relative; width: 110px; height: 110px; margin: 0 auto; cursor: pointer; }
+        .edit-level-display { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates'; font-size: 60px; font-weight: bold; text-shadow: 0 0 15px var(--neon); width: 60px; text-align: center; }
+        #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
         .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
-
         .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
-        .theme-btn { padding: 16px; text-align: center; cursor: pointer; border-radius: 12px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; color: white; }
-        .btn-purple { background: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); }
-        .btn-graphite { background: linear-gradient(135deg, #3a3a3c 0%, #1a1a1b 100%); }
-        .btn-blue { background: linear-gradient(135deg, #052661 0%, #021b49 100%); }
-        .btn-green { background: linear-gradient(135deg, #054126 0%, #02331a 100%); }
-        .btn-gold { background: linear-gradient(135deg, #614d05 0%, #443501 100%); }
-        .btn-pink { background: linear-gradient(135deg, #61053d 0%, #49022e 100%); }
+        .theme-btn { padding: 16px; text-align: center; border-radius: 12px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; color: white; }
     </style>
 </head>
 <body class="theme-purple">
@@ -163,18 +138,17 @@
     </nav>
 
     <div id="user-menu">
-        <div style="font-size:18px; font-weight:bold; margin-bottom:30px; text-align:center;">НАЛАШТУВАННЯ</div>
-        <button onclick="showPersonalData()" style="padding:15px; background:rgba(255,255,255,0.1); color:white; border-radius:12px; width:100%; font-weight:bold; margin-bottom:10px; border:1px solid silver;">ОСОБИСТІ ДАНІ</button>
+        <button onclick="showPersonalData()" style="padding:15px; background:rgba(255,255,255,0.1); color:white; border-radius:12px; width:100%; font-weight:bold; border:1px solid silver;">ОСОБИСТІ ДАНІ</button>
         <div class="theme-grid">
-            <div onclick="setTheme('purple')" class="theme-btn btn-purple">Фіолет</div>
-            <div onclick="setTheme('graphite')" class="theme-btn btn-graphite">Графіт</div>
-            <div onclick="setTheme('blue')" class="theme-btn btn-blue">Синій</div>
-            <div onclick="setTheme('green')" class="theme-btn btn-green">Зелений</div>
-            <div onclick="setTheme('gold')" class="theme-btn btn-gold">Золото</div>
-            <div onclick="setTheme('pink')" class="theme-btn btn-pink">Рожевий</div>
+            <div onclick="setTheme('purple')" style="background:linear-gradient(135deg,#3d0561,#2e0249)" class="theme-btn">Фіолет</div>
+            <div onclick="setTheme('graphite')" style="background:linear-gradient(135deg,#3a3a3c,#1a1a1b)" class="theme-btn">Графіт</div>
+            <div onclick="setTheme('blue')" style="background:linear-gradient(135deg,#052661,#021b49)" class="theme-btn">Синій</div>
+            <div onclick="setTheme('green')" style="background:linear-gradient(135deg,#054126,#02331a)" class="theme-btn">Зелений</div>
+            <div onclick="setTheme('gold')" style="background:linear-gradient(135deg,#614d05,#443501)" class="theme-btn">Золото</div>
+            <div onclick="setTheme('pink')" style="background:linear-gradient(135deg,#61053d,#49022e)" class="theme-btn">Рожевий</div>
         </div>
-        <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗАКРИТИ</button>
-        <div style="text-align:center; color:#ff4d4d; margin-top:30px; cursor:pointer; font-weight:bold;" onclick="logout()">ВИЙТИ</div>
+        <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗАКРИТИ</button>
+        <div style="text-align:center; color:#ff4d4d; margin-top:30px; font-weight:bold;" onclick="logout()">ВИЙТИ</div>
     </div>
 
     <div id="personal-data-screen">
@@ -184,27 +158,25 @@
             <input type="file" id="file-me" hidden accept="image/*" onchange="uploadPhoto(this, 'me')">
         </div>
         <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname"><label>ІМ'Я</label><input type="text" id="me-fname"><label>РІВЕНЬ</label><select id="me-level" onchange="updateMeLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
-        <button onclick="saveMeData()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ ТА ВИЙТИ</button>
+        <button onclick="saveMeData()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ</button>
     </div>
 
     <div id="edit-screen">
-        <span onclick="removeClient()" style="position: absolute; top: 25px; right: 25px; color: #ff4d4d; font-size: 12px; text-transform: uppercase; cursor: pointer;">Видалити</span>
+        <span onclick="removeClient()" style="position: absolute; top: 25px; right: 25px; color: #ff4d4d; font-size: 12px; text-transform: uppercase;">Видалити</span>
         <div class="photo-container" onclick="document.getElementById('file-client').click()">
             <div id="c-photo" style="width:110px; height:110px; border-radius:50%; background-size:cover; border:1px solid silver;"></div>
             <div id="edit-level-badge" class="edit-level-display"></div>
             <input type="file" id="file-client" hidden accept="image/*" onchange="uploadPhoto(this, 'client')">
         </div>
-        <div id="step-wrapper">
-            <label>ЕТАП</label><select id="e-step"></select>
-        </div>
-        <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname"><label>ІМ'Я</label><input type="text" id="e-fname"><label>ТЕЛЕФОН</label><input type="tel" id="e-phone"><label>ПОЛІС №</label><input type="text" id="e-pnum"><label>ДАТА</label><input type="date" id="e-pdate"><label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select><label>ПРИМІТКИ</label>
-        <div class="notes-wrapper" id="notes-wrap"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value"></textarea></div>
-        <button onclick="manualSave()" style="margin-top:20px; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ ТА ВИЙТИ</button>
+        <div id="step-wrapper"><label>ЕТАП</label><select id="e-step"></select></div>
+        <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname"><label>ІМ'Я</label><input type="text" id="e-fname"><label>ТЕЛЕФОН</label><input type="tel" id="e-phone"><label>ПОЛІС №</label><input type="text" id="e-pnum"><label>ДАТА</label><input type="date" id="e-pdate"><label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <label>ПРИМІТКИ</label><div class="notes-wrapper" id="notes-wrap"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value"></textarea></div>
+        <button onclick="manualSave()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗБЕРЕЖТИ</button>
     </div>
 
     <div id="partner-select-modal">
         <div id="modal-partners-list" style="flex:1; overflow-y:auto; padding-top:20px;"></div>
-        <button onclick="window.history.back()" style="padding:18px; width:100%; border-radius:30px; background:white; color:black; font-weight:bold; border:none;">НАЗАД</button>
+        <button onclick="window.history.back()" style="padding:18px; width:100%; border-radius:30px; background:white; color:black; font-weight:bold;">НАЗАД</button>
     </div>
 
     <script>
@@ -214,7 +186,7 @@
 
         let user = null, clients = [], editId = null, filterType = 'new', currentPhotoBase64 = null;
         const steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Поліс", "Семінар"];
-        let currentPath = [];
+        let currentPath = [], longPressTimer = null;
 
         const vp = document.getElementById('main-viewport');
         vp.addEventListener('scroll', () => {
@@ -276,11 +248,11 @@
             if(filterType === 'new') filtered.sort((a,b) => b.created - a.created);
             if(filterType === 'old') filtered.sort((a,b) => a.created - b.created);
             steps.forEach((n, i) => {
-                const stepClients = filtered.filter(c => c.step == i);
+                const sc = filtered.filter(c => c.step == i);
                 const col = document.createElement('div'); col.className = 'column';
-                col.innerHTML = `<div class="col-head"><div>${n}&nbsp;&nbsp;&nbsp;&nbsp;<span>${stepClients.length}</span></div><div class="add-btn-center">${i==0?'<span onclick="createCard()">+</span>':''}</div><div></div></div><div id="list-${i}" class="cards-area"></div>`;
+                col.innerHTML = `<div class="col-head"><div>${n}&nbsp;&nbsp;&nbsp;&nbsp;<span>${sc.length}</span></div><div style="font-size:24px" onclick="${i==0?'createCard()':''}">${i==0?'+':''}</div><div></div></div><div id="list-${i}" class="cards-area"></div>`;
                 b.appendChild(col); s.innerHTML += `<option value="${i}">${n}</option>`;
-                stepClients.forEach(c => {
+                sc.forEach(c => {
                     const div = document.createElement('div'); div.className = 'card';
                     div.onclick = () => { window.history.pushState({e:1}, ""); openEdit(c.id); };
                     div.innerHTML = (c.level ? `<div class="card-level">${c.level}</div>` : '') + `<div style="font-weight:600;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;">${c.phone||""}</div>`;
@@ -299,9 +271,26 @@
             });
             const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
             clients.filter(c => c.isPartner && (c.parentId || 'me') === pid).forEach(p => {
-                const box = document.createElement('div'); box.className = 'icon-unit';
-                box.innerHTML = `<div class="icon-img" style="background-image:url(${p.photo || ''})" onclick="currentPath.push({id:'${p.id}', photo:'${p.photo||''}'}); renderStructure();"><div class="icon-badge">${p.level || 0}</div><div class="icon-minus" onclick="event.stopPropagation(); removeFromStruct('${p.id}')">−</div></div><div class="icon-label"><span>${p.lname || ''}</span><span>${p.fname || ''}</span></div><div class="icon-opt" onclick="window.history.pushState({e:1}, ''); openEdit('${p.id}')">⚙️</div>`;
-                grid.appendChild(box);
+                const unit = document.createElement('div'); unit.className = 'icon-unit';
+                unit.innerHTML = `
+                    <div class="sphere level-sphere">${p.level || 0}</div>
+                    <div class="sphere opt-sphere" id="opt-${p.id}" onclick="event.stopPropagation(); window.history.pushState({e:1}, ''); openEdit('${p.id}')">⚙️</div>
+                    <div class="sphere del-sphere" id="del-${p.id}" onclick="event.stopPropagation(); removeFromStruct('${p.id}')">✕</div>
+                    <div class="photo-sphere" id="ph-${p.id}" style="background-image:url(${p.photo || ''})"></div>
+                    <div class="icon-label"><span>${p.lname || ''}</span><span>${p.fname || ''}</span></div>
+                `;
+                
+                const ph = unit.querySelector(`#ph-${p.id}`);
+                ph.onmousedown = ph.ontouchstart = (e) => {
+                    longPressTimer = setTimeout(() => {
+                        unit.querySelector(`#opt-${p.id}`).style.display = 'flex';
+                        unit.querySelector(`#del-${p.id}`).style.display = 'flex';
+                    }, 500);
+                };
+                ph.onmouseup = ph.ontouchend = () => clearTimeout(longPressTimer);
+                ph.onclick = () => { if(unit.querySelector(`#opt-${p.id}`).style.display !== 'flex') { currentPath.push({id:p.id, photo:p.photo}); renderStructure(); } };
+                
+                grid.appendChild(unit);
             });
         }
 
