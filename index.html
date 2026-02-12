@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>SL TIME CRM 2.3</title>
+    <title>SL TIME CRM 2.4</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -15,7 +15,6 @@
     <style>
         :root {
             --bg: linear-gradient(180deg, #2e0249 0%, #570a57 50%, #1a1a1b 100%);
-            --card-grad: linear-gradient(135deg, #3d0561 0%, #2e0249 100%);
             --accent: #ffffff;
             --neon: rgba(219, 0, 255, 0.8);
             --neon-text: #fff;
@@ -30,93 +29,91 @@
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; user-select: none; }
         body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
-        ::-webkit-scrollbar { display: none; }
 
         header { display: flex; justify-content: space-between; align-items: center; padding: 0 15px; height: 80px; position: relative; z-index: 1000; background: transparent; }
         .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); flex-shrink: 0; }
-        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 6vw; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 20px var(--neon); flex: 1; text-align: center; white-space: nowrap; }
-        @media screen and (min-width: 450px) { .header-title { font-size: 26px; } }
-
-        #header-ctrl { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; cursor: pointer; min-width: 50px; }
-        #header-plus { display: none; font-size: 36px; font-weight: bold; color: white; cursor: pointer; min-width: 50px; text-align: right; }
+        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 24px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 20px var(--neon); flex: 1; text-align: center; }
 
         #main-viewport { display: flex; width: 100vw; height: calc(100vh - 80px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
         .app-container { flex: 0 0 100vw; width: 100vw; height: 100%; scroll-snap-align: start; overflow: hidden; position: relative; }
 
-        /* CRM BOARD */
+        /* CARDS IN LISTS - КОЛІР ТЕМИ */
         .board { display: flex; overflow-x: auto; padding: 10px 20px 55px; gap: 20px; height: 100%; }
         .column { min-width: calc(100vw - 40px); display: flex; flex-direction: column; gap: 15px; }
         .cards-area { flex: 1; overflow-y: auto; padding-bottom: 20px; }
-        .col-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 14px; font-weight: bold; text-transform: uppercase; }
-        .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
-        .card-level { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 28px; font-family: 'Montserrat Alternates'; text-shadow: 0 0 8px var(--neon); }
-
-        /* STRUCTURE 2.3 */
-        .struct-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 75px 10px 20px; overflow-y: auto; align-content: start; height: 100%; }
-        .icon-unit { display: flex; flex-direction: column; align-items: center; position: relative; height: 130px; }
+        .col-head { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; font-size: 14px; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; }
         
-        /* РЕАЛІСТИЧНІ СФЕРИ */
+        .card { 
+            background: rgba(255,255,255,0.05); /* Прозорий фон */
+            backdrop-filter: blur(10px);
+            padding: 22px; border-radius: 12px; 
+            border: 1px solid var(--neon); /* Рамка в колір теми */
+            margin-top: 15px; position: relative; 
+            box-shadow: 0 0 15px rgba(0,0,0,0.2), inset 0 0 10px var(--neon); 
+        }
+        .card-level { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 32px; font-family: 'Montserrat Alternates'; text-shadow: 0 0 10px var(--neon); }
+
+        /* STRUCTURE - КУЛЬКИ ТА ТРИКУТНИК */
+        .struct-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 80px 10px 20px; overflow-y: auto; align-content: start; height: 100%; }
+        .icon-unit { display: flex; flex-direction: column; align-items: center; position: relative; height: 140px; }
+        
         .sphere { 
-            position: absolute; width: 28px; height: 28px; border-radius: 50%; 
-            background: radial-gradient(circle at 30% 30%, #fff 0%, rgba(255,255,255,0.2) 15%, var(--neon) 60%, rgba(0,0,0,0.4) 100%);
+            position: absolute; width: 30px; height: 30px; border-radius: 50%; 
+            background: radial-gradient(circle at 30% 30%, #fff 0%, rgba(255,255,255,0.2) 20%, var(--neon) 60%, rgba(0,0,0,0.5) 100%);
             display: flex; align-items: center; justify-content: center; 
             box-shadow: inset -1px -1px 4px rgba(0,0,0,0.6), 0 4px 10px rgba(0,0,0,0.4); 
-            z-index: 10; font-size: 11px; font-weight: bold; color: white; border: 0.5px solid rgba(255,255,255,0.3);
+            z-index: 10; font-size: 12px; font-weight: bold; color: white; border: 0.5px solid rgba(255,255,255,0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .level-sphere { top: -8px; left: 50%; transform: translateX(-50%); }
-        .opt-sphere { display: none; animation: popInLeft 0.3s forwards; font-size: 14px; }
-        .del-sphere { display: none; animation: popInRight 0.3s forwards; font-size: 15px; }
+        
+        /* ПОЗИЦІЯ ВЕРХНЬОЇ КУЛІ (ПРИПІДНЯТА) */
+        .level-sphere { top: -15px; left: 50%; transform: translateX(-50%); }
 
-        @keyframes popInLeft { 
-            from { transform: translate(-50%, -50%) scale(0); opacity: 0; } 
-            to { transform: translate(-150%, 45%) scale(1); opacity: 1; } 
-        }
-        @keyframes popInRight { 
-            from { transform: translate(-50%, -50%) scale(0); opacity: 0; } 
-            to { transform: translate(50%, 45%) scale(1); opacity: 1; } 
-        }
+        /* НИЖНІ КУЛЬКИ (ТРИКУТНИК) */
+        .opt-sphere { display: none; top: 40px; left: 50%; }
+        .del-sphere { display: none; top: 40px; left: 50%; }
 
-        .photo-sphere { width: 70px; height: 70px; border-radius: 50%; background-size: cover; background-position: center; border: 2px solid rgba(255,255,255,0.4); box-shadow: 0 0 15px var(--neon); z-index: 5; }
+        .icon-unit.menu-open .opt-sphere { display: flex; transform: translate(-140%, 30%); } /* Ліворуч внизу */
+        .icon-unit.menu-open .del-sphere { display: flex; transform: translate(40%, 30%); }  /* Праворуч внизу */
+
+        .photo-sphere { width: 75px; height: 75px; border-radius: 50%; background-size: cover; background-position: center; border: 2px solid rgba(255,255,255,0.4); box-shadow: 0 0 15px var(--neon); z-index: 5; }
         .icon-label { margin-top: 15px; font-size: 10px; font-weight: bold; color: white; text-align: center; display: flex; flex-direction: column; width: 100%; text-transform: uppercase; }
-        .icon-label span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* OTHER UI */
+        /* ПАНЕЛЬ ШЛЯХУ */
         #struct-path { position: absolute; top: 0; left: 0; right: 0; display: none; align-items: center; padding: 0 20px; height: 50px; z-index: 500; gap: 10px; overflow-x: auto; }
-        .path-dot { width: 30px; height: 30px; border-radius: 50%; border: 1px solid white; background-size: cover; flex-shrink: 0; }
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
+        .path-dot { width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid white; background-size: cover; flex-shrink: 0; }
+
+        /* NAV & OTHERS */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
         .nav-item { color: #fff; opacity: 0.4; font-size: 11px; font-weight: bold; }
         .nav-item.active { opacity: 1; text-shadow: 0 0 10px var(--neon); }
         
         #edit-screen, #user-menu, #personal-data-screen, #partner-select-modal { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
         select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
         label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
-        .notes-wrapper { display: grid; position: relative; width: 100%; }
-        .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; font-size: 16px; }
-        #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; font-size: 16px; outline: none; }
-        .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
         .theme-btn { padding: 16px; text-align: center; border-radius: 12px; font-weight: bold; border: 1px solid rgba(255,255,255,0.2); color: white; text-transform: uppercase; font-size: 12px; }
     </style>
 </head>
 <body>
     <div id="splash" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;">
         <div style="width:160px;height:160px;border:2px solid silver;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:bold;color:white;">SL</div>
-        <div id="login-ui" style="display:none; margin-top:40px;"><button onclick="login()" style="background:white;padding:12px 30px;border-radius:25px;font-weight:bold;border:none;">Увійти через Google</button></div>
     </div>
 
     <header id="app-header">
         <div class="avatar" id="u-avatar" onclick="showUserMenu()"></div>
         <div class="header-title">SL Time CRM</div>
-        <div id="header-ctrl" onclick="toggleFilter()">
-            <div id="header-counter" class="total-count">0</div>
-            <div class="f-lines"><div class="f-line l1" style="width:22px;height:2px;background:white;margin-bottom:4px"></div><div class="f-line l2" style="width:16px;height:2px;background:white;margin-bottom:4px"></div><div class="f-line l3" style="width:10px;height:2px;background:white"></div></div>
+        <div id="header-ctrl" onclick="toggleFilter()" style="display:flex; flex-direction:column; align-items:flex-end; cursor:pointer">
+            <div id="header-counter" style="font-size:14px; font-weight:bold">0</div>
+            <div style="width:22px; height:2px; background:white; margin:2px 0"></div>
+            <div style="width:16px; height:2px; background:white; margin:2px 0"></div>
         </div>
-        <div id="header-plus" onclick="handleAddPartner()">+</div>
+        <div id="header-plus" onclick="handleAddPartner()" style="display:none; font-size:32px; font-weight:bold">+</div>
     </header>
 
     <div id="main-viewport">
         <div id="screen-crm" class="app-container"><main class="board" id="main-board"></main></div>
         <div id="screen-struct" class="app-container"><div id="struct-path"></div><div class="struct-grid" id="struct-grid"></div></div>
-        <div id="screen-plan" class="app-container"><div style="display:flex; align-items:center; justify-content:center; height:100%; opacity:0.3; font-size:20px;">ПЛАН ДІЙ</div></div>
+        <div id="screen-plan" class="app-container"></div>
     </div>
 
     <nav class="bottom-nav">
@@ -124,21 +121,6 @@
         <div class="nav-item" onclick="jumpToPage(1)">СТРУКТУРА</div>
         <div class="nav-item" onclick="jumpToPage(2)">ПЛАН</div>
     </nav>
-
-    <div id="user-menu">
-        <div style="text-align:center; font-weight:bold; margin-bottom:25px">НАЛАШТУВАННЯ</div>
-        <button onclick="showPersonalData()" style="padding:15px; background:rgba(255,255,255,0.1); color:white; border-radius:12px; width:100%; font-weight:bold; border:1px solid silver;">ОСОБИСТІ ДАНІ</button>
-        <div class="theme-grid">
-            <div onclick="setTheme('purple')" style="background:linear-gradient(135deg,#3d0561,#2e0249)" class="theme-btn">Фіолет</div>
-            <div onclick="setTheme('graphite')" style="background:linear-gradient(135deg,#3a3a3c,#1a1a1b)" class="theme-btn">Графіт</div>
-            <div onclick="setTheme('blue')" style="background:linear-gradient(135deg,#052661,#021b49)" class="theme-btn">Синій</div>
-            <div onclick="setTheme('green')" style="background:linear-gradient(135deg,#054126,#02331a)" class="theme-btn">Зелений</div>
-            <div onclick="setTheme('gold')" style="background:linear-gradient(135deg,#614d05,#443501)" class="theme-btn">Золото</div>
-            <div onclick="setTheme('pink')" style="background:linear-gradient(135deg,#61053d,#49022e)" class="theme-btn">Рожевий</div>
-        </div>
-        <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none;">ЗАКРИТИ</button>
-        <div style="text-align:center; color:#ff4d4d; margin-top:30px; font-weight:bold; cursor:pointer" onclick="logout()">ВИЙТИ</div>
-    </div>
 
     <div id="edit-screen">
         <span onclick="removeClient()" style="position: absolute; top: 25px; right: 25px; color: #ff4d4d; font-size: 12px; text-transform: uppercase;">Видалити</span>
@@ -149,23 +131,17 @@
         </div>
         <div id="step-wrapper"><label>ЕТАП</label><select id="e-step"></select></div>
         <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname"><label>ІМ'Я</label><input type="text" id="e-fname"><label>ТЕЛЕФОН</label><input type="tel" id="e-phone"><label>РІВЕНЬ</label><select id="e-level" onchange="document.getElementById('edit-level-badge').innerText=this.value"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
-        <label>ПРИМІТКИ</label><div class="notes-wrapper" id="notes-wrap"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value"></textarea></div>
         <button onclick="manualSave()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none; margin-top:20px">ЗБЕРЕЖТИ</button>
     </div>
 
-    <div id="personal-data-screen">
-        <div style="position:relative; width:110px; height:110px; margin:0 auto; cursor:pointer" onclick="document.getElementById('file-me').click()">
-            <div id="me-photo" style="width:110px; height:110px; border-radius:50%; background-size:cover;"></div>
-            <div id="me-level-badge" style="position:absolute; top:50%; left:-65px; transform:translateY(-50%); font-family:'Montserrat Alternates'; font-size:60px; font-weight:bold; text-shadow:0 0 15px var(--neon)"></div>
-            <input type="file" id="file-me" hidden accept="image/*" onchange="uploadPhoto(this, 'me')">
+    <div id="user-menu">
+        <div class="theme-grid">
+            <div onclick="setTheme('green')" style="background:#02331a" class="theme-btn">Зелений</div>
+            <div onclick="setTheme('purple')" style="background:#2e0249" class="theme-btn">Фіолет</div>
+            <div onclick="setTheme('blue')" style="background:#021b49" class="theme-btn">Синій</div>
+            <div onclick="setTheme('graphite')" style="background:#1a1a1b" class="theme-btn">Графіт</div>
         </div>
-        <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname"><label>ІМ'Я</label><input type="text" id="me-fname"><label>РІВЕНЬ</label><select id="me-level" onchange="document.getElementById('me-level-badge').innerText=this.value"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
-        <button onclick="saveMeData()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none;">ЗБЕРЕЖТИ</button>
-    </div>
-
-    <div id="partner-select-modal">
-        <div id="modal-partners-list" style="flex:1; overflow-y:auto; padding-top:20px"></div>
-        <button onclick="window.history.back()" style="padding:18px; width:100%; border-radius:30px; background:white; color:black; font-weight:bold; border:none">НАЗАД</button>
+        <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none;">ЗАКРИТИ</button>
     </div>
 
     <script>
@@ -173,13 +149,12 @@
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.firestore(), provider = new firebase.auth.GoogleAuthProvider();
 
-        let user = null, clients = [], editId = null, filterType = 'new', currentPhotoBase64 = null;
+        let user = null, clients = [], editId = null, currentPath = [], longPressTimer = null;
         const steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Поліс", "Семінар"];
-        let currentPath = [], longPressTimer = null;
 
         const vp = document.getElementById('main-viewport');
         vp.addEventListener('scroll', () => {
-            const index = Math.round(vp.scrollLeft / (window.innerWidth + 60));
+            const index = Math.round(vp.scrollLeft / window.innerWidth);
             document.querySelectorAll('.nav-item').forEach((btn, i) => btn.classList.toggle('active', i === index));
             document.getElementById('header-ctrl').style.display = index === 1 ? 'none' : 'flex';
             document.getElementById('header-plus').style.display = index === 1 ? 'block' : 'none';
@@ -188,41 +163,36 @@
             updateHeaderCounter();
         });
 
-        function jumpToPage(index) { vp.scrollTo({ left: index * (window.innerWidth + 60), behavior: 'smooth' }); }
-        function lock() { window.history.pushState({l:1}, ""); }
-        window.onload = lock;
-        window.onpopstate = () => {
-            if (editId || document.getElementById('user-menu').style.display==='flex' || document.getElementById('partner-select-modal').style.display==='flex' || document.getElementById('personal-data-screen').style.display==='flex') { closeAllUI(); lock(); return; }
-            if (currentPath.length > 0) { currentPath.pop(); renderStructure(); lock(); return; }
-            if (vp.scrollLeft > 0) { jumpToPage(0); lock(); return; }
-            lock();
-        };
+        function jumpToPage(index) { vp.scrollTo({ left: index * window.innerWidth, behavior: 'smooth' }); }
 
-        auth.onAuthStateChanged(async u => { if(u) { user = u; document.getElementById('splash').style.display = 'none'; await loadUserConfig(); loadClients(); lock(); } else { document.getElementById('login-ui').style.display = 'block'; } });
+        auth.onAuthStateChanged(async u => { 
+            if(u) { 
+                user = u; 
+                document.getElementById('splash').style.display = 'none'; 
+                await loadUserConfig(); 
+                loadClients(); 
+            } else { 
+                auth.signInWithPopup(provider); 
+            } 
+        });
 
         async function loadUserConfig() {
             const doc = await db.collection("users").doc(user.uid).get();
             const data = doc.data() || {};
-            const photo = data.myPhoto || user.photoURL;
-            document.getElementById('u-avatar').style.backgroundImage = `url(${photo})`;
-            document.getElementById('me-photo').style.backgroundImage = `url(${photo})`;
-            document.getElementById('me-lname').value = data.meLname || "";
-            document.getElementById('me-fname').value = data.meFname || "";
-            document.getElementById('me-level').value = data.meLevel || "";
-            document.getElementById('me-level-badge').innerText = data.meLevel || "0";
-            const theme = localStorage.getItem('crm_theme') || data.theme || 'purple';
-            document.body.className = 'theme-' + theme;
+            document.getElementById('u-avatar').style.backgroundImage = `url(${data.myPhoto || user.photoURL})`;
+            const theme = localStorage.getItem('crm_theme') || data.theme || 'green';
+            setTheme(theme);
         }
 
         function loadClients() {
             db.collection("users").doc(user.uid).collection("clients").onSnapshot(snap => {
                 clients = []; snap.forEach(d => clients.push({id: d.id, ...d.data()}));
-                renderBoard(); updateHeaderCounter(); if(Math.round(vp.scrollLeft/(window.innerWidth + 60)) === 1) renderStructure();
+                renderBoard(); updateHeaderCounter();
             });
         }
 
         function updateHeaderCounter() {
-            const idx = Math.round(vp.scrollLeft / (window.innerWidth + 60));
+            const idx = Math.round(vp.scrollLeft / window.innerWidth);
             const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
             const count = idx === 1 ? clients.filter(c => c.isPartner && (c.parentId || 'me') === pid).length : clients.filter(c => !c.isStructureOnly).length;
             document.getElementById('header-counter').innerText = count;
@@ -231,16 +201,15 @@
         function renderBoard() {
             const b = document.getElementById('main-board'), s = document.getElementById('e-step');
             b.innerHTML = ''; s.innerHTML = '';
-            let filtered = clients.filter(c => !c.isStructureOnly);
             steps.forEach((n, i) => {
-                const sc = filtered.filter(c => c.step == i);
+                const sc = clients.filter(c => c.step == i && !c.isStructureOnly);
                 const col = document.createElement('div'); col.className = 'column';
-                col.innerHTML = `<div class="col-head"><div>${n}&nbsp;&nbsp;&nbsp;&nbsp;<span>${sc.length}</span></div><div style="font-size:24px" onclick="${i==0?'createCard()':''}">${i==0?'+':''}</div><div></div></div><div id="list-${i}" class="cards-area"></div>`;
+                col.innerHTML = `<div class="col-head"><div>${n}&nbsp;&nbsp;<span>${sc.length}</span></div><div onclick="${i==0?'createCard()':''}" style="font-size:24px">${i==0?'+':''}</div><div></div></div><div class="cards-area" id="list-${i}"></div>`;
                 b.appendChild(col); s.innerHTML += `<option value="${i}">${n}</option>`;
                 sc.forEach(c => {
                     const div = document.createElement('div'); div.className = 'card';
-                    div.onclick = () => { window.history.pushState({e:1}, ""); openEdit(c.id); };
-                    div.innerHTML = (c.level ? `<div class="card-level">${c.level}</div>` : '') + `<div style="font-weight:600;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;">${c.phone||""}</div>`;
+                    div.onclick = () => openEdit(c.id);
+                    div.innerHTML = `<div class="card-level">${c.level || 0}</div><div style="font-weight:600">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px">${c.phone||""}</div>`;
                     document.getElementById(`list-${i}`).appendChild(div);
                 });
             });
@@ -259,94 +228,47 @@
                 const unit = document.createElement('div'); unit.className = 'icon-unit';
                 unit.innerHTML = `
                     <div class="sphere level-sphere">${p.level || 0}</div>
-                    <div class="sphere opt-sphere" id="opt-${p.id}" onclick="event.stopPropagation(); openEdit('${p.id}')">⚙️</div>
-                    <div class="sphere del-sphere" id="del-${p.id}" onclick="event.stopPropagation(); removeFromStruct('${p.id}')">✕</div>
-                    <div class="photo-sphere" id="ph-${p.id}" style="background-image:url(${p.photo || ''})"></div>
+                    <div class="sphere opt-sphere" onclick="event.stopPropagation(); openEdit('${p.id}')">⚙️</div>
+                    <div class="sphere del-sphere" onclick="event.stopPropagation(); removeFromStruct('${p.id}')">✕</div>
+                    <div class="photo-sphere" style="background-image:url(${p.photo || ''})"></div>
                     <div class="icon-label"><span>${p.lname || ''}</span><span>${p.fname || ''}</span></div>
                 `;
                 
-                const ph = unit.querySelector(`#ph-${p.id}`);
+                const ph = unit.querySelector('.photo-sphere');
                 ph.onmousedown = ph.ontouchstart = () => {
-                    longPressTimer = setTimeout(() => {
-                        unit.querySelector(`#opt-${p.id}`).style.display = 'flex';
-                        unit.querySelector(`#del-${p.id}`).style.display = 'flex';
-                    }, 600);
+                    longPressTimer = setTimeout(() => { unit.classList.add('menu-open'); }, 600);
                 };
                 ph.onmouseup = ph.ontouchend = () => clearTimeout(longPressTimer);
                 ph.onclick = () => {
-                    if(unit.querySelector(`#opt-${p.id}`).style.display !== 'flex') {
+                    if(!unit.classList.contains('menu-open')) {
                         currentPath.push({id:p.id, photo:p.photo}); renderStructure();
                     } else {
-                        unit.querySelector(`#opt-${p.id}`).style.display = 'none';
-                        unit.querySelector(`#del-${p.id}`).style.display = 'none';
+                        unit.classList.remove('menu-open');
                     }
                 };
                 grid.appendChild(unit);
             });
         }
 
-        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); window.history.pushState({e:1}, ""); openEdit(res.id); }
         function openEdit(id) { 
             editId = id; const c = clients.find(x => x.id === id); 
-            ['lname','fname','phone','pdate','notes','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || "");
-            document.getElementById('step-wrapper').style.display = c.isStructureOnly ? 'none' : 'block';
-            if (!c.isStructureOnly) document.getElementById('e-step').value = c.step || 0;
+            ['lname','fname','phone','notes','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || "");
             document.getElementById('c-photo').style.backgroundImage = `url(${c.photo||''})`; 
-            document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || "";
             document.getElementById('edit-level-badge').innerText = c.level || "0";
             document.getElementById('edit-screen').style.display='flex'; 
         }
 
-        function uploadPhoto(input, type) {
-            const file = input.files[0]; if(!file) return;
-            const reader = new FileReader();
-            reader.onload = e => {
-                currentPhotoBase64 = e.target.result;
-                document.getElementById(type === 'me' ? 'me-photo' : 'c-photo').style.backgroundImage = `url(${currentPhotoBase64})`;
-            };
-            reader.readAsDataURL(file);
-        }
-
         async function manualSave() { 
-            const data = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, notes: document.getElementById('e-notes').value, level: document.getElementById('e-level').value, updated: Date.now() }; 
-            const stepField = document.getElementById('e-step'); if (stepField.offsetParent) data.step = parseInt(stepField.value);
-            if(currentPhotoBase64) data.photo = currentPhotoBase64;
-            await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(data, {merge:true}); 
+            const d = { lname:document.getElementById('e-lname').value, fname:document.getElementById('e-fname').value, phone:document.getElementById('e-phone').value, notes:document.getElementById('e-notes').value, level:document.getElementById('e-level').value, updated:Date.now() }; 
+            if(document.getElementById('e-step').offsetParent) d.step = parseInt(document.getElementById('e-step').value);
+            await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(d, {merge:true}); 
             closeAllUI(); 
         }
 
-        async function saveMeData() { 
-            const data = { meLname: document.getElementById('me-lname').value, meFname: document.getElementById('me-fname').value, meLevel: document.getElementById('me-level').value }; 
-            if(currentPhotoBase64) data.myPhoto = currentPhotoBase64;
-            await db.collection("users").doc(user.uid).set(data, {merge:true}); 
-            closeAllUI(); 
-        }
-
-        function handleAddPartner() { if (currentPath.length === 0) openPartnerSelect(); else createCardForStruct(); }
-        async function createCardForStruct() {
-            const pid = currentPath[currentPath.length - 1].id;
-            const res = await db.collection("users").doc(user.uid).collection("clients").add({ isPartner: true, parentId: pid, isStructureOnly: true, created: Date.now() });
-            window.history.pushState({e:1}, ""); openEdit(res.id);
-        }
-        function openPartnerSelect() {
-            const list = document.getElementById('modal-partners-list'); list.innerHTML = '';
-            clients.filter(c => c.step === 6 && !c.isPartner && !c.isStructureOnly).forEach(c => {
-                const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; gap:15px; border:1px solid rgba(255,255,255,0.1);";
-                row.innerHTML = `<div style="width:44px; height:44px; border-radius:50%; background-size:cover; background-image:url(${c.photo||''})"></div><div>${c.lname || ''} ${c.fname || ''}</div>`;
-                row.onclick = async () => { await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ isPartner: true, parentId: 'me' }); window.history.back(); };
-                list.appendChild(row);
-            });
-            document.getElementById('partner-select-modal').style.display = 'flex'; window.history.pushState({s:1}, "");
-        }
-
-        function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #partner-select-modal').forEach(el => el.style.display = 'none'); editId = null; currentPhotoBase64 = null; }
-        function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); if(user) db.collection("users").doc(user.uid).set({theme: t}, {merge:true}); }
-        function showUserMenu() { window.history.pushState({m:1}, ""); document.getElementById('user-menu').style.display = 'flex'; }
-        function showPersonalData() { window.history.pushState({p:1}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
-        function logout() { auth.signOut().then(() => location.reload()); }
-        function login() { auth.signInWithPopup(provider); }
-        async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAllUI(); } }
-        async function removeFromStruct(id) { if(confirm("Прибрати?")) await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ isPartner: false, parentId: null, isStructureOnly: false }); }
+        function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); }
+        function showUserMenu() { document.getElementById('user-menu').style.display = 'flex'; window.history.pushState({},""); }
+        function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #partner-select-modal').forEach(el => el.style.display = 'none'); editId = null; }
+        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); openEdit(res.id); }
     </script>
 </body>
 </html>
