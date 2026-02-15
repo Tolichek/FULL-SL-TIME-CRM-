@@ -29,15 +29,23 @@
         .nav-item { color: #b4b4b4; font-size: 11px; cursor: pointer; text-align: center; }
         .active-nav { color: var(--acc); }
         
-        /* Еталонна картка налаштувань */
-        .profile-top { display: flex; flex-direction: column; align-items: center; padding: 20px; text-align: center; }
-        .edit-inputs { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-        .edit-inputs label { color: var(--acc); font-size: 11px; font-weight: bold; text-align: left; }
+        /* КАРТКА НАЛАШТУВАНЬ */
+        .profile-top { display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .edit-inputs { width: 100%; display: flex; flex-direction: column; gap: 15px; margin-top: 10px; }
+        .edit-inputs label { color: var(--acc); font-size: 11px; font-weight: bold; }
         .edit-inputs input { background: transparent; border: none; border-bottom: 1px solid #333; color: white; padding: 8px 0; outline: none; font-size: 17px; width: 100%; }
         
         .card-box { background: var(--card); margin: 10px; padding: 15px; border-radius: 12px; }
         .row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #282828; }
         .row:last-child { border: none; }
+
+        /* Switch */
+        .switch { position: relative; width: 40px; height: 20px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; inset: 0; background: #444; border-radius: 20px; cursor: pointer; transition: .4s; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background: white; border-radius: 50%; transition: .4s; }
+        input:checked + .slider { background: var(--acc); }
+        input:checked + .slider:before { transform: translateX(20px); }
         
         .fab { position: fixed; bottom: 90px; right: 20px; width: 50px; height: 50px; background: var(--acc); border-radius: 15px; color: #131314; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; z-index: 500; }
     </style>
@@ -57,11 +65,11 @@
 
     <div id="profile-screen" class="screen">
         <div class="header"><b>Профіль</b></div>
-        <div class="card-box" style="text-align: center; padding: 30px 15px;">
-            <div id="user-avatar" class="avatar" style="width:100px; height:100px; margin: 0 auto 15px;">?</div>
-            <h2 id="user-name" style="margin: 0;"></h2>
-            <p id="user-email" style="color: #888; margin: 5px 0 20px;"></p>
-            <button id="btn-logout" style="background: none; border: 1px solid #ff6b6b; color: #ff6b6b; padding: 10px 25px; border-radius: 12px; cursor: pointer;">Вийти</button>
+        <div class="card-box" style="text-align: center;">
+            <div id="user-avatar" class="avatar" style="width:80px; height:80px; margin: 0 auto 15px;">?</div>
+            <h2 id="user-name"></h2>
+            <p id="user-email" style="color: #888;"></p>
+            <button id="btn-logout" style="border: 1px solid #ff6b6b; color: #ff6b6b; background:none; padding:10px; border-radius:10px; cursor:pointer;">Вийти</button>
         </div>
     </div>
 
@@ -73,7 +81,7 @@
         </div>
         <div id="notes-area" class="notes-area"></div>
         <div class="input-bar">
-            <textarea id="note-input" rows="1"></textarea>
+            <textarea id="note-input" rows="1" placeholder="Нотатка..."></textarea>
             <button id="btn-send" style="color:var(--acc); background:none; border:none; font-weight:bold;">ОК</button>
         </div>
     </div>
@@ -86,21 +94,29 @@
         </div>
         <div style="overflow-y: auto; flex: 1;">
             <div class="profile-top">
-                <div id="edit-img" class="avatar" style="width:100px; height:100px; margin:0;">?</div>
+                <div id="edit-img" class="avatar" style="width:100px; height:100px; margin:0; cursor:pointer;" onclick="document.getElementById('file-in').click()">?</div>
+                <input type="file" id="file-in" style="display:none" accept="image/*">
+                
                 <div class="edit-inputs">
                     <label>ПРІЗВИЩЕ</label>
-                    <input type="text" id="in-ln" placeholder="Введіть прізвище">
+                    <input type="text" id="in-ln" placeholder="Прізвище">
                     <label>ІМ'Я</label>
-                    <input type="text" id="in-fn" placeholder="Введіть ім'я">
+                    <input type="text" id="in-fn" placeholder="Ім'я">
+                    <label>НОМЕР ТЕЛЕФОНУ</label>
+                    <input type="tel" id="in-tel" placeholder="+380...">
+                    <label>ДАТА НАРОДЖЕННЯ</label>
+                    <input type="date" id="in-dob">
                 </div>
             </div>
             <div class="card-box">
-                <label style="color:var(--acc); font-size:11px; font-weight:bold;">ДАТА НАРОДЖЕННЯ</label>
-                <input type="date" id="in-dob" style="width:100%; background:transparent; border:none; color:white; font-size:17px; padding:10px 0; outline:none; border-bottom: 1px solid #333;">
-            </div>
-            <div class="card-box">
-                <div class="row"><span>Клієнт</span><input type="checkbox" id="chk-c"></div>
-                <div class="row"><span>Партнер (Команда)</span><input type="checkbox" id="chk-p"></div>
+                <div class="row">
+                    <span>Клієнт</span>
+                    <label class="switch"><input type="checkbox" id="chk-c"><span class="slider"></span></label>
+                </div>
+                <div class="row">
+                    <span>Партнер (Команда)</span>
+                    <label class="switch"><input type="checkbox" id="chk-p"><span class="slider"></span></label>
+                </div>
             </div>
         </div>
     </div>
@@ -131,7 +147,7 @@
     const db = getFirestore(app);
     const prov = new GoogleAuthProvider();
 
-    let clients = [], curId = null, isNew = false, filter = 'all';
+    let clients = [], curId = null, isNew = false, filter = 'all', tempImg = "";
 
     onAuthStateChanged(auth, u => {
         if(u) {
@@ -157,7 +173,7 @@
         if(filter === 'partner') f = clients.filter(c => c.isPartner);
         f.forEach(c => {
             const d = document.createElement('div'); d.className = 'chat-item';
-            d.innerHTML = `<div class="avatar">${c.ln[0]}</div><b>${c.ln} ${c.fn}</b>`;
+            d.innerHTML = `<div class="avatar" style="${c.img ? `background-image:url(${c.img})` : ''}">${c.img ? '' : c.ln[0]}</div><b>${c.ln} ${c.fn}</b>`;
             d.onclick = () => { curId = c.id; updateChat(); switchScreen('chat-screen'); };
             b.appendChild(d);
         });
@@ -166,7 +182,8 @@
     const updateChat = () => {
         const c = clients.find(x => x.id == curId); if(!c) return;
         document.getElementById('chat-name').innerText = `${c.ln} ${c.fn}`;
-        document.getElementById('chat-avatar').innerText = c.ln[0];
+        document.getElementById('chat-avatar').style.backgroundImage = c.img ? `url(${c.img})` : 'none';
+        document.getElementById('chat-avatar').innerText = c.img ? '' : c.ln[0];
         document.getElementById('notes-area').innerHTML = c.notes.map(n => `<div class="note-bubble">${n.text}<span class="note-time">${n.time}</span></div>`).join('');
     };
 
@@ -178,22 +195,45 @@
 
     document.getElementById('btn-login').onclick = () => signInWithPopup(auth, prov);
     document.getElementById('btn-logout').onclick = () => { signOut(auth); curId = null; };
+    
     document.getElementById('btn-add').onclick = () => {
-        isNew = true; curId = null; 
+        isNew = true; curId = null; tempImg = "";
         document.getElementById('in-ln').value = ''; document.getElementById('in-fn').value = '';
-        document.getElementById('in-dob').value = ''; document.getElementById('chk-c').checked = false;
-        document.getElementById('chk-p').checked = false;
+        document.getElementById('in-tel').value = ''; document.getElementById('in-dob').value = '';
+        document.getElementById('chk-c').checked = false; document.getElementById('chk-p').checked = false;
+        document.getElementById('edit-img').style.backgroundImage = 'none'; document.getElementById('edit-img').innerText = '?';
         switchScreen('edit-screen');
     };
+
     document.getElementById('chat-back').onclick = () => { curId = null; switchScreen('list-screen'); };
     document.getElementById('edit-back').onclick = () => isNew ? switchScreen('list-screen') : switchScreen('chat-screen');
+
+    document.getElementById('file-in').onchange = e => {
+        const r = new FileReader();
+        r.onload = ev => {
+            tempImg = ev.target.result;
+            document.getElementById('edit-img').style.backgroundImage = `url(${tempImg})`;
+            document.getElementById('edit-img').innerText = '';
+        };
+        r.readAsDataURL(e.target.files[0]);
+    };
 
     document.getElementById('btn-save').onclick = async () => {
         const ln = document.getElementById('in-ln').value, fn = document.getElementById('in-fn').value;
         if(!ln || !fn) return;
-        const d = { ln, fn, dob: document.getElementById('in-dob').value, isPartner: document.getElementById('chk-p').checked, isClient: document.getElementById('chk-c').checked };
+        const d = { 
+            ln, fn, 
+            tel: document.getElementById('in-tel').value,
+            dob: document.getElementById('in-dob').value, 
+            isPartner: document.getElementById('chk-p').checked, 
+            isClient: document.getElementById('chk-c').checked,
+            img: tempImg
+        };
         if(isNew) { curId = Date.now(); clients.push({ id: curId, ...d, notes: [] }); }
-        else { const i = clients.findIndex(x => x.id == curId); clients[i] = {...clients[i], ...d}; }
+        else { 
+            const i = clients.findIndex(x => x.id == curId); 
+            clients[i] = {...clients[i], ...d, img: tempImg || clients[i].img}; 
+        }
         await upd(); switchScreen('chat-screen');
     };
 
