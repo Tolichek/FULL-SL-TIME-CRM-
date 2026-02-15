@@ -3,32 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>My Place</title>
+    <title>My Place CRM</title>
     <style>
         :root { --bg: #131314; --card: #1e1f20; --text: #e3e3e3; --acc: #8ab4f8; }
         body, html { margin: 0; padding: 0; height: 100%; background: var(--bg); color: var(--text); font-family: Roboto, sans-serif; overflow: hidden; }
         .screen { position: absolute; inset: 0; display: none; flex-direction: column; background: var(--bg); }
         .active { display: flex !important; }
+        
+        /* Login */
         #login-screen { align-items: center; justify-content: center; z-index: 100; }
         .google-btn { background: white; color: black; padding: 15px 30px; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+        
+        /* Main UI */
         .header { background: var(--card); padding: 10px 15px; display: flex; align-items: center; border-bottom: 1px solid #333; }
         .chat-list { flex: 1; overflow-y: auto; padding-bottom: 80px; }
         .chat-item { display: flex; padding: 12px 15px; align-items: center; border-bottom: 1px solid #282828; cursor: pointer; }
         .avatar { width: 40px; height: 40px; border-radius: 50%; background: #3c4043; margin-right: 12px; background-size: cover; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
+        
+        /* Chat */
         .notes-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background: #0b0b0b; }
         .note-bubble { background: #2b2c2f; padding: 10px; border-radius: 15px; max-width: 85%; align-self: flex-start; position: relative; }
         .note-time { font-size: 10px; opacity: 0.5; float: right; margin-top: 5px; margin-left: 8px; }
         .input-bar { background: var(--card); padding: 10px; display: flex; gap: 10px; border-top: 1px solid #333; }
         .input-bar textarea { flex: 1; border: none; background: #2b2c2f; padding: 10px; border-radius: 15px; color: white; resize: none; outline: none; }
-        .fab { position: fixed; bottom: 90px; right: 20px; width: 50px; height: 50px; background: var(--acc); border-radius: 15px; color: #131314; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; }
-        .nav-bar { position: fixed; bottom: 15px; left: 10px; right: 10px; background: var(--card); height: 60px; border-radius: 20px; display: flex; justify-content: space-around; align-items: center; border: 1px solid #333; }
-        .nav-item { color: #b4b4b4; font-size: 11px; cursor: pointer; }
+        
+        /* Nav */
+        .nav-bar { position: fixed; bottom: 15px; left: 10px; right: 10px; background: var(--card); height: 60px; border-radius: 20px; display: flex; justify-content: space-around; align-items: center; border: 1px solid #333; z-index: 1000; }
+        .nav-item { color: #b4b4b4; font-size: 11px; cursor: pointer; text-align: center; }
         .active-nav { color: var(--acc); }
+        
+        /* Edit */
         .profile-top { display: flex; align-items: center; gap: 15px; padding: 20px; }
         .edit-inputs { flex: 1; display: flex; flex-direction: column; gap: 8px; }
         .edit-inputs input { background: transparent; border: none; border-bottom: 1px solid #333; color: white; padding: 5px; outline: none; }
         .card-box { background: var(--card); margin: 10px; padding: 15px; border-radius: 12px; }
         .row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
+        
+        .fab { position: fixed; bottom: 90px; right: 20px; width: 50px; height: 50px; background: var(--acc); border-radius: 15px; color: #131314; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; z-index: 500; }
     </style>
 </head>
 <body>
@@ -39,13 +50,18 @@
     </div>
 
     <div id="list-screen" class="screen">
-        <div class="header"><b>My Place</b></div>
+        <div class="header"><b id="list-title">My Place</b></div>
         <div id="chat-list" class="chat-list"></div>
         <div class="fab" id="btn-add">+</div>
-        <div class="nav-bar">
-            <div class="nav-item active-nav" id="f-all">👤 Всі</div>
-            <div class="nav-item" id="f-client">🛒 Клієнти</div>
-            <div class="nav-item" id="f-partner">🤝 Команда</div>
+    </div>
+
+    <div id="profile-screen" class="screen">
+        <div class="header"><b>Профіль</b></div>
+        <div class="card-box" style="text-align: center;">
+            <div id="user-avatar" class="avatar" style="width:80px; height:80px; margin: 0 auto 15px;">?</div>
+            <h2 id="user-name">Гість</h2>
+            <p id="user-email" style="color: #888;"></p>
+            <button id="btn-logout" style="background: none; border: 1px solid #ff6b6b; color: #ff6b6b; padding: 8px 20px; border-radius: 10px; margin-top: 20px; cursor: pointer;">Вийти</button>
         </div>
     </div>
 
@@ -81,9 +97,16 @@
         </div>
     </div>
 
+    <div class="nav-bar" id="bottom-nav" style="display:none;">
+        <div class="nav-item active-nav" id="f-all">👤 Всі</div>
+        <div class="nav-item" id="f-client">🛒 Клієнти</div>
+        <div class="nav-item" id="f-partner">🤝 Команда</div>
+        <div class="nav-item" id="f-profile">🆔 Профіль</div>
+    </div>
+
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const cfg = {
@@ -103,8 +126,15 @@
     let clients = [], curId = null, isNew = false, filter = 'all';
 
     onAuthStateChanged(auth, u => {
-        if(u) { switchScreen('list-screen'); sub(u.uid); }
-        else { switchScreen('login-screen'); }
+        if(u) {
+            document.getElementById('user-name').innerText = u.displayName;
+            document.getElementById('user-email').innerText = u.email;
+            document.getElementById('user-avatar').style.backgroundImage = `url(${u.photoURL})`;
+            switchScreen('list-screen'); 
+            sub(u.uid); 
+        } else { 
+            switchScreen('login-screen'); 
+        }
     });
 
     const sub = uid => onSnapshot(doc(db, "users", uid), d => {
@@ -117,8 +147,11 @@
 
     const render = () => {
         const b = document.getElementById('chat-list'); b.innerHTML = '';
-        clients.filter(c => filter==='all' || (filter==='client' && c.isClient && !c.isPartner) || (filter==='partner' && c.isPartner))
-        .forEach(c => {
+        let f = clients;
+        if(filter === 'client') f = clients.filter(c => c.isClient && !c.isPartner);
+        if(filter === 'partner') f = clients.filter(c => c.isPartner);
+        
+        f.forEach(c => {
             const d = document.createElement('div'); d.className = 'chat-item';
             d.innerHTML = `<div class="avatar">${c.ln[0]}</div><b>${c.ln} ${c.fn}</b>`;
             d.onclick = () => { curId = c.id; updateChat(); switchScreen('chat-screen'); };
@@ -136,10 +169,11 @@
     const switchScreen = id => {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        document.getElementById('bottom-nav').style.display = id === 'list-screen' ? 'flex' : 'none';
+        document.getElementById('bottom-nav').style.display = (id === 'list-screen' || id === 'profile-screen') ? 'flex' : 'none';
     };
 
     document.getElementById('btn-login').onclick = () => signInWithPopup(auth, prov);
+    document.getElementById('btn-logout').onclick = () => signOut(auth);
     document.getElementById('btn-add').onclick = () => { isNew = true; curId = null; switchScreen('edit-screen'); };
     document.getElementById('chat-back').onclick = () => switchScreen('list-screen');
     document.getElementById('edit-back').onclick = () => isNew ? switchScreen('list-screen') : switchScreen('chat-screen');
@@ -162,9 +196,11 @@
     };
 
     document.querySelectorAll('.nav-item').forEach(n => n.onclick = () => {
-        filter = n.id.split('-')[1];
+        const type = n.id.split('-')[1];
+        if(type === 'profile') { switchScreen('profile-screen'); }
+        else { filter = type; switchScreen('list-screen'); render(); }
         document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active-nav'));
-        n.classList.add('active-nav'); render();
+        n.classList.add('active-nav');
     });
 </script>
 </body>
