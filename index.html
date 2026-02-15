@@ -9,44 +9,33 @@
         body, html { margin: 0; padding: 0; height: 100%; background: var(--bg); color: var(--text); font-family: Roboto, sans-serif; overflow: hidden; }
         .screen { position: absolute; inset: 0; display: none; flex-direction: column; background: var(--bg); }
         .active { display: flex !important; }
-        
         #login-screen { align-items: center; justify-content: center; z-index: 100; }
         .google-btn { background: white; color: black; padding: 15px 30px; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 10px; }
-        
         .header { background: var(--card); padding: 10px 15px; display: flex; align-items: center; border-bottom: 1px solid #333; }
         .chat-list { flex: 1; overflow-y: auto; padding-bottom: 80px; }
         .chat-item { display: flex; padding: 12px 15px; align-items: center; border-bottom: 1px solid #282828; cursor: pointer; }
         .avatar { width: 40px; height: 40px; border-radius: 50%; background: #3c4043; margin-right: 12px; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
-        
         .notes-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background: #0b0b0b; }
-        .note-bubble { background: #2b2c2f; padding: 10px; border-radius: 15px; max-width: 85%; align-self: flex-start; }
+        .note-bubble { background: #2b2c2f; padding: 10px; border-radius: 15px; max-width: 85%; align-self: flex-start; position: relative; }
         .note-time { font-size: 10px; opacity: 0.5; float: right; margin-top: 5px; margin-left: 8px; }
-        
         .input-bar { background: var(--card); padding: 10px; display: flex; gap: 10px; border-top: 1px solid #333; }
         .input-bar textarea { flex: 1; border: none; background: #2b2c2f; padding: 10px; border-radius: 15px; color: white; resize: none; outline: none; }
-        
         .nav-bar { position: fixed; bottom: 15px; left: 10px; right: 10px; background: var(--card); height: 60px; border-radius: 20px; display: flex; justify-content: space-around; align-items: center; border: 1px solid #333; z-index: 1000; }
         .nav-item { color: #b4b4b4; font-size: 11px; cursor: pointer; text-align: center; }
         .active-nav { color: var(--acc); }
-        
-        /* КАРТКА НАЛАШТУВАНЬ */
         .profile-top { display: flex; flex-direction: column; align-items: center; padding: 20px; }
         .edit-inputs { width: 100%; display: flex; flex-direction: column; gap: 15px; margin-top: 10px; }
         .edit-inputs label { color: var(--acc); font-size: 11px; font-weight: bold; }
         .edit-inputs input { background: transparent; border: none; border-bottom: 1px solid #333; color: white; padding: 8px 0; outline: none; font-size: 17px; width: 100%; }
-        
         .card-box { background: var(--card); margin: 10px; padding: 15px; border-radius: 12px; }
         .row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #282828; }
         .row:last-child { border: none; }
-
-        /* Switch */
         .switch { position: relative; width: 40px; height: 20px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; inset: 0; background: #444; border-radius: 20px; cursor: pointer; transition: .4s; }
         .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background: white; border-radius: 50%; transition: .4s; }
         input:checked + .slider { background: var(--acc); }
         input:checked + .slider:before { transform: translateX(20px); }
-        
         .fab { position: fixed; bottom: 90px; right: 20px; width: 50px; height: 50px; background: var(--acc); border-radius: 15px; color: #131314; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; z-index: 500; }
     </style>
 </head>
@@ -94,9 +83,8 @@
         </div>
         <div style="overflow-y: auto; flex: 1;">
             <div class="profile-top">
-                <div id="edit-img" class="avatar" style="width:100px; height:100px; margin:0; cursor:pointer;" onclick="document.getElementById('file-in').click()">?</div>
+                <div id="edit-img" class="avatar" style="width:100px; height:100px; margin:0; cursor:pointer;">?</div>
                 <input type="file" id="file-in" style="display:none" accept="image/*">
-                
                 <div class="edit-inputs">
                     <label>ПРІЗВИЩЕ</label>
                     <input type="text" id="in-ln" placeholder="Прізвище">
@@ -149,24 +137,19 @@
 
     let clients = [], curId = null, isNew = false, filter = 'all', tempImg = "";
 
-    onAuthStateChanged(auth, u => {
-        if(u) {
-            document.getElementById('user-name').innerText = u.displayName;
-            document.getElementById('user-email').innerText = u.email;
-            document.getElementById('user-avatar').style.backgroundImage = `url(${u.photoURL})`;
-            switchScreen('list-screen'); sub(u.uid); 
-        } else { switchScreen('login-screen'); }
-    });
+    window.switchScreen = id => {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.getElementById('bottom-nav').style.display = (id === 'list-screen' || id === 'profile-screen') ? 'flex' : 'none';
+    };
 
-    const sub = uid => onSnapshot(doc(db, "users", uid), d => {
-        clients = d.exists() ? d.data().clients : [];
-        render();
-        if(curId) updateChat();
-    });
+    const upd = async () => {
+        if (auth.currentUser) {
+            await setDoc(doc(db, "users", auth.currentUser.uid), { clients });
+        }
+    };
 
-    const upd = async () => await setDoc(doc(db, "users", auth.currentUser.uid), { clients });
-
-    const render = () => {
+    window.render = () => {
         const b = document.getElementById('chat-list'); b.innerHTML = '';
         let f = clients;
         if(filter === 'client') f = clients.filter(c => c.isClient && !c.isPartner);
@@ -174,24 +157,33 @@
         f.forEach(c => {
             const d = document.createElement('div'); d.className = 'chat-item';
             d.innerHTML = `<div class="avatar" style="${c.img ? `background-image:url(${c.img})` : ''}">${c.img ? '' : c.ln[0]}</div><b>${c.ln} ${c.fn}</b>`;
-            d.onclick = () => { curId = c.id; updateChat(); switchScreen('chat-screen'); };
+            d.onclick = () => { curId = c.id; window.updateChat(); window.switchScreen('chat-screen'); };
             b.appendChild(d);
         });
     };
 
-    const updateChat = () => {
+    window.updateChat = () => {
         const c = clients.find(x => x.id == curId); if(!c) return;
         document.getElementById('chat-name').innerText = `${c.ln} ${c.fn}`;
         document.getElementById('chat-avatar').style.backgroundImage = c.img ? `url(${c.img})` : 'none';
         document.getElementById('chat-avatar').innerText = c.img ? '' : c.ln[0];
-        document.getElementById('notes-area').innerHTML = c.notes.map(n => `<div class="note-bubble">${n.text}<span class="note-time">${n.time}</span></div>`).join('');
+        document.getElementById('notes-area').innerHTML = (c.notes || []).map(n => `<div class="note-bubble">${n.text}<span class="note-time">${n.time}</span></div>`).join('');
+        document.getElementById('notes-area').scrollTop = document.getElementById('notes-area').scrollHeight;
     };
 
-    const switchScreen = id => {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        document.getElementById('bottom-nav').style.display = (id === 'list-screen' || id === 'profile-screen') ? 'flex' : 'none';
-    };
+    onAuthStateChanged(auth, u => {
+        if(u) {
+            document.getElementById('user-name').innerText = u.displayName;
+            document.getElementById('user-email').innerText = u.email;
+            document.getElementById('user-avatar').style.backgroundImage = `url(${u.photoURL})`;
+            window.switchScreen('list-screen');
+            onSnapshot(doc(db, "users", u.uid), d => {
+                clients = d.exists() ? d.data().clients : [];
+                window.render();
+                if(curId) window.updateChat();
+            });
+        } else { window.switchScreen('login-screen'); }
+    });
 
     document.getElementById('btn-login').onclick = () => signInWithPopup(auth, prov);
     document.getElementById('btn-logout').onclick = () => { signOut(auth); curId = null; };
@@ -202,11 +194,12 @@
         document.getElementById('in-tel').value = ''; document.getElementById('in-dob').value = '';
         document.getElementById('chk-c').checked = false; document.getElementById('chk-p').checked = false;
         document.getElementById('edit-img').style.backgroundImage = 'none'; document.getElementById('edit-img').innerText = '?';
-        switchScreen('edit-screen');
+        window.switchScreen('edit-screen');
     };
 
-    document.getElementById('chat-back').onclick = () => { curId = null; switchScreen('list-screen'); };
-    document.getElementById('edit-back').onclick = () => isNew ? switchScreen('list-screen') : switchScreen('chat-screen');
+    document.getElementById('chat-back').onclick = () => { curId = null; window.switchScreen('list-screen'); };
+    document.getElementById('edit-back').onclick = () => isNew ? window.switchScreen('list-screen') : window.switchScreen('chat-screen');
+    document.getElementById('edit-img').onclick = () => document.getElementById('file-in').click();
 
     document.getElementById('file-in').onchange = e => {
         const r = new FileReader();
@@ -220,7 +213,7 @@
 
     document.getElementById('btn-save').onclick = async () => {
         const ln = document.getElementById('in-ln').value, fn = document.getElementById('in-fn').value;
-        if(!ln || !fn) return;
+        if(!ln || !fn) { alert("Заповніть Прізвище та Ім'я"); return; }
         const d = { 
             ln, fn, 
             tel: document.getElementById('in-tel').value,
@@ -229,26 +222,31 @@
             isClient: document.getElementById('chk-c').checked,
             img: tempImg
         };
-        if(isNew) { curId = Date.now(); clients.push({ id: curId, ...d, notes: [] }); }
-        else { 
+        if(isNew) { 
+            curId = Date.now(); 
+            clients.push({ id: curId, ...d, notes: [] }); 
+        } else { 
             const i = clients.findIndex(x => x.id == curId); 
             clients[i] = {...clients[i], ...d, img: tempImg || clients[i].img}; 
         }
-        await upd(); switchScreen('chat-screen');
+        await upd();
+        window.updateChat();
+        window.switchScreen('chat-screen');
     };
 
     document.getElementById('btn-send').onclick = async () => {
-        const i = document.getElementById('note-input'); if(!i.value) return;
+        const i = document.getElementById('note-input'); if(!i.value.trim()) return;
         const c = clients.find(x => x.id == curId);
         const now = new Date();
         c.notes.push({ text: i.value, time: now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes() });
         i.value = ''; await upd();
+        window.updateChat();
     };
 
     document.querySelectorAll('.nav-item').forEach(n => n.onclick = () => {
         const type = n.id.split('-')[1];
-        if(type === 'profile') { switchScreen('profile-screen'); }
-        else { filter = type; switchScreen('list-screen'); render(); }
+        if(type === 'profile') { window.switchScreen('profile-screen'); }
+        else { filter = type; window.switchScreen('list-screen'); window.render(); }
         document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active-nav'));
         n.classList.add('active-nav');
     });
