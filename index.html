@@ -16,7 +16,7 @@
         .chat-item { display: flex; padding: 12px 15px; align-items: center; border-bottom: 1px solid #282828; cursor: pointer; }
         .avatar { width: 40px; height: 40px; border-radius: 50%; background: #3c4043; margin-right: 12px; background-size: cover; background-position: center; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
         .notes-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background: #0b0b0b; }
-        .note-bubble { background: #2b2c2f; padding: 10px; border-radius: 15px; max-width: 85%; align-self: flex-start; position: relative; }
+        .note-bubble { background: #2b2c2f; padding: 10px; border-radius: 15px; max-width: 85%; align-self: flex-start; }
         .note-time { font-size: 10px; opacity: 0.5; float: right; margin-top: 5px; margin-left: 8px; }
         .input-bar { background: var(--card); padding: 10px; display: flex; gap: 10px; border-top: 1px solid #333; }
         .input-bar textarea { flex: 1; border: none; background: #2b2c2f; padding: 10px; border-radius: 15px; color: white; resize: none; outline: none; }
@@ -143,9 +143,12 @@
         document.getElementById('bottom-nav').style.display = (id === 'list-screen' || id === 'profile-screen') ? 'flex' : 'none';
     };
 
+    // Жорстке збереження в Firebase
     const upd = async () => {
         if (auth.currentUser) {
-            await setDoc(doc(db, "users", auth.currentUser.uid), { clients });
+            try {
+                await setDoc(doc(db, "users", auth.currentUser.uid), { clients });
+            } catch (e) { console.error("Firebase Save Error:", e); }
         }
     };
 
@@ -156,7 +159,8 @@
         if(filter === 'partner') f = clients.filter(c => c.isPartner);
         f.forEach(c => {
             const d = document.createElement('div'); d.className = 'chat-item';
-            d.innerHTML = `<div class="avatar" style="${c.img ? `background-image:url(${c.img})` : ''}">${c.img ? '' : c.ln[0]}</div><b>${c.ln} ${c.fn}</b>`;
+            const initial = (c.ln && c.ln[0]) ? c.ln[0] : (c.fn && c.fn[0] ? c.fn[0] : '?');
+            d.innerHTML = `<div class="avatar" style="${c.img ? `background-image:url(${c.img})` : ''}">${c.img ? '' : initial}</div><b>${c.ln || ''} ${c.fn || ''}</b>`;
             d.onclick = () => { curId = c.id; window.updateChat(); window.switchScreen('chat-screen'); };
             b.appendChild(d);
         });
@@ -164,9 +168,10 @@
 
     window.updateChat = () => {
         const c = clients.find(x => x.id == curId); if(!c) return;
-        document.getElementById('chat-name').innerText = `${c.ln} ${c.fn}`;
+        document.getElementById('chat-name').innerText = `${c.ln || ''} ${c.fn || ''}`;
         document.getElementById('chat-avatar').style.backgroundImage = c.img ? `url(${c.img})` : 'none';
-        document.getElementById('chat-avatar').innerText = c.img ? '' : c.ln[0];
+        const initial = (c.ln && c.ln[0]) ? c.ln[0] : (c.fn && c.fn[0] ? c.fn[0] : '?');
+        document.getElementById('chat-avatar').innerText = c.img ? '' : initial;
         document.getElementById('notes-area').innerHTML = (c.notes || []).map(n => `<div class="note-bubble">${n.text}<span class="note-time">${n.time}</span></div>`).join('');
         document.getElementById('notes-area').scrollTop = document.getElementById('notes-area').scrollHeight;
     };
@@ -178,15 +183,17 @@
             document.getElementById('user-avatar').style.backgroundImage = `url(${u.photoURL})`;
             window.switchScreen('list-screen');
             onSnapshot(doc(db, "users", u.uid), d => {
-                clients = d.exists() ? d.data().clients : [];
-                window.render();
-                if(curId) window.updateChat();
+                if(d.exists()) {
+                    clients = d.data().clients || [];
+                    window.render();
+                    if(curId) window.updateChat();
+                }
             });
         } else { window.switchScreen('login-screen'); }
     });
 
     document.getElementById('btn-login').onclick = () => signInWithPopup(auth, prov);
-    document.getElementById('btn-logout').onclick = () => { signOut(auth); curId = null; };
+    document.getElementById('btn-logout').onclick = () => { signOut(auth); curId = null; clients = []; };
     
     document.getElementById('btn-add').onclick = () => {
         isNew = true; curId = null; tempImg = "";
@@ -211,25 +218,33 @@
         r.readAsDataURL(e.target.files[0]);
     };
 
+    // ГОТОВО - Зберігає незалежно від заповнених полів
     document.getElementById('btn-save').onclick = async () => {
-        const ln = document.getElementById('in-ln').value, fn = document.getElementById('in-fn').value;
-        if(!ln || !fn) { alert("Заповніть Прізвище та Ім'я"); return; }
-        const d = { 
-            ln, fn, 
-            tel: document.getElementById('in-tel').value,
-            dob: document.getElementById('in-dob').value, 
-            isPartner: document.getElementById('chk-p').checked, 
-            isClient: document.getElementById('chk-c').checked,
-            img: tempImg
-        };
-        if(isNew) { 
-            curId = Date.now(); 
-            clients.push({ id: curId, ...d, notes: [] }); 
-        } else { 
-            const i = clients.findIndex(x => x.id == curId); 
-            clients[i] = {...clients[i], ...d, img: tempImg || clients[i].img}; 
+        const ln = document.getElementById('in-ln').value;
+        const fn = document.getElementById('in-fn').value;
+        const tel = document.getElementById('in-tel').value;
+        const dob = document.getElementById('in-dob').value;
+        const isPartner = document.getElementById('chk-p').checked;
+        const isClient = document.getElementById('chk-c').checked;
+
+        if (isNew) {
+            const newId = Date.now();
+            const newClient = { id: newId, ln, fn, tel, dob, isPartner, isClient, img: tempImg, notes: [] };
+            clients.push(newClient);
+            curId = newId;
+        } else {
+            const i = clients.findIndex(x => x.id == curId);
+            if (i !== -1) {
+                clients[i] = { 
+                    ...clients[i], 
+                    ln, fn, tel, dob, isPartner, isClient, 
+                    img: tempImg || clients[i].img 
+                };
+            }
         }
+        
         await upd();
+        window.render(); // Оновити список негайно
         window.updateChat();
         window.switchScreen('chat-screen');
     };
@@ -237,9 +252,13 @@
     document.getElementById('btn-send').onclick = async () => {
         const i = document.getElementById('note-input'); if(!i.value.trim()) return;
         const c = clients.find(x => x.id == curId);
+        if(!c) return;
         const now = new Date();
-        c.notes.push({ text: i.value, time: now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes() });
-        i.value = ''; await upd();
+        const time = now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes();
+        if(!c.notes) c.notes = [];
+        c.notes.push({ text: i.value, time: time });
+        i.value = ''; 
+        await upd();
         window.updateChat();
     };
 
