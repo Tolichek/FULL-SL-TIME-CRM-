@@ -2,223 +2,282 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Telegram CRM Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Telegram CRM Pure Edition</title>
     <style>
         :root {
-            --tg-blue: #0088cc;
+            --tg-blue: #5085a8;
             --tg-light-blue: #3390ec;
-            --tg-bg: #f4f4f5;
-            --tg-chat-bg: #e7ebf0;
-            --tg-white: #ffffff;
+            --tg-bg: #ffffff;
+            --tg-chat-bg: #9ab4c1;
             --tg-gray: #707579;
+            --tg-white: #ffffff;
         }
 
-        body { font-family: Roboto, -apple-system, sans-serif; margin: 0; background: var(--tg-white); height: 100vh; display: flex; overflow: hidden; }
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, "Roboto", sans-serif;
+            background-color: var(--tg-bg);
+            overflow: hidden;
+        }
 
-        /* Left Side - Contacts */
-        #left-panel { width: 400px; border-right: 1px solid #dfe1e5; display: flex; flex-direction: column; background: white; z-index: 10; }
-        .top-bar { padding: 8px 16px; display: flex; align-items: center; gap: 20px; }
-        .burger { cursor: pointer; font-size: 24px; color: var(--tg-gray); }
-        .search-box { flex: 1; background: #f4f4f5; border-radius: 20px; padding: 5px 15px; display: flex; align-items: center; }
-        .search-box input { border: none; background: transparent; outline: none; width: 100%; padding: 5px; font-size: 15px; }
+        /* Екрани */
+        .screen {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: none;
+            flex-direction: column;
+            background: var(--tg-white);
+        }
 
-        .partners-row { display: flex; overflow-x: auto; padding: 10px; gap: 12px; border-bottom: 1px solid #eee; }
-        .partner { text-align: center; min-width: 60px; cursor: pointer; }
-        .partner .av { width: 54px; height: 54px; border-radius: 50%; border: 2px solid var(--tg-light-blue); margin: 0 auto; background-size: cover; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; background-color: #517da2; }
+        .active { display: flex; }
 
-        .chats-list { flex: 1; overflow-y: auto; }
-        .chat-item { display: flex; padding: 10px 16px; gap: 15px; cursor: pointer; transition: 0.2s; }
-        .chat-item:hover { background: #f4f4f5; }
-        .chat-item.active { background: var(--tg-light-blue); color: white; }
-        .chat-item .av { width: 54px; height: 54px; border-radius: 50%; background-color: #517da2; background-size: cover; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 20px; }
-        .chat-info { flex: 1; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; }
-        .chat-name { font-weight: 500; font-size: 16px; margin-bottom: 4px; display: flex; justify-content: space-between; }
-        .chat-preview { font-size: 14px; color: var(--tg-gray); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .active .chat-preview { color: #e0e0e0; }
+        /* Хедер */
+        .header {
+            background: var(--tg-blue);
+            color: white;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            font-size: 20px;
+            font-weight: 500;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
 
-        /* Right Side - Chat Window */
-        #right-panel { flex: 1; background: var(--tg-chat-bg); display: flex; flex-direction: column; position: relative; }
-        .chat-header { height: 60px; background: white; border-bottom: 1px solid #dfe1e5; display: flex; align-items: center; padding: 0 20px; cursor: pointer; gap: 15px; }
-        .messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-        .bubble { background: white; padding: 8px 12px; border-radius: 12px; max-width: 70%; align-self: flex-start; box-shadow: 0 1px 2px rgba(0,0,0,0.1); font-size: 15px; }
-        
-        .chat-input-area { background: white; padding: 10px 20px; display: flex; align-items: center; gap: 15px; }
-        .chat-input-area input { flex: 1; border: none; outline: none; font-size: 16px; padding: 10px; }
+        .back-btn { cursor: pointer; font-size: 24px; }
 
-        /* Profile Modal (Full Screen) */
-        #profile-modal { position: fixed; inset: 0; background: #f4f4f5; z-index: 100; display: none; flex-direction: column; }
-        .modal-header { background: white; padding: 10px 20px; display: flex; align-items: center; gap: 30px; border-bottom: 1px solid #ddd; }
-        .profile-body { max-width: 600px; margin: 0 auto; width: 100%; padding: 20px; overflow-y: auto; }
-        .card { background: white; border-radius: 10px; padding: 20px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .card label { color: var(--tg-light-blue); font-weight: bold; font-size: 12px; display: block; margin-bottom: 5px; }
-        .card input { width: 100%; border: none; border-bottom: 1px solid #eee; padding: 8px 0; font-size: 16px; outline: none; margin-bottom: 15px; }
+        /* Список чатів */
+        .partners-strip {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px;
+            gap: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            background: #fafafa;
+        }
+        .partners-strip::-webkit-scrollbar { display: none; }
 
-        .fab { position: fixed; bottom: 30px; left: 340px; width: 56px; height: 56px; background: var(--tg-light-blue); border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 11; }
+        .chat-item {
+            display: flex;
+            padding: 10px 15px;
+            align-items: center;
+            border-bottom: 0.5px solid #f0f0f0;
+        }
+
+        .avatar {
+            width: 54px; height: 54px;
+            border-radius: 50%;
+            background: #517da2;
+            color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; font-weight: bold;
+            margin-right: 15px;
+            background-size: cover;
+        }
+
+        .chat-info { flex: 1; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .chat-name-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .lvl-badge { color: var(--tg-light-blue); font-weight: bold; font-size: 13px; }
+
+        /* Вікно чату */
+        #chat-screen { background: var(--tg-chat-bg); }
+        .chat-header { background: white; color: black; }
+        .msg-container { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 8px; }
+        .bubble {
+            background: white; padding: 8px 12px;
+            border-radius: 12px; max-width: 80%;
+            align-self: flex-start; box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+        }
+        .input-bar { background: white; padding: 10px; display: flex; gap: 10px; align-items: center; }
+        .input-bar input { flex: 1; border: none; background: #f1f1f1; padding: 10px 15px; border-radius: 25px; outline: none; }
+
+        /* Анкета (Профіль) */
+        .profile-section { background: #f4f4f5; flex: 1; overflow-y: auto; }
+        .profile-card { background: white; padding: 20px; text-align: center; margin-bottom: 12px; }
+        .big-av { width: 100px; height: 100px; border-radius: 50%; background: #517da2; margin: 0 auto 15px; background-size: cover; cursor: pointer; }
+        .info-group { background: white; margin-bottom: 12px; padding: 5px 15px; }
+        .field { border-bottom: 1px solid #f0f0f0; padding: 10px 0; }
+        .field:last-child { border-bottom: none; }
+        .field label { color: var(--tg-light-blue); font-size: 12px; font-weight: bold; text-transform: uppercase; }
+        .field input { width: 100%; border: none; font-size: 16px; outline: none; padding-top: 5px; }
+
+        /* Floating Button */
+        .fab {
+            position: fixed; bottom: 25px; right: 25px;
+            width: 56px; height: 56px; background: var(--tg-light-blue);
+            border-radius: 50%; color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 5;
+        }
     </style>
 </head>
 <body>
 
-<div id="left-panel">
-    <div class="top-bar">
-        <div class="burger">☰</div>
-        <div class="search-box">
-            <input type="text" placeholder="Пошук" id="search" oninput="filterList()">
-        </div>
+    <div id="list-screen" class="screen active">
+        <div class="header">Telegram MLM</div>
+        <div class="partners-strip" id="partners-list"></div>
+        <div id="main-chats" style="flex:1; overflow-y:auto;"></div>
+        <div class="fab" onclick="createNew()">✎</div>
     </div>
-    <div class="partners-row" id="partners"></div>
-    <div class="chats-list" id="chats"></div>
-</div>
 
-<div id="right-panel">
-    <div class="chat-header" onclick="openProfile()">
-        <div id="h-av" class="partner" style="min-width:40px;"><div class="av" style="width:40px; height:40px;">?</div></div>
-        <div style="flex:1">
-            <div id="h-name" style="font-weight:bold">Оберіть чат</div>
-            <div id="h-status" style="font-size:13px; color:var(--tg-gray)">натисніть для профілю</div>
+    <div id="chat-screen" class="screen">
+        <div class="header chat-header" onclick="goToProfile()">
+            <div class="back-btn" onclick="event.stopPropagation(); goBack()">←</div>
+            <div id="chat-av-small" class="avatar" style="width:40px; height:40px; margin:0;"></div>
+            <div id="chat-title" style="font-weight: bold; font-size: 18px;">Ім'я</div>
+        </div>
+        <div class="msg-container" id="msg-box"></div>
+        <div class="input-bar">
+            <input type="text" id="note-input" placeholder="Написати замітку...">
+            <div onclick="addNote()" style="color: var(--tg-light-blue); font-weight: bold; padding: 5px;">OK</div>
         </div>
     </div>
-    <div class="messages" id="msgs"></div>
-    <div class="chat-input-area">
-        <input type="text" id="msg-in" placeholder="Написати замітку...">
-        <div onclick="sendMsg()" style="color:var(--tg-light-blue); font-weight:bold; cursor:pointer">ВІДПРАВИТИ</div>
-    </div>
-</div>
 
-<div id="profile-modal">
-    <div class="modal-header">
-        <div style="font-size:24px; cursor:pointer" onclick="closeProfile()">←</div>
-        <div style="font-weight:bold; font-size:20px;">Картка клієнта</div>
-        <div style="margin-left:auto; color:var(--tg-light-blue); font-weight:bold; cursor:pointer" onclick="saveData()">ГОТОВО</div>
+    <div id="profile-screen" class="screen">
+        <div class="header" style="background: white; color: black; border-bottom: 1px solid #ddd;">
+            <div class="back-btn" onclick="goBackToChat()">←</div>
+            <div style="flex:1; font-weight: bold;">Редагувати</div>
+            <div onclick="saveAndClose()" style="color: var(--tg-light-blue); font-weight: bold; font-size: 16px;">ГОТОВО</div>
+        </div>
+        <div class="profile-section">
+            <div class="profile-card">
+                <div id="prof-av" class="big-av" onclick="document.getElementById('file-in').click()"></div>
+                <input type="file" id="file-in" style="display:none" onchange="uploadPhoto(this)">
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <input type="text" id="p-ln" placeholder="Прізвище" style="font-size:20px; font-weight:bold; border:none; text-align:center; outline:none;">
+                    <input type="text" id="p-fn" placeholder="Ім'я" style="font-size:18px; border:none; text-align:center; outline:none;">
+                </div>
+            </div>
+            <div class="info-group">
+                <div class="field"><label>По-батькові</label><input type="text" id="p-mn"></div>
+                <div class="field"><label>Дата народження</label><input type="date" id="p-dob"></div>
+                <div class="field"><label>Рівень</label><input type="number" id="p-lvl"></div>
+            </div>
+            <div class="info-group">
+                <div class="field"><label>№ Консультанта</label><input type="text" id="p-cid"></div>
+                <div class="field"><label>№ Директорії</label><input type="text" id="p-did"></div>
+            </div>
+        </div>
     </div>
-    <div class="profile-body">
-        <div class="card" style="text-align:center">
-            <div id="p-av" class="av" style="width:100px; height:100px; margin:0 auto; font-size:40px;">?</div>
-            <input type="file" id="f-in" style="display:none" onchange="uploadImg(this)">
-            <button onclick="document.getElementById('f-in').click()" style="border:none; background:none; color:var(--tg-light-blue); margin-top:10px;">Змінити фото</button>
-        </div>
-        <div class="card">
-            <label>Прізвище</label><input type="text" id="ln">
-            <label>Ім'я</label><input type="text" id="fn">
-            <label>По-батькові</label><input type="text" id="mn">
-            <label>Дата народження</label><input type="date" id="dob">
-        </div>
-        <div class="card">
-            <label>Рівень (LVL)</label><input type="number" id="lvl">
-            <label>№ Консультанта</label><input type="text" id="cid">
-            <label>№ Директорії</label><input type="text" id="did">
-        </div>
-    </div>
-</div>
-
-<div class="fab" onclick="newClient()">✎</div>
 
 <script>
-    let clients = JSON.parse(localStorage.getItem('tg_crm_v3')) || [];
-    let curId = null;
+    let clients = JSON.parse(localStorage.getItem('mlm_final_v1')) || [];
+    let currentId = null;
 
-    function render() {
-        const cBox = document.getElementById('chats');
-        const pBox = document.getElementById('partners');
-        cBox.innerHTML = ''; pBox.innerHTML = '';
+    function renderList() {
+        const list = document.getElementById('main-chats');
+        const pList = document.getElementById('partners-list');
+        list.innerHTML = ''; pList.innerHTML = '';
 
+        // Stories (Partners Lvl 1)
         clients.filter(c => c.lvl == 1).forEach(c => {
-            pBox.innerHTML += `<div class="partner" onclick="select(${c.id})"><div class="av" style="${c.img?`background-image:url(${c.img})`:''}">${c.img?'':c.ln[0]}</div><div style="font-size:11px; margin-top:5px;">${c.ln}</div></div>`;
+            pList.innerHTML += `
+                <div style="text-align:center; min-width:65px;" onclick="openChat(${c.id})">
+                    <div class="avatar" style="margin:0 auto; border:2px solid var(--tg-light-blue); padding:2px; ${c.img ? `background-image:url(${c.img})` : ''}">${c.img ? '' : c.ln[0]}</div>
+                    <div style="font-size:11px; margin-top:5px;">${c.ln}</div>
+                </div>`;
         });
 
+        // Chat rows
         clients.forEach(c => {
-            cBox.innerHTML += `
-                <div class="chat-item ${curId==c.id?'active':''}" onclick="select(${c.id})">
-                    <div class="av" style="${c.img?`background-image:url(${c.img})`:''}">${c.img?'':c.ln[0]}</div>
+            list.innerHTML += `
+                <div class="chat-item" onclick="openChat(${c.id})">
+                    <div class="avatar" style="${c.img ? `background-image:url(${c.img})` : ''}">${c.img ? '' : c.ln[0]}</div>
                     <div class="chat-info">
-                        <div class="chat-name"><span>${c.ln} ${c.fn}</span> <span style="font-size:12px; opacity:0.7">Lvl ${c.lvl}</span></div>
-                        <div class="chat-preview">${c.notes[c.notes.length-1] || 'Немає записів'}</div>
+                        <div class="chat-name-row">
+                            <span style="font-weight:600;">${c.ln} ${c.fn}</span>
+                            <span class="lvl-badge">Lvl ${c.lvl}</span>
+                        </div>
+                        <div style="color:var(--tg-gray); font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                            ${c.notes[c.notes.length-1] || 'Немає записів'}
+                        </div>
                     </div>
                 </div>`;
         });
     }
 
-    function select(id) {
-        curId = id;
+    function openChat(id) {
+        currentId = id;
         const c = clients.find(x => x.id == id);
-        document.getElementById('h-name').innerText = `${c.ln} ${c.fn}`;
-        document.getElementById('h-av').innerHTML = `<div class="av" style="width:40px; height:40px; ${c.img?`background-image:url(${c.img})`:''}">${c.img?'':c.ln[0]}</div>`;
-        const mBox = document.getElementById('msgs');
-        mBox.innerHTML = c.notes.map(n => `<div class="bubble">${n}</div>`).join('');
-        mBox.scrollTop = mBox.scrollHeight;
-        render();
+        document.getElementById('chat-title').innerText = `${c.ln} ${c.fn}`;
+        document.getElementById('chat-av-small').style.backgroundImage = c.img ? `url(${c.img})` : 'none';
+        document.getElementById('chat-av-small').innerText = c.img ? '' : c.ln[0];
+        
+        document.getElementById('msg-box').innerHTML = c.notes.map(n => `<div class="bubble">${n}</div>`).join('');
+        switchScreen('chat-screen');
     }
 
-    function sendMsg() {
-        const inp = document.getElementById('msg-in');
-        if(!inp.value || !curId) return;
-        const c = clients.find(x => x.id == curId);
+    function addNote() {
+        const inp = document.getElementById('note-input');
+        if (!inp.value) return;
+        const c = clients.find(x => x.id == currentId);
         c.notes.push(inp.value);
         inp.value = '';
         save();
-        select(curId);
+        openChat(currentId);
     }
 
-    function openProfile() { if(curId) document.getElementById('profile-modal').style.display = 'flex'; fillProfile(); }
-    function closeProfile() { document.getElementById('profile-modal').style.display = 'none'; }
-
-    function fillProfile() {
-        const c = clients.find(x => x.id == curId);
-        document.getElementById('ln').value = c.ln;
-        document.getElementById('fn').value = c.fn;
-        document.getElementById('mn').value = c.mn;
-        document.getElementById('dob').value = c.dob;
-        document.getElementById('lvl').value = c.lvl;
-        document.getElementById('cid').value = c.cid;
-        document.getElementById('did').value = c.did;
-        document.getElementById('p-av').style.backgroundImage = c.img ? `url(${c.img})` : 'none';
-        document.getElementById('p-av').innerText = c.img ? '' : c.ln[0];
+    function goToProfile() {
+        const c = clients.find(x => x.id == currentId);
+        document.getElementById('p-ln').value = c.ln;
+        document.getElementById('p-fn').value = c.fn;
+        document.getElementById('p-mn').value = c.mn;
+        document.getElementById('p-dob').value = c.dob;
+        document.getElementById('p-lvl').value = c.lvl;
+        document.getElementById('p-cid').value = c.cid;
+        document.getElementById('p-did').value = c.did;
+        document.getElementById('prof-av').style.backgroundImage = c.img ? `url(${c.img})` : 'none';
+        document.getElementById('prof-av').innerText = c.img ? '' : c.ln[0];
+        switchScreen('profile-screen');
     }
 
-    function saveData() {
-        const c = clients.find(x => x.id == curId);
-        c.ln = document.getElementById('ln').value;
-        c.fn = document.getElementById('fn').value;
-        c.mn = document.getElementById('mn').value;
-        c.dob = document.getElementById('dob').value;
-        c.lvl = document.getElementById('lvl').value;
-        c.cid = document.getElementById('cid').value;
-        c.did = document.getElementById('did').value;
-        c.img = document.getElementById('p-av').style.backgroundImage.slice(5, -2).replace(/"/g, "");
+    function saveAndClose() {
+        const c = clients.find(x => x.id == currentId);
+        c.ln = document.getElementById('p-ln').value;
+        c.fn = document.getElementById('p-fn').value;
+        c.mn = document.getElementById('p-mn').value;
+        c.dob = document.getElementById('p-dob').value;
+        c.lvl = document.getElementById('p-lvl').value;
+        c.cid = document.getElementById('p-cid').value;
+        c.did = document.getElementById('p-did').value;
+        c.img = document.getElementById('prof-av').style.backgroundImage.slice(5, -2).replace(/"/g, "");
         save();
-        closeProfile();
-        select(curId);
+        openChat(currentId);
     }
 
-    function newClient() {
+    function createNew() {
         const id = Date.now();
         clients.push({id, ln:'Новий', fn:'Клієнт', mn:'', dob:'', lvl:1, cid:'', did:'', img:'', notes:[]});
-        curId = id;
-        save();
-        render();
-        openProfile();
+        currentId = id;
+        goToProfile();
     }
 
-    function uploadImg(input) {
+    function switchScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    function goBack() { renderList(); switchScreen('list-screen'); }
+    function goBackToChat() { switchScreen('chat-screen'); }
+
+    function uploadPhoto(input) {
         if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = e => {
-                document.getElementById('p-av').style.backgroundImage = `url(${e.target.result})`;
-                document.getElementById('p-av').innerText = '';
+            const r = new FileReader();
+            r.onload = e => {
+                document.getElementById('prof-av').style.backgroundImage = `url(${e.target.result})`;
+                document.getElementById('prof-av').innerText = '';
             };
-            reader.readAsDataURL(input.files[0]);
+            r.readAsDataURL(input.files[0]);
         }
     }
 
-    function filterList() {
-        const q = document.getElementById('search').value.toLowerCase();
-        const filtered = clients.filter(c => `${c.ln} ${c.fn}`.toLowerCase().includes(q));
-        // Тут логіка перерендерингу тільки фільтрованих (для швидкості)
-    }
+    function save() { localStorage.setItem('mlm_final_v1', JSON.stringify(clients)); }
 
-    function save() { localStorage.setItem('tg_crm_v3', JSON.stringify(clients)); }
-
-    render();
+    renderList();
 </script>
 </body>
 </html>
