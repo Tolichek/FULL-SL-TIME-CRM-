@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MLM CRM Pro v4.1</title>
+    <title>My Place MLM</title>
     <style>
         :root {
             --bg-dark: #131314;
@@ -27,24 +27,22 @@
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: none; flex-direction: column; background: var(--bg-dark);
-            padding-bottom: 80px;
-            box-sizing: border-box;
+            padding-bottom: 80px; box-sizing: border-box;
         }
         .active { display: flex; }
 
         .header {
             background: var(--bg-card); padding: 12px 16px; 
-            display: flex; align-items: center; justify-content: space-between;
-            border-bottom: 1px solid #333;
+            display: flex; align-items: center; border-bottom: 1px solid #333;
         }
 
+        /* Список чатів */
         .chat-list { flex: 1; overflow-y: auto; }
         .chat-item {
             display: flex; padding: 12px 16px; align-items: center;
             border-bottom: 1px solid #282828; cursor: pointer;
         }
 
-        /* Аватар */
         .avatar {
             width: 48px; height: 48px; border-radius: 50%;
             background: #3c4043; color: white;
@@ -53,64 +51,71 @@
             background-size: cover; background-position: center;
         }
 
-        /* Навігація */
+        /* Панель навігації */
         .nav-bar {
             position: fixed; bottom: 15px; left: 10px; right: 10px;
             background: var(--bg-card); height: 65px; border-radius: 20px;
             display: flex; justify-content: space-around; align-items: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.6); z-index: 1000;
-            border: 1px solid #333;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6); z-index: 1000; border: 1px solid #333;
         }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-gray); font-size: 11px; gap: 4px; }
         .nav-item.active { color: var(--accent); }
 
-        /* Картка редагування - ТУТ ЗМІНИ */
-        .profile-top-card {
-            display: flex; align-items: center; gap: 20px;
-            background: var(--bg-card); padding: 20px 16px;
-            border-radius: 12px; margin-bottom: 16px;
-        }
-        .edit-avatar-container { text-align: center; }
+        /* Редагування контакту */
+        .profile-top-card { display: flex; align-items: center; gap: 20px; padding: 20px 16px; }
         .edit-fields-container { flex: 1; display: flex; flex-direction: column; gap: 10px; }
         .edit-fields-container input {
-            background: transparent; border: none; border-bottom: 1px solid #333;
-            color: var(--text-main); font-size: 17px; padding: 5px 0; outline: none;
+            background: transparent; border: none; color: var(--text-main); font-size: 18px; outline: none; padding: 5px 0;
         }
         .edit-fields-container label { color: var(--accent); font-size: 11px; font-weight: bold; }
 
-        /* Перемикачі */
-        .card { background: var(--bg-card); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+        .card { padding: 16px; }
         .switch-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; }
         .switch { position: relative; width: 40px; height: 20px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: #444; border-radius: 20px; transition: .4s; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background: #444; border-radius: 20px; transition: .4s; }
         .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background: white; border-radius: 50%; transition: .4s; }
         input:checked + .slider { background: var(--accent); }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        /* Чат */
+        /* Чат нотаток */
         #chat-screen { background: var(--tg-chat-bg); padding-bottom: 0; }
+        .chat-header { background: var(--bg-card); padding: 8px 12px; display: flex; align-items: center; border-bottom: 1px solid #333; }
+        .back-btn { font-size: 24px; color: var(--text-main); cursor: pointer; margin-right: 15px; }
+        
         .notes-area { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
-        .note-bubble { background: #2b2c2f; padding: 10px 14px; border-radius: 16px; max-width: 85%; align-self: flex-start; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        
+        /* Дати в чаті */
+        .date-divider {
+            align-self: center; background: rgba(255,255,255,0.1); color: #fff;
+            padding: 4px 12px; border-radius: 12px; font-size: 12px; margin: 10px 0;
+        }
+
+        .note-bubble { 
+            background: #2b2c2f; padding: 10px 14px; border-radius: 16px; max-width: 85%; 
+            align-self: flex-start; box-shadow: 0 1px 3px rgba(0,0,0,0.1); position: relative;
+        }
+        .note-time { font-size: 10px; opacity: 0.5; float: right; margin-top: 5px; margin-left: 10px; }
+
         .input-bar { background: var(--bg-card); padding: 10px 16px; display: flex; gap: 12px; align-items: flex-end; }
         .input-bar textarea { flex: 1; border: none; background: #2b2c2f; padding: 10px 16px; border-radius: 20px; color: var(--text-main); font-size: 16px; resize: none; outline: none; }
 
-        .fab { position: fixed; bottom: 90px; right: 24px; width: 50px; height: 50px; background: var(--accent); border-radius: 15px; color: #131314; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); cursor: pointer; }
+        .fab { position: fixed; bottom: 90px; right: 24px; width: 50px; height: 50px; background: var(--accent); border-radius: 15px; color: #131314; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; z-index: 5; }
     </style>
 </head>
 <body>
 
     <div id="list-screen" class="screen active">
-        <div class="header"><span id="list-title" style="font-weight: 500; font-size: 18px;">Всі контакти</span></div>
+        <div class="header"><span id="list-title" style="font-weight: 500; font-size: 18px;">My Place</span></div>
         <div class="chat-list" id="chat-list"></div>
         <div class="fab" onclick="showScreen('edit-screen', true)">+</div>
     </div>
 
     <div id="chat-screen" class="screen">
         <div class="chat-header">
-            <div onclick="showScreen('list-screen')" style="font-size: 24px; cursor: pointer; padding-right:15px;">←</div>
-            <div id="chat-avatar" class="avatar" style="width:36px; height:36px; margin:0;" onclick="openEdit()"></div>
-            <div id="chat-name" style="font-weight: 500; flex:1;" onclick="openEdit()">Ім'я</div>
+            <div class="back-btn" onclick="showScreen('list-screen')">←</div>
+            <div id="chat-avatar" class="avatar" style="width:40px; height:40px; margin:0; margin-right:12px;" onclick="openEdit()"></div>
+            <div id="chat-name" style="font-weight: 500; font-size: 17px; flex:1;" onclick="openEdit()">Ім'я</div>
         </div>
         <div class="notes-area" id="notes-area"></div>
         <div class="input-bar">
@@ -121,58 +126,43 @@
 
     <div id="edit-screen" class="screen">
         <div class="header">
-            <div onclick="goBackFromEdit()" style="font-size: 24px; cursor: pointer; padding-right:15px;">←</div>
-            <div id="edit-title" style="font-weight:500;">Контакт</div>
+            <div class="back-btn" onclick="goBackFromEdit()">←</div>
+            <div id="edit-title" style="flex:1; font-weight:500;">Контакт</div>
             <div onclick="saveClient()" style="color:var(--accent); font-weight:bold; cursor:pointer;">ГОТОВО</div>
         </div>
-        <div style="padding: 20px; overflow-y: auto;">
-            
+        <div style="padding: 10px; overflow-y: auto;">
             <div class="profile-top-card">
-                <div class="edit-avatar-container">
-                    <div id="edit-avatar-img" class="avatar" style="width:80px; height:80px; margin-bottom: 8px;">?</div>
+                <div style="text-align:center;">
+                    <div id="edit-avatar-img" class="avatar" style="width:80px; height:80px; margin-right:0; margin-bottom:8px;">?</div>
                     <input type="file" id="file-in" style="display:none" onchange="uploadImg(this)">
                     <span onclick="document.getElementById('file-in').click()" style="color:var(--accent); font-size: 12px; cursor:pointer;">Змінити</span>
                 </div>
                 <div class="edit-fields-container">
-                    <div>
-                        <label>ПРІЗВИЩЕ</label>
-                        <input type="text" id="in-ln" autocomplete="off" placeholder="Прізвище">
-                    </div>
-                    <div>
-                        <label>ІМ'Я</label>
-                        <input type="text" id="in-fn" autocomplete="off" placeholder="Ім'я">
-                    </div>
+                    <div><label>ПРІЗВИЩЕ</label><input type="text" id="in-ln" placeholder="Прізвище"></div>
+                    <div><label>ІМ'Я</label><input type="text" id="in-fn" placeholder="Ім'я"></div>
                 </div>
             </div>
-
             <div class="card">
-                <label style="color:var(--accent); font-size: 11px; font-weight: bold;">ДАТА НАРОДЖЕННЯ</label>
-                <input type="date" id="in-dob" style="width:100%; background:transparent; border:none; color:white; font-size:16px; padding:10px 0; outline:none; border-bottom:1px solid #333;">
+                <label style="color:var(--accent); font-size:11px; font-weight:bold;">ДАТА НАРОДЖЕННЯ</label>
+                <input type="date" id="in-dob" style="width:100%; background:transparent; border:none; color:white; font-size:16px; padding:8px 0; outline:none;">
             </div>
-
             <div class="card">
-                <div class="switch-row">
-                    <span>Партнер (Команда)</span>
-                    <label class="switch"><input type="checkbox" id="is-partner"><span class="slider"></span></label>
-                </div>
-                <div class="switch-row" style="border-top:1px solid #333;">
-                    <span>Клієнт</span>
-                    <label class="switch"><input type="checkbox" id="is-client"><span class="slider"></span></label>
-                </div>
+                <div class="switch-row"><span>Партнер (Команда)</span><label class="switch"><input type="checkbox" id="is-partner"><span class="slider"></span></label></div>
+                <div class="switch-row"><span>Клієнт</span><label class="switch"><input type="checkbox" id="is-client"><span class="slider"></span></label></div>
             </div>
         </div>
     </div>
 
     <div class="nav-bar" id="bottom-nav">
-        <div class="nav-item active" onclick="changeList('all', this)"><i>👤</i>Всі</div>
-        <div class="nav-item" onclick="changeList('client', this)"><i>🛒</i>Клієнти</div>
-        <div class="nav-item" onclick="changeList('partner', this)"><i>🤝</i>Команда</div>
-        <div class="nav-item" onclick="alert('Профіль')"><i>🆔</i>Профіль</div>
-        <div class="nav-item" onclick="alert('Опції')"><i>⚙️</i>Опції</div>
+        <div class="nav-item active" onclick="changeList('all', this)">👤 Всі</div>
+        <div class="nav-item" onclick="changeList('client', this)">🛒 Клієнти</div>
+        <div class="nav-item" onclick="changeList('partner', this)">🤝 Команда</div>
+        <div class="nav-item" onclick="alert('Профіль')">🆔 Профіль</div>
+        <div class="nav-item" onclick="alert('Опції')">⚙️ Опції</div>
     </div>
 
 <script>
-    let clients = JSON.parse(localStorage.getItem('mlm_v5_data')) || [];
+    let clients = JSON.parse(localStorage.getItem('mlm_v6_data')) || [];
     let curId = null;
     let currentFilter = 'all';
     let isNew = false;
@@ -181,69 +171,61 @@
     function autoResize(t) { t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; }
 
     function renderList() {
-        const box = document.getElementById('chat-list');
-        box.innerHTML = '';
+        const box = document.getElementById('chat-list'); box.innerHTML = '';
         let filtered = clients;
         if (currentFilter === 'client') filtered = clients.filter(c => c.isClient);
         if (currentFilter === 'partner') filtered = clients.filter(c => c.isPartner);
         filtered.forEach(c => {
-            box.innerHTML += `
-                <div class="chat-item" onclick="openChat(${c.id})">
-                    <div class="avatar" style="${c.img ? `background-image:url(${c.img})` : ''}">${c.img ? '' : c.ln[0]}</div>
-                    <div style="font-weight:500;">${c.ln} ${c.fn}</div>
-                </div>`;
+            box.innerHTML += `<div class="chat-item" onclick="openChat(${c.id})"><div class="avatar" style="${c.img ? `background-image:url(${c.img})` : ''}">${c.img ? '' : c.ln[0]}</div><div style="font-weight:500;">${c.ln} ${c.fn}</div></div>`;
         });
+    }
+
+    function formatDate(date) {
+        const d = new Date(date);
+        const today = new Date();
+        if (d.toDateString() === today.toDateString()) return "Сьогодні";
+        return d.toLocaleDateString('uk-UA');
+    }
+
+    function openChat(id) {
+        curId = id; const c = clients.find(x => x.id == id);
+        document.getElementById('chat-name').innerText = `${c.ln} ${c.fn}`;
+        document.getElementById('chat-avatar').style.backgroundImage = c.img ? `url(${c.img})` : 'none';
+        document.getElementById('chat-avatar').innerText = c.img ? '' : c.ln[0];
+        
+        const box = document.getElementById('notes-area'); box.innerHTML = '';
+        let lastDate = "";
+        c.notes.forEach(n => {
+            let noteDate = formatDate(n.timestamp || new Date());
+            if (noteDate !== lastDate) {
+                box.innerHTML += `<div class="date-divider">${noteDate}</div>`;
+                lastDate = noteDate;
+            }
+            box.innerHTML += `<div class="note-bubble">${n.text}<span class="note-time">${n.time}</span></div>`;
+        });
+        showScreen('chat-screen');
+        box.scrollTop = box.scrollHeight;
+    }
+
+    function addNote() {
+        const inp = document.getElementById('note-input'); if (!inp.value.trim()) return;
+        const c = clients.find(x => x.id == curId);
+        const now = new Date();
+        c.notes.push({ 
+            text: inp.value, 
+            time: now.getHours() + ':' + (now.getMinutes()<10?'0':'') + now.getMinutes(),
+            timestamp: now.getTime()
+        });
+        inp.value = ''; inp.style.height = 'auto';
+        localStorage.setItem('mlm_v6_data', JSON.stringify(clients));
+        openChat(curId);
     }
 
     function changeList(filter, el) {
         currentFilter = filter;
-        const titles = {all: "Всі контакти", client: "Клієнти", partner: "Моя команда"};
-        document.getElementById('list-title').innerText = titles[filter];
+        document.getElementById('list-title').innerText = filter === 'all' ? "My Place" : (filter === 'client' ? "Клієнти" : "Моя команда");
         document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-        el.classList.add('active');
-        renderList();
-    }
-
-    function openChat(id) {
-        curId = id;
-        const c = clients.find(x => x.id == id);
-        document.getElementById('chat-name').innerText = `${c.ln} ${c.fn}`;
-        document.getElementById('chat-avatar').style.backgroundImage = c.img ? `url(${c.img})` : 'none';
-        document.getElementById('chat-avatar').innerText = c.img ? '' : c.ln[0];
-        document.getElementById('notes-area').innerHTML = c.notes.map(n => `<div class="note-bubble">${n.text}<br><span style="font-size:10px; opacity:0.5;">${n.date}</span></div>`).join('');
-        showScreen('chat-screen');
-    }
-
-    function saveClient() {
-        const ln = document.getElementById('in-ln').value.trim();
-        const fn = document.getElementById('in-fn').value.trim();
-        if (!ln || !fn) return;
-        const data = { ln, fn, dob: document.getElementById('in-dob').value, isPartner: document.getElementById('is-partner').checked, isClient: document.getElementById('is-client').checked };
-        if (isNew) {
-            const nid = Date.now();
-            clients.push({ id: nid, ...data, img: tempImg, notes: [] });
-            curId = nid;
-        } else {
-            const c = clients.find(x => x.id == curId);
-            Object.assign(c, data);
-            if(tempImg) c.img = tempImg;
-        }
-        localStorage.setItem('mlm_v5_data', JSON.stringify(clients));
-        renderList();
-        openChat(curId);
-    }
-
-    function openEdit() {
-        isNew = false;
-        const c = clients.find(x => x.id == curId);
-        document.getElementById('in-ln').value = c.ln;
-        document.getElementById('in-fn').value = c.fn;
-        document.getElementById('in-dob').value = c.dob || '';
-        document.getElementById('is-partner').checked = c.isPartner || false;
-        document.getElementById('is-client').checked = c.isClient || false;
-        document.getElementById('edit-avatar-img').style.backgroundImage = c.img ? `url(${c.img})` : 'none';
-        document.getElementById('edit-avatar-img').innerText = c.img ? '' : c.ln[0];
-        showScreen('edit-screen');
+        el.classList.add('active'); renderList();
     }
 
     function showScreen(id, isCreating = false) {
@@ -258,19 +240,31 @@
         document.getElementById('bottom-nav').style.display = (id === 'list-screen') ? 'flex' : 'none';
     }
 
-    function goBackFromEdit() { isNew ? showScreen('list-screen') : showScreen('chat-screen'); }
-
-    function addNote() {
-        const inp = document.getElementById('note-input');
-        if (!inp.value.trim()) return;
-        const c = clients.find(x => x.id == curId);
-        const now = new Date();
-        c.notes.push({ text: inp.value, date: now.getHours() + ':' + (now.getMinutes()<10?'0':'') + now.getMinutes() });
-        inp.value = ''; inp.style.height = 'auto';
-        localStorage.setItem('mlm_v5_data', JSON.stringify(clients));
-        openChat(curId);
+    function openEdit() {
+        isNew = false; const c = clients.find(x => x.id == curId);
+        document.getElementById('in-ln').value = c.ln; document.getElementById('in-fn').value = c.fn;
+        document.getElementById('in-dob').value = c.dob || '';
+        document.getElementById('is-partner').checked = c.isPartner; document.getElementById('is-client').checked = c.isClient;
+        document.getElementById('edit-avatar-img').style.backgroundImage = c.img ? `url(${c.img})` : 'none';
+        document.getElementById('edit-avatar-img').innerText = c.img ? '' : c.ln[0];
+        showScreen('edit-screen');
     }
 
+    function saveClient() {
+        const ln = document.getElementById('in-ln').value.trim(); const fn = document.getElementById('in-fn').value.trim();
+        if (!ln || !fn) return;
+        const data = { ln, fn, dob: document.getElementById('in-dob').value, isPartner: document.getElementById('is-partner').checked, isClient: document.getElementById('is-client').checked };
+        if (isNew) {
+            clients.push({ id: Date.now(), ...data, img: tempImg, notes: [] });
+            curId = clients[clients.length-1].id;
+        } else {
+            const c = clients.find(x => x.id == curId); Object.assign(c, data);
+            if(tempImg) c.img = tempImg;
+        }
+        localStorage.setItem('mlm_v6_data', JSON.stringify(clients)); renderList(); openChat(curId);
+    }
+
+    function goBackFromEdit() { isNew ? showScreen('list-screen') : showScreen('chat-screen'); }
     function uploadImg(input) { if (input.files && input.files[0]) { const r = new FileReader(); r.onload = e => { tempImg = e.target.result; document.getElementById('edit-avatar-img').style.backgroundImage = `url(${tempImg})`; document.getElementById('edit-avatar-img').innerText = ''; }; r.readAsDataURL(input.files[0]); } }
 
     renderList();
