@@ -3,81 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MLM CRM Lite</title>
+    <title>MLM CRM Dark</title>
     <style>
         :root {
-            --tg-blue: #5085a8;
-            --tg-light-blue: #3390ec;
-            --tg-bg: #f4f4f5;
-            --tg-chat-bg: #9ab4c1;
-            --tg-gray: #8e8e93;
+            --bg-dark: #131314; /* Колір як у Gemini */
+            --bg-card: #1e1f20;
+            --text-main: #e3e3e3;
+            --text-gray: #b4b4b4;
+            --accent: #8ab4f8; /* Блакитний акцент */
+            --tg-chat-bg: #0b0b0b;
         }
 
         body, html {
             margin: 0; padding: 0;
             width: 100%; height: 100%;
-            font-family: -apple-system, BlinkMacSystemFont, "Roboto", sans-serif;
+            font-family: 'Google Sans', Roboto, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             overflow: hidden;
         }
 
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: none; flex-direction: column; background: white;
+            display: none; flex-direction: column; background: var(--bg-dark);
         }
         .active { display: flex; }
 
         /* Header */
         .header {
-            background: var(--tg-blue); color: white;
-            padding: 10px 15px; display: flex; align-items: center; gap: 20px;
+            background: var(--bg-card); color: var(--text-main);
+            padding: 12px 16px; display: flex; align-items: center; gap: 20px;
+            border-bottom: 1px solid #333;
         }
-        .my-avatar { width: 40px; height: 40px; border-radius: 50%; background: #fff; background-size: cover; cursor: pointer; }
+        .my-avatar { width: 36px; height: 36px; border-radius: 50%; background: #444; background-size: cover; cursor: pointer; }
 
         /* Список */
         .chat-list { flex: 1; overflow-y: auto; }
         .chat-item {
-            display: flex; padding: 10px 15px; align-items: center;
-            border-bottom: 0.5px solid #f0f0f0; cursor: pointer;
+            display: flex; padding: 12px 16px; align-items: center;
+            border-bottom: 1px solid #282828; cursor: pointer;
         }
         .avatar {
-            width: 52px; height: 52px; border-radius: 50%;
-            background: #517da2; color: white;
+            width: 48px; height: 48px; border-radius: 50%;
+            background: #3c4043; color: white;
             display: flex; align-items: center; justify-content: center;
-            font-size: 20px; font-weight: bold; margin-right: 15px;
+            font-size: 18px; font-weight: bold; margin-right: 16px;
             background-size: cover;
         }
 
         /* Чат нотаток */
         #chat-screen { background: var(--tg-chat-bg); }
-        .chat-header { background: #fff; padding: 8px 15px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #ddd; }
-        .back-btn { font-size: 24px; color: var(--tg-gray); cursor: pointer; }
+        .chat-header { background: var(--bg-card); padding: 8px 16px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #333; }
+        .back-btn { font-size: 24px; color: var(--text-main); cursor: pointer; }
         
-        .notes-area { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+        .notes-area { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
         .note-bubble {
-            background: white; padding: 8px 12px; border-radius: 12px;
+            background: #2b2c2f; padding: 10px 14px; border-radius: 16px;
             max-width: 85%; align-self: flex-start; position: relative;
-            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3); line-height: 1.4;
         }
-        .note-meta { display: flex; justify-content: flex-end; align-items: center; gap: 8px; margin-top: 4px; }
-        .note-date { font-size: 10px; color: var(--tg-gray); }
-        .delete-note { font-size: 14px; color: #ff5e5e; cursor: pointer; }
+        .note-meta { display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-top: 6px; }
+        .note-date { font-size: 11px; color: var(--text-gray); }
+        .delete-note { font-size: 14px; color: #f28b82; cursor: pointer; opacity: 0.7; }
 
-        /* Поля вводу */
-        .input-bar { background: white; padding: 10px; display: flex; gap: 10px; }
-        .input-bar input { flex: 1; border: none; background: #f1f1f1; padding: 10px 15px; border-radius: 20px; outline: none; }
+        /* Поле вводу, що збільшується */
+        .input-bar { 
+            background: var(--bg-card); padding: 10px 16px; 
+            display: flex; gap: 12px; align-items: flex-end; 
+            border-top: 1px solid #333;
+        }
+        .input-bar textarea { 
+            flex: 1; border: none; background: #2b2c2f; 
+            padding: 10px 16px; border-radius: 20px; outline: none; 
+            color: var(--text-main); font-size: 16px; 
+            resize: none; max-height: 150px; /* Максимальна висота */
+            font-family: inherit; line-height: 1.4;
+        }
 
         /* Профіль / Редагування */
-        .profile-content { flex: 1; background: var(--tg-bg); overflow-y: auto; padding: 20px; }
-        .card { background: white; border-radius: 10px; padding: 15px; margin-bottom: 15px; }
-        .card label { display: block; color: var(--tg-light-blue); font-size: 12px; font-weight: bold; margin-bottom: 5px; }
-        .card input { width: 100%; border: none; border-bottom: 1px solid #eee; padding: 8px 0; font-size: 16px; outline: none; }
+        .profile-content { flex: 1; background: var(--bg-dark); overflow-y: auto; padding: 20px; }
+        .card { background: var(--bg-card); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+        .card label { display: block; color: var(--accent); font-size: 12px; font-weight: bold; margin-bottom: 6px; }
+        .card input { 
+            width: 100%; border: none; border-bottom: 1px solid #3c4043; 
+            padding: 8px 0; font-size: 16px; outline: none; 
+            background: transparent; color: var(--text-main);
+        }
 
         .fab {
-            position: fixed; bottom: 25px; right: 25px;
-            width: 56px; height: 56px; background: var(--tg-light-blue);
-            border-radius: 50%; color: white;
+            position: fixed; bottom: 24px; right: 24px;
+            width: 56px; height: 56px; background: var(--accent);
+            border-radius: 16px; color: #131314;
             display: flex; align-items: center; justify-content: center;
-            font-size: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            font-size: 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            cursor: pointer;
         }
     </style>
 </head>
@@ -86,7 +105,7 @@
     <div id="list-screen" class="screen active">
         <div class="header">
             <div class="my-avatar" id="my-photo"></div>
-            <span style="font-weight: 500; font-size: 20px;">Контакти</span>
+            <span style="font-weight: 500; font-size: 18px;">Контакти</span>
         </div>
         <div class="chat-list" id="chat-list"></div>
         <div class="fab" onclick="showScreen('edit-screen', true)">+</div>
@@ -95,40 +114,46 @@
     <div id="chat-screen" class="screen">
         <div class="chat-header">
             <div class="back-btn" onclick="showScreen('list-screen')">←</div>
-            <div id="chat-avatar" class="avatar" style="width:40px; height:40px; margin:0;" onclick="openEdit()"></div>
-            <div id="chat-name" style="font-weight: 600; flex:1;" onclick="openEdit()">Ім'я</div>
+            <div id="chat-avatar" class="avatar" style="width:36px; height:36px; margin:0; font-size:14px;" onclick="openEdit()"></div>
+            <div id="chat-name" style="font-weight: 500; flex:1;" onclick="openEdit()">Ім'я</div>
         </div>
         <div class="notes-area" id="notes-area"></div>
         <div class="input-bar">
-            <input type="text" id="note-input" placeholder="Записати дію...">
-            <button onclick="addNote()" style="border:none; background:none; color:var(--tg-light-blue); font-weight:bold;">ОК</button>
+            <textarea id="note-input" placeholder="Записати дію..." rows="1" oninput="autoResize(this)"></textarea>
+            <button onclick="addNote()" style="border:none; background:none; color:var(--accent); font-weight:bold; cursor:pointer; padding-bottom:10px;">ОК</button>
         </div>
     </div>
 
     <div id="edit-screen" class="screen">
-        <div class="header" style="background:white; color:black; border-bottom:1px solid #ddd;">
+        <div class="header" style="background:var(--bg-card); border-bottom:1px solid #333;">
             <div class="back-btn" onclick="goBackFromEdit()">←</div>
-            <div id="edit-title" style="flex:1; font-weight:bold;">Контакт</div>
-            <div onclick="saveClient()" style="color:var(--tg-light-blue); font-weight:bold; cursor:pointer;">ГОТОВО</div>
+            <div id="edit-title" style="flex:1; font-weight:500;">Контакт</div>
+            <div onclick="saveClient()" style="color:var(--accent); font-weight:bold; cursor:pointer;">ГОТОВО</div>
         </div>
         <div class="profile-content">
             <div class="card" style="text-align:center;">
-                <div id="edit-avatar-img" class="avatar" style="width:80px; height:80px; margin: 0 auto 10px;">?</div>
+                <div id="edit-avatar-img" class="avatar" style="width:80px; height:80px; margin: 0 auto 12px;">?</div>
                 <input type="file" id="file-in" style="display:none" onchange="uploadImg(this)">
-                <button onclick="document.getElementById('file-in').click()" style="border:none; background:none; color:var(--tg-light-blue);">Змінити фото</button>
+                <button onclick="document.getElementById('file-in').click()" style="border:none; background:none; color:var(--accent); cursor:pointer;">Змінити фото</button>
             </div>
             <div class="card">
-                <label>ПРІЗВИЩЕ</label><input type="text" id="in-ln">
-                <label>ІМ'Я</label><input type="text" id="in-fn">
+                <label>ПРІЗВИЩЕ</label><input type="text" id="in-ln" autocomplete="off">
+                <label>ІМ'Я</label><input type="text" id="in-fn" autocomplete="off">
                 <label>ДАТА НАРОДЖЕННЯ</label><input type="date" id="in-dob">
             </div>
         </div>
     </div>
 
 <script>
-    let clients = JSON.parse(localStorage.getItem('mlm_v2')) || [];
+    let clients = JSON.parse(localStorage.getItem('mlm_v2_dark')) || [];
     let curId = null;
     let isNew = false;
+    let tempImg = "";
+
+    function autoResize(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+    }
 
     function renderList() {
         const box = document.getElementById('chat-list');
@@ -137,7 +162,7 @@
             box.innerHTML += `
                 <div class="chat-item" onclick="openChat(${c.id})">
                     <div class="avatar" style="${c.img ? `background-image:url(${c.img})` : ''}">${c.img ? '' : c.ln[0]}</div>
-                    <div style="font-weight:600;">${c.ln} ${c.fn}</div>
+                    <div style="font-weight:500;">${c.ln} ${c.fn}</div>
                 </div>`;
         });
     }
@@ -157,7 +182,7 @@
         const box = document.getElementById('notes-area');
         box.innerHTML = c.notes.map((n, i) => `
             <div class="note-bubble">
-                ${n.text}
+                ${n.text.replace(/\n/g, '<br>')}
                 <div class="note-meta">
                     <span class="note-date">${n.date}</span>
                     <span class="delete-note" onclick="deleteNote(${i})">✕</span>
@@ -169,12 +194,13 @@
 
     function addNote() {
         const inp = document.getElementById('note-input');
-        if (!inp.value) return;
+        if (!inp.value.trim()) return;
         const c = clients.find(x => x.id == curId);
         const now = new Date();
         const dateStr = now.toLocaleDateString() + ' ' + now.getHours() + ':' + (now.getMinutes()<10?'0':'') + now.getMinutes();
         c.notes.push({ text: inp.value, date: dateStr });
         inp.value = '';
+        inp.style.height = 'auto'; 
         save();
         renderNotes();
     }
@@ -201,9 +227,9 @@
     }
 
     function saveClient() {
-        const ln = document.getElementById('in-ln').value;
-        const fn = document.getElementById('in-fn').value;
-        if (!ln || !fn) return alert("Заповніть Прізвище та Ім'я");
+        const ln = document.getElementById('in-ln').value.trim();
+        const fn = document.getElementById('in-fn').value.trim();
+        if (!ln || !fn) return;
 
         if (isNew) {
             const nid = Date.now();
@@ -221,7 +247,6 @@
         openChat(curId);
     }
 
-    let tempImg = "";
     function uploadImg(input) {
         if (input.files && input.files[0]) {
             const r = new FileReader();
@@ -253,7 +278,7 @@
         else showScreen('chat-screen');
     }
 
-    function save() { localStorage.setItem('mlm_v2', JSON.stringify(clients)); }
+    function save() { localStorage.setItem('mlm_v2_dark', JSON.stringify(clients)); }
 
     renderList();
 </script>
