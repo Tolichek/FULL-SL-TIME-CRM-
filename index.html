@@ -3,82 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>My Place CRM (Firebase)</title>
-    
+    <title>My Place</title>
     <style>
-        :root {
-            --bg-dark: #131314;
-            --bg-card: #1e1f20;
-            --text-main: #e3e3e3;
-            --accent: #8ab4f8;
-        }
-        body, html { margin: 0; padding: 0; height: 100%; background: var(--bg-dark); color: var(--text-main); font-family: sans-serif; overflow: hidden; }
-        .screen { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        :root { --bg: #131314; --card: #1e1f20; --text: #e3e3e3; --acc: #8ab4f8; }
+        body, html { margin: 0; padding: 0; height: 100%; background: var(--bg); color: var(--text); font-family: Roboto, sans-serif; overflow: hidden; }
+        .screen { position: absolute; inset: 0; display: none; flex-direction: column; background: var(--bg); }
         .active { display: flex !important; }
-        .google-btn { background: white; color: black; padding: 15px 30px; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 16px; }
-        #error-msg { color: #ff6b6b; font-size: 12px; margin-top: 20px; text-align: center; padding: 0 20px; }
-        /* Інші стилі для робочої області залишаються такими ж */
-        .header { width: 100%; background: var(--bg-card); padding: 15px; box-sizing: border-box; border-bottom: 1px solid #333; }
-        .chat-list { width: 100%; flex: 1; overflow-y: auto; }
-        .chat-item { padding: 15px; border-bottom: 1px solid #282828; width: 100%; box-sizing: border-box; }
+        #login-screen { align-items: center; justify-content: center; z-index: 100; }
+        .google-btn { background: white; color: black; padding: 15px 30px; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+        .header { background: var(--card); padding: 10px 15px; display: flex; align-items: center; border-bottom: 1px solid #333; }
+        .chat-list { flex: 1; overflow-y: auto; padding-bottom: 80px; }
+        .chat-item { display: flex; padding: 12px 15px; align-items: center; border-bottom: 1px solid #282828; cursor: pointer; }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; background: #3c4043; margin-right: 12px; background-size: cover; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
+        .notes-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background: #0b0b0b; }
+        .note-bubble { background: #2b2c2f; padding: 10px; border-radius: 15px; max-width: 85%; align-self: flex-start; position: relative; }
+        .note-time { font-size: 10px; opacity: 0.5; float: right; margin-top: 5px; margin-left: 8px; }
+        .input-bar { background: var(--card); padding: 10px; display: flex; gap: 10px; border-top: 1px solid #333; }
+        .input-bar textarea { flex: 1; border: none; background: #2b2c2f; padding: 10px; border-radius: 15px; color: white; resize: none; outline: none; }
+        .fab { position: fixed; bottom: 90px; right: 20px; width: 50px; height: 50px; background: var(--acc); border-radius: 15px; color: #131314; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; }
+        .nav-bar { position: fixed; bottom: 15px; left: 10px; right: 10px; background: var(--card); height: 60px; border-radius: 20px; display: flex; justify-content: space-around; align-items: center; border: 1px solid #333; }
+        .nav-item { color: #b4b4b4; font-size: 11px; cursor: pointer; }
+        .active-nav { color: var(--acc); }
+        .profile-top { display: flex; align-items: center; gap: 15px; padding: 20px; }
+        .edit-inputs { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+        .edit-inputs input { background: transparent; border: none; border-bottom: 1px solid #333; color: white; padding: 5px; outline: none; }
+        .card-box { background: var(--card); margin: 10px; padding: 15px; border-radius: 12px; }
+        .row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
     </style>
 </head>
 <body>
 
     <div id="login-screen" class="screen active">
-        <h1 style="color: var(--accent); font-size: 42px;">My Place</h1>
-        <p style="color: #888; margin-bottom: 30px;">Авторизація Firebase</p>
-        <button class="google-btn" id="login-btn">
-            <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" width="20"> Увійти через Google
-        </button>
-        <div id="error-msg"></div>
+        <h1 style="color: var(--acc); font-size: 42px; margin-bottom: 30px;">My Place</h1>
+        <button class="google-btn" id="btn-login">Увійти через Google</button>
     </div>
 
     <div id="list-screen" class="screen">
-        <div class="header"><b>My Place CRM</b></div>
+        <div class="header"><b>My Place</b></div>
         <div id="chat-list" class="chat-list"></div>
-        <div style="padding: 20px; color: var(--accent);" onclick="location.reload()">Оновити сторінку</div>
+        <div class="fab" id="btn-add">+</div>
+        <div class="nav-bar">
+            <div class="nav-item active-nav" id="f-all">👤 Всі</div>
+            <div class="nav-item" id="f-client">🛒 Клієнти</div>
+            <div class="nav-item" id="f-partner">🤝 Команда</div>
+        </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    <div id="chat-screen" class="screen">
+        <div class="header">
+            <div id="chat-back" style="cursor:pointer; font-size:24px; margin-right:15px;">←</div>
+            <div id="chat-avatar" class="avatar" style="width:35px; height:35px; margin:0; margin-right:10px;"></div>
+            <div id="chat-name" style="font-weight:500;"></div>
+        </div>
+        <div id="notes-area" class="notes-area"></div>
+        <div class="input-bar">
+            <textarea id="note-input" rows="1"></textarea>
+            <button id="btn-send" style="color:var(--acc); background:none; border:none; font-weight:bold;">ОК</button>
+        </div>
+    </div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY",
-            authDomain: "starlife-crm.firebaseapp.com",
-            projectId: "starlife-crm",
-            storageBucket: "starlife-crm.firebasestorage.app",
-            messagingSenderId: "1022280682130",
-            appId: "1:1022280682130:web:3ea517e8b6d22c7787744b"
-        };
+    <div id="edit-screen" class="screen">
+        <div class="header">
+            <div id="edit-back" style="cursor:pointer; font-size:24px; margin-right:15px;">←</div>
+            <div style="flex:1;">Контакт</div>
+            <div id="btn-save" style="color:var(--acc); font-weight:bold; cursor:pointer;">ГОТОВО</div>
+        </div>
+        <div class="profile-top">
+            <div id="edit-img" class="avatar" style="width:70px; height:70px; margin:0;">?</div>
+            <div class="edit-inputs">
+                <input type="text" id="in-ln" placeholder="Прізвище">
+                <input type="text" id="in-fn" placeholder="Ім'я">
+            </div>
+        </div>
+        <div class="card-box">
+            <div class="row"><span>Партнер</span><input type="checkbox" id="chk-p"></div>
+            <div class="row"><span>Клієнт</span><input type="checkbox" id="chk-c"></div>
+        </div>
+    </div>
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const errorDiv = document.getElementById('error-msg');
+    const cfg = {
+        apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY",
+        authDomain: "starlife-crm.firebaseapp.com",
+        projectId: "starlife-crm",
+        storageBucket: "starlife-crm.firebasestorage.app",
+        messagingSenderId: "1022280682130",
+        appId: "1:1022280682130:web:3ea517e8b6d22c7787744b"
+    };
 
-        // Перевірка результату редіректу при завантаженні
-        getRedirectResult(auth).catch((error) => {
-            errorDiv.innerText = "Помилка: " + error.message;
+    const app = initializeApp(cfg);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const prov = new GoogleAuthProvider();
+
+    let clients = [], curId = null, isNew = false, filter = 'all';
+
+    onAuthStateChanged(auth, u => {
+        if(u) { switchScreen('list-screen'); sub(u.uid); }
+        else { switchScreen('login-screen'); }
+    });
+
+    const sub = uid => onSnapshot(doc(db, "users", uid), d => {
+        clients = d.exists() ? d.data().clients : [];
+        render();
+        if(curId) updateChat();
+    });
+
+    const upd = async () => await setDoc(doc(db, "users", auth.currentUser.uid), { clients });
+
+    const render = () => {
+        const b = document.getElementById('chat-list'); b.innerHTML = '';
+        clients.filter(c => filter==='all' || (filter==='client' && c.isClient && !c.isPartner) || (filter==='partner' && c.isPartner))
+        .forEach(c => {
+            const d = document.createElement('div'); d.className = 'chat-item';
+            d.innerHTML = `<div class="avatar">${c.ln[0]}</div><b>${c.ln} ${c.fn}</b>`;
+            d.onclick = () => { curId = c.id; updateChat(); switchScreen('chat-screen'); };
+            b.appendChild(d);
         });
+    };
 
-        // Слухач кнопки
-        document.getElementById('login-btn').onclick = () => {
-            errorDiv.innerText = "Зачекайте, перенаправлення...";
-            signInWithRedirect(auth, provider);
-        };
+    const updateChat = () => {
+        const c = clients.find(x => x.id == curId); if(!c) return;
+        document.getElementById('chat-name').innerText = `${c.ln} ${c.fn}`;
+        document.getElementById('chat-avatar').innerText = c.ln[0];
+        document.getElementById('notes-area').innerHTML = c.notes.map(n => `<div class="note-bubble">${n.text}<span class="note-time">${n.time}</span></div>`).join('');
+    };
 
-        // Стан входу
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById('login-screen').classList.remove('active');
-                document.getElementById('list-screen').classList.add('active');
-                console.log("Вхід виконано:", user.displayName);
-            }
-        });
-    </script>
+    const switchScreen = id => {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.getElementById('bottom-nav').style.display = id === 'list-screen' ? 'flex' : 'none';
+    };
+
+    document.getElementById('btn-login').onclick = () => signInWithPopup(auth, prov);
+    document.getElementById('btn-add').onclick = () => { isNew = true; curId = null; switchScreen('edit-screen'); };
+    document.getElementById('chat-back').onclick = () => switchScreen('list-screen');
+    document.getElementById('edit-back').onclick = () => isNew ? switchScreen('list-screen') : switchScreen('chat-screen');
+
+    document.getElementById('btn-save').onclick = async () => {
+        const ln = document.getElementById('in-ln').value, fn = document.getElementById('in-fn').value;
+        if(!ln || !fn) return;
+        const d = { ln, fn, isPartner: document.getElementById('chk-p').checked, isClient: document.getElementById('chk-c').checked };
+        if(isNew) { curId = Date.now(); clients.push({ id: curId, ...d, notes: [] }); }
+        else { const i = clients.findIndex(x => x.id == curId); clients[i] = {...clients[i], ...d}; }
+        await upd(); switchScreen('chat-screen');
+    };
+
+    document.getElementById('btn-send').onclick = async () => {
+        const i = document.getElementById('note-input'); if(!i.value) return;
+        const c = clients.find(x => x.id == curId);
+        const now = new Date();
+        c.notes.push({ text: i.value, time: now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes() });
+        i.value = ''; await upd();
+    };
+
+    document.querySelectorAll('.nav-item').forEach(n => n.onclick = () => {
+        filter = n.id.split('-')[1];
+        document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active-nav'));
+        n.classList.add('active-nav'); render();
+    });
+</script>
 </body>
 </html>
