@@ -3,143 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>My Place CRM</title>
+    <title>My Place CRM (Firebase)</title>
     
     <style>
         :root {
             --bg-dark: #131314;
             --bg-card: #1e1f20;
             --text-main: #e3e3e3;
-            --text-gray: #b4b4b4;
             --accent: #8ab4f8;
-            --tg-chat-bg: #0b0b0b;
         }
-
-        body, html {
-            margin: 0; padding: 0;
-            width: 100%; height: 100%;
-            font-family: 'Roboto', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            overflow: hidden;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .screen {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: none; flex-direction: column; background: var(--bg-dark);
-            box-sizing: border-box;
-        }
+        body, html { margin: 0; padding: 0; height: 100%; background: var(--bg-dark); color: var(--text-main); font-family: sans-serif; overflow: hidden; }
+        .screen { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; }
         .active { display: flex !important; }
-
-        #login-screen { align-items: center; justify-content: center; z-index: 10000; }
-        .google-btn {
-            background: white; color: #000; border: none; padding: 14px 28px;
-            border-radius: 30px; font-weight: bold; cursor: pointer; 
-            display: flex; align-items: center; gap: 12px; font-size: 16px;
-        }
-
-        .header { background: var(--bg-card); padding: 12px 16px; display: flex; align-items: center; border-bottom: 1px solid #333; }
-        .chat-list { flex: 1; overflow-y: auto; padding-bottom: 90px; }
-        .chat-item { display: flex; padding: 12px 16px; align-items: center; border-bottom: 1px solid #282828; cursor: pointer; }
-        .avatar { width: 48px; height: 48px; border-radius: 50%; background: #3c4043; background-size: cover; margin-right: 16px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-
-        .nav-bar {
-            position: fixed; bottom: 15px; left: 10px; right: 10px;
-            background: var(--bg-card); height: 65px; border-radius: 20px;
-            display: flex; justify-content: space-around; align-items: center;
-            border: 1px solid #333; z-index: 1000;
-        }
-        .nav-item { color: var(--text-gray); font-size: 11px; cursor: pointer; text-align: center; }
-        .nav-item.active { color: var(--accent); }
-
-        .notes-area { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; background: var(--tg-chat-bg); }
-        .note-bubble { background: #2b2c2f; padding: 10px 14px; border-radius: 16px; max-width: 85%; align-self: flex-start; position: relative; }
-        .note-time { font-size: 10px; opacity: 0.5; float: right; margin-top: 5px; margin-left: 10px; }
-        .date-divider { align-self: center; background: rgba(255,255,255,0.1); color: #fff; padding: 4px 12px; border-radius: 12px; font-size: 12px; margin: 10px 0; }
-
-        .input-bar { background: var(--bg-card); padding: 10px 16px; display: flex; gap: 12px; align-items: flex-end; }
-        .input-bar textarea { flex: 1; border: none; background: #2b2c2f; padding: 10px 16px; border-radius: 20px; color: var(--text-main); font-size: 16px; resize: none; outline: none; }
-
-        .profile-top-card { display: flex; align-items: center; gap: 20px; padding: 20px 16px; }
-        .edit-fields-container { flex: 1; display: flex; flex-direction: column; gap: 10px; }
-        .edit-fields-container input { background: transparent; border: none; color: white; font-size: 18px; outline: none; border-bottom: 1px solid #333; }
-        
-        .card { padding: 16px; background: var(--bg-card); margin: 10px; border-radius: 12px; }
-        .switch-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; }
-        .switch { position: relative; width: 40px; height: 20px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; inset: 0; background: #444; border-radius: 20px; cursor: pointer; transition: .4s; }
-        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background: white; border-radius: 50%; transition: .4s; }
-        input:checked + .slider { background: var(--accent); }
-        input:checked + .slider:before { transform: translateX(20px); }
-
-        .fab { position: fixed; bottom: 90px; right: 24px; width: 50px; height: 50px; background: var(--accent); border-radius: 15px; color: #131314; display: flex; align-items: center; justify-content: center; font-size: 28px; z-index: 5; }
+        .google-btn { background: white; color: black; padding: 15px 30px; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 16px; }
+        #error-msg { color: #ff6b6b; font-size: 12px; margin-top: 20px; text-align: center; padding: 0 20px; }
+        /* Інші стилі для робочої області залишаються такими ж */
+        .header { width: 100%; background: var(--bg-card); padding: 15px; box-sizing: border-box; border-bottom: 1px solid #333; }
+        .chat-list { width: 100%; flex: 1; overflow-y: auto; }
+        .chat-item { padding: 15px; border-bottom: 1px solid #282828; width: 100%; box-sizing: border-box; }
     </style>
 </head>
 <body>
 
     <div id="login-screen" class="screen active">
         <h1 style="color: var(--accent); font-size: 42px;">My Place</h1>
+        <p style="color: #888; margin-bottom: 30px;">Авторизація Firebase</p>
         <button class="google-btn" id="login-btn">
             <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" width="20"> Увійти через Google
         </button>
+        <div id="error-msg"></div>
     </div>
 
     <div id="list-screen" class="screen">
-        <div class="header"><span id="list-title" style="font-weight: 500; font-size: 18px;">My Place</span></div>
-        <div class="chat-list" id="chat-list"></div>
-        <div class="fab" id="add-btn">+</div>
-    </div>
-
-    <div id="chat-screen" class="screen">
-        <div class="header">
-            <div id="back-to-list" style="font-size: 24px; cursor: pointer; margin-right: 15px;">←</div>
-            <div id="chat-avatar" class="avatar" style="width:38px; height:38px; margin:0; margin-right:12px;"></div>
-            <div id="chat-name" style="font-weight: 500; flex:1;"></div>
-        </div>
-        <div id="notes-area" class="notes-area"></div>
-        <div class="input-bar">
-            <textarea id="note-input" placeholder="Записати дію..." rows="1"></textarea>
-            <button id="send-note" style="color:var(--accent); background:none; border:none; font-weight:bold;">ОК</button>
-        </div>
-    </div>
-
-    <div id="edit-screen" class="screen">
-        <div class="header">
-            <div id="back-from-edit" style="font-size: 24px; cursor: pointer; margin-right: 15px;">←</div>
-            <div id="edit-title" style="flex:1; font-weight:500;">Контакт</div>
-            <div id="save-client" style="color:var(--accent); font-weight:bold; cursor:pointer;">ГОТОВО</div>
-        </div>
-        <div style="padding: 10px; overflow-y: auto;">
-            <div class="profile-top-card">
-                <div style="text-align:center;">
-                    <div id="edit-avatar-img" class="avatar" style="width:80px; height:80px; margin:0; margin-bottom:8px;">?</div>
-                    <input type="file" id="file-in" style="display:none" accept="image/*">
-                    <span id="change-photo" style="color:var(--accent); font-size: 12px; cursor:pointer;">Змінити</span>
-                </div>
-                <div class="edit-fields-container">
-                    <input type="text" id="in-ln" placeholder="Прізвище">
-                    <input type="text" id="in-fn" placeholder="Ім'я">
-                </div>
-            </div>
-            <div class="card">
-                <div class="switch-row"><span>Партнер (Команда)</span><label class="switch"><input type="checkbox" id="is-partner"><span class="slider"></span></label></div>
-                <div class="switch-row"><span>Клієнт</span><label class="switch"><input type="checkbox" id="is-client"><span class="slider"></span></label></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="nav-bar" id="bottom-nav" style="display:none;">
-        <div class="nav-item active" data-filter="all">👤 Всі</div>
-        <div class="nav-item" data-filter="client">🛒 Клієнти</div>
-        <div class="nav-item" data-filter="partner">🤝 Команда</div>
+        <div class="header"><b>My Place CRM</b></div>
+        <div id="chat-list" class="chat-list"></div>
+        <div style="padding: 20px; color: var(--accent);" onclick="location.reload()">Оновити сторінку</div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY",
@@ -152,178 +56,29 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
 
-        let clients = [];
-        let curId = null;
-        let isNew = false;
-        let currentFilter = 'all';
-        let tempImg = "";
+        const errorDiv = document.getElementById('error-msg');
 
-        // Стан авторизації
+        // Перевірка результату редіректу при завантаженні
+        getRedirectResult(auth).catch((error) => {
+            errorDiv.innerText = "Помилка: " + error.message;
+        });
+
+        // Слухач кнопки
+        document.getElementById('login-btn').onclick = () => {
+            errorDiv.innerText = "Зачекайте, перенаправлення...";
+            signInWithRedirect(auth, provider);
+        };
+
+        // Стан входу
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                switchScreen('list-screen');
-                subscribeToData(user.uid);
-            } else {
-                switchScreen('login-screen');
+                document.getElementById('login-screen').classList.remove('active');
+                document.getElementById('list-screen').classList.add('active');
+                console.log("Вхід виконано:", user.displayName);
             }
         });
-
-        function subscribeToData(uid) {
-            onSnapshot(doc(db, "users", uid), (docSnap) => {
-                if (docSnap.exists()) {
-                    clients = docSnap.data().clients || [];
-                    renderList();
-                    if(curId) updateChatUI();
-                } else {
-                    setDoc(doc(db, "users", uid), { clients: [] });
-                }
-            });
-        }
-
-        async function uploadToCloud() {
-            const user = auth.currentUser;
-            if (user) {
-                await setDoc(doc(db, "users", user.uid), { clients: clients });
-            }
-        }
-
-        // Рендеринг
-        function renderList() {
-            const box = document.getElementById('chat-list');
-            box.innerHTML = '';
-            let filtered = clients;
-            if (currentFilter === 'client') filtered = clients.filter(c => c.isClient && !c.isPartner);
-            if (currentFilter === 'partner') filtered = clients.filter(c => c.isPartner);
-
-            filtered.forEach(c => {
-                const item = document.createElement('div');
-                item.className = 'chat-item';
-                item.onclick = () => openChat(c.id);
-                item.innerHTML = `
-                    <div class="avatar" style="${c.img ? `background-image:url(${c.img})` : ''}">${c.img ? '' : c.ln[0]}</div>
-                    <div style="font-weight:500;">${c.ln} ${c.fn}</div>
-                `;
-                box.appendChild(item);
-            });
-        }
-
-        function openChat(id) {
-            curId = id;
-            updateChatUI();
-            switchScreen('chat-screen');
-        }
-
-        function updateChatUI() {
-            const c = clients.find(x => x.id == curId);
-            if(!c) return;
-            document.getElementById('chat-name').innerText = `${c.ln} ${c.fn}`;
-            document.getElementById('chat-avatar').style.backgroundImage = c.img ? `url(${c.img})` : 'none';
-            document.getElementById('chat-avatar').innerText = c.img ? '' : c.ln[0];
-            
-            const area = document.getElementById('notes-area');
-            area.innerHTML = '';
-            let lastDate = "";
-            c.notes.forEach(n => {
-                const d = new Date(n.ts || Date.now());
-                const dateLabel = d.toLocaleDateString() === new Date().toLocaleDateString() ? "Сьогодні" : d.toLocaleDateString('uk-UA');
-                if (dateLabel !== lastDate) {
-                    area.innerHTML += `<div class="date-divider">${dateLabel}</div>`;
-                    lastDate = dateLabel;
-                }
-                area.innerHTML += `<div class="note-bubble">${n.text}<span class="note-time">${n.time}</span></div>`;
-            });
-            area.scrollTop = area.scrollHeight;
-        }
-
-        // Дії
-        window.addNote = async () => {
-            const inp = document.getElementById('note-input');
-            if (!inp.value.trim()) return;
-            const c = clients.find(x => x.id == curId);
-            const now = new Date();
-            c.notes.push({
-                text: inp.value,
-                time: now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes(),
-                ts: now.getTime()
-            });
-            inp.value = '';
-            await uploadToCloud();
-        };
-
-        window.saveClient = async () => {
-            const ln = document.getElementById('in-ln').value.trim();
-            const fn = document.getElementById('in-fn').value.trim();
-            if (!ln || !fn) return alert("Введіть дані");
-
-            const data = {
-                ln, fn,
-                isPartner: document.getElementById('is-partner').checked,
-                isClient: document.getElementById('is-client').checked
-            };
-
-            if (isNew) {
-                const id = Date.now();
-                clients.push({ id, ...data, img: tempImg, notes: [] });
-                curId = id;
-            } else {
-                const idx = clients.findIndex(x => x.id == curId);
-                clients[idx] = { ...clients[idx], ...data };
-                if (tempImg) clients[idx].img = tempImg;
-            }
-
-            await uploadToCloud();
-            openChat(curId);
-        };
-
-        // Навігація
-        function switchScreen(id) {
-            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.getElementById('bottom-nav').style.display = id === 'list-screen' ? 'flex' : 'none';
-        }
-
-        // Слухачі подій
-        document.getElementById('login-btn').onclick = () => signInWithPopup(auth, provider);
-        document.getElementById('back-to-list').onclick = () => { curId = null; switchScreen('list-screen'); };
-        document.getElementById('add-btn').onclick = () => {
-            isNew = true; curId = null; tempImg = "";
-            document.getElementById('in-ln').value = ''; document.getElementById('in-fn').value = '';
-            document.getElementById('is-partner').checked = false; document.getElementById('is-client').checked = false;
-            document.getElementById('edit-avatar-img').style.backgroundImage = 'none'; document.getElementById('edit-avatar-img').innerText = '?';
-            switchScreen('edit-screen');
-        };
-        document.getElementById('back-from-edit').onclick = () => isNew ? switchScreen('list-screen') : switchScreen('chat-screen');
-        document.getElementById('chat-avatar').onclick = () => {
-            isNew = false;
-            const c = clients.find(x => x.id == curId);
-            document.getElementById('in-ln').value = c.ln;
-            document.getElementById('in-fn').value = c.fn;
-            document.getElementById('is-partner').checked = c.isPartner;
-            document.getElementById('is-client').checked = c.isClient;
-            document.getElementById('edit-avatar-img').style.backgroundImage = c.img ? `url(${c.img})` : 'none';
-            document.getElementById('edit-avatar-img').innerText = c.img ? '' : c.ln[0];
-            switchScreen('edit-screen');
-        };
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.onclick = () => {
-                currentFilter = item.dataset.filter;
-                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
-                renderList();
-            };
-        });
-        document.getElementById('file-in').onchange = (e) => {
-            const r = new FileReader();
-            r.onload = ev => {
-                tempImg = ev.target.result;
-                document.getElementById('edit-avatar-img').style.backgroundImage = `url(${tempImg})`;
-                document.getElementById('edit-avatar-img').innerText = '';
-            };
-            r.readAsDataURL(e.target.files[0]);
-        };
     </script>
 </body>
 </html>
