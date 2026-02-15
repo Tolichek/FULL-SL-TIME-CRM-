@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MLM CRM Pro Dark</title>
+    <title>MLM CRM Pro v4</title>
     <style>
         :root {
             --bg-dark: #131314;
@@ -28,13 +28,15 @@
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: none; flex-direction: column; background: var(--bg-dark);
+            padding-bottom: 80px; /* Місце для нижньої панелі */
+            box-sizing: border-box;
         }
         .active { display: flex; }
 
         /* Header */
         .header {
             background: var(--bg-card); color: var(--text-main);
-            padding: 12px 16px; display: flex; align-items: center; gap: 20px;
+            padding: 12px 16px; display: flex; align-items: center; justify-content: space-between;
             border-bottom: 1px solid #333;
         }
 
@@ -52,72 +54,65 @@
             background-size: cover; background-position: center;
         }
 
-        /* Чат нотаток */
-        #chat-screen { background: var(--tg-chat-bg); }
-        .chat-header { background: var(--bg-card); padding: 8px 16px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #333; }
-        .back-btn { font-size: 24px; cursor: pointer; }
-        
+        /* Нижня панель (Floating Nav) */
+        .nav-bar {
+            position: fixed; bottom: 15px; left: 10px; right: 10px;
+            background: var(--bg-card); height: 65px; border-radius: 20px;
+            display: flex; justify-content: space-around; align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.6); z-index: 1000;
+            border: 1px solid #333;
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center;
+            color: var(--text-gray); cursor: pointer; font-size: 11px; gap: 4px;
+        }
+        .nav-item.active { color: var(--accent); }
+        .nav-item i { font-size: 20px; }
+
+        /* Перемикачі (Toggle Switch) */
+        .switch-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid #333;
+        }
+        .switch {
+            position: relative; display: inline-block; width: 40px; height: 20px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #444; transition: .4s; border-radius: 20px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 16px; width: 16px;
+            left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--accent); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        /* Чат та інше (без змін) */
+        #chat-screen { background: var(--tg-chat-bg); padding-bottom: 0; }
         .notes-area { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 10px; }
-        .note-bubble {
-            background: #2b2c2f; padding: 10px 14px; border-radius: 16px;
-            max-width: 85%; align-self: flex-start; position: relative;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.3); line-height: 1.4;
-            user-select: none; /* Щоб не виділявся текст при довгому натисканні */
-        }
-        .note-date { font-size: 10px; color: var(--text-gray); margin-top: 4px; text-align: right; display: block; }
+        .note-bubble { background: #2b2c2f; padding: 10px 14px; border-radius: 16px; max-width: 85%; align-self: flex-start; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
 
-        /* Поле вводу */
-        .input-bar { 
-            background: var(--bg-card); padding: 10px 16px; 
-            display: flex; gap: 12px; align-items: flex-end; 
-            border-top: 1px solid #333;
-        }
-        .input-bar textarea { 
-            flex: 1; border: none; background: #2b2c2f; 
-            padding: 10px 16px; border-radius: 20px; outline: none; 
-            color: var(--text-main); font-size: 16px; 
-            resize: none; max-height: 150px; line-height: 1.4;
-        }
+        .input-bar { background: var(--bg-card); padding: 10px 16px; display: flex; gap: 12px; align-items: flex-end; }
+        .input-bar textarea { flex: 1; border: none; background: #2b2c2f; padding: 10px 16px; border-radius: 20px; color: var(--text-main); font-size: 16px; resize: none; outline: none; }
 
-        /* Контекстне меню */
-        #context-menu {
-            position: fixed; background: var(--menu-bg); border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5); display: none;
-            z-index: 1000; overflow: hidden; min-width: 150px;
-        }
-        .menu-item {
-            padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #3c4043;
-            font-size: 15px; color: var(--text-main);
-        }
-        .menu-item:last-child { border-bottom: none; }
-        .menu-item.delete { color: #f28b82; }
-
-        /* Профіль / Редагування */
-        .profile-content { flex: 1; background: var(--bg-dark); overflow-y: auto; padding: 20px; }
+        .profile-content { flex: 1; overflow-y: auto; padding: 20px; }
         .card { background: var(--bg-card); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
-        .card label { display: block; color: var(--accent); font-size: 11px; font-weight: bold; margin-bottom: 2px; }
-        .card input { 
-            width: 100%; border: none; background: transparent; 
-            padding: 8px 0 12px; font-size: 17px; outline: none; 
-            color: var(--text-main);
-        }
+        .card input { width: 100%; border: none; background: transparent; padding: 8px 0; font-size: 17px; color: var(--text-main); outline: none; }
+        .card label { color: var(--accent); font-size: 11px; font-weight: bold; }
 
-        .fab {
-            position: fixed; bottom: 24px; right: 24px;
-            width: 56px; height: 56px; background: var(--accent);
-            border-radius: 16px; color: #131314;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-            cursor: pointer;
-        }
+        .fab { position: fixed; bottom: 90px; right: 24px; width: 50px; height: 50px; background: var(--accent); border-radius: 15px; color: #131314; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 12px rgba(0,0,0,0.4); cursor: pointer; }
+        
+        #context-menu { position: fixed; background: var(--menu-bg); border-radius: 12px; display: none; z-index: 2000; min-width: 150px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .menu-item { padding: 12px 16px; border-bottom: 1px solid #3c4043; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div id="list-screen" class="screen active">
         <div class="header">
-            <div class="avatar" style="width:36px; height:36px; margin:0;" id="my-photo" onclick="alert('Акаунт')"></div>
-            <span style="font-weight: 500; font-size: 18px;">Контакти</span>
+            <span id="list-title" style="font-weight: 500; font-size: 18px;">Всі контакти</span>
         </div>
         <div class="chat-list" id="chat-list"></div>
         <div class="fab" onclick="showScreen('edit-screen', true)">+</div>
@@ -125,11 +120,11 @@
 
     <div id="chat-screen" class="screen">
         <div class="chat-header">
-            <div class="back-btn" onclick="showScreen('list-screen')">←</div>
-            <div id="chat-avatar" class="avatar" style="width:36px; height:36px; margin:0; font-size:14px;" onclick="openEdit()"></div>
+            <div onclick="showScreen('list-screen')" style="font-size: 24px; cursor: pointer;">←</div>
+            <div id="chat-avatar" class="avatar" style="width:36px; height:36px; margin:0;" onclick="openEdit()"></div>
             <div id="chat-name" style="font-weight: 500; flex:1;" onclick="openEdit()">Ім'я</div>
         </div>
-        <div class="notes-area" id="notes-area" onclick="closeMenu()"></div>
+        <div class="notes-area" id="notes-area"></div>
         <div class="input-bar">
             <textarea id="note-input" placeholder="Записати дію..." rows="1" oninput="autoResize(this)"></textarea>
             <button id="send-btn" onclick="addNote()" style="border:none; background:none; color:var(--accent); font-weight:bold; cursor:pointer; padding-bottom:10px;">ОК</button>
@@ -137,57 +132,108 @@
     </div>
 
     <div id="edit-screen" class="screen">
-        <div class="header" style="background:var(--bg-card);">
-            <div class="back-btn" onclick="goBackFromEdit()">←</div>
-            <div id="edit-title" style="flex:1; font-weight:500;">Контакт</div>
+        <div class="header">
+            <div onclick="goBackFromEdit()" style="font-size: 24px; cursor: pointer;">←</div>
+            <div id="edit-title" style="font-weight:500;">Контакт</div>
             <div onclick="saveClient()" style="color:var(--accent); font-weight:bold; cursor:pointer;">ГОТОВО</div>
         </div>
         <div class="profile-content">
-            <div class="card" style="text-align:center; background: transparent; border-radius: 0;">
-                <div id="edit-avatar-img" class="avatar" style="width:100px; height:100px; margin: 0 auto 12px;">?</div>
+            <div class="card" style="text-align:center;">
+                <div id="edit-avatar-img" class="avatar" style="width:90px; height:90px; margin: 0 auto 12px;">?</div>
                 <input type="file" id="file-in" style="display:none" onchange="uploadImg(this)">
-                <button onclick="document.getElementById('file-in').click()" style="border:none; background:none; color:var(--accent); cursor:pointer; font-size: 15px;">Змінити фото</button>
+                <button onclick="document.getElementById('file-in').click()" style="border:none; background:none; color:var(--accent);">Змінити фото</button>
             </div>
             <div class="card">
-                <label>ПРІЗВИЩЕ</label>
-                <input type="text" id="in-ln" autocomplete="off" placeholder="Введіть прізвище">
-                <label>ІМ'Я</label>
-                <input type="text" id="in-fn" autocomplete="off" placeholder="Введіть ім'я">
-                <label>ДАТА НАРОДЖЕННЯ</label>
-                <input type="date" id="in-dob">
+                <label>ПРІЗВИЩЕ</label><input type="text" id="in-ln" autocomplete="off">
+                <label>ІМ'Я</label><input type="text" id="in-fn" autocomplete="off">
+                <label>ДАТА НАРОДЖЕННЯ</label><input type="date" id="in-dob">
+            </div>
+            <div class="card">
+                <div class="switch-row">
+                    <span>Партнер (Команда)</span>
+                    <label class="switch"><input type="checkbox" id="is-partner"><span class="slider"></span></label>
+                </div>
+                <div class="switch-row" style="border:none;">
+                    <span>Клієнт</span>
+                    <label class="switch"><input type="checkbox" id="is-client"><span class="slider"></span></label>
+                </div>
             </div>
         </div>
+    </div>
+
+    <div id="profile-screen" class="screen">
+        <div class="header"><span style="font-weight: 500;">Мій профіль</span></div>
+        <div class="profile-content">
+            <div class="card" style="text-align: center;">
+                <div class="avatar" style="width:80px; height:80px; margin: 0 auto 15px; background-color: #444;">G</div>
+                <button style="background: var(--accent); border: none; padding: 10px 20px; border-radius: 10px; font-weight: bold;">Увійти через Google</button>
+                <p style="font-size: 12px; color: var(--text-gray); margin-top: 15px;">Синхронізація дозволить зберігати ваші дані в хмарі.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="settings-screen" class="screen">
+        <div class="header"><span style="font-weight: 500;">Налаштування</span></div>
+        <div class="profile-content">
+            <div class="card">Темна тема (Увімкнено)</div>
+            <div class="card">Мова: Українська</div>
+        </div>
+    </div>
+
+    <div class="nav-bar" id="bottom-nav">
+        <div class="nav-item" onclick="changeList('all', this)"><i>👤</i>Всі</div>
+        <div class="nav-item" onclick="changeList('client', this)"><i>🛒</i>Клієнти</div>
+        <div class="nav-item" onclick="changeList('partner', this)"><i>🤝</i>Команда</div>
+        <div class="nav-item" onclick="showScreen('profile-screen', false, this)"><i>🆔</i>Профіль</div>
+        <div class="nav-item" onclick="showScreen('settings-screen', false, this)"><i>⚙️</i>Опції</div>
     </div>
 
     <div id="context-menu">
         <div class="menu-item" onclick="editNote()">Редагувати</div>
-        <div class="menu-item delete" onclick="deleteNoteAction()">Видалити</div>
+        <div class="menu-item" style="color:#f28b82;" onclick="deleteNoteAction()">Видалити</div>
     </div>
 
 <script>
-    let clients = JSON.parse(localStorage.getItem('mlm_v3_dark')) || [];
+    let clients = JSON.parse(localStorage.getItem('mlm_v4_data')) || [];
     let curId = null;
+    let currentFilter = 'all';
     let isNew = false;
     let tempImg = "";
     let selectedNoteIndex = null;
     let isEditingNote = false;
     let longPressTimer;
 
-    function autoResize(textarea) {
-        textarea.style.height = 'auto';
-        textarea.style.height = textarea.scrollHeight + 'px';
-    }
+    function autoResize(t) { t.style.height = 'auto'; t.style.height = t.scrollHeight + 'px'; }
 
     function renderList() {
         const box = document.getElementById('chat-list');
         box.innerHTML = '';
-        clients.forEach(c => {
+        let filtered = clients;
+        
+        if (currentFilter === 'client') filtered = clients.filter(c => c.isClient);
+        if (currentFilter === 'partner') filtered = clients.filter(c => c.isPartner);
+
+        filtered.forEach(c => {
             box.innerHTML += `
                 <div class="chat-item" onclick="openChat(${c.id})">
                     <div class="avatar" style="${c.img ? `background-image:url(${c.img})` : ''}">${c.img ? '' : c.ln[0]}</div>
                     <div style="font-weight:500;">${c.ln} ${c.fn}</div>
                 </div>`;
         });
+    }
+
+    function changeList(filter, el) {
+        currentFilter = filter;
+        const titles = {all: "Всі контакти", client: "Клієнти", partner: "Моя команда"};
+        document.getElementById('list-title').innerText = titles[filter];
+        showScreen('list-screen');
+        setActiveNav(el);
+        renderList();
+    }
+
+    function setActiveNav(el) {
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        if(el) el.classList.add('active');
     }
 
     function openChat(id) {
@@ -198,102 +244,34 @@
         document.getElementById('chat-avatar').innerText = c.img ? '' : c.ln[0];
         renderNotes();
         showScreen('chat-screen');
+        document.getElementById('bottom-nav').style.display = 'none';
     }
 
-    function renderNotes() {
-        const c = clients.find(x => x.id == curId);
-        const box = document.getElementById('notes-area');
-        box.innerHTML = c.notes.map((n, i) => `
-            <div class="note-bubble" 
-                 onmousedown="startLongPress(event, ${i})" 
-                 onmouseup="cancelLongPress()" 
-                 onmouseleave="cancelLongPress()"
-                 ontouchstart="startLongPress(event, ${i})" 
-                 ontouchend="cancelLongPress()">
-                ${n.text.replace(/\n/g, '<br>')}
-                <span class="note-date">${n.date}</span>
-            </div>
-        `).join('');
-        box.scrollTop = box.scrollHeight;
-    }
-
-    // Робота з нотатками
-    function startLongPress(e, index) {
-        selectedNoteIndex = index;
-        longPressTimer = setTimeout(() => {
-            showMenu(e);
-        }, 600);
-    }
-
-    function cancelLongPress() {
-        clearTimeout(longPressTimer);
-    }
-
-    function showMenu(e) {
-        const menu = document.getElementById('context-menu');
-        const x = e.pageX || e.touches[0].pageX;
-        const y = e.pageY || e.touches[0].pageY;
-        menu.style.display = 'block';
-        menu.style.left = x + 'px';
-        menu.style.top = (y - 50) + 'px';
-    }
-
-    function closeMenu() {
-        document.getElementById('context-menu').style.display = 'none';
-    }
-
-    function editNote() {
-        closeMenu();
-        isEditingNote = true;
-        const c = clients.find(x => x.id == curId);
-        const inp = document.getElementById('note-input');
-        inp.value = c.notes[selectedNoteIndex].text;
-        autoResize(inp);
-        inp.focus();
-        document.getElementById('send-btn').innerText = "ЗБЕРЕГТИ";
-    }
-
-    function deleteNoteAction() {
-        closeMenu();
-        if (confirm("Видалити нотатку?")) {
-            const c = clients.find(x => x.id == curId);
-            c.notes.splice(selectedNoteIndex, 1);
-            save();
-            renderNotes();
+    function showScreen(id, isCreating = false, navEl = null) {
+        if (isCreating) {
+            isNew = true; curId = null; tempImg = "";
+            document.getElementById('in-ln').value = ''; document.getElementById('in-fn').value = '';
+            document.getElementById('in-dob').value = ''; document.getElementById('is-partner').checked = false;
+            document.getElementById('is-client').checked = false;
+            document.getElementById('edit-avatar-img').style.backgroundImage = 'none';
+            document.getElementById('edit-avatar-img').innerText = '?';
         }
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        document.getElementById('bottom-nav').style.display = (id === 'chat-screen' || id === 'edit-screen') ? 'none' : 'flex';
+        if(navEl) setActiveNav(navEl);
     }
 
-    function addNote() {
-        const inp = document.getElementById('note-input');
-        if (!inp.value.trim()) return;
-        const c = clients.find(x => x.id == curId);
-        
-        if (isEditingNote) {
-            c.notes[selectedNoteIndex].text = inp.value;
-            isEditingNote = false;
-            document.getElementById('send-btn').innerText = "ОК";
-        } else {
-            const now = new Date();
-            const dateStr = now.getHours() + ':' + (now.getMinutes()<10?'0':'') + now.getMinutes();
-            c.notes.push({ text: inp.value, date: dateStr });
-        }
-        
-        inp.value = '';
-        inp.style.height = 'auto'; 
-        save();
-        renderNotes();
-    }
-
-    // Керування контактами
     function openEdit() {
         isNew = false;
         const c = clients.find(x => x.id == curId);
         document.getElementById('in-ln').value = c.ln;
         document.getElementById('in-fn').value = c.fn;
         document.getElementById('in-dob').value = c.dob || '';
+        document.getElementById('is-partner').checked = c.isPartner || false;
+        document.getElementById('is-client').checked = c.isClient || false;
         document.getElementById('edit-avatar-img').style.backgroundImage = c.img ? `url(${c.img})` : 'none';
         document.getElementById('edit-avatar-img').innerText = c.img ? '' : c.ln[0];
-        document.getElementById('edit-title').innerText = "Редагування";
         showScreen('edit-screen');
     }
 
@@ -302,57 +280,72 @@
         const fn = document.getElementById('in-fn').value.trim();
         if (!ln || !fn) return;
 
+        const data = {
+            ln, fn, 
+            dob: document.getElementById('in-dob').value,
+            isPartner: document.getElementById('is-partner').checked,
+            isClient: document.getElementById('is-client').checked
+        };
+
         if (isNew) {
             const nid = Date.now();
-            clients.push({ id: nid, ln, fn, dob: document.getElementById('in-dob').value, img: tempImg, notes: [] });
+            clients.push({ id: nid, ...data, img: tempImg, notes: [] });
             curId = nid;
         } else {
             const c = clients.find(x => x.id == curId);
-            c.ln = ln; c.fn = fn;
-            c.dob = document.getElementById('in-dob').value;
+            Object.assign(c, data);
             if(tempImg) c.img = tempImg;
         }
-        tempImg = "";
-        save();
-        renderList();
-        openChat(curId);
+        save(); renderList(); openChat(curId);
     }
 
-    function uploadImg(input) {
-        if (input.files && input.files[0]) {
-            const r = new FileReader();
-            r.onload = e => {
-                tempImg = e.target.result;
-                document.getElementById('edit-avatar-img').style.backgroundImage = `url(${tempImg})`;
-                document.getElementById('edit-avatar-img').innerText = '';
-            };
-            r.readAsDataURL(input.files[0]);
+    // --- Логіка нотаток ---
+    function renderNotes() {
+        const c = clients.find(x => x.id == curId);
+        const box = document.getElementById('notes-area');
+        box.innerHTML = c.notes.map((n, i) => `
+            <div class="note-bubble" onmousedown="startLP(event, ${i})" ontouchstart="startLP(event, ${i})" onmouseup="stopLP()" ontouchend="stopLP()">
+                ${n.text.replace(/\n/g, '<br>')}
+                <span style="font-size:10px; color:var(--text-gray); display:block; text-align:right; margin-top:5px;">${n.date}</span>
+            </div>
+        `).join('');
+        box.scrollTop = box.scrollHeight;
+    }
+
+    function addNote() {
+        const inp = document.getElementById('note-input');
+        if (!inp.value.trim()) return;
+        const c = clients.find(x => x.id == curId);
+        if (isEditingNote) {
+            c.notes[selectedNoteIndex].text = inp.value;
+            isEditingNote = false; document.getElementById('send-btn').innerText = "ОК";
+        } else {
+            const now = new Date();
+            c.notes.push({ text: inp.value, date: now.getHours() + ':' + (now.getMinutes()<10?'0':'') + now.getMinutes() });
         }
+        inp.value = ''; inp.style.height = 'auto'; save(); renderNotes();
     }
 
-    function showScreen(id, isCreating = false) {
-        if (isCreating) {
-            isNew = true; curId = null; tempImg = "";
-            document.getElementById('in-ln').value = '';
-            document.getElementById('in-fn').value = '';
-            document.getElementById('in-dob').value = '';
-            document.getElementById('edit-avatar-img').style.backgroundImage = 'none';
-            document.getElementById('edit-avatar-img').innerText = '?';
-            document.getElementById('edit-title').innerText = "Новий контакт";
-        }
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        closeMenu();
+    function startLP(e, i) { 
+        selectedNoteIndex = i; 
+        longPressTimer = setTimeout(() => {
+            const menu = document.getElementById('context-menu');
+            const touch = e.touches ? e.touches[0] : e;
+            menu.style.display = 'block'; menu.style.left = touch.pageX + 'px'; menu.style.top = (touch.pageY - 40) + 'px';
+        }, 600);
     }
+    function stopLP() { clearTimeout(longPressTimer); }
+    function closeMenu() { document.getElementById('context-menu').style.display = 'none'; }
+    
+    function deleteNoteAction() { closeMenu(); if(confirm("Видалити?")) { clients.find(x => x.id == curId).notes.splice(selectedNoteIndex, 1); save(); renderNotes(); } }
+    function editNote() { closeMenu(); isEditingNote = true; document.getElementById('note-input').value = clients.find(x => x.id == curId).notes[selectedNoteIndex].text; document.getElementById('send-btn').innerText = "ЗБЕРЕГТИ"; document.getElementById('note-input').focus(); }
 
-    function goBackFromEdit() {
-        if (isNew) showScreen('list-screen');
-        else showScreen('chat-screen');
-    }
-
-    function save() { localStorage.setItem('mlm_v3_dark', JSON.stringify(clients)); }
+    function goBackFromEdit() { isNew ? showScreen('list-screen') : openChat(curId); }
+    function uploadImg(input) { if (input.files && input.files[0]) { const r = new FileReader(); r.onload = e => { tempImg = e.target.result; document.getElementById('edit-avatar-img').style.backgroundImage = `url(${tempImg})`; document.getElementById('edit-avatar-img').innerText = ''; }; r.readAsDataURL(input.files[0]); } }
+    function save() { localStorage.setItem('mlm_v4_data', JSON.stringify(clients)); }
 
     renderList();
+    setActiveNav(document.querySelector('.nav-item'));
 </script>
 </body>
 </html>
