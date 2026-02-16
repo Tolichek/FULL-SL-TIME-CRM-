@@ -17,29 +17,27 @@
         .screen { position: absolute; inset: 0; display: none; flex-direction: column; background: var(--bg); }
         .active { display: flex !important; }
 
-        /* Splash Screen */
+        /* Splash */
         #splash-screen { display: flex; align-items: center; justify-content: center; background: var(--bg); z-index: 20000; }
-        .splash-text { font-size: 32px; letter-spacing: 8px; text-transform: uppercase; color: white; font-weight: 300; animation: pulse 2s infinite alternate; }
-        @keyframes pulse { from { opacity: 0.3; } to { opacity: 1; } }
+        .splash-text { font-size: 32px; letter-spacing: 8px; text-transform: uppercase; color: white; font-weight: 300; }
 
-        /* ACTION BARS (ВЕРХНІ ПАНЕЛІ) */
+        /* ACTION BARS (ЗВЕРХУ) */
         .action-bar { 
             display: none; height: 60px; background: var(--bg); align-items: center; 
             padding: 0 15px; gap: 25px; position: absolute; top: 0; left: 0; right: 0; z-index: 5000; 
         }
         .action-bar.active { display: flex; }
-        .action-bar svg { fill: white; width: 22px; height: 22px; cursor: pointer; opacity: 0.8; }
+        .action-bar svg { fill: white; width: 24px; height: 24px; cursor: pointer; opacity: 0.9; }
         .sel-count { flex: 1; font-size: 20px; font-weight: 500; }
 
-        /* LISTS */
+        /* LIST & CHATS */
         .header { height: 60px; display: flex; align-items: center; padding: 0 15px; font-size: 20px; font-weight: 500; }
-        .chat-list { flex: 1; overflow-y: auto; padding-bottom: 100px; }
-        .chat-item { display: flex; padding: 12px 15px; align-items: center; position: relative; user-select: none; -webkit-tap-highlight-color: transparent; }
+        .chat-list { flex: 1; overflow-y: auto; padding-bottom: 90px; }
+        .chat-item { display: flex; padding: 10px 15px; align-items: center; position: relative; user-select: none; }
         
-        .avatar-box { position: relative; width: 50px; height: 50px; margin-right: 15px; flex-shrink: 0; }
+        .avatar-box { position: relative; width: 50px; height: 50px; margin-right: 15px; cursor: pointer; }
         .avatar { width: 100%; height: 100%; border-radius: 50%; background: #3c4043; display: flex; align-items: center; justify-content: center; font-size: 20px; background-size: cover; }
         
-        /* ЗЕЛЕНА ГАЛОЧКА */
         .check-badge { 
             position: absolute; bottom: -2px; right: -2px; width: 22px; height: 22px; 
             background: var(--sel); border-radius: 50%; display: none; align-items: center; justify-content: center; 
@@ -47,27 +45,25 @@
         }
         .selected .check-badge { display: flex; }
 
-        /* ЧАТ ТА ПОВІДОМЛЕННЯ */
-        .notes-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .note-item { display: flex; align-items: center; gap: 12px; cursor: pointer; }
-        .note-bubble { background: #2b2c2f; padding: 10px 14px; border-radius: 18px; max-width: 80%; }
-        .note-check { 
-            width: 22px; height: 22px; border: 2px solid #555; border-radius: 50%; 
-            display: none; align-items: center; justify-content: center; flex-shrink: 0;
-        }
-        .selection-mode .note-check { display: flex; }
-        .note-item.selected .note-check { background: var(--sel); border-color: var(--sel); }
-        .note-item.selected .note-check::after { content: '✓'; color: white; font-size: 14px; }
-
-        /* MENU (ТРИ ТОЧКИ) */
+        /* МЕНЮ З ТВОГО СКРІНШОТУ */
         .menu-drop { 
             position: absolute; top: 55px; right: 10px; background: #2a2e3a; 
-            border-radius: 12px; display: none; flex-direction: column; min-width: 220px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8); z-index: 6000; padding: 5px 0;
+            border-radius: 12px; display: none; flex-direction: column; min-width: 240px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); z-index: 6000; padding: 8px 0;
         }
-        .menu-row { padding: 12px 15px; display: flex; align-items: center; gap: 15px; cursor: pointer; }
+        .menu-row { padding: 12px 18px; display: flex; align-items: center; gap: 20px; cursor: pointer; font-size: 16px; }
+        .menu-row svg { fill: #b4b4b4; width: 22px; height: 22px; }
 
-        /* FLOATING ELEMENTS */
+        /* INSIDE CHAT */
+        .notes-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .note-item { display: flex; align-items: center; gap: 12px; }
+        .note-bubble { background: #2b2c2f; padding: 10px 14px; border-radius: 18px; max-width: 80%; }
+        .note-check { width: 22px; height: 22px; border: 2px solid #555; border-radius: 50%; display: none; }
+        .selection-mode .note-check { display: block; }
+        .note-item.selected .note-check { background: var(--sel); border-color: var(--sel); position: relative; }
+        .note-item.selected .note-check::after { content: '✓'; color: white; font-size: 14px; position: absolute; left: 4px; top: 0; }
+
+        /* NAVIGATION & FAB */
         .nav-bar { 
             position: fixed; bottom: 20px; left: 15px; right: 15px; 
             background: var(--card); height: 65px; border-radius: 20px; 
@@ -75,12 +71,7 @@
         }
         .nav-item { color: #888; font-size: 11px; text-align: center; cursor: pointer; }
         .nav-item.active { color: var(--acc); }
-        
-        .fab { 
-            position: fixed; bottom: 100px; right: 20px; width: 56px; height: 56px; 
-            background: var(--acc); border-radius: 18px; color: #131314; 
-            display: flex; align-items: center; justify-content: center; font-size: 30px; cursor: pointer;
-        }
+        .fab { position: fixed; bottom: 100px; right: 20px; width: 56px; height: 56px; background: var(--acc); border-radius: 18px; color: #131314; display: flex; align-items: center; justify-content: center; font-size: 30px; cursor: pointer; }
 
         .input-area { background: var(--card); margin: 10px 15px 25px; border-radius: 25px; padding: 5px 15px; display: flex; align-items: center; }
         .input-area textarea { flex: 1; background: transparent; border: none; color: white; outline: none; padding: 10px 0; font-size: 16px; resize: none; }
@@ -91,67 +82,60 @@
     <div id="splash-screen" class="screen active"><div class="splash-text">My Place</div></div>
 
     <div id="bar-chats" class="action-bar">
-        <svg onclick="resetSel('chat')" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/></svg>
+        <svg onclick="resetSelection('chat')" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/></svg>
         <div id="count-chats" class="sel-count">1</div>
-        <svg title="Архів" viewBox="0 0 24 24"><path d="M20,21H4V7H20V21M20,3H4V5H20V3M18,10H6V19H18V10M9,12H15V14H9V12Z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M20,21H4V7H20V21M20,3H4V5H20V3M18,10H6V19H18V10M9,12H15V14H9V12Z"/></svg>
         <svg onclick="deleteItems('chat')" viewBox="0 0 24 24"><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19V4M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/></svg>
-        <svg onclick="toggleM('drop-chat')" viewBox="0 0 24 24"><path d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z"/></svg>
+        <svg onclick="toggleMenu('drop-chat')" viewBox="0 0 24 24"><path d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z"/></svg>
         
         <div id="drop-chat" class="menu-drop">
-            <div class="menu-row">📌 Закріпити</div>
-            <div class="menu-row">📁 Додати до папки</div>
-            <div class="menu-row">💬 Непрочитане</div>
-            <div class="menu-row">🧹 Очистити</div>
-            <div class="menu-row">🚫 Заблокувати</div>
+            <div class="menu-row"><svg viewBox="0 0 24 24"><path d="M16,12V4H17V2H7V4H8V12L6,14V16H11.2V22H12.8V16H18V14L16,12Z"/></svg> Закріпити</div>
+            <div class="menu-row"><svg viewBox="0 0 24 24"><path d="M20,18H4V8H20V18M12,12L16,16H8L12,12M20,6H12L10,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V8C22,6.89 21.1,6 20,6Z"/></svg> Додати до папки</div>
+            <div class="menu-row"><svg viewBox="0 0 24 24"><path d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2M20,16H5.17L4,17.17V4H20V16Z"/></svg> Позначити як непрочитане</div>
+            <div class="menu-row"><svg viewBox="0 0 24 24"><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19V4M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/></svg> Очистити історію</div>
+            <div class="menu-row"><svg viewBox="0 0 24 24"><path d="M12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20,12C20,16.41 16.41,20 12,20M15.59,7L12,10.59L8.41,7L7,8.41L10.59,12L7,15.59L8.41,17L12,13.41L15.59,17L17,15.59L13.41,12L17,8.41L15.59,7Z"/></svg> Заблокувати</div>
         </div>
     </div>
 
     <div id="bar-notes" class="action-bar">
-        <svg onclick="resetSel('note')" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/></svg>
+        <svg onclick="resetSelection('note')" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/></svg>
         <div id="count-notes" class="sel-count">1</div>
-        <svg title="Редагувати" viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/></svg>
-        <svg title="Копіювати" viewBox="0 0 24 24"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg>
         <svg onclick="deleteItems('note')" viewBox="0 0 24 24"><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19V4M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/></svg>
-    </div>
-
-    <div id="login-screen" class="screen">
-        <h1 style="color:var(--acc); font-size:42px; text-align:center; margin-top:100px;">My Place</h1>
-        <button id="btn-login" style="background:white; color:black; padding:15px 30px; border-radius:30px; border:none; font-weight:bold; cursor:pointer; margin: 40px auto; display:block;">Увійти через Google</button>
     </div>
 
     <div id="list-screen" class="screen">
         <div class="header">My Place</div>
         <div id="chat-list" class="chat-list"></div>
-        <div class="fab" id="fab-add">+</div>
+        <div class="fab" onclick="switchS('edit-screen')">+</div>
         <div class="nav-bar">
-            <div class="nav-item active" data-f="all">👤 Всі</div>
-            <div class="nav-item" data-f="client">🛒 Клієнти</div>
-            <div class="nav-item" data-f="partner">🤝 Команда</div>
+            <div class="nav-item active" onclick="setF('all', this)">👤 Всі</div>
+            <div class="nav-item" onclick="setF('client', this)">🛒 Клієнти</div>
+            <div class="nav-item" onclick="setF('partner', this)">🤝 Команда</div>
         </div>
     </div>
 
     <div id="chat-screen" class="screen">
         <div class="header">
-            <span id="back-list" style="margin-right:15px; cursor:pointer">←</span>
-            <div id="chat-ava" class="avatar" style="width:36px; height:36px; margin-right:12px;"></div>
+            <span onclick="goBack()" style="margin-right:15px; cursor:pointer">←</span>
+            <div id="chat-ava" class="avatar" style="width:36px; height:36px; margin-right:12px; cursor:pointer"></div>
             <span id="chat-title"></span>
         </div>
         <div id="notes-area" class="notes-area"></div>
         <div class="input-area">
             <textarea id="note-in" rows="1" placeholder="Замітка..."></textarea>
-            <button id="btn-ok" style="background:none; border:none; color:var(--acc); font-weight:bold; margin-left:10px;">ОК</button>
+            <button onclick="addNote()" style="background:none; border:none; color:var(--acc); font-weight:bold; margin-left:10px;">ОК</button>
         </div>
     </div>
 
     <div id="edit-screen" class="screen">
-        <div class="header">
-            <span onclick="switchS('list-screen')" style="margin-right:15px; cursor:pointer">←</span>
-            <span>Налаштування</span>
-        </div>
+        <div class="header"><span onclick="goBack()" style="margin-right:15px; cursor:pointer">←</span> Картка контакта</div>
         <div style="padding:20px;">
+            <div id="edit-img-preview" class="avatar" style="width:100px; height:100px; margin:0 auto 20px;">?</div>
             <input type="text" id="in-ln" placeholder="Прізвище" style="width:100%; background:none; border:none; border-bottom:1px solid #333; color:white; padding:10px; margin-bottom:20px;">
             <input type="text" id="in-fn" placeholder="Ім'я" style="width:100%; background:none; border:none; border-bottom:1px solid #333; color:white; padding:10px; margin-bottom:20px;">
-            <button id="btn-save" style="width:100%; background:var(--acc); color:#131314; padding:15px; border-radius:15px; border:none; font-weight:bold;">Зберегти</button>
+            <button onclick="saveContact()" style="width:100%; background:var(--acc); color:#131314; padding:15px; border-radius:15px; border:none; font-weight:bold;">Зберегти</button>
         </div>
     </div>
 
@@ -164,7 +148,6 @@
     const app = initializeApp(cfg);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    const prov = new GoogleAuthProvider();
 
     let clients = [], curId = null, filter = 'all', selC = new Set(), selN = new Set(), hold;
 
@@ -181,99 +164,87 @@
                 document.getElementById('splash-screen').style.display='none';
                 if(!curId) switchS('list-screen');
             });
-        } else {
-            document.getElementById('splash-screen').style.display='none';
-            switchS('login-screen');
-        }
+        } else signInWithPopup(auth, new GoogleAuthProvider());
     });
 
-    const render = () => {
+    window.render = () => {
         const b = document.getElementById('chat-list');
         let f = clients.filter(c => filter === 'all' || (filter === 'client' && c.isClient) || (filter === 'partner' && c.isPartner));
         b.innerHTML = f.map(c => `
-            <div class="chat-item ${selC.has(c.id)?'selected':''}" data-id="${c.id}">
+            <div class="chat-item ${selC.has(c.id)?'selected':''}" onclick="chatTap(${c.id})" onmousedown="startH(${c.id},'c')" ontouchstart="startH(${c.id},'c')" onmouseup="endH()" ontouchend="endH()">
                 <div class="avatar-box">
-                    <div class="avatar">${c.ln?.[0] || '?'}</div>
+                    <div class="avatar" onclick="event.stopPropagation(); openEdit(${c.id})">${c.ln?.[0] || '?'}</div>
                     <div class="check-badge">✓</div>
                 </div>
                 <b>${c.ln||''} ${c.fn||''}</b>
             </div>
         `).join('');
-
-        document.querySelectorAll('.chat-item').forEach(el => {
-            const id = parseInt(el.dataset.id);
-            el.onclick = () => selC.size > 0 ? toggleC(id) : openC(id);
-            el.onmousedown = el.ontouchstart = () => hold = setTimeout(() => toggleC(id), 600);
-            el.onmouseup = el.ontouchend = () => clearTimeout(hold);
-        });
     };
 
-    const openC = id => {
-        curId = id;
-        const c = clients.find(x => x.id == id);
-        document.getElementById('chat-title').innerText = `${c.ln||''} ${c.fn||''}`;
-        renderN();
-        switchS('chat-screen');
-    };
+    window.chatTap = id => selC.size > 0 ? toggleC(id) : openChat(id);
+    window.startH = (id, t) => hold = setTimeout(() => t=='c'?toggleC(id):toggleN(id), 600);
+    window.endH = () => clearTimeout(hold);
 
-    const toggleC = id => {
+    function toggleC(id) {
         selC.has(id) ? selC.delete(id) : selC.add(id);
         const bar = document.getElementById('bar-chats');
         if(selC.size > 0) { bar.classList.add('active'); document.getElementById('count-chats').innerText = selC.size; }
         else bar.classList.remove('active');
         render();
-    };
+    }
 
-    const renderN = () => {
-        const c = clients.find(x => x.id == curId);
-        document.getElementById('notes-area').innerHTML = (c.notes || []).map((n, i) => `
-            <div class="note-item ${selN.has(i)?'selected':''}" data-idx="${i}">
-                <div class="note-check"></div>
-                <div class="note-bubble">${n.text}</div>
-            </div>
-        `).join('');
-
-        document.querySelectorAll('.note-item').forEach(el => {
-            const idx = parseInt(el.dataset.idx);
-            el.onclick = () => selN.size > 0 ? toggleN(idx) : null;
-            el.onmousedown = el.ontouchstart = () => hold = setTimeout(() => toggleN(idx), 600);
-            el.onmouseup = el.ontouchend = () => clearTimeout(hold);
-        });
-    };
-
-    const toggleN = i => {
-        selN.has(i) ? selN.delete(i) : selN.add(i);
-        const bar = document.getElementById('bar-notes');
-        const area = document.getElementById('notes-area');
-        if(selN.size > 0) { bar.classList.add('active'); area.classList.add('selection-mode'); document.getElementById('count-notes').innerText = selN.size; }
-        else { bar.classList.remove('active'); area.classList.remove('selection-mode'); }
+    window.openChat = id => {
+        curId = id;
+        const c = clients.find(x => x.id == id);
+        document.getElementById('chat-title').innerText = `${c.ln||''} ${c.fn||''}`;
+        document.getElementById('chat-ava').innerText = c.ln?.[0] || '?';
+        document.getElementById('chat-ava').onclick = () => openEdit(id);
         renderN();
+        switchS('chat-screen');
     };
 
-    window.resetSel = t => {
-        if(t=='chat') { selC.clear(); document.getElementById('bar-chats').classList.remove('active'); render(); }
-        else { selN.clear(); document.getElementById('bar-notes').classList.remove('active'); document.getElementById('notes-area').classList.remove('selection-mode'); renderN(); }
+    window.openEdit = id => {
+        curId = id;
+        const c = clients.find(x => x.id == id);
+        document.getElementById('in-ln').value = c.ln || '';
+        document.getElementById('in-fn').value = c.fn || '';
+        switchS('edit-screen');
     };
 
-    window.toggleM = id => {
-        const m = document.getElementById(id);
-        m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
-    };
-
-    document.getElementById('btn-login').onclick = () => signInWithPopup(auth, prov);
-    document.getElementById('back-list').onclick = () => { curId=null; switchS('list-screen'); };
-    document.getElementById('fab-add').onclick = () => switchS('edit-screen');
-    
-    document.getElementById('btn-save').onclick = async () => {
-        const ln = document.getElementById('in-ln').value;
-        const fn = document.getElementById('in-fn').value;
-        if(!ln && !fn) return;
-        clients.push({ id: Date.now(), ln, fn, notes: [], isClient: filter==='client', isPartner: filter==='partner' });
+    window.saveContact = async () => {
+        const c = clients.find(x => x.id == curId);
+        c.ln = document.getElementById('in-ln').value;
+        c.fn = document.getElementById('in-fn').value;
         await setDoc(doc(db, "users", auth.currentUser.uid), { clients });
         switchS('list-screen');
     };
 
-    document.getElementById('btn-ok').onclick = async () => {
+    window.renderN = () => {
+        const c = clients.find(x => x.id == curId);
+        document.getElementById('notes-area').innerHTML = (c.notes || []).map((n, i) => `
+            <div class="note-item ${selN.has(i)?'selected':''}" onclick="noteTap(${i})" onmousedown="startH(${i},'n')" ontouchstart="startH(${i},'n')" onmouseup="endH()" ontouchend="endH()">
+                <div class="note-check"></div>
+                <div class="note-bubble">${n.text}</div>
+            </div>
+        `).join('');
+    };
+
+    window.noteTap = i => selN.size > 0 ? toggleN(i) : null;
+
+    function toggleN(i) {
+        selN.has(i) ? selN.delete(i) : selN.add(i);
+        const bar = document.getElementById('bar-notes');
+        if(selN.size > 0) { bar.classList.add('active'); document.getElementById('count-notes').innerText = selN.size; }
+        else bar.classList.remove('active');
+        renderN();
+    }
+
+    window.resetSelection = t => {
+        if(t=='chat') { selC.clear(); document.getElementById('bar-chats').classList.remove('active'); render(); }
+        else { selN.clear(); document.getElementById('bar-notes').classList.remove('active'); renderN(); }
+    };
+
+    window.addNote = async () => {
         const i = document.getElementById('note-in');
         if(!i.value.trim()) return;
         clients.find(x => x.id == curId).notes.push({ text: i.value });
@@ -282,16 +253,20 @@
         renderN();
     };
 
-    document.querySelectorAll('.nav-item').forEach(el => {
-        el.onclick = () => {
-            filter = el.dataset.f;
-            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-            el.classList.add('active');
-            render();
-        };
-    });
+    window.toggleMenu = id => {
+        const m = document.getElementById(id);
+        m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
+    };
 
-    window.switchS = switchS; // Для виклику з HTML
+    window.setF = (v, el) => {
+        filter = v;
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+        render();
+    };
+
+    window.goBack = () => { curId=null; switchS('list-screen'); };
+    window.switchS = switchS;
 </script>
 </body>
 </html>
