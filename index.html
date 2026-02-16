@@ -11,13 +11,9 @@
         .screen { position: absolute; inset: 0; display: none; flex-direction: column; background: var(--bg); }
         .active { display: flex !important; }
 
-        /* МІНІМАЛІСТИЧНА ЗАСТАВКА (БЕЗ МАЛЮНКІВ) */
+        /* ЗАСТАВКА */
         #splash-screen { display: flex; align-items: center; justify-content: center; background: var(--bg); z-index: 20000; }
-        .splash-text { 
-            font-size: 32px; letter-spacing: 8px; text-transform: uppercase; 
-            color: white; font-weight: 300; 
-            animation: fade-in-out 2s infinite alternate;
-        }
+        .splash-text { font-size: 32px; letter-spacing: 8px; text-transform: uppercase; color: white; font-weight: 300; animation: fade-in-out 2s infinite alternate; }
         @keyframes fade-in-out { from { opacity: 0.3; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
         /* ВХІД */
@@ -37,27 +33,27 @@
         .nav-item { color: #b4b4b4; font-size: 11px; cursor: pointer; text-align: center; }
         .active-nav { color: var(--acc); }
 
-        /* ЕТАЛОННА КАРТКА */
         .profile-top { display: flex; flex-direction: column; align-items: center; padding: 20px; }
         .edit-inputs { width: 100%; display: flex; flex-direction: column; gap: 15px; margin-top: 10px; }
         .edit-inputs label { color: var(--acc); font-size: 11px; font-weight: bold; }
         .edit-inputs input { background: transparent; border: none; border-bottom: 1px solid #333; color: white; padding: 8px 0; outline: none; font-size: 17px; width: 100%; }
         .card-box { background: var(--card); margin: 10px; padding: 15px; border-radius: 12px; }
         .row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #282828; }
+        
+        /* Switch */
         .switch { position: relative; width: 40px; height: 20px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; inset: 0; background: #444; border-radius: 20px; cursor: pointer; transition: .4s; }
         .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background: white; border-radius: 50%; transition: .4s; }
         input:checked + .slider { background: var(--acc); }
         input:checked + .slider:before { transform: translateX(20px); }
+
         .fab { position: fixed; bottom: 90px; right: 20px; width: 50px; height: 50px; background: var(--acc); border-radius: 15px; color: #131314; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; z-index: 500; }
     </style>
 </head>
 <body>
 
-    <div id="splash-screen" class="screen active">
-        <div class="splash-text">My Place</div>
-    </div>
+    <div id="splash-screen" class="screen active"><div class="splash-text">My Place</div></div>
 
     <div id="login-screen" class="screen">
         <h1 style="color: var(--brand-blue); font-size: 42px; margin-bottom: 30px;">My Place</h1>
@@ -68,6 +64,11 @@
         <div class="header"><b>My Place</b></div>
         <div id="chat-list" class="chat-list"></div>
         <div class="fab" id="btn-add">+</div>
+        <div class="nav-bar">
+            <div class="nav-item active-nav" id="f-all">👤 Всі</div>
+            <div class="nav-item" id="f-client">🛒 Клієнти</div>
+            <div class="nav-item" id="f-partner">🤝 Команда</div>
+        </div>
     </div>
 
     <div id="chat-screen" class="screen">
@@ -91,7 +92,7 @@
         </div>
         <div style="overflow-y: auto; flex: 1;">
             <div class="profile-top">
-                <div id="edit-img" class="avatar" style="width:100px; height:100px; margin:0; cursor:pointer;" onclick="document.getElementById('file-in').click()">?</div>
+                <div id="edit-img" class="avatar" style="width:100px; height:100px; margin:0; cursor:pointer;">?</div>
                 <input type="file" id="file-in" style="display:none" accept="image/*">
                 <div class="edit-inputs">
                     <label>ПРІЗВИЩЕ</label><input type="text" id="in-ln">
@@ -107,15 +108,9 @@
         </div>
     </div>
 
-    <div class="nav-bar" id="bottom-nav" style="display:none;">
-        <div class="nav-item active-nav" id="f-all">👤 Всі</div>
-        <div class="nav-item" id="f-client">🛒 Клієнти</div>
-        <div class="nav-item" id="f-partner">🤝 Команда</div>
-    </div>
-
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const cfg = {
@@ -137,41 +132,26 @@
     const switchScreen = id => {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-        document.getElementById('bottom-nav').style.display = (id==='list-screen') ? 'flex' : 'none';
     };
-
-    const hideSplash = () => { document.getElementById('splash-screen').style.display = 'none'; };
-    setTimeout(hideSplash, 3000);
 
     onAuthStateChanged(auth, u => {
         if(u) {
             onSnapshot(doc(db, "users", u.uid), d => {
                 clients = d.exists() ? d.data().clients || [] : [];
-                window.render(); hideSplash();
-                if(!document.querySelector('.screen.active')) switchScreen('list-screen');
+                render(); 
+                document.getElementById('splash-screen').style.display = 'none';
+                if (!curId) switchScreen('list-screen');
             });
-        } else { hideSplash(); switchScreen('login-screen'); }
+        } else {
+            document.getElementById('splash-screen').style.display = 'none';
+            switchScreen('login-screen');
+        }
     });
 
-    document.getElementById('btn-login').onclick = () => signInWithPopup(auth, prov);
-    document.getElementById('btn-add').onclick = () => { curId=null; tempImg=""; switchScreen('edit-screen'); };
-    
-    document.getElementById('btn-save').onclick = async () => {
-        const d = { 
-            ln: document.getElementById('in-ln').value, fn: document.getElementById('in-fn').value, 
-            tel: document.getElementById('in-tel').value, dob: document.getElementById('in-dob').value, 
-            isPartner: document.getElementById('chk-p').checked, isClient: document.getElementById('chk-c').checked,
-            img: tempImg
-        };
-        if(!curId) { curId=Date.now(); clients.push({id:curId, ...d, notes:[]}); }
-        else { const i=clients.findIndex(x=>x.id==curId); clients[i]={...clients[i],...d, img: tempImg || clients[i].img}; }
-        await setDoc(doc(db, "users", auth.currentUser.uid), { clients });
-        switchScreen('list-screen');
-    };
-
-    window.render = () => {
+    const render = () => {
         const b = document.getElementById('chat-list');
-        b.innerHTML = clients.map(c => `
+        let f = clients.filter(c => filter === 'all' || (filter === 'client' && c.isClient) || (filter === 'partner' && c.isPartner));
+        b.innerHTML = f.map(c => `
             <div class="chat-item" onclick="window.openChat(${c.id})">
                 <div class="avatar" style="${c.img?`background-image:url(${c.img})`:''}"></div>
                 <b>${c.ln||''} ${c.fn||''}</b>
@@ -179,20 +159,60 @@
         `).join('');
     };
 
-    window.openChat = id => { curId=id; window.updateChat(); switchScreen('chat-screen'); };
-    window.updateChat = () => {
-        const c = clients.find(x=>x.id==curId);
+    window.openChat = id => {
+        curId = id;
+        const c = clients.find(x => x.id == id);
         document.getElementById('chat-name').innerText = `${c.ln||''} ${c.fn||''}`;
-        document.getElementById('notes-area').innerHTML = (c.notes||[]).map(n=>`<div class="note-bubble">${n.text}</div>`).join('');
+        document.getElementById('chat-avatar').style.backgroundImage = c.img ? `url(${c.img})` : 'none';
+        document.getElementById('notes-area').innerHTML = (c.notes||[]).map(n => `<div class="note-bubble">${n.text}</div>`).join('');
+        switchScreen('chat-screen');
     };
 
-    document.getElementById('file-in').onchange = e => {
-        const r=new FileReader(); r.onload=ev=>{tempImg=ev.target.result; document.getElementById('edit-img').style.backgroundImage=`url(${tempImg})`;};
-        r.readAsDataURL(e.target.files[0]);
-    };
-    
+    document.getElementById('btn-login').onclick = () => signInWithPopup(auth, prov);
+    document.getElementById('btn-add').onclick = () => { curId = null; tempImg = ""; switchScreen('edit-screen'); };
     document.getElementById('chat-back').onclick = () => switchScreen('list-screen');
     document.getElementById('edit-back').onclick = () => switchScreen('list-screen');
+    document.getElementById('edit-img').onclick = () => document.getElementById('file-in').click();
+
+    document.getElementById('btn-save').onclick = async () => {
+        const d = { 
+            id: curId || Date.now(),
+            ln: document.getElementById('in-ln').value, 
+            fn: document.getElementById('in-fn').value, 
+            tel: document.getElementById('in-tel').value, 
+            dob: document.getElementById('in-dob').value, 
+            isPartner: document.getElementById('chk-p').checked, 
+            isClient: document.getElementById('chk-c').checked,
+            img: tempImg,
+            notes: curId ? (clients.find(x => x.id == curId).notes || []) : []
+        };
+        if (!curId) clients.push(d);
+        else clients[clients.findIndex(x => x.id == curId)] = d;
+        await setDoc(doc(db, "users", auth.currentUser.uid), { clients });
+        switchScreen('list-screen');
+    };
+
+    document.getElementById('btn-send').onclick = async () => {
+        const i = document.getElementById('note-input');
+        if (!i.value.trim()) return;
+        clients.find(x => x.id == curId).notes.push({ text: i.value });
+        i.value = '';
+        await setDoc(doc(db, "users", auth.currentUser.uid), { clients });
+        window.openChat(curId);
+    };
+
+    document.querySelectorAll('.nav-item').forEach(n => n.onclick = () => {
+        filter = n.id.split('-')[1];
+        document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active-nav'));
+        n.classList.add('active-nav');
+        render();
+    });
+
+    document.getElementById('file-in').onchange = e => {
+        const r = new FileReader();
+        r.onload = ev => { tempImg = ev.target.result; document.getElementById('edit-img').style.backgroundImage = `url(${tempImg})`; };
+        r.readAsDataURL(e.target.files[0]);
+    };
 </script>
 </body>
 </html>
