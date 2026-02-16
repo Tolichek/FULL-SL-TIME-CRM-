@@ -7,55 +7,51 @@
     <style>
         :root { --bg: #131314; --card: #1e1f20; --text: #e3e3e3; --acc: #8ab4f8; --sel: #4caf50; }
         body, html { margin: 0; padding: 0; height: 100%; background: var(--bg); color: var(--text); font-family: Roboto, sans-serif; overflow: hidden; -webkit-tap-highlight-color: transparent; }
-        
         .screen { position: absolute; inset: 0; display: none; flex-direction: column; background: var(--bg); z-index: 10; }
         .active { display: flex !important; }
 
-        /* Splash Screen - Тільки логотип на темному фоні */
+        /* Splash */
         #splash-screen { display: flex; align-items: center; justify-content: center; background: var(--bg); z-index: 20000; }
-        .splash-logo { font-size: 32px; letter-spacing: 8px; text-transform: uppercase; color: white; font-weight: 300; animation: fade 1.5s infinite alternate; }
-        @keyframes fade { from { opacity: 0.5; } to { opacity: 1; } }
+        .splash-logo { font-size: 32px; letter-spacing: 8px; text-transform: uppercase; color: white; font-weight: 300; }
 
-        /* Action Bars (Multi-selection) */
+        /* Action Bars */
         .action-bar { display: none; height: 60px; background: var(--bg); align-items: center; padding: 0 15px; gap: 20px; position: absolute; top: 0; left: 0; right: 0; z-index: 5000; }
         .action-bar.active { display: flex; }
         .action-bar svg { fill: white; width: 24px; height: 24px; }
 
-        /* Header */
+        /* Lists */
         .header { height: 60px; display: flex; align-items: center; padding: 0 15px; font-size: 20px; font-weight: 500; }
-
-        /* Chat List */
         .chat-list { flex: 1; overflow-y: auto; padding-bottom: 100px; }
         .chat-item { display: flex; padding: 12px 15px; align-items: center; position: relative; }
-        .avatar-box { position: relative; width: 52px; height: 52px; margin-right: 15px; }
-        .avatar { width: 100%; height: 100%; border-radius: 50%; background: #3c4043; display: flex; align-items: center; justify-content: center; font-size: 20px; background-size: cover; background-position: center; border: none; }
+        .avatar-box { position: relative; width: 52px; height: 52px; margin-right: 15px; flex-shrink: 0; }
+        .avatar { width: 100%; height: 100%; border-radius: 50%; background: #3c4043; display: flex; align-items: center; justify-content: center; font-size: 20px; background-size: cover; background-position: center; }
         .check-badge { position: absolute; bottom: -2px; right: -2px; width: 22px; height: 22px; background: var(--sel); border-radius: 50%; display: none; align-items: center; justify-content: center; border: 2px solid var(--bg); color: white; font-size: 10px; }
         .selected .check-badge { display: flex; }
+
+        /* Chat Screen Styles */
+        .notes-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background: var(--bg); }
+        .note-bubble { background: #2b2c2f; padding: 10px 14px; border-radius: 18px; max-width: 80%; align-self: flex-start; }
+        .input-area { background: var(--card); margin: 10px 15px 25px; border-radius: 25px; padding: 5px 15px; display: flex; align-items: center; gap: 10px; }
+        .input-area textarea { flex: 1; background: transparent; border: none; color: white; outline: none; padding: 10px 0; font-size: 16px; resize: none; }
 
         /* Profile Parallax View */
         .profile-hero { width: 100%; height: 350px; background-size: cover; background-position: center; position: relative; background-color: #2a2e3a; }
         .profile-hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent, rgba(19,19,20,1)); }
         .hero-top { position: absolute; top: 0; width: 100%; padding: 15px; display: flex; justify-content: space-between; z-index: 100; box-sizing: border-box; }
         .hero-info { position: absolute; bottom: 20px; left: 20px; z-index: 100; }
-
-        /* Cards */
+        
         .info-card { background: var(--card); border-radius: 15px; padding: 15px; margin: 10px 20px; display: flex; flex-direction: column; gap: 5px; }
-        .info-label { font-size: 12px; color: var(--acc); font-weight: bold; }
+        .action-buttons { display: flex; justify-content: space-around; padding: 15px 0; border-bottom: 1px solid #222; }
+        .act-btn { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 11px; cursor: pointer; color: var(--acc); }
+        .act-icon { width: 45px; height: 45px; border-radius: 50%; background: var(--card); display: flex; align-items: center; justify-content: center; font-size: 20px; }
 
-        /* Inputs - NO BORDERS */
-        .edit-input { width: 100%; background: none; border: none; border-bottom: 1px solid #333; color: white; padding: 15px 0; font-size: 18px; outline: none; }
-        .edit-input:focus { border-bottom: 2px solid var(--acc); }
-
-        /* Bottom Nav */
-        .nav-bar { position: fixed; bottom: 20px; left: 15px; right: 15px; background: var(--card); height: 65px; border-radius: 20px; display: flex; justify-content: space-around; align-items: center; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        /* Nav & FAB */
+        .nav-bar { position: fixed; bottom: 20px; left: 15px; right: 15px; background: var(--card); height: 65px; border-radius: 20px; display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
         .nav-item { color: #888; font-size: 10px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-        .nav-item svg { width: 22px; height: 22px; fill: currentColor; }
         .nav-item.active { color: var(--acc); }
-
         .fab { position: fixed; bottom: 100px; right: 20px; width: 56px; height: 56px; background: var(--acc); border-radius: 18px; color: #131314; display: flex; align-items: center; justify-content: center; font-size: 30px; z-index: 900; }
 
-        .menu-drop { position: absolute; top: 55px; right: 10px; background: #2a2e3a; border-radius: 12px; display: none; flex-direction: column; min-width: 200px; z-index: 6000; padding: 5px 0; }
-        .menu-row { padding: 12px 18px; display: flex; align-items: center; gap: 15px; }
+        .edit-input { width: 100%; background: none; border: none; border-bottom: 1px solid #333; color: white; padding: 15px 0; font-size: 18px; outline: none; }
     </style>
 </head>
 <body>
@@ -69,7 +65,7 @@
     </div>
 
     <div id="screen-main" class="screen">
-        <div class="header" id="main-title">Контакти</div>
+        <div class="header">Контакти</div>
         <div id="contact-list" class="chat-list"></div>
         <div class="fab" onclick="openEdit(null)">+</div>
     </div>
@@ -82,20 +78,35 @@
             </div>
             <div class="hero-info">
                 <h2 id="prof-name" style="margin:0"></h2>
-                <p id="prof-status" style="font-size:14px; opacity:0.6; margin:5px 0 0;">онлайн</p>
             </div>
+        </div>
+        <div class="action-buttons">
+            <div class="act-btn" onclick="openChat(curId)"><div class="act-icon">💬</div>Написати</div>
+            <div class="act-btn"><div class="act-icon">🔔</div>Вимкнути</div>
+            <div class="act-btn"><div class="act-icon">📞</div>Виклик</div>
         </div>
         <div id="prof-body"></div>
     </div>
 
+    <div id="screen-chat" class="screen">
+        <div class="header">
+            <span onclick="goBack()" style="margin-right:20px;">←</span>
+            <div id="chat-ava-head" class="avatar" style="width:36px; height:36px; margin-right:12px;"></div>
+            <span id="chat-name-head" style="flex:1">Чат</span>
+        </div>
+        <div id="notes-area" class="notes-area"></div>
+        <div class="input-area">
+            <textarea id="note-in" rows="1" placeholder="Повідомлення..."></textarea>
+            <button onclick="addNote()" style="background:none; border:none; color:var(--acc); font-weight:bold;">ОК</button>
+        </div>
+    </div>
+
     <div id="screen-my-profile" class="screen">
         <div class="header">Мій профіль</div>
-        <div style="flex:1; padding:20px;">
+        <div style="padding:20px; text-align:center;">
             <div id="my-avatar" class="avatar" style="width:100px; height:100px; margin:0 auto 20px;"></div>
-            <h3 id="my-name" style="text-align:center;">Користувач</h3>
-            <div class="info-card" onclick="signOutUser()" style="color:#ff6b6b; align-items:center; font-weight:bold;">
-                Вийти з акаунту
-            </div>
+            <h3 id="my-name">Користувач</h3>
+            <div class="info-card" onclick="signOutUser()" style="color:#ff6b6b; font-weight:bold;">Вийти з акаунту</div>
         </div>
     </div>
 
@@ -105,7 +116,7 @@
             <span style="flex:1">Контакт</span>
             <span onclick="saveData()" style="color:var(--acc); font-weight:bold;">ГОТОВО</span>
         </div>
-        <div style="padding:20px; overflow-y:auto;">
+        <div style="padding:20px;">
             <div id="edit-avatar-btn" class="avatar" style="width:120px; height:120px; margin:0 auto 20px; cursor:pointer;">?</div>
             <input type="file" id="file-in" style="display:none" accept="image/*">
             <input type="text" id="in-ln" class="edit-input" placeholder="Прізвище">
@@ -115,22 +126,10 @@
     </div>
 
     <div class="nav-bar">
-        <div class="nav-item active" onclick="setMode('all', this)">
-            <svg viewBox="0 0 24 24"><path d="M12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/></svg>
-            Контакти
-        </div>
-        <div class="nav-item" onclick="setMode('partner', this)">
-            <svg viewBox="0 0 24 24"><path d="M16,13C15.71,13 15.38,13 15.03,13.05C16.19,13.89 17,15 17,16.5V19H23V16.5C23,14.17 18.33,13 16,13M8,13C5.67,13 1,14.17 1,16.5V19H15V16.5C15,14.17 10.33,13 8,13M8,11A3,3 0 0,0 11,8A3,3 0 0,0 8,5A3,3 0 0,0 5,8A3,3 0 0,0 8,11M16,11A3,3 0 0,0 19,8A3,3 0 0,0 16,5A3,3 0 0,0 13,8A3,3 0 0,0 16,11Z"/></svg>
-            Команда
-        </div>
-        <div class="nav-item" onclick="setMode('client', this)">
-            <svg viewBox="0 0 24 24"><path d="M17,18C15.89,18 15,18.89 15,20A2,2 0 0,0 17,22A2,2 0 0,0 19,20C19,18.89 18.11,18 17,18M7,18C5.89,18 5,18.89 5,20A2,2 0 0,0 7,22A2,2 0 0,0 9,20C9,18.89 8.11,18 7,18M7,16L11,16L11,14L7,14L7,16M13,16L17,16L17,14L13,14L13,16M1,2V4H3L6.6,11.59L5.25,14.04C5.09,14.32 5,14.65 5,15A2,2 0 0,0 7,17H19V15H7.42C7.29,15 7.17,14.89 7.17,14.75L7.2,14.63L8.1,13H15.55C16.3,13 16.96,12.59 17.3,11.97L20.88,5.48C21.04,5.19 21.1,4.86 21.1,4.53C21.1,3.41 20.19,2.5 19.07,2.5H4.89L3.95,0.5H1V2Z"/></svg>
-            Клієнти
-        </div>
-        <div class="nav-item" onclick="switchS('screen-my-profile')">
-            <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,8.39L14.07,10.5L12,12.61L9.93,10.5L12,8.39M12,4.61L15.82,8.43L12,12.25L8.18,8.43L12,4.61M12,19.39L8.18,15.57L12,11.75L15.82,15.57L12,19.39Z"/></svg>
-            Профіль
-        </div>
+        <div class="nav-item active" onclick="setMode('all', this)">👤 Контакти</div>
+        <div class="nav-item" onclick="setMode('partner', this)">🤝 Команда</div>
+        <div class="nav-item" onclick="setMode('client', this)">🛒 Клієнти</div>
+        <div class="nav-item" onclick="switchS('screen-my-profile')">🆔 Профіль</div>
     </div>
 
 <script type="module">
@@ -151,10 +150,7 @@
         if(push) history.pushState({screen: id}, "");
     };
 
-    window.onpopstate = (e) => {
-        const sid = e.state?.screen || 'screen-main';
-        switchS(sid, false);
-    };
+    window.onpopstate = (e) => switchS(e.state?.screen || 'screen-main', false);
 
     onAuthStateChanged(auth, u => {
         if(u) {
@@ -169,22 +165,16 @@
         } else signInWithPopup(auth, new GoogleAuthProvider());
     });
 
-    window.signOutUser = () => {
-        if(confirm("Вийти з акаунту?")) signOut(auth).then(() => location.reload());
-    };
-
     const render = () => {
         const b = document.getElementById('contact-list');
         let f = clients.filter(c => mode === 'all' || (mode === 'client' && c.isClient) || (mode === 'partner' && c.isPartner));
         b.innerHTML = f.map(c => `
-            <div class="chat-item ${selC.has(c.id)?'selected':''}" data-id="${c.id}">
-                <div class="avatar-box" onclick="event.stopPropagation(); openProf(${c.id})">
+            <div class="chat-item ${selC.has(c.id)?'selected':''}" data-id="${c.id}" onclick="handleTap(${c.id})">
+                <div class="avatar-box">
                     <div class="avatar" style="${c.img?`background-image:url(${c.img})`:''}">${c.img?'':(c.ln?.[0]||'?')}</div>
                     <div class="check-badge">✓</div>
                 </div>
-                <div style="flex:1" onclick="handleTap(${c.id})">
-                    <b>${c.ln||''} ${c.fn||''}</b>
-                </div>
+                <b>${c.ln||''} ${c.fn||''}</b>
             </div>
         `).join('');
 
@@ -205,32 +195,49 @@
         switchS('screen-profile');
     };
 
-    window.openEdit = id => {
-        curId = id; const c = id ? clients.find(x => x.id == id) : {};
-        document.getElementById('in-ln').value = c.ln || '';
-        document.getElementById('in-fn').value = c.fn || '';
-        document.getElementById('in-tel').value = c.tel || '';
-        tempImg = c.img || "";
-        const av = document.getElementById('edit-avatar-btn');
-        av.style.backgroundImage = tempImg ? `url(${tempImg})` : 'none';
-        av.innerText = tempImg ? '' : '?';
-        switchS('screen-edit');
+    window.openChat = id => {
+        curId = id; const c = clients.find(x => x.id == id);
+        document.getElementById('chat-name-head').innerText = `${c.ln||''} ${c.fn||''}`;
+        document.getElementById('chat-ava-head').style.backgroundImage = c.img ? `url(${c.img})` : 'none';
+        renderNotes();
+        switchS('screen-chat');
+    };
+
+    window.renderNotes = () => {
+        const c = clients.find(x => x.id == curId);
+        document.getElementById('notes-area').innerHTML = (c.notes || []).map(n => `<div class="note-bubble">${n.text}</div>`).join('');
+    };
+
+    window.addNote = async () => {
+        const i = document.getElementById('note-in');
+        if(!i.value.trim()) return;
+        clients.find(x => x.id == curId).notes.push({ text: i.value });
+        i.value = '';
+        await setDoc(doc(db, "users", auth.currentUser.uid), { clients });
+        renderNotes();
     };
 
     window.saveData = async () => {
-        const data = { id: curId || Date.now(), ln: document.getElementById('in-ln').value, fn: document.getElementById('in-fn').value, tel: document.getElementById('in-tel').value, img: tempImg, isClient: mode==='client', isPartner: mode==='partner' };
+        const ln = document.getElementById('in-ln').value;
+        const fn = document.getElementById('in-fn').value;
+        const data = { id: curId || Date.now(), ln, fn, tel: document.getElementById('in-tel').value, img: tempImg, isClient: mode==='client', isPartner: mode==='partner', notes: curId ? (clients.find(x => x.id == curId).notes || []) : [] };
         if(!curId) clients.push(data); else clients[clients.findIndex(x => x.id == curId)] = data;
         await setDoc(doc(db, "users", auth.currentUser.uid), { clients });
         goBack();
     };
 
+    window.openEdit = id => {
+        curId = id; const c = id ? clients.find(x => x.id == id) : {};
+        document.getElementById('in-ln').value = c.ln || ''; document.getElementById('in-fn').value = c.fn || ''; document.getElementById('in-tel').value = c.tel || '';
+        tempImg = c.img || "";
+        const av = document.getElementById('edit-avatar-btn');
+        av.style.backgroundImage = tempImg ? `url(${tempImg})` : 'none'; av.innerText = tempImg ? '' : '?';
+        switchS('screen-edit');
+    };
+
     window.setMode = (m, el) => {
-        mode = m;
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-        el.classList.add('active');
-        document.getElementById('main-title').innerText = el.innerText.trim();
-        render();
-        switchS('screen-main');
+        mode = m; document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); el.classList.add('active');
+        render(); switchS('screen-main');
     };
 
     const toggleC = id => {
@@ -242,6 +249,7 @@
 
     window.resetSel = () => { selC.clear(); document.getElementById('bar-sel').classList.remove('active'); render(); };
     window.deleteItems = async () => { if(confirm("Видалити?")) { clients = clients.filter(c => !selC.has(c.id)); await setDoc(doc(db, "users", auth.currentUser.uid), { clients }); resetSel(); } };
+    window.signOutUser = () => signOut(auth).then(() => location.reload());
     window.goBack = () => history.back();
     window.switchS = switchS;
 
