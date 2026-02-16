@@ -11,69 +11,70 @@
         .screen { position: absolute; inset: 0; display: none; flex-direction: column; background: var(--bg); }
         .active { display: flex !important; }
 
-        /* ОНОВЛЕНА ЗАСТАВКА: РЕАЛІСТИЧНИЙ СУВІЙ ТА ПЕРО */
+        /* ОНОВЛЕНА ЗАСТАВКА: МАКСИМАЛЬНА ВІДПОВІДНІСТЬ МАЛЮНКУ */
         #splash-screen { display: flex; align-items: center; justify-content: center; background: var(--bg); z-index: 20000; }
-        .splash-container { text-align: center; position: relative; width: 220px; height: 280px; }
+        .splash-container { text-align: center; position: relative; width: 250px; height: 300px; }
         
-        /* Тіло сувою з градієнтом під старий папір */
+        /* Реалістичний сувій */
         .scroll-paper {
-            width: 130px; height: 170px; 
-            background: linear-gradient(135deg, #f4e4bc 0%, #e2cfa1 100%); 
+            width: 140px; height: 180px; 
+            background: linear-gradient(135deg, #f3e2b9 0%, #e1cd9d 50%, #d4bf8e 100%); 
             border-radius: 2px;
-            position: absolute; left: 35px; top: 40px;
-            box-shadow: 10px 10px 25px rgba(0,0,0,0.7);
-            border-left: 2px solid #d4b483;
+            position: absolute; left: 40px; top: 45px;
+            box-shadow: 15px 15px 30px rgba(0,0,0,0.8);
+            border-left: 3px solid #c0a672;
+            overflow: hidden;
         }
         
-        /* Об'ємні валики сувою */
+        /* Валики сувою (об'ємні) */
         .scroll-roll {
-            width: 145px; height: 30px; 
-            background: linear-gradient(to bottom, #d4b483, #e2cfa1, #bc9a6a);
-            position: absolute; left: 28px; border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-            border: 1px solid #a68b5b;
+            width: 160px; height: 34px; 
+            background: linear-gradient(to bottom, #a68b5b 0%, #e2cfa1 40%, #e2cfa1 60%, #8c7343 100%);
+            position: absolute; left: 30px; border-radius: 17px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.6);
+            border: 1px solid #7d663a;
         }
-        .top-roll { top: 20px; }
-        .bottom-roll { top: 200px; }
+        .top-roll { top: 25px; }
+        .bottom-roll { top: 210px; }
 
-        /* Ефект написання чорнилом */
+        /* Анімація написання */
         .ink-text {
-            position: absolute; top: 70px; left: 50px; width: 100px; height: 130px;
-            display: flex; flex-direction: column; gap: 15px;
+            position: absolute; top: 75px; left: 55px; width: 110px; height: 140px;
+            display: flex; flex-direction: column; gap: 18px;
         }
         .ink-line {
-            height: 2px; background: rgba(30, 20, 10, 0.8); width: 0; border-radius: 2px;
-            box-shadow: 0 0 1px rgba(0,0,0,0.5);
+            height: 3px; background: rgba(20, 15, 5, 0.9); width: 0; border-radius: 3px;
             animation: ink-draw 3s infinite linear;
+            box-shadow: 0 0 2px rgba(0,0,0,0.3);
         }
-        .line-2 { animation-delay: 0.7s; }
-        .line-3 { animation-delay: 1.4s; }
+        .line-2 { animation-delay: 0.8s; }
+        .line-3 { animation-delay: 1.6s; }
 
-        /* Золоте перо з деталями */
+        /* Масивне Золоте Перо */
         .quill-gold {
-            width: 80px; height: 120px; position: absolute;
-            right: 0px; top: -15px; z-index: 10;
-            filter: drop-shadow(5px 5px 5px rgba(0,0,0,0.5));
+            width: 100px; height: 140px; position: absolute;
+            right: -10px; top: -20px; z-index: 10;
+            filter: drop-shadow(8px 8px 8px rgba(0,0,0,0.6));
             animation: writing-quill 3s infinite ease-in-out;
             transform-origin: bottom left;
         }
 
         @keyframes writing-quill {
             0% { transform: translate(0, 0) rotate(35deg); }
-            25% { transform: translate(-40px, 40px) rotate(25deg); }
-            50% { transform: translate(-70px, 80px) rotate(40deg); }
-            75% { transform: translate(-30px, 120px) rotate(25deg); }
+            30% { transform: translate(-50px, 50px) rotate(25deg); }
+            60% { transform: translate(-85px, 95px) rotate(40deg); }
+            85% { transform: translate(-40px, 145px) rotate(25deg); }
             100% { transform: translate(0, 0) rotate(35deg); }
         }
 
         @keyframes ink-draw {
-            0%, 25% { width: 0; opacity: 0; }
-            85%, 100% { width: 100%; opacity: 1; }
+            0%, 30% { width: 0; opacity: 0; }
+            90%, 100% { width: 100%; opacity: 1; }
         }
 
-        .splash-text { position: absolute; bottom: -10px; width: 100%; font-size: 22px; letter-spacing: 6px; text-transform: uppercase; color: #f4e4bc; font-weight: 300; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .splash-text { position: absolute; bottom: -20px; width: 100%; font-size: 24px; letter-spacing: 8px; text-transform: uppercase; color: #f3e2b9; font-weight: 300; text-shadow: 0 3px 6px rgba(0,0,0,0.8); }
 
-        /* БАЗОВІ СТИЛІ CRM (БЕЗ ЗМІН) */
+        /* КНОПКА GOOGLE ТА ІНТЕРФЕЙС (БЕЗ ЗМІН) */
         #login-screen { align-items: center; justify-content: center; z-index: 10000; }
         .google-btn { background: white; color: black; padding: 15px 30px; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 10px; }
         .header { background: var(--card); padding: 10px 15px; display: flex; align-items: center; border-bottom: 1px solid #333; }
@@ -87,7 +88,6 @@
         .active-nav { color: var(--acc); }
         .fab { position: fixed; bottom: 90px; right: 20px; width: 50px; height: 50px; background: var(--acc); border-radius: 15px; color: #131314; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; z-index: 500; }
         
-        /* КАРТКА РЕДАГУВАННЯ (ЕТАЛОН) */
         .profile-top { display: flex; flex-direction: column; align-items: center; padding: 20px; }
         .edit-inputs { width: 100%; display: flex; flex-direction: column; gap: 15px; margin-top: 10px; }
         .edit-inputs label { color: var(--acc); font-size: 11px; font-weight: bold; }
@@ -118,15 +118,16 @@
             
             <svg class="quill-gold" viewBox="0 0 100 100">
                 <defs>
-                    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" style="stop-color:#d4af37;stop-opacity:1" />
                         <stop offset="50%" style="stop-color:#fcf6ba;stop-opacity:1" />
                         <stop offset="100%" style="stop-color:#aa771c;stop-opacity:1" />
                     </linearGradient>
                 </defs>
-                <path d="M80,10 C60,20 40,50 30,90 C50,70 70,40 80,10" fill="url(#goldGrad)" />
-                <path d="M30,90 L35,85" stroke="#131314" stroke-width="2" />
-                <path d="M45,60 Q55,55 65,50" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="1" />
+                <path d="M85,5 C60,15 35,50 25,95 C50,75 75,35 85,5" fill="url(#gold)" />
+                <path d="M25,95 L32,88" stroke="#131314" stroke-width="3" />
+                <path d="M40,65 Q55,60 70,55" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="1.5" />
+                <path d="M35,80 Q50,75 60,70" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="1.5" />
             </svg>
             
             <div class="splash-text">My Place</div>
@@ -229,7 +230,7 @@
     });
 
     document.getElementById('btn-login').onclick = () => signInWithPopup(auth, prov);
-    document.getElementById('btn-add').onclick = () => { curId=null; switchScreen('edit-screen'); };
+    document.getElementById('btn-add').onclick = () => { curId=null; tempImg=""; switchScreen('edit-screen'); };
     
     document.getElementById('btn-save').onclick = async () => {
         const d = { 
@@ -239,7 +240,7 @@
             img: tempImg
         };
         if(!curId) { curId=Date.now(); clients.push({id:curId, ...d, notes:[]}); }
-        else { const i=clients.findIndex(x=>x.id==curId); clients[i]={...clients[i],...d}; }
+        else { const i=clients.findIndex(x=>x.id==curId); clients[i]={...clients[i],...d, img: tempImg || clients[i].img}; }
         await setDoc(doc(db, "users", auth.currentUser.uid), { clients });
         switchScreen('list-screen');
     };
