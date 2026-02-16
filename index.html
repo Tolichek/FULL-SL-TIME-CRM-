@@ -6,44 +6,47 @@
     <title>DASH</title>
     <style>
         :root {
-            --bg-login: #f8faf8; /* Світлий фон з твого фото */
-            --green: #2d5a27;    /* Твій темно-зелений */
-            --text: #1a1a1a;
+            --bg: #ffffff;
+            --green: #1b4332; /* Глибокий темно-зелений для логотипу */
+            --google-text: #3c4043;
+            --google-blue: #1a73e8;
         }
 
-        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Inter', sans-serif; background: var(--bg-login); overflow: hidden; }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Roboto', sans-serif; background: var(--bg); overflow: hidden; }
 
         .screen { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; }
         .active { display: flex; }
 
-        /* ЗАСТАВКА (SPLASH) */
-        #splash-screen { background: var(--bg-login); z-index: 1000; }
-        
-        .logo-wrap { position: relative; display: flex; align-items: center; }
+        /* SPLASH SCREEN (ШВИДКА АНІМАЦІЯ) */
+        #splash-screen { background: var(--bg); z-index: 2000; }
+        .logo-wrap { position: relative; }
         .logo-text { 
-            font-size: 52px; font-weight: 900; color: var(--green); 
-            letter-spacing: 6px; text-transform: uppercase; 
-            opacity: 0; transform: scale(0.8);
-            animation: logoIn 0.3s ease-out forwards;
+            font-size: 60px; font-weight: 900; color: var(--green); 
+            letter-spacing: 4px; opacity: 0; 
+            animation: fastShow 0.2s forwards;
         }
-        .dash-stroke { 
-            position: absolute; bottom: -8px; left: 0; height: 6px; background: var(--green); 
-            width: 0; animation: strike 0.4s cubic-bezier(0.17, 0.67, 0.83, 0.67) forwards 0.2s;
+        .dash-line { 
+            position: absolute; bottom: -5px; left: 0; height: 8px; background: var(--green); 
+            width: 0; animation: fastLine 0.3s ease-in forwards 0.1s;
         }
 
-        @keyframes logoIn { to { opacity: 1; transform: scale(1); } }
-        @keyframes strike { from { width: 0; } to { width: 100%; } }
+        @keyframes fastShow { to { opacity: 1; } }
+        @keyframes fastLine { to { width: 100%; } }
 
-        /* ЕКРАН ВХОДУ */
-        #login-screen { padding: 40px; text-align: center; }
-        .login-title { font-size: 24px; font-weight: 600; margin-bottom: 40px; color: var(--text); }
+        /* GOOGLE LOGIN SCREEN (ТОЧНО ЯК НА ФОТО) */
+        #login-screen { background: var(--bg); padding-top: 50px; justify-content: flex-start; }
+        .google-logo { width: 74px; margin-top: 40px; margin-bottom: 20px; }
+        .user-email { font-size: 16px; color: var(--google-text); margin-bottom: 30px; }
         
-        .btn-google {
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-            width: 100%; max-width: 280px; padding: 14px; background: white;
-            border: 1px solid #dadce0; border-radius: 25px; color: #3c4043;
-            font-size: 16px; font-weight: 500; cursor: pointer;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        .btn-continue {
+            background: var(--google-blue); color: white; border: none;
+            padding: 10px 24px; border-radius: 20px; font-size: 14px;
+            font-weight: 500; cursor: pointer; margin-bottom: 15px;
+            width: 220px;
+        }
+        .btn-logout {
+            background: none; color: var(--google-blue); border: none;
+            font-size: 14px; font-weight: 500; cursor: pointer;
         }
     </style>
 </head>
@@ -52,32 +55,29 @@
     <div id="splash-screen" class="screen active">
         <div class="logo-wrap">
             <div class="logo-text">DASH</div>
-            <div class="dash-stroke"></div>
+            <div class="dash-line"></div>
         </div>
     </div>
 
     <div id="login-screen" class="screen">
-        <div class="login-title">Вхід у DASH</div>
-        <button class="btn-google" id="google-login">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_Logo.svg" width="18" height="18">
-            Увійти через Google
-        </button>
+        <img class="google-logo" src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google">
+        <div class="user-email" id="user-email">user@gmail.com</div>
+        
+        <button class="btn-continue" id="btn-continue">Продовжити як...</button>
+        <button class="btn-logout">Вийти з акаунту</button>
     </div>
 
 <script>
-    // Логіка перемикання заставки на вхід
+    // Швидкий перехід від Splash до Login
     setTimeout(() => {
-        const splash = document.getElementById('splash-screen');
-        const login = document.getElementById('login-screen');
-        
-        splash.style.opacity = '0';
-        splash.style.transition = 'opacity 0.4s ease';
-        
-        setTimeout(() => {
-            splash.classList.remove('active');
-            login.classList.add('active');
-        }, 400);
-    }, 1800); // Заставка триває 1.8 сек
+        document.getElementById('splash-screen').style.display = 'none';
+        document.getElementById('login-screen').classList.add('active');
+    }, 1200);
+
+    // Імітація входу (для тесту)
+    document.getElementById('btn-continue').onclick = () => {
+        alert('Вхід виконано. Чекаю на макет головного екрана.');
+    };
 </script>
 
 </body>
