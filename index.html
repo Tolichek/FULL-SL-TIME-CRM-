@@ -7,17 +7,18 @@
     <style>
         :root { --bg: #131314; --card: #1e1f20; --text: #e3e3e3; --acc: #8ab4f8; --sel: #4caf50; }
         body, html { margin: 0; padding: 0; height: 100%; background: var(--bg); color: var(--text); font-family: Roboto, sans-serif; overflow: hidden; -webkit-tap-highlight-color: transparent; }
+        
         .screen { position: absolute; inset: 0; display: none; flex-direction: column; background: var(--bg); z-index: 10; }
         .active { display: flex !important; }
 
-        /* Splash */
+        /* Splash Screen */
         #splash-screen { display: flex; align-items: center; justify-content: center; background: var(--bg); z-index: 20000; }
         .splash-logo { font-size: 32px; letter-spacing: 8px; text-transform: uppercase; color: white; font-weight: 300; }
 
-        /* Action Bars */
+        /* Action Bar (Multi-selection) */
         .action-bar { display: none; height: 60px; background: var(--bg); align-items: center; padding: 0 15px; gap: 20px; position: absolute; top: 0; left: 0; right: 0; z-index: 5000; }
         .action-bar.active { display: flex; }
-        .action-bar svg { fill: white; width: 24px; height: 24px; }
+        .action-bar svg { fill: white; width: 24px; height: 24px; cursor: pointer; }
 
         /* Lists */
         .header { height: 60px; display: flex; align-items: center; padding: 0 15px; font-size: 20px; font-weight: 500; }
@@ -28,8 +29,8 @@
         .check-badge { position: absolute; bottom: -2px; right: -2px; width: 22px; height: 22px; background: var(--sel); border-radius: 50%; display: none; align-items: center; justify-content: center; border: 2px solid var(--bg); color: white; font-size: 10px; }
         .selected .check-badge { display: flex; }
 
-        /* Chat Screen Styles */
-        .notes-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; background: var(--bg); }
+        /* Chat Inside */
+        .notes-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
         .note-bubble { background: #2b2c2f; padding: 10px 14px; border-radius: 18px; max-width: 80%; align-self: flex-start; }
         .input-area { background: var(--card); margin: 10px 15px 25px; border-radius: 25px; padding: 5px 15px; display: flex; align-items: center; gap: 10px; }
         .input-area textarea { flex: 1; background: transparent; border: none; color: white; outline: none; padding: 10px 0; font-size: 16px; resize: none; }
@@ -40,18 +41,20 @@
         .hero-top { position: absolute; top: 0; width: 100%; padding: 15px; display: flex; justify-content: space-between; z-index: 100; box-sizing: border-box; }
         .hero-info { position: absolute; bottom: 20px; left: 20px; z-index: 100; }
         
-        .info-card { background: var(--card); border-radius: 15px; padding: 15px; margin: 10px 20px; display: flex; flex-direction: column; gap: 5px; }
-        .action-buttons { display: flex; justify-content: space-around; padding: 15px 0; border-bottom: 1px solid #222; }
-        .act-btn { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 11px; cursor: pointer; color: var(--acc); }
+        .info-card { background: var(--card); border-radius: 15px; padding: 15px; margin: 10px 20px; }
+        .action-buttons { display: flex; justify-content: space-around; padding: 15px 0; }
+        .act-btn { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 11px; color: var(--acc); cursor: pointer; }
         .act-icon { width: 45px; height: 45px; border-radius: 50%; background: var(--card); display: flex; align-items: center; justify-content: center; font-size: 20px; }
 
         /* Nav & FAB */
-        .nav-bar { position: fixed; bottom: 20px; left: 15px; right: 15px; background: var(--card); height: 65px; border-radius: 20px; display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
+        .nav-bar { position: fixed; bottom: 20px; left: 15px; right: 15px; background: var(--card); height: 65px; border-radius: 20px; display: flex; justify-content: space-around; align-items: center; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         .nav-item { color: #888; font-size: 10px; text-align: center; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; }
         .nav-item.active { color: var(--acc); }
         .fab { position: fixed; bottom: 100px; right: 20px; width: 56px; height: 56px; background: var(--acc); border-radius: 18px; color: #131314; display: flex; align-items: center; justify-content: center; font-size: 30px; z-index: 900; }
 
+        /* Edit Inputs */
         .edit-input { width: 100%; background: none; border: none; border-bottom: 1px solid #333; color: white; padding: 15px 0; font-size: 18px; outline: none; }
+        .edit-input:focus { border-bottom: 2px solid var(--acc); }
     </style>
 </head>
 <body>
@@ -60,7 +63,7 @@
 
     <div id="bar-sel" class="action-bar">
         <svg onclick="resetSel()" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/></svg>
-        <div id="sel-count" class="sel-count">0</div>
+        <div id="sel-count" class="sel-count" style="flex:1; font-size:20px; margin-left:20px;">0</div>
         <svg onclick="deleteItems()" viewBox="0 0 24 24"><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19V4M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/></svg>
     </div>
 
@@ -106,7 +109,7 @@
         <div style="padding:20px; text-align:center;">
             <div id="my-avatar" class="avatar" style="width:100px; height:100px; margin:0 auto 20px;"></div>
             <h3 id="my-name">Користувач</h3>
-            <div class="info-card" onclick="signOutUser()" style="color:#ff6b6b; font-weight:bold;">Вийти з акаунту</div>
+            <div class="info-card" onclick="signOutUser()" style="color:#ff6b6b; font-weight:bold; cursor:pointer; padding:15px;">Вийти з акаунту</div>
         </div>
     </div>
 
@@ -114,7 +117,7 @@
         <div class="header">
             <span onclick="goBack()" style="margin-right:20px;">←</span>
             <span style="flex:1">Контакт</span>
-            <span onclick="saveData()" style="color:var(--acc); font-weight:bold;">ГОТОВО</span>
+            <span onclick="saveData()" style="color:var(--acc); font-weight:bold; cursor:pointer">ГОТОВО</span>
         </div>
         <div style="padding:20px;">
             <div id="edit-avatar-btn" class="avatar" style="width:120px; height:120px; margin:0 auto 20px; cursor:pointer;">?</div>
@@ -174,7 +177,7 @@
                     <div class="avatar" style="${c.img?`background-image:url(${c.img})`:''}">${c.img?'':(c.ln?.[0]||'?')}</div>
                     <div class="check-badge">✓</div>
                 </div>
-                <b>${c.ln||''} ${c.fn||''}</b>
+                <div style="flex:1"><b>${c.ln||''} ${c.fn||''}</b></div>
             </div>
         `).join('');
 
@@ -191,7 +194,7 @@
         curId = id; const c = clients.find(x => x.id == id);
         document.getElementById('prof-name').innerText = `${c.ln||''} ${c.fn||''}`;
         document.getElementById('prof-hero-img').style.backgroundImage = c.img ? `url(${c.img})` : 'none';
-        document.getElementById('prof-body').innerHTML = `<div class="info-card"><span class="info-label">Телефон</span><span>${c.tel||'—'}</span></div>`;
+        document.getElementById('prof-body').innerHTML = `<div class="info-card"><span style="color:var(--acc); font-size:12px; font-weight:bold;">Телефон</span><br><span>${c.tel||'—'}</span></div>`;
         switchS('screen-profile');
     };
 
@@ -199,8 +202,7 @@
         curId = id; const c = clients.find(x => x.id == id);
         document.getElementById('chat-name-head').innerText = `${c.ln||''} ${c.fn||''}`;
         document.getElementById('chat-ava-head').style.backgroundImage = c.img ? `url(${c.img})` : 'none';
-        renderNotes();
-        switchS('screen-chat');
+        renderNotes(); switchS('screen-chat');
     };
 
     window.renderNotes = () => {
@@ -212,14 +214,12 @@
         const i = document.getElementById('note-in');
         if(!i.value.trim()) return;
         clients.find(x => x.id == curId).notes.push({ text: i.value });
-        i.value = '';
-        await setDoc(doc(db, "users", auth.currentUser.uid), { clients });
+        i.value = ''; await setDoc(doc(db, "users", auth.currentUser.uid), { clients });
         renderNotes();
     };
 
     window.saveData = async () => {
-        const ln = document.getElementById('in-ln').value;
-        const fn = document.getElementById('in-fn').value;
+        const ln = document.getElementById('in-ln').value, fn = document.getElementById('in-fn').value;
         const data = { id: curId || Date.now(), ln, fn, tel: document.getElementById('in-tel').value, img: tempImg, isClient: mode==='client', isPartner: mode==='partner', notes: curId ? (clients.find(x => x.id == curId).notes || []) : [] };
         if(!curId) clients.push(data); else clients[clients.findIndex(x => x.id == curId)] = data;
         await setDoc(doc(db, "users", auth.currentUser.uid), { clients });
@@ -229,8 +229,7 @@
     window.openEdit = id => {
         curId = id; const c = id ? clients.find(x => x.id == id) : {};
         document.getElementById('in-ln').value = c.ln || ''; document.getElementById('in-fn').value = c.fn || ''; document.getElementById('in-tel').value = c.tel || '';
-        tempImg = c.img || "";
-        const av = document.getElementById('edit-avatar-btn');
+        tempImg = c.img || ""; const av = document.getElementById('edit-avatar-btn');
         av.style.backgroundImage = tempImg ? `url(${tempImg})` : 'none'; av.innerText = tempImg ? '' : '?';
         switchS('screen-edit');
     };
@@ -251,7 +250,6 @@
     window.deleteItems = async () => { if(confirm("Видалити?")) { clients = clients.filter(c => !selC.has(c.id)); await setDoc(doc(db, "users", auth.currentUser.uid), { clients }); resetSel(); } };
     window.signOutUser = () => signOut(auth).then(() => location.reload());
     window.goBack = () => history.back();
-    window.switchS = switchS;
 
     document.getElementById('edit-avatar-btn').onclick = () => document.getElementById('file-in').click();
     document.getElementById('file-in').onchange = e => {
