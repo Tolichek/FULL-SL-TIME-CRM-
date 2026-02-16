@@ -17,43 +17,57 @@
         .screen { position: absolute; inset: 0; display: none; flex-direction: column; background: var(--bg); }
         .active { display: flex !important; }
 
-        /* ЧИСТА ЗАСТАВКА */
+        /* Splash Screen */
         #splash-screen { display: flex; align-items: center; justify-content: center; background: var(--bg); z-index: 20000; }
         .splash-text { font-size: 32px; letter-spacing: 8px; text-transform: uppercase; color: white; font-weight: 300; animation: pulse 2s infinite alternate; }
         @keyframes pulse { from { opacity: 0.3; } to { opacity: 1; } }
 
-        /* ACTION BARS */
+        /* ACTION BARS (ВЕРХНІ ПАНЕЛІ) */
         .action-bar { 
             display: none; height: 60px; background: var(--bg); align-items: center; 
-            padding: 0 15px; gap: 25px; position: absolute; top: 0; left: 0; right: 0; z-index: 2000; 
+            padding: 0 15px; gap: 25px; position: absolute; top: 0; left: 0; right: 0; z-index: 5000; 
         }
         .action-bar.active { display: flex; }
-        .icon { font-size: 22px; cursor: pointer; }
+        .action-bar svg { fill: white; width: 22px; height: 22px; cursor: pointer; opacity: 0.8; }
+        .sel-count { flex: 1; font-size: 20px; font-weight: 500; }
 
-        /* ІНТЕРФЕЙС */
+        /* LISTS */
         .header { height: 60px; display: flex; align-items: center; padding: 0 15px; font-size: 20px; font-weight: 500; }
-        .chat-list { flex: 1; overflow-y: auto; padding-bottom: 90px; }
-        .chat-item { display: flex; padding: 12px 15px; align-items: center; user-select: none; }
+        .chat-list { flex: 1; overflow-y: auto; padding-bottom: 100px; }
+        .chat-item { display: flex; padding: 12px 15px; align-items: center; position: relative; user-select: none; -webkit-tap-highlight-color: transparent; }
         
-        .avatar-box { position: relative; width: 48px; height: 48px; margin-right: 15px; }
-        .avatar { width: 100%; height: 100%; border-radius: 50%; background: #3c4043; background-size: cover; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .avatar-box { position: relative; width: 50px; height: 50px; margin-right: 15px; flex-shrink: 0; }
+        .avatar { width: 100%; height: 100%; border-radius: 50%; background: #3c4043; display: flex; align-items: center; justify-content: center; font-size: 20px; background-size: cover; }
         
+        /* ЗЕЛЕНА ГАЛОЧКА */
         .check-badge { 
-            position: absolute; bottom: -2px; right: -2px; width: 20px; height: 20px; 
+            position: absolute; bottom: -2px; right: -2px; width: 22px; height: 22px; 
             background: var(--sel); border-radius: 50%; display: none; align-items: center; justify-content: center; 
-            border: 2px solid var(--bg); color: white; font-size: 12px;
+            border: 2px solid var(--bg); color: white; font-size: 12px; font-weight: bold;
         }
         .selected .check-badge { display: flex; }
 
-        /* ЧАТ */
+        /* ЧАТ ТА ПОВІДОМЛЕННЯ */
         .notes-area { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .note-item { display: flex; align-items: center; gap: 12px; }
+        .note-item { display: flex; align-items: center; gap: 12px; cursor: pointer; }
         .note-bubble { background: #2b2c2f; padding: 10px 14px; border-radius: 18px; max-width: 80%; }
-        .note-check { width: 20px; height: 20px; border: 2px solid #555; border-radius: 50%; display: none; }
-        .selection-mode .note-check { display: block; }
+        .note-check { 
+            width: 22px; height: 22px; border: 2px solid #555; border-radius: 50%; 
+            display: none; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .selection-mode .note-check { display: flex; }
         .note-item.selected .note-check { background: var(--sel); border-color: var(--sel); }
+        .note-item.selected .note-check::after { content: '✓'; color: white; font-size: 14px; }
 
-        /* ПЛАВАЮЧІ ЕЛЕМЕНТИ */
+        /* MENU (ТРИ ТОЧКИ) */
+        .menu-drop { 
+            position: absolute; top: 55px; right: 10px; background: #2a2e3a; 
+            border-radius: 12px; display: none; flex-direction: column; min-width: 220px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); z-index: 6000; padding: 5px 0;
+        }
+        .menu-row { padding: 12px 15px; display: flex; align-items: center; gap: 15px; cursor: pointer; }
+
+        /* FLOATING ELEMENTS */
         .nav-bar { 
             position: fixed; bottom: 20px; left: 15px; right: 15px; 
             background: var(--card); height: 65px; border-radius: 20px; 
@@ -68,12 +82,6 @@
             display: flex; align-items: center; justify-content: center; font-size: 30px; cursor: pointer;
         }
 
-        .menu-drop { 
-            position: absolute; top: 55px; right: 10px; background: #2a2e3a; 
-            border-radius: 12px; display: none; flex-direction: column; min-width: 200px; padding: 5px 0; z-index: 3000;
-        }
-        .menu-row { padding: 12px 15px; display: flex; align-items: center; gap: 15px; cursor: pointer; }
-
         .input-area { background: var(--card); margin: 10px 15px 25px; border-radius: 25px; padding: 5px 15px; display: flex; align-items: center; }
         .input-area textarea { flex: 1; background: transparent; border: none; color: white; outline: none; padding: 10px 0; font-size: 16px; resize: none; }
     </style>
@@ -82,20 +90,33 @@
 
     <div id="splash-screen" class="screen active"><div class="splash-text">My Place</div></div>
 
-    <div id="login-screen" class="screen">
-        <h1 style="color: var(--acc); font-size: 42px; margin-bottom: 30px; text-align: center;">My Place</h1>
-        <button id="btn-login" style="background: white; color: black; padding: 15px 30px; border-radius: 30px; border: none; font-weight: bold; cursor: pointer; margin: 0 auto; display: block;">Увійти через Google</button>
-    </div>
-
     <div id="bar-chats" class="action-bar">
-        <div class="icon" id="cancel-chats">✕</div>
-        <div id="count-chats" style="flex:1; font-size: 20px;">1</div>
-        <div class="icon">🗑️</div>
-        <div class="icon" id="menu-trigger">⋮</div>
+        <svg onclick="resetSel('chat')" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/></svg>
+        <div id="count-chats" class="sel-count">1</div>
+        <svg title="Архів" viewBox="0 0 24 24"><path d="M20,21H4V7H20V21M20,3H4V5H20V3M18,10H6V19H18V10M9,12H15V14H9V12Z"/></svg>
+        <svg onclick="deleteItems('chat')" viewBox="0 0 24 24"><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19V4M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/></svg>
+        <svg onclick="toggleM('drop-chat')" viewBox="0 0 24 24"><path d="M12,16A2,2 0 0,1 14,18A2,2 0 0,1 12,20A2,2 0 0,1 10,18A2,2 0 0,1 12,16M12,10A2,2 0 0,1 14,12A2,2 0 0,1 12,14A2,2 0 0,1 10,12A2,2 0 0,1 12,10M12,4A2,2 0 0,1 14,6A2,2 0 0,1 12,8A2,2 0 0,1 10,6A2,2 0 0,1 12,4Z"/></svg>
+        
         <div id="drop-chat" class="menu-drop">
             <div class="menu-row">📌 Закріпити</div>
             <div class="menu-row">📁 Додати до папки</div>
+            <div class="menu-row">💬 Непрочитане</div>
+            <div class="menu-row">🧹 Очистити</div>
+            <div class="menu-row">🚫 Заблокувати</div>
         </div>
+    </div>
+
+    <div id="bar-notes" class="action-bar">
+        <svg onclick="resetSel('note')" viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/></svg>
+        <div id="count-notes" class="sel-count">1</div>
+        <svg title="Редагувати" viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/></svg>
+        <svg title="Копіювати" viewBox="0 0 24 24"><path d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"/></svg>
+        <svg onclick="deleteItems('note')" viewBox="0 0 24 24"><path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19V4M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/></svg>
+    </div>
+
+    <div id="login-screen" class="screen">
+        <h1 style="color:var(--acc); font-size:42px; text-align:center; margin-top:100px;">My Place</h1>
+        <button id="btn-login" style="background:white; color:black; padding:15px 30px; border-radius:30px; border:none; font-weight:bold; cursor:pointer; margin: 40px auto; display:block;">Увійти через Google</button>
     </div>
 
     <div id="list-screen" class="screen">
@@ -122,6 +143,18 @@
         </div>
     </div>
 
+    <div id="edit-screen" class="screen">
+        <div class="header">
+            <span onclick="switchS('list-screen')" style="margin-right:15px; cursor:pointer">←</span>
+            <span>Налаштування</span>
+        </div>
+        <div style="padding:20px;">
+            <input type="text" id="in-ln" placeholder="Прізвище" style="width:100%; background:none; border:none; border-bottom:1px solid #333; color:white; padding:10px; margin-bottom:20px;">
+            <input type="text" id="in-fn" placeholder="Ім'я" style="width:100%; background:none; border:none; border-bottom:1px solid #333; color:white; padding:10px; margin-bottom:20px;">
+            <button id="btn-save" style="width:100%; background:var(--acc); color:#131314; padding:15px; border-radius:15px; border:none; font-weight:bold;">Зберегти</button>
+        </div>
+    </div>
+
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -133,7 +166,7 @@
     const db = getFirestore(app);
     const prov = new GoogleAuthProvider();
 
-    let clients = [], curId = null, filter = 'all', selC = new Set(), hold;
+    let clients = [], curId = null, filter = 'all', selC = new Set(), selN = new Set(), hold;
 
     const switchS = id => {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -167,13 +200,9 @@
             </div>
         `).join('');
 
-        // Обробка кліків та затискань
         document.querySelectorAll('.chat-item').forEach(el => {
             const id = parseInt(el.dataset.id);
-            el.onclick = () => {
-                if(selC.size > 0) toggleC(id);
-                else openC(id);
-            };
+            el.onclick = () => selC.size > 0 ? toggleC(id) : openC(id);
             el.onmousedown = el.ontouchstart = () => hold = setTimeout(() => toggleC(id), 600);
             el.onmouseup = el.ontouchend = () => clearTimeout(hold);
         });
@@ -190,23 +219,60 @@
     const toggleC = id => {
         selC.has(id) ? selC.delete(id) : selC.add(id);
         const bar = document.getElementById('bar-chats');
-        if(selC.size > 0) {
-            bar.classList.add('active');
-            document.getElementById('count-chats').innerText = selC.size;
-        } else bar.classList.remove('active');
+        if(selC.size > 0) { bar.classList.add('active'); document.getElementById('count-chats').innerText = selC.size; }
+        else bar.classList.remove('active');
         render();
     };
 
     const renderN = () => {
         const c = clients.find(x => x.id == curId);
-        document.getElementById('notes-area').innerHTML = (c.notes || []).map(n => `
-            <div class="note-item"><div class="note-bubble">${n.text}</div></div>
+        document.getElementById('notes-area').innerHTML = (c.notes || []).map((n, i) => `
+            <div class="note-item ${selN.has(i)?'selected':''}" data-idx="${i}">
+                <div class="note-check"></div>
+                <div class="note-bubble">${n.text}</div>
+            </div>
         `).join('');
+
+        document.querySelectorAll('.note-item').forEach(el => {
+            const idx = parseInt(el.dataset.idx);
+            el.onclick = () => selN.size > 0 ? toggleN(idx) : null;
+            el.onmousedown = el.ontouchstart = () => hold = setTimeout(() => toggleN(idx), 600);
+            el.onmouseup = el.ontouchend = () => clearTimeout(hold);
+        });
+    };
+
+    const toggleN = i => {
+        selN.has(i) ? selN.delete(i) : selN.add(i);
+        const bar = document.getElementById('bar-notes');
+        const area = document.getElementById('notes-area');
+        if(selN.size > 0) { bar.classList.add('active'); area.classList.add('selection-mode'); document.getElementById('count-notes').innerText = selN.size; }
+        else { bar.classList.remove('active'); area.classList.remove('selection-mode'); }
+        renderN();
+    };
+
+    window.resetSel = t => {
+        if(t=='chat') { selC.clear(); document.getElementById('bar-chats').classList.remove('active'); render(); }
+        else { selN.clear(); document.getElementById('bar-notes').classList.remove('active'); document.getElementById('notes-area').classList.remove('selection-mode'); renderN(); }
+    };
+
+    window.toggleM = id => {
+        const m = document.getElementById(id);
+        m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
     };
 
     document.getElementById('btn-login').onclick = () => signInWithPopup(auth, prov);
     document.getElementById('back-list').onclick = () => { curId=null; switchS('list-screen'); };
-    document.getElementById('cancel-chats').onclick = () => { selC.clear(); document.getElementById('bar-chats').classList.remove('active'); render(); };
+    document.getElementById('fab-add').onclick = () => switchS('edit-screen');
+    
+    document.getElementById('btn-save').onclick = async () => {
+        const ln = document.getElementById('in-ln').value;
+        const fn = document.getElementById('in-fn').value;
+        if(!ln && !fn) return;
+        clients.push({ id: Date.now(), ln, fn, notes: [], isClient: filter==='client', isPartner: filter==='partner' });
+        await setDoc(doc(db, "users", auth.currentUser.uid), { clients });
+        switchS('list-screen');
+    };
+
     document.getElementById('btn-ok').onclick = async () => {
         const i = document.getElementById('note-in');
         if(!i.value.trim()) return;
@@ -225,10 +291,7 @@
         };
     });
 
-    document.getElementById('menu-trigger').onclick = () => {
-        const m = document.getElementById('drop-chat');
-        m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
-    };
+    window.switchS = switchS; // Для виклику з HTML
 </script>
 </body>
 </html>
