@@ -20,30 +20,30 @@
             color: #2c3e44;
         }
 
-        /* Dashboard - нормальний розмір, але високо */
+        /* Dashboard - помітна назва зверху */
         .header { text-align: center; padding-top: 10px; }
-        .dashboard-title { font-size: 18px; font-weight: 500; opacity: 0.7; letter-spacing: 0.5px; }
+        .dashboard-title { font-size: 24px; font-weight: 500; opacity: 0.8; letter-spacing: 0.5px; }
 
-        /* Список - чіткий, компактний */
+        /* Список - компактно під назвою */
         .list-label { text-align: left; padding: 10px 25px 5px 25px; font-size: 20px; font-weight: 600; }
 
-        /* Список до самого низу */
+        /* Список клієнтів проходить під острівцем до чорної смуги */
         .client-list {
             flex: 1;
             overflow-y: auto;
-            padding: 0 25px 120px 25px; 
+            padding: 0 25px 130px 25px; 
         }
 
         .client-item {
             display: flex;
             align-items: center;
-            padding: 8px 0;
+            padding: 10px 0;
             border-bottom: 0.5px solid rgba(44, 62, 68, 0.1);
         }
 
         .avatar {
-            width: 34px;
-            height: 34px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.2);
             border: 1px solid #2c3e44;
@@ -51,32 +51,32 @@
             align-items: center;
             justify-content: center;
             margin-right: 12px;
-            font-size: 16px;
+            font-size: 18px;
         }
 
         .client-name { font-size: 16px; font-weight: 500; }
 
-        /* Плюс */
+        /* Кнопка Плюс */
         .fab {
             position: fixed;
             right: 25px;
-            bottom: 100px;
-            width: 44px;
-            height: 44px;
+            bottom: 110px;
+            width: 48px;
+            height: 48px;
             background: rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 30px;
+            font-size: 32px;
             border: 1px solid rgba(0,0,0,0.1);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        /* Навігація: острівець на 3 кнопки + фото */
+        /* Навігаційний блок: Острівець на 3 кнопки + Фото поруч */
         .nav-container {
             position: fixed;
-            bottom: 30px;
+            bottom: 35px;
             left: 0;
             right: 0;
             display: flex;
@@ -86,29 +86,30 @@
         }
 
         .nav-island {
-            height: 48px;
-            width: 170px;
+            height: 52px;
+            width: 180px;
             background: rgba(255, 255, 255, 0.25);
-            border-radius: 24px;
+            border-radius: 26px;
             display: flex;
             justify-content: space-around;
             align-items: center;
-            padding: 0 5px;
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0 10px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
-        .nav-item { font-size: 20px; cursor: pointer; }
+        .nav-item { font-size: 22px; cursor: pointer; opacity: 0.9; }
 
+        /* Фото акаунта на рівні з острівцем */
         .profile-img {
-            width: 48px;
-            height: 48px;
+            width: 52px;
+            height: 52px;
             border: 2px solid #2c3e44;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 24px;
             background: rgba(255, 255, 255, 0.3);
             cursor: pointer;
         }
@@ -131,17 +132,18 @@
         <div class="client-item"><div class="avatar">👤</div><div class="client-name">Бережна Оксана</div></div>
         <div class="client-item"><div class="avatar">👤</div><div class="client-name">Лужний Олександр</div></div>
         <div class="client-item"><div class="avatar">👤</div><div class="client-name">Іванова Тетяна</div></div>
+        <div class="client-item"><div class="avatar">👤</div><div class="client-name">Грибан Ірина</div></div>
     </div>
 
     <div class="fab">+</div>
 
     <div class="nav-container">
         <div class="nav-island">
-            <div class="nav-item">📞</div>
+            <div class="nav-item">👤</div> 
             <div class="nav-item">🤝</div>
             <div class="nav-item">👥</div>
         </div>
-        <div class="profile-img">👤</div>
+        <div class="profile-img">🖼️</div>
     </div>
 
 </body>
