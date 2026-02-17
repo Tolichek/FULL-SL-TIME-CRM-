@@ -31,7 +31,6 @@
         .screen {
             height: 100%;
             width: 100%;
-            /* ГРАДІЄНТ: Виглядає як вертикальні смуги (зміна зліва направо) */
             background: linear-gradient(to right, #14abb1 0%, #48c560 100%);
             display: flex;
             flex-direction: column;
@@ -62,6 +61,7 @@
             padding: 12px 24px;
             border-radius: 50px;
             white-space: nowrap;
+            cursor: pointer;
         }
 
         .google-btn img {
@@ -92,12 +92,40 @@
     <div class="screen">
         <div class="main-content">
             <h1 class="login-text">Login</h1>
-            <div class="google-btn">
+            <div class="google-btn" id="loginBtn">
                 <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt="G">
                 <span>Continue with Google</span>
             </div>
         </div>
         <div class="footer-text">dashboard</div>
     </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAs-XXXXXXXXXXXXXX", 
+            authDomain: "crm-app-XXXXX.firebaseapp.com",
+            projectId: "crm-app-XXXXX",
+            storageBucket: "crm-app-XXXXX.appspot.com",
+            messagingSenderId: "XXXXXXXXXXXX",
+            appId: "1:XXXXXXXXXXXX:web:XXXXXXXXXXXX"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    console.log("Вхід успішний:", result.user.displayName);
+                    // Логіка переходу після входу
+                }).catch((error) => {
+                    console.error("Помилка:", error.message);
+                });
+        });
+    </script>
 </body>
 </html>
