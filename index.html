@@ -3,211 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Starlife CRM - Список Pixel Perfect</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600&display=swap" rel="stylesheet">
+    <title>Starlife CRM - Список</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;600&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body, html {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background-color: #000;
-            font-family: 'Inter', sans-serif;
-            color: #2D4133;
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        
+        body, html { 
+            width: 100%; 
+            height: 100dvh; 
+            overflow: hidden; 
+            background: #000; 
         }
 
         .viewport {
-            width: 100vw;
-            height: 100vh;
-            max-width: 430px;
-            margin: 0 auto;
-            /* Горизонтальний градієнт як на макеті */
+            width: 100%;
+            height: 100dvh;
             background: linear-gradient(to right, #1896A1 0%, #7ED957 100%);
             display: flex;
             flex-direction: column;
-            padding: env(safe-area-inset-top) 25px env(safe-area-inset-bottom) 25px;
+            padding: 10px 25px calc(env(safe-area-inset-bottom) + 20px) 25px;
             position: relative;
         }
 
-        /* Dashboard: Тонкий, малий, по центру зверху */
+        /* Тонкий dashboard зверху по центру */
         .dash-top {
             text-align: center;
-            font-size: 32px;
+            font-size: 30px;
             font-weight: 200;
-            opacity: 0.8;
-            margin-top: 20px;
-            margin-bottom: 5px;
-            letter-spacing: 0.5px;
+            color: #2D4133;
+            opacity: 0.7;
+            margin-top: 15px;
         }
 
-        /* Список: Жирний, зліва */
-        .screen-title {
-            font-size: 40px;
+        /* Жирний Список зліва */
+        .title {
+            font-size: 38px;
             font-weight: 600;
-            margin-bottom: 30px;
-            margin-left: 5px;
+            color: #2D4133;
+            margin: 15px 0 25px 0;
         }
 
-        .scroll-list {
+        .scroll-area {
             flex: 1;
             overflow-y: auto;
-            padding-bottom: 150px;
+            padding-bottom: 160px;
         }
 
-        .scroll-list::-webkit-scrollbar { width: 0; }
-
-        /* Контакт з тонким кільцем */
-        .contact-item {
+        /* Елемент списку з тонким кільцем */
+        .item {
             display: flex;
             align-items: center;
-            padding: 10px 0;
-            margin-bottom: 5px;
+            margin-bottom: 12px;
         }
 
-        .avatar-ring {
-            width: 58px;
-            height: 58px;
+        .ring {
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
-            border: 1px solid #2D4133;
-            margin-right: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            border: 1.2px solid #2D4133;
+            margin-right: 18px;
             background: rgba(255, 255, 255, 0.1);
         }
 
-        /* Іконка-заглушка всередині аватара */
-        .avatar-ring svg {
-            width: 32px;
-            height: 32px;
-            fill: #2D4133;
-            opacity: 0.4;
-        }
+        .name { font-size: 21px; color: #2D4133; }
 
-        .contact-name {
-            font-size: 22px;
-            font-weight: 400;
-        }
-
-        /* Кнопка + (Салатова, прозора) */
-        .fab-add {
+        /* Плюс над профілем */
+        .fab {
             position: absolute;
-            bottom: 140px;
-            right: 30px;
-            width: 68px;
-            height: 68px;
-            background: rgba(144, 212, 169, 0.6);
+            bottom: 135px;
+            right: 25px;
+            width: 65px;
+            height: 65px;
+            background: #A0D8B4;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 45px;
+            font-size: 40px;
             font-weight: 200;
             color: #2D4133;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
 
-        /* Навігаційний острів */
-        .bottom-area {
+        /* Навігація Острів */
+        .nav-bar {
             position: absolute;
-            bottom: 40px;
+            bottom: 30px;
             left: 20px;
             right: 20px;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
-        .nav-island {
+        .island {
             flex: 1;
-            height: 75px;
-            background: rgba(255, 255, 255, 0.22);
+            height: 72px;
+            background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 37.5px;
+            border-radius: 36px;
             display: flex;
             justify-content: space-around;
             align-items: center;
-            padding: 0 15px;
         }
 
-        .nav-item {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0.5;
-        }
-
-        .nav-item.active { opacity: 1; }
-
-        .nav-item svg {
-            width: 34px;
-            height: 34px;
-            stroke: #2D4133;
-            fill: none;
-            stroke-width: 1.5;
-        }
-
-        /* Кнопка профілю з салатовою рамкою */
-        .profile-btn {
-            width: 75px;
-            height: 75px;
+        .owner {
+            width: 72px;
+            height: 72px;
             border-radius: 50%;
-            border: 4.5px solid #7ED957;
+            border: 4px solid #7ED957;
             background: #ccc;
-            background-size: cover;
-            flex-shrink: 0;
         }
+
+        /* Точні SVG іконки з макету */
+        .icon { width: 32px; height: 32px; fill: none; stroke: #2D4133; stroke-width: 1.5; opacity: 0.5; }
+        .icon.active { opacity: 1; }
     </style>
 </head>
 <body>
-
     <div class="viewport">
         <div class="dash-top">dashboard</div>
-        <div class="screen-title">Список</div>
+        <div class="title">Список</div>
 
-        <div class="scroll-list">
-            <div class="contact-item">
-                <div class="avatar-ring">
-                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                </div>
-                <div class="contact-name">Сарнавський Олег</div>
+        <div class="scroll-area">
+            <div class="item">
+                <div class="ring"></div>
+                <div class="name">Сарнавський Олег</div>
             </div>
         </div>
 
-        <div class="fab-add">+</div>
+        <div class="fab">+</div>
 
-        <div class="bottom-area">
-            <div class="nav-island">
-                <div class="nav-item active">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14c-4.42 0-8 2-8 5v1h16v-1c0-3-3.58-5-8-5z"/>
-                        <path d="M19 12l2 2-2 2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                </div>
-                <div class="nav-item">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M12 11a3 3 0 100-6 3 3 0 000 6zM6 19v-1a4 4 0 014-4h4a4 4 0 014 4v1"/>
-                        <path d="M4 21h16" stroke-width="1"/>
-                    </svg>
-                </div>
-                <div class="nav-item">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 7a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
-                    </svg>
-                </div>
+        <div class="nav-bar">
+            <div class="island">
+                <svg class="icon active" viewBox="0 0 24 24">
+                    <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14c-4 0-7.5 2-7.5 5v1h15v-1c0-3-3.5-5-7.5-5z"/>
+                    <path d="M18 11l2 2-2 2" />
+                </svg>
+                <svg class="icon" viewBox="0 0 24 24">
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4 20c0-4 4-4 8-4s8 0 8 4M4 22h16" />
+                </svg>
+                <svg class="icon" viewBox="0 0 24 24">
+                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 7a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87" />
+                </svg>
             </div>
-            <div class="profile-btn"></div>
+            <div class="owner"></div>
         </div>
     </div>
-
 </body>
 </html>
