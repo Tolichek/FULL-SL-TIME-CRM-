@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Starlife CRM - Список</title>
+    <title>Starlife CRM - Список Pixel Perfect</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600&display=swap" rel="stylesheet">
     <style>
         * {
@@ -26,136 +26,144 @@
             height: 100vh;
             max-width: 430px;
             margin: 0 auto;
+            /* Горизонтальний градієнт як на макеті */
             background: linear-gradient(to right, #1896A1 0%, #7ED957 100%);
             display: flex;
             flex-direction: column;
             padding: env(safe-area-inset-top) 25px env(safe-area-inset-bottom) 25px;
+            position: relative;
         }
 
-        /* Шапка екрана */
-        .header {
-            text-align: center;
-            padding-top: 20px;
-            margin-bottom: 30px;
-        }
-
+        /* Dashboard: Тонкий, малий, по центру зверху */
         .dash-top {
-            font-size: 28px;
+            text-align: center;
+            font-size: 32px;
             font-weight: 200;
             opacity: 0.8;
-            margin-bottom: 10px;
+            margin-top: 20px;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
         }
 
+        /* Список: Жирний, зліва */
         .screen-title {
-            text-align: left;
-            font-size: 32px;
+            font-size: 40px;
             font-weight: 600;
+            margin-bottom: 30px;
+            margin-left: 5px;
         }
 
-        /* Область списку з прокруткою */
         .scroll-list {
             flex: 1;
             overflow-y: auto;
-            padding-right: 5px;
-            margin-bottom: 100px; /* Місце для навігації */
+            padding-bottom: 150px;
         }
 
-        /* Прибираємо стандартний скроллбар */
         .scroll-list::-webkit-scrollbar { width: 0; }
 
+        /* Контакт з тонким кільцем */
         .contact-item {
             display: flex;
             align-items: center;
-            padding: 12px 0;
-            cursor: pointer;
+            padding: 10px 0;
+            margin-bottom: 5px;
         }
 
         .avatar-ring {
-            width: 54px;
-            height: 54px;
+            width: 58px;
+            height: 58px;
             border-radius: 50%;
-            border: 1.5px solid #2D4133;
-            margin-right: 18px;
+            border: 1px solid #2D4133;
+            margin-right: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             background: rgba(255, 255, 255, 0.1);
         }
 
+        /* Іконка-заглушка всередині аватара */
         .avatar-ring svg {
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             fill: #2D4133;
+            opacity: 0.4;
         }
 
         .contact-name {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 400;
         }
 
-        /* Кнопка Плюс */
+        /* Кнопка + (Салатова, прозора) */
         .fab-add {
             position: absolute;
-            bottom: 130px;
-            right: 25px;
-            width: 62px;
-            height: 62px;
-            background: rgba(255, 255, 255, 0.3); /* Напівпрозорий як на ескізі */
+            bottom: 140px;
+            right: 30px;
+            width: 68px;
+            height: 68px;
+            background: rgba(144, 212, 169, 0.6);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 36px;
+            font-size: 45px;
             font-weight: 200;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            color: #2D4133;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
         }
 
-        /* Нижня навігація "Острів" */
-        .bottom-nav {
+        /* Навігаційний острів */
+        .bottom-area {
             position: absolute;
-            bottom: 30px;
-            left: 25px;
-            right: 25px;
+            bottom: 40px;
+            left: 20px;
+            right: 20px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 15px;
         }
 
         .nav-island {
             flex: 1;
-            height: 70px;
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-radius: 35px;
+            height: 75px;
+            background: rgba(255, 255, 255, 0.22);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 37.5px;
             display: flex;
             justify-content: space-around;
             align-items: center;
-            padding: 0 10px;
+            padding: 0 15px;
         }
 
-        .nav-icon {
-            width: 32px;
-            height: 32px;
-            opacity: 0.6;
-            cursor: pointer;
+        .nav-item {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.5;
         }
 
-        .nav-icon.active {
-            opacity: 1;
+        .nav-item.active { opacity: 1; }
+
+        .nav-item svg {
+            width: 34px;
+            height: 34px;
+            stroke: #2D4133;
+            fill: none;
+            stroke-width: 1.5;
         }
 
+        /* Кнопка профілю з салатовою рамкою */
         .profile-btn {
-            width: 70px;
-            height: 70px;
+            width: 75px;
+            height: 75px;
             border-radius: 50%;
-            border: 3px solid #7ED957; /* Салатова рамка як на макеті */
-            background-color: #ccc;
+            border: 4.5px solid #7ED957;
+            background: #ccc;
             background-size: cover;
-            background-position: center;
-            cursor: pointer;
             flex-shrink: 0;
         }
     </style>
@@ -163,10 +171,8 @@
 <body>
 
     <div class="viewport">
-        <div class="header">
-            <div class="dash-top">dashboard</div>
-            <div class="screen-title">Список</div>
-        </div>
+        <div class="dash-top">dashboard</div>
+        <div class="screen-title">Список</div>
 
         <div class="scroll-list">
             <div class="contact-item">
@@ -179,13 +185,27 @@
 
         <div class="fab-add">+</div>
 
-        <div class="bottom-nav">
+        <div class="bottom-area">
             <div class="nav-island">
-                <img src="https://img.icons8.com/material-outlined/48/2D4133/user-male-circle.png" class="nav-icon active">
-                <img src="https://img.icons8.com/material-outlined/48/2D4133/conference-call.png" class="nav-icon">
-                <img src="https://img.icons8.com/material-outlined/48/2D4133/settings.png" class="nav-icon">
+                <div class="nav-item active">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14c-4.42 0-8 2-8 5v1h16v-1c0-3-3.58-5-8-5z"/>
+                        <path d="M19 12l2 2-2 2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="nav-item">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 11a3 3 0 100-6 3 3 0 000 6zM6 19v-1a4 4 0 014-4h4a4 4 0 014 4v1"/>
+                        <path d="M4 21h16" stroke-width="1"/>
+                    </svg>
+                </div>
+                <div class="nav-item">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 7a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+                    </svg>
+                </div>
             </div>
-            <div class="profile-btn" style="background-image: url('https://via.placeholder.com/150');"></div>
+            <div class="profile-btn"></div>
         </div>
     </div>
 
