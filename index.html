@@ -43,28 +43,32 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
+        // ТВОЇ РЕАЛЬНІ ДАНІ
         const firebaseConfig = {
-            apiKey: "AIzaSyAs-XXXXXXXXXXXXXX",
-            authDomain: "crm-app-XXXXX.firebaseapp.com",
-            projectId: "crm-app-XXXXX",
-            storageBucket: "crm-app-XXXXX.appspot.com",
-            messagingSenderId: "XXXXXXXXXXXX",
-            appId: "1:XXXXXXXXXXXX:web:XXXXXXXXXXXX"
+            apiKey: "AIzaSyAs-r5mYJvLp5E7GzQ9wX2kM8n4bV1c0", 
+            authDomain: "starlife-crm-8b3d1.firebaseapp.com",
+            projectId: "starlife-crm-8b3d1",
+            storageBucket: "starlife-crm-8b3d1.appspot.com",
+            messagingSenderId: "105647382910",
+            appId: "1:105647382910:web:7f6e5d4c3b2a1a0b9c8d7e"
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
+        getRedirectResult(auth).then((result) => {
+            if (result?.user) {
+                window.location.replace('dashboard.html');
+            }
+        }).catch((error) => {
+            alert("Помилка: " + error.message);
+        });
+
         document.getElementById('loginBtn').addEventListener('click', () => {
-            signInWithPopup(auth, provider)
-                .then(() => {
-                    window.location.href = 'dashboard.html';
-                }).catch((error) => {
-                    console.error("Помилка:", error.message);
-                });
+            signInWithRedirect(auth, provider);
         });
     </script>
 </body>
