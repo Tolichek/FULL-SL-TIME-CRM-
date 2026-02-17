@@ -4,170 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#000000">
-    <title>CRM Dashboard</title>
+    <title>CRM Login</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
-        
         html { background-color: #000000; height: 100%; }
-        
-        /* Анімація плавного виклику екрана */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
         body {
-            height: 100dvh;
-            width: 100%;
+            height: 100dvh; width: 100%; overflow: hidden;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .screen {
+            height: 100%; width: 100%;
             background: linear-gradient(to right, #14abb1 0%, #48c560 100%);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            color: #2c3e44;
-            animation: fadeIn 0.6s ease-in-out; /* Плавна поява */
+            display: flex; flex-direction: column; align-items: center; position: relative;
         }
-
-        .header { text-align: center; padding-top: 10px; }
-        .dashboard-title { font-size: 24px; font-weight: 500; opacity: 0.8; letter-spacing: 0.5px; }
-
-        .list-label { text-align: left; padding: 10px 25px 5px 25px; font-size: 20px; font-weight: 600; }
-
-        .client-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 0 25px 130px 25px; 
-            -webkit-overflow-scrolling: touch;
+        .main-content { margin-top: 25dvh; text-align: center; width: 100%; }
+        .login-text { font-size: 34px; font-weight: 600; color: #2c3e44; margin-bottom: 25px; }
+        .google-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 24px; border-radius: 50px; white-space: nowrap; cursor: pointer;
         }
-
-        .client-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 0.5px solid rgba(44, 62, 68, 0.1);
-        }
-
-        .avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid #2c3e44;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 12px;
-            font-size: 18px;
-        }
-
-        .client-name { font-size: 16px; font-weight: 500; }
-
-        .fab {
-            position: fixed;
-            right: 25px;
-            bottom: 110px;
-            width: 48px;
-            height: 48px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            border: 1px solid rgba(0,0,0,0.1);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .nav-container {
-            position: fixed;
-            bottom: 35px;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .nav-island {
-            height: 52px;
-            width: 180px;
-            background: rgba(255, 255, 255, 0.25);
-            border-radius: 26px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 0 10px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .nav-item { font-size: 22px; cursor: pointer; opacity: 0.9; }
-
-        .profile-img {
-            width: 52px;
-            height: 52px;
-            border: 2px solid #2c3e44;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            background: rgba(255, 255, 255, 0.3);
-            cursor: pointer;
-            overflow: hidden;
-        }
-
-        .profile-img img { width: 100%; height: 100%; object-fit: cover; }
+        .google-btn img { width: 20px; height: 20px; margin-right: 12px; }
+        .google-btn span { font-size: 16px; color: #2c3e44; font-weight: 500; }
+        .footer-text { position: absolute; bottom: 120px; font-size: 32px; color: #2c3e44; font-weight: 500; opacity: 0.8; }
     </style>
 </head>
 <body>
-
-    <div class="header">
-        <div class="dashboard-title">dashboard</div>
-    </div>
-    
-    <div class="list-label">Список</div>
-
-    <div class="client-list" id="clientList">
+    <div class="screen">
+        <div class="main-content">
+            <h1 class="login-text">Login</h1>
+            <div class="google-btn" id="loginBtn">
+                <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt="G">
+                <span>Continue with Google</span>
+            </div>
         </div>
-
-    <div class="fab">+</div>
-
-    <div class="nav-container">
-        <div class="nav-island">
-            <div class="nav-item">👤</div> 
-            <div class="nav-item">🤝</div>
-            <div class="nav-item">👥</div>
-        </div>
-        <div class="profile-img" id="userPhoto">👤</div>
+        <div class="footer-text">dashboard</div>
     </div>
 
     <script type="module">
-        // Отримуємо дані користувача з Firebase Auth (якщо залогінений)
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        
-        const auth = getAuth();
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // Вставляємо фото користувача з Google в кружечок поруч з острівцем
-                if (user.photoURL) {
-                    document.getElementById('userPhoto').innerHTML = `<img src="${user.photoURL}" alt="Me">`;
-                }
-            } else {
-                // Якщо не залогінений — повертаємо на вхід
-                window.location.href = 'index.html';
-            }
-        });
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        // Тимчасові дані для списку (потім підключимо Firestore)
-        const clients = ["Кузін Іван", "Косолап Валерій", "Дивна Юлія", "Ведмідь Микола", "Конська Ілона", "Бережна Оксана", "Лужний Олександр", "Іванова Тетяна"];
-        const listContainer = document.getElementById('clientList');
-        
-        clients.forEach(name => {
-            const item = document.createElement('div');
-            item.className = 'client-item';
-            item.innerHTML = `<div class="avatar">👤</div><div class="client-name">${name}</div>`;
-            listContainer.appendChild(item);
+        const firebaseConfig = {
+            apiKey: "AIzaSyAs-XXXXXXXXXXXXXX",
+            authDomain: "crm-app-XXXXX.firebaseapp.com",
+            projectId: "crm-app-XXXXX",
+            storageBucket: "crm-app-XXXXX.appspot.com",
+            messagingSenderId: "XXXXXXXXXXXX",
+            appId: "1:XXXXXXXXXXXX:web:XXXXXXXXXXXX"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            signInWithPopup(auth, provider)
+                .then(() => {
+                    window.location.href = 'dashboard.html';
+                }).catch((error) => {
+                    console.error("Помилка:", error.message);
+                });
         });
     </script>
 </body>
