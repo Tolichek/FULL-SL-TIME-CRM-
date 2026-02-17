@@ -16,9 +16,9 @@
             height: 100%;
             width: 100%;
             overflow: hidden;
+            background-color: #14abb1;
         }
 
-        /* Вертикальний градієнт */
         .screen {
             height: 100vh;
             width: 100%;
@@ -26,67 +26,65 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* Центрування основного контенту */
             position: relative;
         }
 
-        /* Блок логіну по центру */
-        .login-container {
+        /* Підняв центральний блок вище */
+        .main-content {
+            margin-top: 30vh; 
             text-align: center;
             width: 100%;
             padding: 0 40px;
         }
 
         .login-text {
-            font-size: 32px; /* Зменшений розмір */
+            font-size: 54px;
             font-weight: 600;
             color: #2c3e44;
-            margin-bottom: 25px;
-            letter-spacing: 0.5px;
+            margin-bottom: 35px;
+            letter-spacing: -1px;
         }
 
-        /* Кнопка Google */
         .google-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 12px 24px;
+            padding: 14px 28px;
             border-radius: 50px;
             cursor: pointer;
             margin: 0 auto;
-            max-width: 280px;
-            transition: background 0.2s;
+            max-width: 300px;
         }
 
         .google-btn img {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             margin-right: 12px;
         }
 
         .google-btn span {
-            font-size: 16px;
+            font-size: 18px;
             color: #2c3e44;
             font-weight: 500;
         }
 
-        /* Напис dashboard внизу */
+        /* Підняв dashboard вище, щоб не перекривався кнопками телефону */
         .footer-text {
             position: absolute;
-            bottom: 60px;
-            font-size: 24px;
+            bottom: 120px; 
+            font-size: 38px;
             color: #2c3e44;
-            opacity: 0.8;
-            letter-spacing: 1px;
+            opacity: 0.7;
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
 
     <div class="screen">
-        <div class="login-container">
+        <div class="main-content">
             <h1 class="login-text">Login</h1>
             <div class="google-btn">
                 <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt="G">
