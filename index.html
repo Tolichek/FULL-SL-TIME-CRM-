@@ -2,81 +2,152 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#000000">
-    <title>CRM Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>SL CRM</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
-        html { background-color: #000000; height: 100%; }
-        body {
-            height: 100dvh; width: 100%; overflow: hidden;
-            display: flex; flex-direction: column; align-items: center;
-        }
-        .screen {
-            height: 100%; width: 100%;
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        /* Чорні панелі та фон */
+        html, body { height: 100%; background: #000; overflow: hidden; }
+
+        /* Твій новий дизайн: Візуально вертикальний градієнт */
+        .app-bg {
+            height: 100dvh; width: 100%;
             background: linear-gradient(to right, #14abb1 0%, #48c560 100%);
-            display: flex; flex-direction: column; align-items: center; position: relative;
+            display: flex; flex-direction: column; color: #2c3e44;
+            position: relative;
         }
-        .main-content { margin-top: 25dvh; text-align: center; width: 100%; }
-        .login-text { font-size: 34px; font-weight: 600; color: #2c3e44; margin-bottom: 25px; }
+
+        /* --- LOGIN SCREEN --- */
+        #screen-login { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; height: 100%; }
+        .login-main { margin-top: 25dvh; text-align: center; }
+        .login-title { font-size: 64px; font-weight: bold; color: #2c3e44; margin-bottom: 30px; }
         .google-btn {
-            display: inline-flex; align-items: center; justify-content: center;
-            background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 12px 24px; border-radius: 50px; white-space: nowrap; cursor: pointer;
+            display: inline-flex; align-items: center; background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3); padding: 12px 25px; border-radius: 40px; cursor: pointer;
         }
-        .google-btn img { width: 20px; height: 20px; margin-right: 12px; }
-        .google-btn span { font-size: 16px; color: #2c3e44; font-weight: 500; }
-        .footer-text { position: absolute; bottom: 120px; font-size: 32px; color: #2c3e44; font-weight: 500; opacity: 0.8; }
+        .google-btn img { width: 22px; margin-right: 12px; }
+        .login-footer { position: absolute; bottom: 120px; font-size: 32px; font-weight: 500; opacity: 0.8; width: 100%; text-align: center; }
+
+        /* --- DASHBOARD SCREEN --- */
+        #screen-dashboard { display: none; flex-direction: column; height: 100%; }
+        .header { text-align: center; padding-top: 10px; }
+        .header-title { font-size: 24px; font-weight: 500; opacity: 0.7; }
+        .list-label { padding: 10px 25px; font-size: 20px; font-weight: 600; }
+        
+        .client-list { flex: 1; overflow-y: auto; padding: 0 25px 130px 25px; }
+        .client-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 0.5px solid rgba(44, 62, 68, 0.1); }
+        .avatar { 
+            width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.2); 
+            border: 1px solid #2c3e44; margin-right: 12px; display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
+        }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .client-name { font-size: 16px; font-weight: 500; }
+
+        .fab {
+            position: fixed; right: 25px; bottom: 110px; width: 48px; height: 48px;
+            background: rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 32px; border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        /* Навігація: Острівець + Фото поруч */
+        .nav-container {
+            position: fixed; bottom: 35px; left: 0; right: 0;
+            display: flex; justify-content: center; align-items: center; gap: 15px;
+        }
+        .nav-island {
+            height: 52px; width: 180px; background: rgba(255,255,255,0.25); border-radius: 26px;
+            display: flex; justify-content: space-around; align-items: center; backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .profile-btn { 
+            width: 52px; height: 52px; border: 2px solid #2c3e44; border-radius: 50%; 
+            background: rgba(255,255,255,0.2); overflow: hidden; display: flex; align-items: center; justify-content: center;
+        }
+        .profile-btn img { width: 100%; height: 100%; object-fit: cover; }
     </style>
 </head>
 <body>
-    <div class="screen">
-        <div class="main-content">
-            <h1 class="login-text">Login</h1>
+
+<div class="app-bg">
+    <div id="screen-login">
+        <div class="login-main">
+            <h1 class="login-title">Login</h1>
             <div class="google-btn" onclick="login()">
                 <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt="G">
-                <span>Continue with Google</span>
+                <span style="font-size: 18px; font-weight: 500;">Continue with Google</span>
             </div>
         </div>
-        <div class="footer-text">dashboard</div>
+        <div class="login-footer">dashboard</div>
     </div>
 
-    <script>
-        // Конфігурація з твого робочого проекту
-        const firebaseConfig = { 
-            apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY", 
-            authDomain: "starlife-crm.firebaseapp.com", 
-            projectId: "starlife-crm", 
-            storageBucket: "starlife-crm.firebasestorage.app", 
-            messagingSenderId: "1022280682130", 
-            appId: "1:1022280682130:web:3ea517e8b6d22c7787744b" 
-        };
+    <div id="screen-dashboard">
+        <div class="header"><div class="header-title">dashboard</div></div>
+        <div class="list-label">Список</div>
+        <div class="client-list" id="client-list"></div>
+        <div class="fab">+</div>
+        <div class="nav-container">
+            <div class="nav-island">
+                <span style="font-size:22px">👤</span><span style="font-size:22px">🤝</span><span style="font-size:22px">👥</span>
+            </div>
+            <div class="profile-btn" id="user-photo">👤</div>
+        </div>
+    </div>
+</div>
 
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const provider = new firebase.auth.GoogleAuthProvider();
+<script>
+    // Твої робочі ключі
+    const firebaseConfig = { 
+        apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY", 
+        authDomain: "starlife-crm.firebaseapp.com", 
+        projectId: "starlife-crm", 
+        storageBucket: "starlife-crm.firebasestorage.app", 
+        messagingSenderId: "1022280682130", 
+        appId: "1:1022280682130:web:3ea517e8b6d22c7787744b" 
+    };
 
-        // Функція входу один в один як у тебе
-        function login() {
-            auth.signInWithPopup(provider).then((result) => {
-                if(result.user) {
-                    window.location.href = 'dashboard.html';
-                }
-            }).catch((error) => {
-                alert("Помилка: " + error.message);
-            });
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const provider = new firebase.auth.GoogleAuthProvider();
+
+    function login() {
+        auth.signInWithPopup(provider).catch(err => alert(err.message));
+    }
+
+    auth.onAuthStateChanged(user => {
+        const loginScr = document.getElementById('screen-login');
+        const dashScr = document.getElementById('screen-dashboard');
+        
+        if (user) {
+            loginScr.style.display = 'none';
+            dashScr.style.display = 'flex';
+            if(user.photoURL) document.getElementById('user-photo').innerHTML = `<img src="${user.photoURL}">`;
+            renderList();
+        } else {
+            loginScr.style.display = 'flex';
+            dashScr.style.display = 'none';
         }
+    });
 
-        // Автоматичний перехід, якщо вже залогінений
-        auth.onAuthStateChanged(user => {
-            if(user) {
-                window.location.href = 'dashboard.html';
-            }
+    function renderList() {
+        const names = ["Кузін Іван", "Косолап Валерій", "Дивна Юлія", "Ведмідь Микола", "Конська Ілона", "Бережна Оксана", "Лужний Олександр", "Іванова Тетяна"];
+        const container = document.getElementById('client-list');
+        container.innerHTML = '';
+        names.forEach(name => {
+            const item = document.createElement('div');
+            item.className = 'client-item';
+            item.innerHTML = `<div class="avatar">👤</div><div class="client-name">${name}</div>`;
+            container.appendChild(item);
         });
-    </script>
+    }
+</script>
+
 </body>
 </html>
