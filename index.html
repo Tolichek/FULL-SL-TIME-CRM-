@@ -2,82 +2,190 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>DASH</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Mobile</title>
     <style>
         :root {
-            --bg: #ffffff;
-            --green: #1b4332; /* Глибокий темно-зелений для логотипу */
-            --google-text: #3c4043;
-            --google-blue: #1a73e8;
+            /* Початкова тема: Зелена */
+            --bg-gradient: linear-gradient(135deg, #40e0d0 0%, #98fb98 100%);
+            --text-color: #000;
+            --panel-bg: rgba(255, 255, 255, 0.2);
+            --accent-color: #2ecc71;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
 
-        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Roboto', sans-serif; background: var(--bg); overflow: hidden; }
-
-        .screen { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; }
-        .active { display: flex; }
-
-        /* SPLASH SCREEN (ШВИДКА АНІМАЦІЯ) */
-        #splash-screen { background: var(--bg); z-index: 2000; }
-        .logo-wrap { position: relative; }
-        .logo-text { 
-            font-size: 60px; font-weight: 900; color: var(--green); 
-            letter-spacing: 4px; opacity: 0; 
-            animation: fastShow 0.2s forwards;
-        }
-        .dash-line { 
-            position: absolute; bottom: -5px; left: 0; height: 8px; background: var(--green); 
-            width: 0; animation: fastLine 0.3s ease-in forwards 0.1s;
+        /* Налаштування теми Графіт (приклад для JS) */
+        [data-theme="graphite"] {
+            --bg-gradient: linear-gradient(135deg, #2c3e50 0%, #000000 100%);
+            --text-color: #fff;
+            --panel-bg: rgba(255, 255, 255, 0.1);
         }
 
-        @keyframes fastShow { to { opacity: 1; } }
-        @keyframes fastLine { to { width: 100%; } }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
 
-        /* GOOGLE LOGIN SCREEN (ТОЧНО ЯК НА ФОТО) */
-        #login-screen { background: var(--bg); padding-top: 50px; justify-content: flex-start; }
-        .google-logo { width: 74px; margin-top: 40px; margin-bottom: 20px; }
-        .user-email { font-size: 16px; color: var(--google-text); margin-bottom: 30px; }
+        body {
+            background: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Контейнер смартфона 9:16 */
+        #app-container {
+            width: 360px;
+            height: 740px; /* Співвідношення сторін для смартфона */
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            position: relative;
+            overflow: hidden;
+            border-radius: 30px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
+
+        .screen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .screen.active { display: flex; }
+
+        /* Екран 1: Логін */
+        .login-screen { justify-content: center; align-items: center; }
         
-        .btn-continue {
-            background: var(--google-blue); color: white; border: none;
-            padding: 10px 24px; border-radius: 20px; font-size: 14px;
-            font-weight: 500; cursor: pointer; margin-bottom: 15px;
-            width: 220px;
+        .btn-google {
+            background: var(--panel-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 15px 30px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: bold;
+            color: var(--text-color);
+            transition: 0.3s;
         }
-        .btn-logout {
-            background: none; color: var(--google-blue); border: none;
-            font-size: 14px; font-weight: 500; cursor: pointer;
+
+        /* Екран 2: Список */
+        .header-title { font-size: 14px; text-align: center; opacity: 0.7; margin-bottom: 10px; }
+        .screen-name { font-size: 24px; font-weight: bold; margin-bottom: 20px; }
+
+        .contact-list { flex: 1; overflow-y: auto; }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: var(--panel-bg);
+            border-radius: 15px;
+            cursor: pointer;
+        }
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #ddd;
+            margin-right: 15px;
+            object-fit: cover;
+        }
+
+        /* Нижня панель (Острів) */
+        .bottom-nav {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 80px; /* Місце для фото профілю */
+            height: 60px;
+            background: var(--panel-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item { opacity: 0.5; cursor: pointer; font-size: 12px; text-align: center; }
+        .nav-item.active { opacity: 1; font-weight: bold; }
+
+        .user-profile-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #ccc;
+            border: 2px solid white;
+            cursor: pointer;
+        }
+
+        .fab-add {
+            position: absolute;
+            bottom: 100px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 
-    <div id="splash-screen" class="screen active">
-        <div class="logo-wrap">
-            <div class="logo-text">DASH</div>
-            <div class="dash-line"></div>
+<div id="app-container">
+    
+    <div class="screen active" id="screen-login">
+        <h1 style="margin-bottom: 40px;">Login</h1>
+        <div class="btn-google" onclick="navTo('screen-list')">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="20" style="margin-right: 10px;">
+            Continue with Google
         </div>
+        <p style="position: absolute; bottom: 40px; opacity: 0.5;">dashboard</p>
     </div>
 
-    <div id="login-screen" class="screen">
-        <img class="google-logo" src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google">
-        <div class="user-email" id="user-email">user@gmail.com</div>
+    <div class="screen" id="screen-list">
+        <div class="header-title">dashboard</div>
+        <div class="screen-name">Список</div>
         
-        <button class="btn-continue" id="btn-continue">Продовжити як...</button>
-        <button class="btn-logout">Вийти з акаунту</button>
+        <div class="contact-list">
+            <div class="contact-item" onclick="navTo('screen-info')">
+                <div class="avatar"></div>
+                <span>Сарнавський Олег</span>
+            </div>
+        </div>
+
+        <div class="fab-add" onclick="navTo('screen-form')">+</div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active">Список</div>
+            <div class="nav-item" onclick="navTo('screen-clients')">Клієнт</div>
+            <div class="nav-item" onclick="navTo('screen-team')">Команда</div>
+        </div>
+        <div class="user-profile-btn" onclick="navTo('screen-owner')"></div>
     </div>
+
+</div>
 
 <script>
-    // Швидкий перехід від Splash до Login
-    setTimeout(() => {
-        document.getElementById('splash-screen').style.display = 'none';
-        document.getElementById('login-screen').classList.add('active');
-    }, 1200);
-
-    // Імітація входу (для тесту)
-    document.getElementById('btn-continue').onclick = () => {
-        alert('Вхід виконано. Чекаю на макет головного екрана.');
-    };
+    // Проста функція навігації
+    function navTo(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        const target = document.getElementById(screenId);
+        if(target) target.classList.add('active');
+    }
 </script>
 
 </body>
