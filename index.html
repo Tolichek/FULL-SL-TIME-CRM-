@@ -2,9 +2,10 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>CRM Login</title>
     <style>
+        /* Повне обнулення */
         * {
             margin: 0;
             padding: 0;
@@ -12,18 +13,17 @@
             font-family: sans-serif;
         }
 
-        /* Прибрав фоновий колір, який створював синю лінію внизу */
+        /* Заборона будь-яких білих зон */
         html, body {
             height: 100%;
             width: 100%;
-            margin: 0;
-            padding: 0;
+            background: #14abb1;
             overflow: hidden;
         }
 
-        /* Чіткий вертикальний градієнт на весь екран */
         .screen {
-            height: 100vh;
+            /* Використання динамічної висоти для мобільних */
+            min-height: 100dvh;
             width: 100%;
             background: linear-gradient(to bottom, #14abb1 0%, #48c560 100%);
             display: flex;
@@ -33,29 +33,27 @@
         }
 
         .main-content {
-            margin-top: 20vh;
+            margin-top: 22vh;
             text-align: center;
             width: 100%;
         }
 
-        /* Зменшив розмір літер Login */
         .login-text {
-            font-size: 38px;
+            font-size: 34px; /* Акуратний розмір */
             font-weight: 600;
             color: #2c3e44;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
-        /* Кнопка в один рядок */
         .google-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             background: rgba(255, 255, 255, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 10px 20px;
-            border-radius: 40px;
-            white-space: nowrap;
+            padding: 10px 22px;
+            border-radius: 50px;
+            white-space: nowrap; /* Строго один рядок */
         }
 
         .google-btn img {
@@ -65,22 +63,22 @@
         }
 
         .google-btn span {
-            font-size: 16px;
+            font-size: 15px;
             color: #2c3e44;
+            font-weight: 500;
         }
 
-        /* Напис dashboard піднято вище */
         .footer-text {
             position: absolute;
-            bottom: 140px;
+            bottom: 100px;
             font-size: 28px;
             color: #2c3e44;
             font-weight: 500;
+            opacity: 0.8;
         }
     </style>
 </head>
 <body>
-
     <div class="screen">
         <div class="main-content">
             <h1 class="login-text">Login</h1>
@@ -89,9 +87,7 @@
                 <span>Continue with Google</span>
             </div>
         </div>
-
         <div class="footer-text">dashboard</div>
     </div>
-
 </body>
 </html>
