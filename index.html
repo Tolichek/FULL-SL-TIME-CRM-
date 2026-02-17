@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Starlife CRM</title>
+    <title>Starlife CRM Fix</title>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
+        
         const firebaseConfig = {
             apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY",
             authDomain: "starlife-crm.firebaseapp.com",
@@ -19,25 +18,20 @@
             measurementId: "G-65MK91C3M8"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getFirestore(app);
         const provider = new GoogleAuthProvider();
 
-        // Експортуємо функції для використання в HTML
         window.loginWithGoogle = () => {
-            signInWithPopup(auth, provider).then((result) => {
-                openScreen('scr-2');
-            }).catch((error) => console.error(error));
+            signInWithPopup(auth, provider).then(() => openScreen('scr-list'))
+            .catch((err) => console.error(err));
         };
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.querySelectorAll('.owner-avatar').forEach(el => el.style.backgroundImage = `url(${user.photoURL})`);
-                console.log("User logged in:", user.displayName);
             } else {
-                openScreen('scr-1');
+                openScreen('scr-login');
             }
         });
     </script>
@@ -53,76 +47,176 @@
 
         body.theme-graphite { --bg-gradient: linear-gradient(135deg, #2c3e50 0%, #000000 100%); --text-color: #ffffff; --panel-bg: rgba(255, 255, 255, 0.1); }
         
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
-        body { background: #121212; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; overflow: hidden; }
-
-        #phone {
-            width: 375px; height: 812px; background: var(--bg-gradient); color: var(--text-color);
-            position: relative; overflow: hidden; border-radius: 40px; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        
+        body { 
+            background: #121212; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            font-family: -apple-system, sans-serif; 
+            overflow: hidden; 
         }
 
-        .screen { position: absolute; inset: 0; display: none; flex-direction: column; padding: 20px; padding-top: 50px; }
+        /* Чіткий контейнер смартфона */
+        #phone {
+            width: 100vw;
+            max-width: 375px;
+            height: 100vh;
+            max-height: 812px;
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            position: relative;
+            overflow: hidden;
+            border-radius: 0; /* Для десктопа можна змінити на 40px */
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (min-width: 500px) {
+            #phone { border-radius: 40px; height: 95vh; }
+        }
+
+        .screen { 
+            position: absolute; 
+            inset: 0; 
+            display: none; 
+            flex-direction: column; 
+            padding: 20px 20px 100px 20px; /* Великий відступ знизу для навігації */
+        }
         .screen.active { display: flex; }
 
         .glass { background: var(--panel-bg); backdrop-filter: blur(15px); border: 1px solid var(--glass-border); border-radius: 20px; }
-        .title { font-size: 24px; font-weight: 800; margin-bottom: 20px; }
+        
+        .title { font-size: 24px; font-weight: 800; margin: 20px 0; }
 
-        .nav-island { position: absolute; bottom: 30px; left: 20px; right: 90px; height: 60px; display: flex; justify-content: space-around; align-items: center; z-index: 5; }
-        .owner-avatar { position: absolute; bottom: 30px; right: 20px; width: 60px; height: 60px; border-radius: 50%; border: 2px solid white; cursor: pointer; background-size: cover; background-position: center; z-index: 5; }
-        .fab { position: absolute; bottom: 100px; right: 20px; width: 50px; height: 50px; background: #2ecc71; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 30px; cursor: pointer; z-index: 5; }
+        /* Прокрутка вмісту */
+        .scroll-content {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
 
-        input { width: 100%; padding: 12px; margin-bottom: 10px; border: none; border-radius: 12px; background: var(--panel-bg); color: var(--text-color); }
-        .avatar-circle { width: 50px; height: 50px; border-radius: 50%; background: #ddd; margin-right: 15px; background-size: cover; }
+        /* Нижня панель зафіксована */
+        .bottom-nav-container {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .nav-island {
+            flex: 1;
+            height: 60px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .owner-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid white;
+            background-size: cover;
+            background-position: center;
+            background-color: #ccc;
+        }
+
+        .fab {
+            position: absolute;
+            bottom: 90px;
+            right: 0px;
+            width: 50px;
+            height: 50px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        input { 
+            width: 100%; 
+            padding: 14px; 
+            margin-bottom: 12px; 
+            border: none; 
+            border-radius: 12px; 
+            background: var(--panel-bg); 
+            color: var(--text-color);
+            font-size: 16px;
+        }
+
+        .contact-item { padding: 15px; margin-bottom: 10px; display: flex; align-items: center; }
     </style>
 </head>
 <body class="theme-green">
 
 <div id="phone">
     
-    <div class="screen active" id="scr-1">
+    <div class="screen active" id="scr-login">
         <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center;">
             <h1 class="title">Login</h1>
             <div class="glass" onclick="window.loginWithGoogle()" style="padding:15px 25px; cursor:pointer; display:flex; align-items:center;">
                 <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" width="20" style="margin-right:10px">
                 Continue with Google
             </div>
-            <div style="position:absolute; bottom:40px; opacity:0.5">dashboard</div>
         </div>
     </div>
 
-    <div class="screen" id="scr-2">
-        <div style="text-align:center; font-size:12px; opacity:0.6">dashboard</div>
-        <div class="title">Список</div>
-        <div id="contacts-list" style="flex:1; overflow-y:auto">
-            </div>
-        <div class="fab" onclick="openScreen('scr-3')">+</div>
-        <div class="nav-island glass">
-            <div onclick="openScreen('scr-2')" style="font-weight:bold">Список</div>
-            <div onclick="openScreen('scr-clients')">Клієнт</div>
-            <div onclick="openScreen('scr-team')">Команда</div>
-        </div>
-        <div class="owner-avatar" onclick="openScreen('scr-7')"></div>
-    </div>
-
-    <div class="screen" id="scr-3">
-        <div class="title">Новий контакт</div>
-        <input type="text" id="f-lastname" placeholder="Прізвище">
-        <input type="text" id="f-firstname" placeholder="Ім'я">
-        <input type="tel" id="f-phone" placeholder="Мобільний">
-        <input type="date" id="f-birth" onchange="document.getElementById('age-val').innerText = (new Date().getFullYear() - new Date(this.value).getFullYear()) + ' років'">
-        <div id="age-val" style="text-align:center; margin-bottom:10px"></div>
+    <div class="screen" id="scr-list">
+        <div style="text-align:center; font-size:12px; opacity:0.6; margin-top:20px;">dashboard</div>
+        <h1 class="title">Список</h1>
         
-        <div class="glass" style="padding:15px">
-            <div style="display:flex; justify-content:space-between">
-                <label>Клієнт</label>
-                <input type="checkbox" id="f-isClient" style="width:20px" onchange="document.getElementById('f-isPartner').disabled = !this.checked">
+        <div class="scroll-content">
+            <div class="glass contact-item">Сарнавський Олег</div>
             </div>
-            <div style="display:flex; justify-content:space-between">
-                <label>Партнер</label>
-                <input type="checkbox" id="f-isPartner" style="width:20px" disabled>
+
+        <div class="fab" onclick="openScreen('scr-form')">+</div>
+
+        <div class="bottom-nav-container">
+            <div class="nav-island glass">
+                <span style="font-weight:bold">Список</span>
+                <span onclick="openScreen('scr-clients')">Клієнт</span>
+                <span onclick="openScreen('scr-team')">Команда</span>
             </div>
+            <div class="owner-avatar" onclick="openScreen('scr-settings')"></div>
         </div>
-        <button onclick="openScreen('scr-2')" class="glass" style="width:100%; padding:15px; margin-top:20px; background:#2ecc71; color:white; border:none">Зберегти</button>
+    </div>
+
+    <div class="screen" id="scr-form">
+        <div style="text-align:center; font-size:12px; opacity:0.6; margin-top:20px;">dashboard</div>
+        <h1 class="title">Новий контакт</h1>
+        
+        <div class="scroll-content">
+            <input type="text" placeholder="Прізвище">
+            <input type="text" placeholder="Ім'я">
+            <input type="tel" placeholder="Мобільний">
+            <input type="date" placeholder="Дата народження">
+            
+            <div class="glass" style="padding:15px; margin-top:10px;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+                    <label>Клієнт</label>
+                    <input type="checkbox" style="width:20px; margin:0;">
+                </div>
+                <div style="display:flex; justify-content:space-between;">
+                    <label>Партнер</label>
+                    <input type="checkbox" style="width:20px; margin:0;">
+                </div>
+            </div>
+            
+            <button class="glass" style="width:100%; padding:16px; margin-top:20px; background:var(--accent); color:white; border:none; font-weight:bold;" onclick="openScreen('scr-list')">
+                Зберегти
+            </button>
+        </div>
     </div>
 
 </div>
@@ -131,10 +225,6 @@
     function openScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
-    }
-
-    function setTheme(t) {
-        document.body.className = 'theme-' + t;
     }
 </script>
 
