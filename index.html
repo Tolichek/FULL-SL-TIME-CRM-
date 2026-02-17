@@ -2,175 +2,145 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>SL CRM Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>SL CRM 3.0</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        /* Твій вилизаний градієнт та фон */
         html, body { height: 100%; background: #000; overflow: hidden; }
-
         .app-bg {
             height: 100dvh; width: 100%;
             background: linear-gradient(to right, #14abb1 0%, #48c560 100%);
-            display: flex; flex-direction: column; align-items: center; color: #2c3e44;
+            display: flex; flex-direction: column; position: relative;
         }
 
-        /* Заголовок dashboard як на макеті */
-        .header { padding-top: 15px; text-align: center; width: 100%; }
-        .dash-label { font-size: 24px; font-weight: 500; opacity: 0.7; }
+        /* Заголовок dashboard (макет 1000007435.jpg) */
+        .header { padding-top: 10px; text-align: center; width: 100%; }
+        .header h1 { font-size: 24px; font-weight: 500; opacity: 0.7; color: #2c3e44; }
 
-        /* Велике фото профілю в тонкому колі */
-        .profile-pic-container { margin-top: 15px; position: relative; }
-        .profile-pic {
-            width: 130px; height: 130px; border-radius: 50%;
-            border: 1px solid #2c3e44; background: rgba(255, 255, 255, 0.1);
-            display: flex; align-items: center; justify-content: center; overflow: hidden;
-        }
-        .profile-pic img { width: 100%; height: 100%; object-fit: cover; }
+        /* Екрани */
+        .view { display: none; height: 100%; width: 100%; flex-direction: column; overflow: hidden; }
+        .view.active { display: flex; }
 
-        /* Ім'я та Рівень */
-        .user-name { margin-top: 20px; font-size: 26px; font-weight: 500; text-align: center; }
-        .level-section { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
-        .level-circle {
-            width: 36px; height: 36px; background: rgba(44, 62, 68, 0.3);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-weight: bold; font-size: 20px; color: #2c3e44;
-        }
-        .level-text { font-size: 18px; font-weight: 500; }
+        /* Списки (Клієнти, Команда, Списки) */
+        .list-label { padding: 10px 25px 5px; font-size: 20px; font-weight: 600; color: #2c3e44; }
+        .scroll-area { flex: 1; overflow-y: auto; padding: 0 25px 130px; }
+        .item-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 0.5px solid rgba(44, 62, 68, 0.1); color: #2c3e44; }
+        .item-left { display: flex; align-items: center; }
+        .avatar-sm { width: 36px; height: 36px; border-radius: 50%; border: 1px solid #2c3e44; margin-right: 12px; background: rgba(255,255,255,0.2); overflow: hidden; }
+        .level-circle-sm { width: 36px; height: 36px; background: rgba(44, 62, 68, 0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
 
-        /* Ряд кнопок-плиток (Встановити фото, Змінити дані, Налаштування) */
-        .action-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
-            width: 94%; margin-top: 30px;
-        }
-        .action-box {
-            background: rgba(255, 255, 255, 0.2); border: 0.5px solid rgba(255, 255, 255, 0.3);
-            border-radius: 8px; padding: 12px 4px; text-align: center;
-            display: flex; flex-direction: column; align-items: center;
-        }
-        .action-box img { width: 28px; margin-bottom: 6px; opacity: 0.8; }
-        .action-box span { font-size: 10px; font-weight: bold; text-transform: none; line-height: 1.2; }
+        /* Профіль (макет 1000007438.jpg) */
+        .profile-content { align-items: center; padding-top: 30px; }
+        .u-pic-big { width: 130px; height: 130px; border-radius: 50%; border: 1.5px solid #2c3e44; margin-bottom: 20px; }
+        .u-name-big { font-size: 26px; font-weight: 500; margin-bottom: 5px; }
+        .lvl-badge { display: flex; align-items: center; gap: 10px; margin-bottom: 25px; }
+        .lvl-c { width: 34px; height: 34px; background: #2c3e44; color: #48c560; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
 
-        /* Блок контактних даних */
-        .data-panel {
-            width: 94%; background: rgba(255, 255, 255, 0.25);
-            border-radius: 12px; padding: 18px 20px; margin-top: 15px;
-        }
-        .data-item { margin-bottom: 15px; }
-        .data-item:last-child { margin-bottom: 0; }
-        .data-value { font-size: 20px; font-weight: 500; margin-bottom: 2px; }
-        .data-label { font-size: 11px; opacity: 0.7; font-weight: bold; }
+        /* Кнопки-плитки */
+        .actions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 92%; margin-bottom: 20px; }
+        .action-tile { background: rgba(255,255,255,0.2); border: 0.5px solid rgba(255,255,255,0.3); border-radius: 10px; padding: 15px 5px; text-align: center; font-size: 10px; font-weight: bold; }
 
-        /* Кнопка Logaut з лого Google */
-        .logout-wrap { margin-top: auto; margin-bottom: 100px; }
-        .logout-pill {
-            background: rgba(255, 255, 255, 0.3); border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 30px; padding: 12px 45px; display: flex; align-items: center; gap: 15px;
-            font-weight: bold; cursor: pointer;
-        }
-        .logout-pill img { width: 20px; }
+        /* Блок даних (макет 1000007440.jpg) */
+        .data-card { width: 92%; background: rgba(255,255,255,0.25); border-radius: 15px; padding: 18px; margin-bottom: 20px; }
+        .data-v { font-size: 19px; font-weight: 500; margin-bottom: 2px; }
+        .data-l { font-size: 11px; opacity: 0.6; margin-bottom: 12px; }
 
-        /* Навігація - іконки як на макеті */
-        .nav-island-container { position: fixed; bottom: 30px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 15px; }
-        .nav-island {
-            height: 56px; width: 220px; background: rgba(255, 255, 255, 0.3);
-            border-radius: 28px; display: flex; justify-content: space-around; align-items: center;
-            backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .nav-icon { width: 30px; opacity: 0.7; }
-        .nav-profile-active {
-            width: 56px; height: 56px; border: 2.5px solid #2c3e44;
-            border-radius: 50%; overflow: hidden; background: rgba(255, 255, 255, 0.2);
-            display: flex; align-items: center; justify-content: center;
-        }
+        /* Навігаційний острівець (твій фінальний макет) */
+        .nav-fixed { position: fixed; bottom: 35px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 15px; z-index: 100; }
+        .island { height: 56px; width: 220px; background: rgba(255,255,255,0.3); border-radius: 28px; display: flex; justify-content: space-around; align-items: center; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); }
+        .nav-btn { font-size: 26px; opacity: 0.6; cursor: pointer; }
+        .nav-btn.active { opacity: 1; }
+        .u-trigger { width: 56px; height: 56px; border: 2px solid #2c3e44; border-radius: 50%; overflow: hidden; background: rgba(255,255,255,0.2); }
+        
+        /* Плюс для додавання (макет 1000007435.jpg) */
+        .fab { position: fixed; right: 25px; bottom: 110px; width: 52px; height: 52px; background: rgba(255,255,255,0.4); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 36px; color: #2c3e44; }
     </style>
 </head>
 <body>
 
 <div class="app-bg">
-    <div class="header"><div class="dash-label">dashboard</div></div>
+    <div class="header"><h1>dashboard</h1></div>
 
-    <div class="profile-pic-container">
-        <div class="profile-pic"><img id="u-photo" src=""></div>
+    <div id="view-1" class="view active">
+        <div class="list-label">Список</div>
+        <div class="scroll-area" id="list-1"></div>
+        <div class="fab">+</div>
     </div>
 
-    <div class="user-name" id="u-name">Завантаження...</div>
-
-    <div class="level-section">
-        <div class="level-circle">3</div>
-        <div class="level-text">рівень</div>
+    <div id="view-2" class="view">
+        <div class="list-label">Клієнти</div>
+        <div class="scroll-area" id="list-2"></div>
     </div>
 
-    <div class="action-grid">
-        <div class="action-box">
-            <img src="https://cdn-icons-png.flaticon.com/512/685/685655.png" alt="">
-            <span>Встановити фото</span>
-        </div>
-        <div class="action-box">
-            <img src="https://cdn-icons-png.flaticon.com/512/1250/1250615.png" alt="">
-            <span>Змінити дані</span>
-        </div>
-        <div class="action-box">
-            <img src="https://cdn-icons-png.flaticon.com/512/3524/3524659.png" alt="">
-            <span>Налаштування</span>
-        </div>
+    <div id="view-3" class="view">
+        <div class="list-label">Команда</div>
+        <div class="scroll-area" id="list-3"></div>
     </div>
 
-    <div class="data-panel">
-        <div class="data-item">
-            <div class="data-value" id="u-phone">+380 (63) 393 96 94</div>
-            <div class="data-label">Мобільний</div>
+    <div id="view-4" class="view profile-content">
+        <div class="u-pic-big"><img id="u-photo" src="" style="width:100%;height:100%;border-radius:50%;object-fit:cover;"></div>
+        <div class="u-name-big" id="u-name">...</div>
+        <div class="lvl-badge"><div class="lvl-c">3</div><span style="font-size:18px">рівень</span></div>
+        <div class="actions-grid">
+            <div class="action-tile">📷<br>Встановити фото</div>
+            <div class="action-tile">✏️<br>Змінити дані</div>
+            <div class="action-tile">⚙️<br>Налаштування</div>
         </div>
-        <div class="data-item">
-            <div class="data-value">13 серпня 1977 (48 років)</div>
-            <div class="data-label">День народження</div>
+        <div class="data-card">
+            <div class="data-v">+380 (63) 393 96 94</div><div class="data-l">Мобільний</div>
+            <div class="data-v">13 серпня 1977 (48 років)</div><div class="data-l">День народження</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.3);padding:12px 40px;border-radius:30px;font-weight:bold;display:flex;align-items:center;gap:10px;" onclick="auth.signOut()">
+            <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" width="18"> Logaut
         </div>
     </div>
 
-    <div class="logout-wrap">
-        <div class="logout-pill" onclick="logout()">
-            <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt=""> Logaut
+    <div class="nav-fixed">
+        <div class="island">
+            <span class="nav-btn active" onclick="show(1)">📞</span>
+            <span class="nav-btn" onclick="show(2)">🤝</span>
+            <span class="nav-btn" onclick="show(3)">👥</span>
         </div>
-    </div>
-
-    <div class="nav-island-container">
-        <div class="nav-island">
-            <span style="font-size:26px; opacity: 0.6;">📞</span>
-            <span style="font-size:26px; opacity: 0.6;">🤝</span>
-            <span style="font-size:26px; opacity: 0.6;">👥</span>
-        </div>
-        <div class="nav-profile-active">
-            <img id="nav-photo" src="" style="width:100%; height:100%; object-fit:cover;">
-        </div>
+        <div class="u-trigger" onclick="show(4)"><img id="u-nav" src="" style="width:100%;height:100%;object-fit:cover;"></div>
     </div>
 </div>
 
 <script>
-    const firebaseConfig = { 
-        apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY", 
-        authDomain: "starlife-crm.firebaseapp.com", 
-        projectId: "starlife-crm", 
-        storageBucket: "starlife-crm.firebasestorage.app", 
-        messagingSenderId: "1022280682130", 
-        appId: "1:1022280682130:web:3ea517e8b6d22c7787744b" 
-    };
+    const firebaseConfig = { apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY", authDomain: "starlife-crm.firebaseapp.com", projectId: "starlife-crm", storageBucket: "starlife-crm.firebasestorage.app", messagingSenderId: "1022280682130", appId: "1:1022280682130:web:3ea517e8b6d22c7787744b" };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
+
+    function show(id) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById('view-'+id).classList.add('active');
+        document.querySelectorAll('.nav-btn').forEach((b, i) => b.classList.toggle('active', i+1 === id));
+    }
 
     auth.onAuthStateChanged(user => {
         if (user) {
             document.getElementById('u-name').innerText = user.displayName;
-            const photo = user.photoURL || 'https://www.gstatic.com/images/branding/product/1x/avatar_circle_blue_512dp.png';
-            document.getElementById('u-photo').src = photo;
-            document.getElementById('nav-photo').src = photo;
+            document.getElementById('u-photo').src = user.photoURL;
+            document.getElementById('u-nav').src = user.photoURL;
+            loadData();
         }
     });
 
-    function logout() { auth.signOut().then(() => location.reload()); }
-</script>
+    function loadData() {
+        const names1 = ["Кузін Іван", "Косолап Валерій", "Дивна Юлія", "Ведмідь Микола"];
+        const names2 = ["Фурман Сергій", "Вернадський Євген", "Шлопак Оля"];
+        const team = [{n:"Онопко Ксенія", l:3}, {n:"Градський Богдан", l:3}, {n:"Бігула Ірина", l:2}];
 
+        document.getElementById('list-1').innerHTML = names1.map(n => `<div class="item-row"><div class="item-left"><div class="avatar-sm">👤</div>${n}</div></div>`).join('');
+        document.getElementById('list-2').innerHTML = names2.map(n => `<div class="item-row"><div class="item-left"><div class="avatar-sm">👤</div>${n}</div></div>`).join('');
+        document.getElementById('list-3').innerHTML = team.map(t => `<div class="item-row"><div class="item-left"><div class="avatar-sm">👤</div>${t.n}</div><div class="level-circle-sm">${t.l}</div></div>`).join('');
+    }
+</script>
 </body>
 </html>
