@@ -20,74 +20,96 @@
             color: #2c3e44;
         }
 
-        /* Верхня частина */
-        .header { text-align: center; padding-top: 20px; }
-        .dashboard-title { font-size: 32px; font-weight: 500; opacity: 0.8; }
-        .list-label { text-align: left; padding: 10px 25px; font-size: 28px; }
+        /* Заголовок максимально високо до динаміка */
+        .header { text-align: center; padding-top: 5px; }
+        .dashboard-title { font-size: 14px; font-weight: 500; opacity: 0.6; }
 
-        /* Список клієнтів */
+        /* Напис Список вище і менше */
+        .list-label { text-align: left; padding: 5px 25px; font-size: 18px; font-weight: 600; }
+
+        /* Список тепер іде до самого низу екрана */
         .client-list {
             flex: 1;
             overflow-y: auto;
-            padding: 0 20px;
+            padding: 0 25px 100px 25px; /* Відступ знизу, щоб острівець не закривав останнє ім'я */
         }
 
         .client-item {
             display: flex;
             align-items: center;
-            padding: 12px 0;
+            padding: 6px 0;
         }
 
         .avatar {
-            width: 50px;
-            height: 50px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.2);
             border: 1px solid #2c3e44;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 15px;
+            margin-right: 12px;
+            font-size: 16px;
         }
 
-        .avatar-img { width: 30px; opacity: 0.6; }
-        .client-name { font-size: 20px; font-weight: 500; }
+        .client-name { font-size: 15px; font-weight: 500; }
 
         /* Кнопка Плюс */
         .fab {
-            position: absolute;
-            right: 25px;
-            bottom: 110px;
-            width: 55px;
-            height: 55px;
+            position: fixed;
+            right: 20px;
+            bottom: 85px;
+            width: 40px;
+            height: 40px;
             background: rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 35px;
+            font-size: 24px;
             border: 1px solid rgba(0,0,0,0.1);
         }
 
-        /* Нижня панель навігації */
-        .nav-bar {
-            height: 80px;
-            background: rgba(255, 255, 255, 0.2);
-            margin: 10px 20px 30px 20px;
-            border-radius: 40px;
+        /* Навігаційний блок: Острівець + фото поруч */
+        .nav-container {
+            position: fixed;
+            bottom: 25px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            padding: 0 20px;
+        }
+
+        /* Вузький острівець на 3 кнопки */
+        .nav-island {
+            height: 50px;
+            width: 180px;
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 25px;
             display: flex;
             justify-content: space-around;
             align-items: center;
             padding: 0 10px;
+            backdrop-filter: blur(5px);
         }
 
-        .nav-item { width: 35px; opacity: 0.7; }
-        .nav-item.profile {
+        .nav-item { font-size: 18px; opacity: 0.8; }
+
+        /* Фото акаунта на одному рівні поруч */
+        .profile-img {
             width: 45px;
             height: 45px;
-            border: 2px solid #2c3e44;
+            border: 1.5px solid #2c3e44;
             border-radius: 50%;
-            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            background: rgba(255, 255, 255, 0.2);
         }
     </style>
 </head>
@@ -113,11 +135,13 @@
 
     <div class="fab">+</div>
 
-    <div class="nav-bar">
-        <div class="nav-item">📞</div>
-        <div class="nav-item">🤝</div>
-        <div class="nav-item">👥</div>
-        <div class="nav-item profile">👤</div>
+    <div class="nav-container">
+        <div class="nav-island">
+            <div class="nav-item">📞</div>
+            <div class="nav-item">🤝</div>
+            <div class="nav-item">👥</div>
+        </div>
+        <div class="profile-img">👤</div>
     </div>
 
 </body>
