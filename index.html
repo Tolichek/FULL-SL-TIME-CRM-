@@ -2,10 +2,10 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>CRM Login</title>
     <style>
-        /* Повне обнулення */
+        /* Прибираємо все зайве, що може створювати смуги */
         * {
             margin: 0;
             padding: 0;
@@ -13,19 +13,19 @@
             font-family: sans-serif;
         }
 
-        /* Заборона будь-яких білих зон */
+        /* Градієнт на самій основі сторінки — смуг більше не буде */
         html, body {
             height: 100%;
             width: 100%;
-            background: #14abb1;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #14abb1 0%, #48c560 100%) no-repeat fixed;
             overflow: hidden;
         }
 
         .screen {
-            /* Використання динамічної висоти для мобільних */
-            min-height: 100dvh;
+            height: 100%;
             width: 100%;
-            background: linear-gradient(to bottom, #14abb1 0%, #48c560 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -33,13 +33,13 @@
         }
 
         .main-content {
-            margin-top: 22vh;
+            margin-top: 25vh; /* Login зверху над формою */
             text-align: center;
             width: 100%;
         }
 
         .login-text {
-            font-size: 34px; /* Акуратний розмір */
+            font-size: 34px;
             font-weight: 600;
             color: #2c3e44;
             margin-bottom: 25px;
@@ -51,27 +51,28 @@
             justify-content: center;
             background: rgba(255, 255, 255, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 10px 22px;
+            padding: 12px 24px;
             border-radius: 50px;
-            white-space: nowrap; /* Строго один рядок */
+            white-space: nowrap; /* Суворо в один рядок */
         }
 
         .google-btn img {
-            width: 18px;
-            height: 18px;
-            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
         }
 
         .google-btn span {
-            font-size: 15px;
+            font-size: 16px;
             color: #2c3e44;
             font-weight: 500;
         }
 
+        /* Напис dashboard у нижній частині */
         .footer-text {
             position: absolute;
-            bottom: 100px;
-            font-size: 28px;
+            bottom: 120px; 
+            font-size: 32px;
             color: #2c3e44;
             font-weight: 500;
             opacity: 0.8;
