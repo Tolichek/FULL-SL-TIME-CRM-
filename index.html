@@ -3,114 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRM - Login</title>
+    <title>CRM Login</title>
     <style>
         * {
             margin: 0;
             padding: 0;
-            box-box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
         body, html {
             height: 100%;
+            width: 100%;
             overflow: hidden;
         }
 
-        /* Вертикальний градієнт за інструкцією */
-        .container {
+        /* Вертикальний градієнт */
+        .screen {
             height: 100vh;
             width: 100%;
-            background: linear-gradient(to bottom, #00ACC1, #4CAF50);
+            background: linear-gradient(to bottom, #14abb1, #48c560);
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
             align-items: center;
-            padding: 60px 20px;
+            justify-content: center; /* Центрування основного контенту */
+            position: relative;
         }
 
-        /* Напис Login зверху над формою */
-        .top-section {
+        /* Блок логіну по центру */
+        .login-container {
             text-align: center;
-            margin-top: 40px;
-        }
-
-        .login-title {
-            font-size: 48px;
-            font-weight: bold;
-            color: #37474F;
-            margin-bottom: 30px;
-        }
-
-        .login-form {
             width: 100%;
-            max-width: 320px;
+            padding: 0 40px;
         }
 
+        .login-text {
+            font-size: 32px; /* Зменшений розмір */
+            font-weight: 600;
+            color: #2c3e44;
+            margin-bottom: 25px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Кнопка Google */
         .google-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 255, 255, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 15px;
-            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 24px;
+            border-radius: 50px;
             cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .google-btn:hover {
-            background: rgba(255, 255, 255, 0.4);
+            margin: 0 auto;
+            max-width: 280px;
+            transition: background 0.2s;
         }
 
         .google-btn img {
-            width: 24px;
-            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
         }
 
         .google-btn span {
-            font-size: 18px;
-            color: #263238;
+            font-size: 16px;
+            color: #2c3e44;
+            font-weight: 500;
         }
 
-        /* Напис dashboard у нижній частині */
-        .bottom-section {
-            margin-bottom: 40px;
-        }
-
-        .dashboard-label {
-            font-size: 32px;
-            color: #263238;
-            letter-spacing: 1.5px;
-            text-transform: lowercase;
+        /* Напис dashboard внизу */
+        .footer-text {
+            position: absolute;
+            bottom: 60px;
+            font-size: 24px;
+            color: #2c3e44;
+            opacity: 0.8;
+            letter-spacing: 1px;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="top-section">
-            <h1 class="login-title">Login</h1>
-            
-            <div class="login-form">
-                <div class="google-btn" onclick="handleLogin()">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
-                    <span>Continue with Google</span>
-                </div>
+    <div class="screen">
+        <div class="login-container">
+            <h1 class="login-text">Login</h1>
+            <div class="google-btn">
+                <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt="G">
+                <span>Continue with Google</span>
             </div>
         </div>
 
-        <div class="bottom-section">
-            <div class="dashboard-label">dashboard</div>
-        </div>
+        <div class="footer-text">dashboard</div>
     </div>
-
-    <script>
-        function handleLogin() {
-            console.log("Login sequence started...");
-            // Тут буде логіка авторизації
-        }
-    </script>
 
 </body>
 </html>
