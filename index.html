@@ -3,94 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>CRM System</title>
+    <title>SL CRM Profile</title>
+    
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
-        html, body { height: 100%; background: #000; overflow: hidden; color: #2c3e44; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
+        html, body { height: 100%; background: #000; overflow: hidden; }
+
         .app-bg {
             height: 100dvh; width: 100%;
             background: linear-gradient(to right, #14abb1 0%, #48c560 100%);
-            display: flex; flex-direction: column; position: relative;
+            display: flex; flex-direction: column; align-items: center; color: #2c3e44;
         }
-        .view { display: none; height: 100%; width: 100%; flex-direction: column; }
-        .active { display: flex; }
 
-        /* PROFILE VIEW */
-        #view-profile { align-items: center; padding-top: 40px; }
-        .big-avatar { width: 140px; height: 140px; border-radius: 50%; border: 1.5px solid #2c3e44; margin-bottom: 20px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .big-avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .profile-name { font-size: 26px; font-weight: 500; margin-bottom: 8px; }
-        .level-row { display: flex; align-items: center; gap: 10px; margin-bottom: 30px; font-size: 18px; }
-        .level-circle { width: 34px; height: 34px; background: #2c3e44; color: #48c560; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-        
-        .actions-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; width: 92%; margin-bottom: 20px; }
-        .action-box { background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 12px 5px; text-align: center; font-size: 10px; font-weight: bold; }
-        .action-box span { display: block; font-size: 24px; margin-bottom: 5px; }
-        
-        .data-card { width: 92%; background: rgba(255,255,255,0.25); border-radius: 15px; padding: 18px; margin-bottom: 30px; }
-        .data-val { font-size: 19px; font-weight: 500; }
-        .data-lbl { font-size: 11px; opacity: 0.6; margin-bottom: 12px; }
-        
-        .logout-pill { background: rgba(255,255,255,0.3); border-radius: 30px; padding: 12px 35px; display: flex; align-items: center; gap: 12px; font-weight: bold; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
-        .logout-pill img { width: 18px; }
+        /* Заголовок dashboard як на макеті */
+        .header { padding-top: 15px; text-align: center; width: 100%; }
+        .dash-label { font-size: 24px; font-weight: 500; opacity: 0.7; }
 
-        /* DASHBOARD */
-        .header { text-align: center; padding-top: 10px; }
-        .dash-title { font-size: 22px; opacity: 0.7; }
-        .list-label { padding: 10px 25px 5px; font-size: 20px; font-weight: 600; }
-        .client-list { flex: 1; overflow-y: auto; padding: 0 25px 140px; }
-        .client-item { display: flex; align-items: center; padding: 10px 0; border-bottom: 0.5px solid rgba(44, 62, 68, 0.1); }
-        .avatar-sm { width: 36px; height: 36px; border-radius: 50%; border: 1px solid #2c3e44; margin-right: 12px; overflow: hidden; background: rgba(255,255,255,0.2); }
+        /* Велике фото профілю в тонкому колі */
+        .profile-pic-container { margin-top: 15px; position: relative; }
+        .profile-pic {
+            width: 130px; height: 130px; border-radius: 50%;
+            border: 1px solid #2c3e44; background: rgba(255, 255, 255, 0.1);
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
+        }
+        .profile-pic img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* NAV ISLAND */
-        .nav-container { position: fixed; bottom: 35px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 15px; }
-        .nav-island { height: 54px; width: 220px; background: rgba(255,255,255,0.3); border-radius: 27px; display: flex; justify-content: space-around; align-items: center; backdrop-filter: blur(10px); }
-        .nav-icon { width: 28px; height: 28px; opacity: 0.8; }
-        .profile-trigger { width: 54px; height: 54px; border: 2px solid #2c3e44; border-radius: 50%; overflow: hidden; background: rgba(255,255,255,0.2); }
-        .profile-trigger img { width: 100%; height: 100%; object-fit: cover; }
+        /* Ім'я та Рівень */
+        .user-name { margin-top: 20px; font-size: 26px; font-weight: 500; text-align: center; }
+        .level-section { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+        .level-circle {
+            width: 36px; height: 36px; background: rgba(44, 62, 68, 0.3);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: bold; font-size: 20px; color: #2c3e44;
+        }
+        .level-text { font-size: 18px; font-weight: 500; }
+
+        /* Ряд кнопок-плиток (Встановити фото, Змінити дані, Налаштування) */
+        .action-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+            width: 94%; margin-top: 30px;
+        }
+        .action-box {
+            background: rgba(255, 255, 255, 0.2); border: 0.5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px; padding: 12px 4px; text-align: center;
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .action-box img { width: 28px; margin-bottom: 6px; opacity: 0.8; }
+        .action-box span { font-size: 10px; font-weight: bold; text-transform: none; line-height: 1.2; }
+
+        /* Блок контактних даних */
+        .data-panel {
+            width: 94%; background: rgba(255, 255, 255, 0.25);
+            border-radius: 12px; padding: 18px 20px; margin-top: 15px;
+        }
+        .data-item { margin-bottom: 15px; }
+        .data-item:last-child { margin-bottom: 0; }
+        .data-value { font-size: 20px; font-weight: 500; margin-bottom: 2px; }
+        .data-label { font-size: 11px; opacity: 0.7; font-weight: bold; }
+
+        /* Кнопка Logaut з лого Google */
+        .logout-wrap { margin-top: auto; margin-bottom: 100px; }
+        .logout-pill {
+            background: rgba(255, 255, 255, 0.3); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px; padding: 12px 45px; display: flex; align-items: center; gap: 15px;
+            font-weight: bold; cursor: pointer;
+        }
+        .logout-pill img { width: 20px; }
+
+        /* Навігація - іконки як на макеті */
+        .nav-island-container { position: fixed; bottom: 30px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 15px; }
+        .nav-island {
+            height: 56px; width: 220px; background: rgba(255, 255, 255, 0.3);
+            border-radius: 28px; display: flex; justify-content: space-around; align-items: center;
+            backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .nav-icon { width: 30px; opacity: 0.7; }
+        .nav-profile-active {
+            width: 56px; height: 56px; border: 2.5px solid #2c3e44;
+            border-radius: 50%; overflow: hidden; background: rgba(255, 255, 255, 0.2);
+            display: flex; align-items: center; justify-content: center;
+        }
     </style>
 </head>
 <body>
+
 <div class="app-bg">
-    <div id="view-dash" class="view active">
-        <div class="header"><div class="dash-title">dashboard</div></div>
-        <div class="list-label">Список</div>
-        <div class="client-list" id="list-container"></div>
-        <div class="nav-container">
-            <div class="nav-island">
-                <span style="font-size:24px">📞</span><span style="font-size:24px">🤝</span><span style="font-size:24px">👥</span>
-            </div>
-            <div class="profile-trigger" onclick="switchView('profile')"><img class="u-photo" src=""></div>
+    <div class="header"><div class="dash-label">dashboard</div></div>
+
+    <div class="profile-pic-container">
+        <div class="profile-pic"><img id="u-photo" src=""></div>
+    </div>
+
+    <div class="user-name" id="u-name">Завантаження...</div>
+
+    <div class="level-section">
+        <div class="level-circle">3</div>
+        <div class="level-text">рівень</div>
+    </div>
+
+    <div class="action-grid">
+        <div class="action-box">
+            <img src="https://cdn-icons-png.flaticon.com/512/685/685655.png" alt="">
+            <span>Встановити фото</span>
+        </div>
+        <div class="action-box">
+            <img src="https://cdn-icons-png.flaticon.com/512/1250/1250615.png" alt="">
+            <span>Змінити дані</span>
+        </div>
+        <div class="action-box">
+            <img src="https://cdn-icons-png.flaticon.com/512/3524/3524659.png" alt="">
+            <span>Налаштування</span>
         </div>
     </div>
 
-    <div id="view-profile" class="view">
-        <div class="big-avatar"><img class="u-photo" src=""></div>
-        <div class="profile-name" id="u-name-display">Завантаження...</div>
-        <div class="level-row"><div class="level-circle">3</div> рівень</div>
-        
-        <div class="actions-grid">
-            <div class="action-box"><span>📷</span>Встановити фото</div>
-            <div class="action-box"><span>✏️</span>Змінити дані</div>
-            <div class="action-box"><span>⚙️</span>Налаштування</div>
+    <div class="data-panel">
+        <div class="data-item">
+            <div class="data-value" id="u-phone">+380 (63) 393 96 94</div>
+            <div class="data-label">Мобільний</div>
         </div>
-
-        <div class="data-card">
-            <div class="data-val">+380 (XX) XXX XX XX</div><div class="data-lbl">Мобільний</div>
-            <div class="data-val">-- -- ---- (-- років)</div><div class="data-lbl">День народження</div>
+        <div class="data-item">
+            <div class="data-value">13 серпня 1977 (48 років)</div>
+            <div class="data-label">День народження</div>
         </div>
+    </div>
 
+    <div class="logout-wrap">
         <div class="logout-pill" onclick="logout()">
-            <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png"> Logaut
+            <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt=""> Logaut
         </div>
+    </div>
 
-        <div class="nav-container">
-            <div class="nav-island" onclick="switchView('dash')">
-                <span style="font-size:24px">📞</span><span style="font-size:24px">🤝</span><span style="font-size:24px">👥</span>
-            </div>
-            <div class="profile-trigger" style="background:rgba(44,62,68,0.2)"><img class="u-photo" src=""></div>
+    <div class="nav-island-container">
+        <div class="nav-island">
+            <span style="font-size:26px; opacity: 0.6;">📞</span>
+            <span style="font-size:26px; opacity: 0.6;">🤝</span>
+            <span style="font-size:26px; opacity: 0.6;">👥</span>
+        </div>
+        <div class="nav-profile-active">
+            <img id="nav-photo" src="" style="width:100%; height:100%; object-fit:cover;">
         </div>
     </div>
 </div>
@@ -109,34 +162,15 @@
 
     auth.onAuthStateChanged(user => {
         if (user) {
-            document.getElementById('u-name-display').innerText = user.displayName || "Користувач";
-            const photos = document.querySelectorAll('.u-photo');
-            photos.forEach(img => {
-                img.src = user.photoURL || 'https://www.gstatic.com/images/branding/product/1x/avatar_circle_blue_512dp.png';
-            });
-            renderList();
-        } else {
-            // Тут буде логіка входу, якщо сесія завершена
+            document.getElementById('u-name').innerText = user.displayName;
+            const photo = user.photoURL || 'https://www.gstatic.com/images/branding/product/1x/avatar_circle_blue_512dp.png';
+            document.getElementById('u-photo').src = photo;
+            document.getElementById('nav-photo').src = photo;
         }
     });
 
-    function switchView(v) {
-        document.getElementById('view-dash').classList.toggle('active', v === 'dash');
-        document.getElementById('view-profile').classList.toggle('active', v === 'profile');
-    }
-
     function logout() { auth.signOut().then(() => location.reload()); }
-
-    function renderList() {
-        const names = ["Кузін Іван", "Косолап Валерій", "Дивна Юлія", "Ведмідь Микола", "Конська Ілона", "Бережна Оксана", "Лужний Олександр", "Іванова Тетяна"];
-        const list = document.getElementById('list-container');
-        list.innerHTML = names.map(n => `
-            <div class="client-item">
-                <div class="avatar-sm">👤</div>
-                <div class="client-name">${n}</div>
-            </div>
-        `).join('');
-    }
 </script>
+
 </body>
 </html>
