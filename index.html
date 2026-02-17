@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Starlife CRM - Login Pixel Perfect</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -25,58 +25,58 @@
             height: 100vh;
             max-width: 430px;
             margin: 0 auto;
-            /* Твій горизонтальний градієнт */
+            /* Горизонтальний градієнт зліва направо */
             background: linear-gradient(to right, #1896A1 0%, #7ED957 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* Центруємо все дерево елементів */
-            padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px;
+            justify-content: center;
+            padding: 20px;
         }
 
-        /* Напис Login - жирний і високий */
+        /* Слово Login - тепер акуратне, не велетенське */
         .login-text {
-            font-size: 58px;
-            font-weight: 600;
+            font-size: 32px; /* Зменшив у два рази */
+            font-weight: 400;
             color: #2D4133;
-            letter-spacing: -1px;
-            margin-bottom: 25px; /* Відстань до кнопки */
+            letter-spacing: -0.5px;
+            margin-bottom: 20px;
         }
 
         /* Капсула Google */
         .google-capsule {
-            width: 90%;
-            height: 66px;
-            background: rgba(255, 255, 255, 0.28);
+            width: 88%;
+            height: 54px;
+            background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.35);
-            border-radius: 33px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 27px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 18vh; /* Великий відступ від кнопки до dashboard як на макеті */
+            margin-bottom: 15vh; /* Відступ до дашборду */
         }
 
         .google-icon {
-            width: 28px;
-            height: 28px;
-            margin-right: 14px;
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
         }
 
         .btn-text {
-            font-size: 21px;
+            font-size: 18px;
             color: #2D4133;
             font-weight: 400;
         }
 
-        /* dashboard: припіднятий, жирний, центральний */
+        /* dashboard: малий, тонкий, як на ескізі */
         .dash-label {
-            font-size: 46px;
-            font-weight: 400; /* Набагато жирніше ніж раніше */
+            font-size: 36px;
+            font-weight: 200;
             color: #2D4133;
-            letter-spacing: -0.5px;
-            opacity: 0.95;
+            opacity: 0.8;
+            letter-spacing: 1px;
         }
     </style>
 </head>
