@@ -2,189 +2,208 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRM Mobile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CRM Pro Mobile</title>
     <style>
         :root {
-            /* Початкова тема: Зелена */
             --bg-gradient: linear-gradient(135deg, #40e0d0 0%, #98fb98 100%);
-            --text-color: #000;
-            --panel-bg: rgba(255, 255, 255, 0.2);
-            --accent-color: #2ecc71;
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --text-color: #000000;
+            --panel-bg: rgba(255, 255, 255, 0.25);
+            --accent: #2ecc71;
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --transition: all 0.3s ease;
         }
 
-        /* Налаштування теми Графіт (приклад для JS) */
-        [data-theme="graphite"] {
-            --bg-gradient: linear-gradient(135deg, #2c3e50 0%, #000000 100%);
-            --text-color: #fff;
-            --panel-bg: rgba(255, 255, 255, 0.1);
-        }
+        /* Теми */
+        body.theme-graphite { --bg-gradient: linear-gradient(135deg, #2c3e50 0%, #000000 100%); --text-color: #ffffff; --panel-bg: rgba(255, 255, 255, 0.1); }
+        body.theme-blue { --bg-gradient: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); --text-color: #ffffff; --panel-bg: rgba(255, 255, 255, 0.15); }
+        body.theme-purple { --bg-gradient: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); --text-color: #ffffff; --panel-bg: rgba(255, 255, 255, 0.15); }
+        body.theme-pink { --bg-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); --text-color: #000000; --panel-bg: rgba(255, 255, 255, 0.3); }
+        body.theme-gold { --bg-gradient: linear-gradient(135deg, #f6d365 0%, #fda085 100%); --text-color: #000000; --panel-bg: rgba(255, 255, 255, 0.3); }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        body { margin: 0; background: #121212; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
-        body {
-            background: #1a1a1a;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* Контейнер смартфона 9:16 */
-        #app-container {
-            width: 360px;
-            height: 740px; /* Співвідношення сторін для смартфона */
+        /* Smartphone Container */
+        #phone {
+            width: 375px;
+            height: 812px;
             background: var(--bg-gradient);
             color: var(--text-color);
             position: relative;
             overflow: hidden;
-            border-radius: 30px;
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            border-radius: 40px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
         }
 
         .screen {
             position: absolute;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             display: none;
             flex-direction: column;
             padding: 20px;
+            padding-top: 50px;
         }
-
         .screen.active { display: flex; }
 
-        /* Екран 1: Логін */
-        .login-screen { justify-content: center; align-items: center; }
-        
-        .btn-google {
-            background: var(--panel-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.3);
-            padding: 15px 30px;
-            border-radius: 50px;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            font-weight: bold;
-            color: var(--text-color);
-            transition: 0.3s;
-        }
+        /* UI Elements */
+        .glass { background: var(--panel-bg); backdrop-filter: blur(15px); border: 1px solid var(--glass-border); border-radius: 20px; }
+        .header { text-align: center; font-size: 14px; opacity: 0.6; margin-bottom: 5px; }
+        .title { font-size: 28px; font-weight: 800; margin-bottom: 20px; }
 
-        /* Екран 2: Список */
-        .header-title { font-size: 14px; text-align: center; opacity: 0.7; margin-bottom: 10px; }
-        .screen-name { font-size: 24px; font-weight: bold; margin-bottom: 20px; }
+        /* Login */
+        .login-center { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .google-btn { padding: 15px 25px; border-radius: 40px; display: flex; align-items: center; cursor: pointer; font-weight: 600; }
 
-        .contact-list { flex: 1; overflow-y: auto; }
-        .contact-item {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            margin-bottom: 10px;
-            background: var(--panel-bg);
-            border-radius: 15px;
-            cursor: pointer;
-        }
-        .avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: #ddd;
-            margin-right: 15px;
-            object-fit: cover;
-        }
+        /* List Items */
+        .item-list { flex: 1; overflow-y: auto; padding-bottom: 100px; }
+        .contact-row { display: flex; align-items: center; padding: 12px; margin-bottom: 10px; cursor: pointer; }
+        .avatar-circle { width: 50px; height: 50px; border-radius: 50%; background: #ccc; margin-right: 15px; background-size: cover; }
+        .level-badge { margin-left: auto; width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--text-color); display: flex; justify-content: center; align-items: center; font-weight: bold; }
 
-        /* Нижня панель (Острів) */
-        .bottom-nav {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            right: 80px; /* Місце для фото профілю */
-            height: 60px;
-            background: var(--panel-bg);
-            backdrop-filter: blur(15px);
-            border-radius: 30px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-        }
+        /* Bottom Navigation */
+        .nav-island { position: absolute; bottom: 30px; left: 20px; right: 90px; height: 65px; display: flex; justify-content: space-around; align-items: center; }
+        .nav-btn { font-size: 12px; opacity: 0.5; cursor: pointer; }
+        .nav-btn.active { opacity: 1; font-weight: bold; }
+        .owner-avatar { position: absolute; bottom: 30px; right: 20px; width: 65px; height: 65px; border-radius: 50%; border: 2px solid white; cursor: pointer; }
 
-        .nav-item { opacity: 0.5; cursor: pointer; font-size: 12px; text-align: center; }
-        .nav-item.active { opacity: 1; font-weight: bold; }
+        /* FAB */
+        .fab { position: absolute; bottom: 110px; right: 20px; width: 55px; height: 55px; background: var(--accent); border-radius: 50%; display: flex; justify-content: center; align-items: center; color: white; font-size: 30px; cursor: pointer; }
 
-        .user-profile-btn {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: #ccc;
-            border: 2px solid white;
-            cursor: pointer;
+        /* Forms */
+        .form-group { margin-bottom: 15px; }
+        input[type="text"], input[type="tel"], input[type="number"], input[type="date"] {
+            width: 100%; padding: 12px; margin-bottom: 10px; border: none; border-radius: 12px; background: var(--panel-bg); color: var(--text-color);
         }
+        .toggle-container { display: flex; justify-content: space-between; align-items: center; padding: 10px; }
 
-        .fab-add {
-            position: absolute;
-            bottom: 100px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            background: var(--accent-color);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-size: 24px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            cursor: pointer;
-        }
+        /* Chat */
+        .chat-header { position: absolute; top: 0; left: 0; right: 0; height: 80px; background: rgba(0,0,0,0.4); color: white; display: flex; align-items: center; padding: 0 20px; z-index: 10; }
+        .chat-messages { flex: 1; overflow-y: auto; padding: 90px 10px 80px; }
+        .msg-bubble { background: var(--panel-bg); padding: 10px; border-radius: 15px; margin-bottom: 10px; max-width: 80%; position: relative; }
+        .chat-input-area { position: absolute; bottom: 0; left: 0; right: 0; padding: 15px; background: transparent; display: flex; align-items: flex-end; }
+        .dynamic-input { flex: 1; min-height: 40px; max-height: 120px; background: var(--panel-bg); border-radius: 20px; padding: 10px 15px; border: 1px solid var(--glass-border); overflow-y: auto; }
+
+        /* Gallery Overlay */
+        .gallery-view { position: absolute; inset: 0; background: black; z-index: 100; display: none; color: white; }
+        .gallery-active { display: flex; flex-direction: column; }
     </style>
 </head>
-<body>
+<body class="theme-green">
 
-<div id="app-container">
+<div id="phone">
     
-    <div class="screen active" id="screen-login">
-        <h1 style="margin-bottom: 40px;">Login</h1>
-        <div class="btn-google" onclick="navTo('screen-list')">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="20" style="margin-right: 10px;">
-            Continue with Google
+    <div class="screen active" id="scr-login">
+        <div class="login-center">
+            <h1 class="title">Login</h1>
+            <div class="google-btn glass" onclick="goTo('scr-list')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" width="20" style="margin-right:15px">
+                Continue with Google
+            </div>
+            <div style="position:absolute; bottom:40px; opacity:0.5">dashboard</div>
         </div>
-        <p style="position: absolute; bottom: 40px; opacity: 0.5;">dashboard</p>
     </div>
 
-    <div class="screen" id="screen-list">
-        <div class="header-title">dashboard</div>
-        <div class="screen-name">Список</div>
-        
-        <div class="contact-list">
-            <div class="contact-item" onclick="navTo('screen-info')">
-                <div class="avatar"></div>
-                <span>Сарнавський Олег</span>
+    <div class="screen" id="scr-list">
+        <div class="header">dashboard</div>
+        <div class="title">Список</div>
+        <div class="item-list" id="list-contacts">
+            <div class="contact-row glass" onclick="openClient()">
+                <div class="avatar-circle"></div>
+                <div class="name">Сарнавський Олег</div>
             </div>
         </div>
-
-        <div class="fab-add" onclick="navTo('screen-form')">+</div>
-
-        <div class="bottom-nav">
-            <div class="nav-item active">Список</div>
-            <div class="nav-item" onclick="navTo('screen-clients')">Клієнт</div>
-            <div class="nav-item" onclick="navTo('screen-team')">Команда</div>
+        <div class="fab" onclick="goTo('scr-form')">+</div>
+        <div class="nav-island glass">
+            <div class="nav-btn active">Список</div>
+            <div class="nav-btn" onclick="goTo('scr-clients')">Клієнт</div>
+            <div class="nav-btn" onclick="goTo('scr-team')">Команда</div>
         </div>
-        <div class="user-profile-btn" onclick="navTo('screen-owner')"></div>
+        <div class="owner-avatar glass" onclick="goTo('scr-owner')"></div>
+    </div>
+
+    <div class="screen" id="scr-form">
+        <div class="header">dashboard</div>
+        <div style="overflow-y:auto; flex:1">
+            <div class="avatar-circle" style="width:100px; height:100px; margin: 0 auto 20px;" onclick="alert('Відкрити галерею')"></div>
+            <input type="text" placeholder="Прізвище">
+            <input type="text" placeholder="Ім'я">
+            <input type="tel" placeholder="Мобільний">
+            <div style="display:flex; align-items:center">
+                <input type="date" id="birth" onchange="calcAge()">
+                <span id="age" style="margin: 0 10px"></span>
+            </div>
+            <div id="policies">
+                <input type="text" placeholder="Номер поліса">
+                <input type="date">
+            </div>
+            <button onclick="addPolicy()" style="background:none; border:1px solid var(--text-color); color:var(--text-color); border-radius:15px; padding:5px 15px; margin-bottom:20px">+ поліс</button>
+            
+            <div class="glass" style="padding:15px">
+                <div style="display:flex; align-items:center; margin-bottom:10px">
+                    <span>Рівень: </span>
+                    <input type="number" value="1" style="width:60px; margin:0 10px">
+                </div>
+                <div class="toggle-container">
+                    <label>Клієнт</label>
+                    <input type="checkbox" id="isClient" onchange="togglePartner()">
+                </div>
+                <div class="toggle-container">
+                    <label>Партнер</label>
+                    <input type="checkbox" id="isPartner" disabled>
+                </div>
+            </div>
+            <button onclick="goTo('scr-list')" class="glass" style="width:100%; padding:15px; margin-top:20px; font-weight:bold; background: var(--accent); color:white; border:none">Зберегти</button>
+        </div>
+    </div>
+
+    <div class="screen" id="scr-settings">
+        <div class="title">Налаштування</div>
+        <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
+            <div onclick="setTheme('graphite')" style="height:60px; background:linear-gradient(135deg, #2c3e50, #000); border-radius:15px"></div>
+            <div onclick="setTheme('blue')" style="height:60px; background:linear-gradient(135deg, #1e3c72, #2a5298); border-radius:15px"></div>
+            <div onclick="setTheme('purple')" style="height:60px; background:linear-gradient(135deg, #6a11cb, #2575fc); border-radius:15px"></div>
+            <div onclick="setTheme('pink')" style="height:60px; background:linear-gradient(135deg, #ff9a9e, #fecfef); border-radius:15px"></div>
+            <div onclick="setTheme('gold')" style="height:60px; background:linear-gradient(135deg, #f6d365, #fda085); border-radius:15px"></div>
+            <div onclick="setTheme('green')" style="height:60px; background:linear-gradient(135deg, #40e0d0, #98fb98); border-radius:15px"></div>
+        </div>
+        <button onclick="goTo('scr-owner')" style="margin-top:30px">Назад</button>
     </div>
 
 </div>
 
 <script>
-    // Проста функція навігації
-    function navTo(screenId) {
+    function goTo(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        const target = document.getElementById(screenId);
-        if(target) target.classList.add('active');
+        document.getElementById(id).classList.add('active');
+    }
+
+    function addPolicy() {
+        const div = document.createElement('div');
+        div.innerHTML = '<input type="text" placeholder="Номер поліса"><input type="date">';
+        document.getElementById('policies').appendChild(div);
+    }
+
+    function calcAge() {
+        const b = new Date(document.getElementById('birth').value);
+        const age = new Date().getFullYear() - b.getFullYear();
+        document.getElementById('age').innerText = age + " років";
+    }
+
+    function togglePartner() {
+        const c = document.getElementById('isClient').checked;
+        const p = document.getElementById('isPartner');
+        p.disabled = !c;
+        if(!c) p.checked = false;
+    }
+
+    function setTheme(t) {
+        document.body.className = 'theme-' + t;
+    }
+
+    function openClient() {
+        // Логіка переходу до чату або інфо
+        goTo('scr-form');
     }
 </script>
 
