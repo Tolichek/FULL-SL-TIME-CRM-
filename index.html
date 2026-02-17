@@ -2,156 +2,115 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Starlife CRM - Список</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM - Login</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        
-        body, html { 
-            width: 100%; 
-            height: 100dvh; 
-            overflow: hidden; 
-            background: #000; 
+        * {
+            margin: 0;
+            padding: 0;
+            box-box-sizing: border-box;
+            font-family: Arial, sans-serif;
         }
 
-        .viewport {
+        body, html {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        /* Вертикальний градієнт за інструкцією */
+        .container {
+            height: 100vh;
             width: 100%;
-            height: 100dvh;
-            background: linear-gradient(to right, #1896A1 0%, #7ED957 100%);
+            background: linear-gradient(to bottom, #00ACC1, #4CAF50);
             display: flex;
             flex-direction: column;
-            padding: 10px 25px calc(env(safe-area-inset-bottom) + 20px) 25px;
-            position: relative;
-        }
-
-        /* Тонкий dashboard зверху по центру */
-        .dash-top {
-            text-align: center;
-            font-size: 30px;
-            font-weight: 200;
-            color: #2D4133;
-            opacity: 0.7;
-            margin-top: 15px;
-        }
-
-        /* Жирний Список зліва */
-        .title {
-            font-size: 38px;
-            font-weight: 600;
-            color: #2D4133;
-            margin: 15px 0 25px 0;
-        }
-
-        .scroll-area {
-            flex: 1;
-            overflow-y: auto;
-            padding-bottom: 160px;
-        }
-
-        /* Елемент списку з тонким кільцем */
-        .item {
-            display: flex;
+            justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            padding: 60px 20px;
         }
 
-        .ring {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            border: 1.2px solid #2D4133;
-            margin-right: 18px;
-            background: rgba(255, 255, 255, 0.1);
+        /* Напис Login зверху над формою */
+        .top-section {
+            text-align: center;
+            margin-top: 40px;
         }
 
-        .name { font-size: 21px; color: #2D4133; }
+        .login-title {
+            font-size: 48px;
+            font-weight: bold;
+            color: #37474F;
+            margin-bottom: 30px;
+        }
 
-        /* Плюс над профілем */
-        .fab {
-            position: absolute;
-            bottom: 135px;
-            right: 25px;
-            width: 65px;
-            height: 65px;
-            background: #A0D8B4;
-            border-radius: 50%;
+        .login-form {
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .google-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
-            font-weight: 200;
-            color: #2D4133;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            background: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
         }
 
-        /* Навігація Острів */
-        .nav-bar {
-            position: absolute;
-            bottom: 30px;
-            left: 20px;
-            right: 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .google-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
         }
 
-        .island {
-            flex: 1;
-            height: 72px;
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 36px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
+        .google-btn img {
+            width: 24px;
+            margin-right: 15px;
         }
 
-        .owner {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            border: 4px solid #7ED957;
-            background: #ccc;
+        .google-btn span {
+            font-size: 18px;
+            color: #263238;
         }
 
-        /* Точні SVG іконки з макету */
-        .icon { width: 32px; height: 32px; fill: none; stroke: #2D4133; stroke-width: 1.5; opacity: 0.5; }
-        .icon.active { opacity: 1; }
+        /* Напис dashboard у нижній частині */
+        .bottom-section {
+            margin-bottom: 40px;
+        }
+
+        .dashboard-label {
+            font-size: 32px;
+            color: #263238;
+            letter-spacing: 1.5px;
+            text-transform: lowercase;
+        }
     </style>
 </head>
 <body>
-    <div class="viewport">
-        <div class="dash-top">dashboard</div>
-        <div class="title">Список</div>
 
-        <div class="scroll-area">
-            <div class="item">
-                <div class="ring"></div>
-                <div class="name">Сарнавський Олег</div>
+    <div class="container">
+        <div class="top-section">
+            <h1 class="login-title">Login</h1>
+            
+            <div class="login-form">
+                <div class="google-btn" onclick="handleLogin()">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google">
+                    <span>Continue with Google</span>
+                </div>
             </div>
         </div>
 
-        <div class="fab">+</div>
-
-        <div class="nav-bar">
-            <div class="island">
-                <svg class="icon active" viewBox="0 0 24 24">
-                    <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14c-4 0-7.5 2-7.5 5v1h15v-1c0-3-3.5-5-7.5-5z"/>
-                    <path d="M18 11l2 2-2 2" />
-                </svg>
-                <svg class="icon" viewBox="0 0 24 24">
-                    <circle cx="12" cy="8" r="4" />
-                    <path d="M4 20c0-4 4-4 8-4s8 0 8 4M4 22h16" />
-                </svg>
-                <svg class="icon" viewBox="0 0 24 24">
-                    <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 7a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87" />
-                </svg>
-            </div>
-            <div class="owner"></div>
+        <div class="bottom-section">
+            <div class="dashboard-label">dashboard</div>
         </div>
     </div>
+
+    <script>
+        function handleLogin() {
+            console.log("Login sequence started...");
+            // Тут буде логіка авторизації
+        }
+    </script>
+
 </body>
 </html>
