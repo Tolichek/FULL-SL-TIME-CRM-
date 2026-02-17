@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>CRM Login</title>
     <style>
-        /* Прибираємо все зайве, що може створювати смуги */
         * {
             margin: 0;
             padding: 0;
@@ -13,27 +12,26 @@
             font-family: sans-serif;
         }
 
-        /* Градієнт на самій основі сторінки — смуг більше не буде */
-        html, body {
+        /* Повне перекриття системних зон */
+        html {
             height: 100%;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(to bottom, #14abb1 0%, #48c560 100%) no-repeat fixed;
-            overflow: hidden;
+            background: #14abb1; /* Верхня точка */
         }
 
-        .screen {
-            height: 100%;
+        body {
+            min-height: 100dvh;
             width: 100%;
+            margin: 0;
+            /* Фіксований градієнт на весь в'юпорт */
+            background: linear-gradient(to bottom, #14abb1 0%, #48c560 100%) no-repeat fixed;
             display: flex;
             flex-direction: column;
             align-items: center;
-            position: relative;
+            overflow: hidden;
         }
 
         .main-content {
-            margin-top: 25vh; /* Login зверху над формою */
+            margin-top: 25dvh;
             text-align: center;
             width: 100%;
         }
@@ -53,7 +51,7 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
             padding: 12px 24px;
             border-radius: 50px;
-            white-space: nowrap; /* Суворо в один рядок */
+            white-space: nowrap;
         }
 
         .google-btn img {
@@ -68,10 +66,12 @@
             font-weight: 500;
         }
 
-        /* Напис dashboard у нижній частині */
         .footer-text {
-            position: absolute;
+            position: fixed; /* Фіксуємо над низом екрана */
             bottom: 120px; 
+            left: 0;
+            right: 0;
+            text-align: center;
             font-size: 32px;
             color: #2c3e44;
             font-weight: 500;
@@ -80,15 +80,13 @@
     </style>
 </head>
 <body>
-    <div class="screen">
-        <div class="main-content">
-            <h1 class="login-text">Login</h1>
-            <div class="google-btn">
-                <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt="G">
-                <span>Continue with Google</span>
-            </div>
+    <div class="main-content">
+        <h1 class="login-text">Login</h1>
+        <div class="google-btn">
+            <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png" alt="G">
+            <span>Continue with Google</span>
         </div>
-        <div class="footer-text">dashboard</div>
     </div>
+    <div class="footer-text">dashboard</div>
 </body>
 </html>
