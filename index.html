@@ -2,79 +2,342 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#000000">
-    <title>Starlife CRM</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>SL TIME CRM 2.7.5</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&display=swap');
-        
-        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: 'Inter', sans-serif; background-color: #000; }
-        .app-wrapper { display: flex; flex-direction: column; height: 100vh; }
-        .bg-gradient-custom { flex: 1; position: relative; background: linear-gradient(90deg, #1fa5a3 0%, #48d15f 100%); display: flex; flex-direction: column; }
-
-        /* Екран 2: Список */
-        .header-box { width: 100%; padding-top: 10px; display: flex; flex-direction: column; align-items: center; }
-        .dash-text { font-size: 14px; font-weight: 300; color: #1a332a; letter-spacing: 0.15em; opacity: 0.7; }
-        .list-text { align-self: flex-start; margin-left: 24px; font-size: 10px; font-weight: 400; color: #1a332a; opacity: 0.5; text-transform: lowercase; }
-
-        .bottom-ui { margin-top: auto; padding: 0 24px 12px 24px; display: flex; align-items: flex-end; justify-content: space-between; width: 100%; }
-
-        .island {
-            width: 65%; height: 48px; display: flex; justify-content: space-around; align-items: center;
-            background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(15px); border-radius: 24px; border: 0.5px solid rgba(255, 255, 255, 0.2);
+        :root {
+            --bg: linear-gradient(180deg, #2e0249 0%, #570a57 50%, #1a1a1b 100%);
+            --card-grad: linear-gradient(135deg, #3d0561 0%, #2e0249 100%);
+            --accent: #ffffff;
+            --neon: rgba(219, 0, 255, 0.8);
+            --neon-text: #fff;
         }
 
-        .side-group { display: flex; flex-direction: column; align-items: center; gap: 12px; }
-        .plus-btn { width: 42px; height: 42px; border-radius: 50%; background: rgba(255, 255, 255, 0.3); display: flex; align-items: center; justify-content: center; border: 0.5px solid rgba(255, 255, 255, 0.2); }
-        .avatar-box { width: 56px; height: 56px; border-radius: 50%; border: 0.8px solid rgba(26, 51, 42, 0.4); }
+        body.theme-purple { --bg: linear-gradient(180deg, #2e0249 0%, #570a57 50%, #1a1a1b 100%); --card-grad: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); --neon: rgba(219, 0, 255, 0.8); }
+        body.theme-graphite { --bg: linear-gradient(180deg, #1a1a1b 0%, #2c2c2e 50%, #000000 100%); --card-grad: linear-gradient(135deg, #3a3a3c 0%, #1a1a1b 100%); --neon: rgba(255, 255, 255, 0.4); }
+        body.theme-blue { --bg: linear-gradient(180deg, #021b49 0%, #0a2e57 50%, #010a1b 100%); --card-grad: linear-gradient(135deg, #052661 0%, #021b49 100%); --neon: rgba(0, 150, 255, 0.8); }
+        body.theme-green { --bg: linear-gradient(180deg, #02331a 0%, #0a492e 50%, #01140a 100%); --card-grad: linear-gradient(135deg, #054126 0%, #02331a 100%); --neon: rgba(0, 255, 133, 0.8); }
+        body.theme-gold { --bg: linear-gradient(180deg, #443501 0%, #755b0a 50%, #1a1401 100%); --card-grad: linear-gradient(135deg, #614d05 0%, #443501 100%); --neon: rgba(255, 215, 0, 0.7); }
+        body.theme-pink { --bg: linear-gradient(180deg, #49022e 0%, #570a3a 50%, #1b0110 100%); --card-grad: linear-gradient(135deg, #61053d 0%, #49022e 100%); --neon: rgba(255, 0, 150, 0.8); }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
+        body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
 
-        /* ВАШІ ІКОНКИ (SVG) */
-        .nav-svg { width: 24px; height: 24px; fill: none; stroke: #1a332a; stroke-width: 1.2; opacity: 0.4; }
-        .nav-svg.active { opacity: 1; }
+        ::-webkit-scrollbar { display: none; }
+        
+        header { display: flex; justify-content: space-between; align-items: center; padding: 0 15px; height: 80px; position: relative; z-index: 1000; background: transparent; }
+        .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); flex-shrink: 0; }
+        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 6vw; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 10px var(--neon), 0 0 20px var(--neon), 0 0 40px var(--neon); letter-spacing: 0.5px; flex: 1; text-align: center; white-space: nowrap; overflow: visible; }
+        @media screen and (min-width: 450px) { .header-title { font-size: 26px; } }
 
-        .black-bar { background-color: #000; height: 48px; width: 100%; }
+        #header-ctrl { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; cursor: pointer; min-width: 50px; height: 44px; flex-shrink: 0; }
+        .total-count { font-size: 14px; font-weight: bold; line-height: 1; opacity: 0.9; }
+        .f-lines { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; width: 22px; }
+        .f-line { height: 2px; background: white; border-radius: 2px; }
+        .l1 { width: 22px; } .l2 { width: 16px; } .l3 { width: 10px; }
+        #header-plus { display: none; font-size: 36px; font-weight: bold; color: white; cursor: pointer; min-width: 50px; text-align: right; line-height: 1; flex-shrink: 0; }
+
+        #main-viewport { display: flex; width: 100vw; height: calc(100vh - 80px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; gap: 60px; }
+        .app-container { flex: 0 0 100vw; width: 100vw; height: 100%; scroll-snap-align: start; scroll-snap-stop: always; overflow: hidden; position: relative; }
+
+        .board { display: flex; overflow-x: auto; padding: 10px 20px 55px; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
+        .column { min-width: calc(100vw - 40px); scroll-snap-align: center; scroll-snap-stop: always; display: flex; flex-direction: column; gap: 15px; }
+        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 20px; } 
+        .col-head { display: flex; justify-content: space-between; align-items: center; font-size: 14px; text-transform: uppercase; font-weight: bold; height: 36px; }
+        .add-btn-center { cursor: pointer; font-size: 32px; font-weight: bold; line-height: 1; display: flex; align-items: center; height: 100%; }
+
+        .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
+        .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 30px; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; color: #fff; text-shadow: 0 0 8px var(--neon); }
+
+        #struct-path { position: absolute; top: 0; left: 0; right: 0; display: none; align-items: center; padding: 0 20px; gap: 10px; overflow-x: auto; height: 50px; background: transparent; z-index: 500; }
+        .path-dot { width: 32px; height: 32px; border-radius: 50%; background-size: cover; background-position: center; border: 1.5px solid white; flex-shrink: 0; }
+
+        .struct-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 80px 10px 20px; overflow-y: auto; align-content: start; height: 100%; }
+        .icon-unit { display: flex; flex-direction: column; align-items: center; position: relative; height: 140px; }
+        
+        .sphere { 
+            position: absolute; width: 30px; height: 30px; border-radius: 50%; 
+            background: radial-gradient(circle at 30% 30%, #fff 0%, rgba(255,255,255,0.2) 20%, var(--neon) 60%, rgba(0,0,0,0.5) 100%);
+            display: flex; align-items: center; justify-content: center; 
+            box-shadow: inset -1px -1px 4px rgba(0,0,0,0.6), 0 4px 10px rgba(0,0,0,0.4); 
+            z-index: 10; font-size: 15px; font-weight: bold; color: white; border: 0.5px solid rgba(255,255,255,0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); line-height: 0;
+        }
+        .level-sphere { top: -15px; left: 50%; transform: translateX(-50%); }
+        .opt-sphere { display: none; top: 40px; left: 50%; }
+        .del-sphere { display: none; top: 40px; left: 50%; }
+        .icon-unit.menu-open .opt-sphere { display: flex; transform: translate(-150%, 45%); }
+        .icon-unit.menu-open .del-sphere { display: flex; transform: translate(50%, 45%); }
+
+        .photo-sphere { width: 75px; height: 75px; border-radius: 50%; background-size: cover; background-position: center; border: 2px solid rgba(255,255,255,0.4); box-shadow: 0 0 15px var(--neon); z-index: 5; cursor: pointer; }
+        .icon-label { margin-top: 20px; font-size: 10px; font-weight: bold; text-align: center; color: white; text-transform: uppercase; width: 100%; display: flex; flex-direction: column; }
+        .icon-label span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.7); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
+        .nav-item { color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33%; height: 100%; font-size: 11px; font-weight: bold; }
+        .nav-item.active { opacity: 1; text-shadow: 0 0 10px var(--neon); }
+
+        #edit-screen, #user-menu, #personal-data-screen, #partner-select-modal { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
+        select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
+        label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
+        .photo-container { position: relative; width: 110px; height: 110px; margin: 0 auto; cursor: pointer; }
+        .edit-level-display { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon); width: 60px; text-align: center; }
+        
+        .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
+        .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; font-size: 16px; }
+        #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; font-size: 16px; outline: none; }
+
+        #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
+        .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
+
+        .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
+        .theme-btn { padding: 16px; text-align: center; cursor: pointer; border-radius: 12px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; color: white; }
     </style>
 </head>
-<body>
+<body class="theme-purple">
+    <script>
+        const st = localStorage.getItem('crm_theme');
+        if(st) document.body.className = 'theme-' + st;
+    </script>
 
-<div class="app-wrapper">
-    <div class="bg-gradient-custom">
-        <div class="header-box">
-            <div class="dash-text">dashboard</div>
-            <div class="list-text">список</div>
-        </div>
-
-        <div style="flex: 1;"></div>
-
-        <div class="bottom-ui">
-            <div class="island">
-                <svg class="nav-svg active" viewBox="0 0 24 24">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                </svg>
-                <svg class="nav-svg" viewBox="0 0 24 24">
-                    <path d="M12 11c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"></path>
-                    <path d="M6 16c0-1.5 2-2.5 4-2.5h4c2 0 4 1 4 2.5"></path>
-                    <path d="M4 18c0 1 2 2 8 2s8-1 8-2" stroke-opacity="0.5"></path>
-                </svg>
-                <svg class="nav-svg" viewBox="0 0 24 24">
-                    <path d="M17 21v-2a4 4 0 0 0-3-3.87"></path>
-                    <path d="M7 21v-2a4 4 0 0 1 3-3.87"></path>
-                    <path d="M12 15a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"></path>
-                </svg>
-            </div>
-
-            <div class="side-group">
-                <div class="plus-btn">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a332a" stroke-width="1"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                </div>
-                <div class="avatar-box"></div>
-            </div>
-        </div>
+    <div id="splash" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+        <div style="width:160px;height:160px;border:2px solid silver;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:bold;color:white;">SL</div>
+        <div id="login-ui" style="display:none; margin-top:40px;"><button onclick="login()" style="background:white;border:none;padding:12px 30px;border-radius:25px;font-weight:bold;">Увійти через Google</button></div>
     </div>
-    <div class="black-bar"></div>
-</div>
 
+    <header id="app-header">
+        <div class="avatar" id="u-avatar" onclick="showUserMenu()"></div>
+        <div class="header-title">SL Time CRM</div>
+        <div id="header-ctrl" onclick="toggleFilter()">
+            <div id="header-counter" class="total-count">0</div>
+            <div class="f-lines"><div class="f-line l1"></div><div class="f-line l2"></div><div class="f-line l3"></div></div>
+        </div>
+        <div id="header-plus" onclick="handleAddPartner()">+</div>
+    </header>
+
+    <div id="filter-popup">
+        <div class="f-item" onclick="setFilter('az')">А-Я</div>
+        <div class="f-item" onclick="setFilter('new')">Нові</div>
+        <div class="f-item" onclick="setFilter('old')">Старі</div>
+    </div>
+
+    <div id="main-viewport">
+        <div id="screen-crm" class="app-container"><main class="board" id="main-board"></main></div>
+        <div id="screen-struct" class="app-container"><div id="struct-path"></div><div class="struct-grid" id="struct-grid"></div></div>
+        <div id="screen-plan" class="app-container"><div style="display:flex; align-items:center; justify-content:center; height:100%; opacity:0.3; font-size:20px;">ПЛАН ДІЙ</div></div>
+    </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active" id="btn-0" onclick="jumpToPage(0)">СПИСКИ</div>
+        <div class="nav-item" id="btn-1" onclick="jumpToPage(1)">СТРУКТУРА</div>
+        <div class="nav-item" id="btn-2" onclick="jumpToPage(2)">ПЛАН</div>
+    </nav>
+
+    <div id="user-menu">
+        <div style="font-size:18px; font-weight:bold; margin-bottom:30px; text-align:center;">НАЛАШТУВАННЯ</div>
+        <button onclick="showPersonalData()" style="padding:15px; background:rgba(255,255,255,0.1); color:white; border-radius:12px; width:100%; font-weight:bold; margin-bottom:10px; border:1px solid silver;">ОСОБИСТІ ДАНІ</button>
+        <div class="theme-grid">
+            <div onclick="setTheme('purple')" style="background:linear-gradient(135deg,#3d0561,#2e0249)" class="theme-btn">Фіолет</div>
+            <div onclick="setTheme('graphite')" style="background:linear-gradient(135deg,#3a3a3c,#1a1a1b)" class="theme-btn">Графіт</div>
+            <div onclick="setTheme('blue')" style="background:linear-gradient(135deg,#052661,#021b49)" class="theme-btn">Синій</div>
+            <div onclick="setTheme('green')" style="background:linear-gradient(135deg,#054126,#02331a)" class="theme-btn">Зелений</div>
+            <div onclick="setTheme('gold')" style="background:linear-gradient(135deg,#614d05,#443501)" class="theme-btn">Золото</div>
+            <div onclick="setTheme('pink')" style="background:linear-gradient(135deg,#61053d,#49022e)" class="theme-btn">Рожевий</div>
+        </div>
+        <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗАКРИТИ</button>
+        <div style="text-align:center; color:#ff4d4d; margin-top:30px; cursor:pointer; font-weight:bold;" onclick="logout()">ВИЙТИ</div>
+    </div>
+
+    <div id="edit-screen">
+        <span onclick="removeClient()" style="position: absolute; top: 25px; right: 25px; color: #ff4d4d; font-size: 12px; text-transform: uppercase; cursor: pointer;">Видалити</span>
+        <div class="photo-container" onclick="document.getElementById('file-client').click()">
+            <div id="c-photo" style="width:110px; height:110px; border-radius:50%; background-size:cover; border:1px solid silver;"></div>
+            <div id="edit-level-badge" class="edit-level-display"></div>
+            <input type="file" id="file-client" hidden accept="image/*" onchange="uploadPhoto(this, 'client')">
+        </div>
+        <div id="step-wrapper"><label>ЕТАП</label><select id="e-step"></select></div>
+        <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname"><label>ІМ'Я</label><input type="text" id="e-fname"><label>ТЕЛЕФОН</label><input type="tel" id="e-phone">
+        <label>ПОЛІС №</label><input type="text" id="e-pnum"><label>ДАТА</label><input type="date" id="e-pdate">
+        <label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <label>ПРИМІТКИ</label>
+        <div class="notes-wrapper" id="notes-wrap"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value"></textarea></div>
+        <button onclick="manualSave()" style="margin-top:20px; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none;">ЗБЕРЕГТИ ТА ВИЙТИ</button>
+    </div>
+
+    <div id="personal-data-screen">
+        <div class="photo-container" onclick="document.getElementById('file-me').click()">
+            <div id="me-photo" style="width:110px; height:110px; border-radius:50%; background-size:cover;"></div>
+            <div id="me-level-badge" class="edit-level-display"></div>
+            <input type="file" id="file-me" hidden accept="image/*" onchange="uploadPhoto(this, 'me')">
+        </div>
+        <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname"><label>ІМ'Я</label><input type="text" id="me-fname"><label>РІВЕНЬ</label><select id="me-level" onchange="updateMeLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <button onclick="saveMeData()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none;">ЗБЕРЕГТИ ТА ВИЙТИ</button>
+    </div>
+
+    <div id="partner-select-modal">
+        <div id="modal-partners-list" style="flex:1; overflow-y:auto; padding-top:20px;"></div>
+        <button onclick="window.history.back()" style="padding:18px; width:100%; border-radius:30px; background:white; color:black; font-weight:bold; border:none;">НАЗАД</button>
+    </div>
+
+    <script>
+        const firebaseConfig = { apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY", authDomain: "starlife-crm.firebaseapp.com", projectId: "starlife-crm", storageBucket: "starlife-crm.firebasestorage.app", messagingSenderId: "1022280682130", appId: "1:1022280682130:web:3ea517e8b6d22c7787744b" };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth(), db = firebase.firestore(), provider = new firebase.auth.GoogleAuthProvider();
+
+        let user = null, clients = [], editId = null, filterType = 'new', currentPhotoBase64 = null;
+        const steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Поліс", "Семінар"];
+        let currentPath = [], longPressTimer = null;
+
+        const vp = document.getElementById('main-viewport');
+        vp.addEventListener('scroll', () => {
+            const index = Math.round(vp.scrollLeft / (window.innerWidth + 60));
+            document.querySelectorAll('.nav-item').forEach((btn, i) => btn.classList.toggle('active', i === index));
+            const ctrl = document.getElementById('header-ctrl'), plus = document.getElementById('header-plus'), pathBar = document.getElementById('struct-path');
+            if(index === 1) { ctrl.style.display = 'none'; plus.style.display = 'block'; pathBar.style.display = 'flex'; renderStructure(); }
+            else { ctrl.style.display = 'flex'; plus.style.display = 'none'; pathBar.style.display = 'none'; }
+            updateHeaderCounter();
+        });
+
+        function jumpToPage(index) { vp.scrollTo({ left: index * (window.innerWidth + 60), behavior: 'smooth' }); }
+        function lock() { window.history.pushState({l:1}, ""); }
+        window.onload = lock;
+        window.onpopstate = () => {
+            if (editId || document.getElementById('user-menu').style.display==='flex' || document.getElementById('partner-select-modal').style.display==='flex' || document.getElementById('personal-data-screen').style.display==='flex') { closeAllUI(); lock(); return; }
+            if (currentPath.length > 0) { currentPath.pop(); renderStructure(); lock(); return; }
+            if (vp.scrollLeft > 0) { jumpToPage(0); lock(); return; }
+            lock();
+        };
+
+        auth.onAuthStateChanged(async u => { if(u) { user = u; document.getElementById('splash').style.display = 'none'; await loadUserConfig(); loadClients(); lock(); } else { document.getElementById('login-ui').style.display = 'block'; } });
+
+        async function loadUserConfig() {
+            const doc = await db.collection("users").doc(user.uid).get();
+            const data = doc.data() || {};
+            const photo = data.myPhoto || user.photoURL;
+            document.getElementById('u-avatar').style.backgroundImage = `url(${photo})`;
+            document.getElementById('me-photo').style.backgroundImage = `url(${photo})`;
+            document.getElementById('me-lname').value = data.meLname || "";
+            document.getElementById('me-fname').value = data.meFname || "";
+            document.getElementById('me-level').value = data.meLevel || "";
+            updateMeLevelBadge();
+            const theme = localStorage.getItem('crm_theme') || data.theme || 'purple';
+            document.body.className = 'theme-' + theme;
+        }
+
+        function loadClients() {
+            db.collection("users").doc(user.uid).collection("clients").onSnapshot(snap => {
+                clients = []; snap.forEach(d => clients.push({id: d.id, ...d.data()}));
+                renderBoard(); updateHeaderCounter(); if(Math.round(vp.scrollLeft/(window.innerWidth + 60)) === 1) renderStructure();
+            });
+        }
+
+        function updateHeaderCounter() {
+            const index = Math.round(vp.scrollLeft / (window.innerWidth + 60));
+            const counter = document.getElementById('header-counter');
+            if(index === 1) {
+                const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
+                counter.innerText = clients.filter(c => c.isPartner && (c.parentId || 'me') === pid).length;
+            } else { counter.innerText = clients.filter(c => !c.isStructureOnly).length; }
+        }
+
+        function renderBoard() {
+            const b = document.getElementById('main-board'), s = document.getElementById('e-step');
+            b.innerHTML = ''; s.innerHTML = '';
+            let filtered = clients.filter(c => !c.isStructureOnly);
+            if(filterType === 'az') filtered.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
+            if(filterType === 'new') filtered.sort((a,b) => b.created - a.created);
+            if(filterType === 'old') filtered.sort((a,b) => a.created - b.created);
+            steps.forEach((n, i) => {
+                const sc = filtered.filter(c => c.step == i);
+                const col = document.createElement('div'); col.className = 'column';
+                col.innerHTML = `<div class="col-head"><div>${n}&nbsp;&nbsp;&nbsp;&nbsp;<span>${sc.length}</span></div>${i==0 ? '<div class="add-btn-center" onclick="createCard()">+</div>' : '<div></div>'}<div></div></div><div id="list-${i}" class="cards-area"></div>`;
+                b.appendChild(col); s.innerHTML += `<option value="${i}">${n}</option>`;
+                sc.forEach(c => {
+                    const div = document.createElement('div'); div.className = 'card';
+                    div.onclick = () => { window.history.pushState({e:1}, ""); openEdit(c.id); };
+                    div.innerHTML = (c.level ? `<div class="card-level">${c.level}</div>` : '') + `<div style="font-weight:600;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;">${c.phone||""}</div>`;
+                    document.getElementById(`list-${i}`).appendChild(div);
+                });
+            });
+        }
+
+        function renderStructure() {
+            const grid = document.getElementById('struct-grid'), pathBar = document.getElementById('struct-path');
+            grid.innerHTML = ''; pathBar.innerHTML = '';
+            currentPath.forEach((p, idx) => {
+                const dot = document.createElement('div'); dot.className = 'path-dot'; dot.style.backgroundImage = `url(${p.photo || ''})`;
+                dot.onclick = () => { currentPath = currentPath.slice(0, idx + 1); renderStructure(); };
+                pathBar.appendChild(dot);
+            });
+            const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
+            clients.filter(c => c.isPartner && (c.parentId || 'me') === pid).forEach(p => {
+                const unit = document.createElement('div'); unit.className = 'icon-unit';
+                unit.innerHTML = `<div class="sphere level-sphere">${p.level || 0}</div><div class="sphere opt-sphere" onclick="event.stopPropagation(); openEdit('${p.id}')">⚙️</div><div class="sphere del-sphere" onclick="event.stopPropagation(); removeFromStruct('${p.id}')">✕</div><div class="photo-sphere" style="background-image:url(${p.photo || ''})"></div><div class="icon-label"><span>${p.lname || ''}</span><span>${p.fname || ''}</span></div>`;
+                const ph = unit.querySelector('.photo-sphere');
+                ph.onmousedown = ph.ontouchstart = () => { longPressTimer = setTimeout(() => unit.classList.add('menu-open'), 600); };
+                ph.onmouseup = ph.ontouchend = () => clearTimeout(longPressTimer);
+                ph.onclick = () => { if(!unit.classList.contains('menu-open')) { currentPath.push({id:p.id, photo:p.photo}); renderStructure(); } else unit.classList.remove('menu-open'); };
+                grid.appendChild(unit);
+            });
+        }
+
+        function uploadPhoto(input, type) {
+            const file = input.files[0]; if(!file) return;
+            const reader = new FileReader();
+            reader.onload = e => { currentPhotoBase64 = e.target.result; document.getElementById(type === 'me' ? 'me-photo' : 'c-photo').style.backgroundImage = `url(${currentPhotoBase64})`; };
+            reader.readAsDataURL(file);
+        }
+
+        async function manualSave() { 
+            const d = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, pnum: document.getElementById('e-pnum').value, pdate: document.getElementById('e-pdate').value, notes: document.getElementById('e-notes').value, level: document.getElementById('e-level').value, updated: Date.now() }; 
+            if (document.getElementById('e-step').offsetParent) d.step = parseInt(document.getElementById('e-step').value);
+            if(currentPhotoBase64) d.photo = currentPhotoBase64;
+            await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(d, {merge:true}); 
+            currentPhotoBase64 = null; closeAllUI(); 
+        }
+
+        async function saveMeData() { 
+            const d = { meLname: document.getElementById('me-lname').value, meFname: document.getElementById('me-fname').value, meLevel: document.getElementById('me-level').value }; 
+            if(currentPhotoBase64) d.myPhoto = currentPhotoBase64;
+            await db.collection("users").doc(user.uid).set(d, {merge:true}); 
+            currentPhotoBase64 = null; closeAllUI(); 
+        }
+
+        function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','phone','pnum','pdate','notes','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || ""); document.getElementById('c-photo').style.backgroundImage = `url(${c.photo||''})`; document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || ""; updateEditLevelBadge(); document.getElementById('edit-screen').style.display='flex'; }
+        function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #partner-select-modal').forEach(el => el.style.display = 'none'); editId = null; currentPhotoBase64 = null; }
+        function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); }
+        function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
+        function setFilter(t) { filterType = t; renderBoard(); toggleFilter(); }
+        function showUserMenu() { window.history.pushState({m:1}, ""); document.getElementById('user-menu').style.display = 'flex'; }
+        function showPersonalData() { window.history.pushState({p:1}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
+        function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
+        function updateMeLevelBadge() { document.getElementById('me-level-badge').innerText = document.getElementById('me-level').value; }
+        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); openEdit(res.id); }
+        function handleAddPartner() { if (currentPath.length === 0) openPartnerSelect(); else createCardForStruct(); }
+        async function createCardForStruct() { const pid = currentPath[currentPath.length - 1].id; const res = await db.collection("users").doc(user.uid).collection("clients").add({ isPartner: true, parentId: pid, isStructureOnly: true, created: Date.now() }); openEdit(res.id); }
+        function openPartnerSelect() {
+            const list = document.getElementById('modal-partners-list'); list.innerHTML = '';
+            clients.filter(c => c.step === 6 && !c.isPartner && !c.isStructureOnly).forEach(c => {
+                const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; gap:15px; border:1px solid rgba(255,255,255,0.1);";
+                row.innerHTML = `<div style="width:44px; height:44px; border-radius:50%; background-size:cover; background-image:url(${c.photo||''})"></div><div>${c.lname || ''} ${c.fname || ''}</div>`;
+                row.onclick = async () => { await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ isPartner: true, parentId: 'me' }); window.history.back(); };
+                list.appendChild(row);
+            });
+            document.getElementById('partner-select-modal').style.display = 'flex'; window.history.pushState({s:1}, "");
+        }
+        async function removeFromStruct(id) { if(confirm("Прибрати?")) await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ isPartner: false, parentId: null, isStructureOnly: false }); }
+        async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAllUI(); } }
+        function login() { auth.signInWithPopup(provider); }
+        function logout() { auth.signOut().then(() => location.reload()); }
+    </script>
 </body>
 </html>
