@@ -1,15 +1,267 @@
-<div id="login-page" class="h-screen w-full flex flex-col items-center justify-center" 
-     style="background: linear-gradient(to bottom, #4ade80, #2dd4bf, #3b82f6);">
-    
-    <h1 class="text-4xl font-bold text-[#2d4a3e] mb-12">Login</h1>
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Starlife CRM - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --main-gradient: linear-gradient(90deg, #0891b2 0%, #22c55e 100%);
+            --glass: rgba(255, 255, 255, 0.25);
+            --text-primary: #1a3a3a;
+        }
 
-    <button onclick="loginWithGoogle()" 
-            class="flex items-center bg-white/40 backdrop-blur-md px-6 py-3 rounded-full shadow-lg hover:bg-white/50 transition-all border border-white/20">
-        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" class="w-6 h-6 mr-3" alt="Google">
-        <span class="text-[#2d4a3e] font-semibold text-lg">Continue with Google</span>
-    </button>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            color: var(--text-primary);
+            overflow: hidden;
+        }
 
-    <div class="mt-20">
-        <span class="text-[#2d4a3e] text-2xl font-medium opacity-80">dashboard</span>
+        .app-container {
+            height: 100%;
+            background: var(--main-gradient);
+            transition: background 0.5s ease;
+            position: relative;
+        }
+
+        .screen {
+            display: none;
+            height: 100%;
+            flex-direction: column;
+        }
+
+        .screen.active { display: flex; }
+
+        /* Glassmorphism Elements */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+        }
+
+        /* Navigation Island */
+        .nav-island {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85%;
+            height: 65px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+        }
+
+        /* Stretchy Header Effect */
+        .stretchy-wrapper {
+            overflow-y: auto;
+            height: 100%;
+        }
+
+        .profile-photo-container {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: rgba(0,0,0,0.1);
+        }
+
+        .profile-photo-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid var(--text-primary);
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+
+        /* Messenger Elements */
+        .chat-bubble {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            margin: 8px 0;
+            position: relative;
+            font-size: 15px;
+            align-self: flex-start;
+        }
+
+        .chat-time {
+            font-size: 10px;
+            opacity: 0.7;
+            text-align: right;
+            margin-top: 4px;
+        }
+
+        .pinned-bar {
+            background: rgba(255, 255, 255, 0.3);
+            border-left: 3px solid #065f46;
+            padding: 5px 15px;
+            margin: 0 10px;
+            border-radius: 10px;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="app-container" id="mainContainer">
+
+    <div id="screen-login" class="screen active flex items-center justify-center p-8">
+        <h1 class="text-4xl font-bold mb-24 opacity-80">Login</h1>
+        <button onclick="goTo('screen-main')" class="glass-card px-8 py-4 flex items-center gap-4 text-xl shadow-lg active:scale-95 transition">
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/action/google.svg" class="w-8 h-8">
+            Continue with Google
+        </button>
+        <div class="absolute bottom-12 text-3xl font-light tracking-widest opacity-60">dashboard</div>
     </div>
+
+    <div id="screen-main" class="screen flex flex-col pt-8">
+        <div class="text-center text-2xl font-light mb-2">dashboard</div>
+        <div class="px-6 flex justify-between items-end mb-4">
+            <h2 id="tableTitle" class="text-3xl font-medium">Список</h2>
+            <span id="levelTitle" class="text-xl opacity-0">рівень</span>
+        </div>
+
+        <div id="listContent" class="flex-1 overflow-y-auto px-6 space-y-4 pb-32">
+            <div class="flex items-center justify-between py-2 border-b border-black/10" onclick="goTo('screen-chat')">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 rounded-full border border-black/30 flex items-center justify-center overflow-hidden">
+                        <i class="fa-solid fa-user text-2xl opacity-40"></i>
+                    </div>
+                    <span class="text-xl">Кузін Іван</span>
+                </div>
+                <div class="team-badge hidden w-10 h-10 rounded-full bg-black/20 flex items-center justify-center font-bold">3</div>
+            </div>
+        </div>
+
+        <button onclick="goTo('screen-edit')" class="fixed bottom-28 right-8 w-16 h-16 bg-[#76c893] rounded-full shadow-2xl flex items-center justify-center text-4xl text-black/60">+</button>
+
+        <div class="nav-island glass-card">
+            <i class="fa-solid fa-phone text-2xl opacity-40 nav-icon active" onclick="switchTable('contacts', this)"></i>
+            <i class="fa-solid fa-handshake text-2xl opacity-40 nav-icon" onclick="switchTable('clients', this)"></i>
+            <i class="fa-solid fa-users text-2xl opacity-40 nav-icon" onclick="switchTable('team', this)"></i>
+            <div class="w-10 h-10 rounded-full border border-black overflow-hidden" onclick="goTo('screen-my-profile')">
+                <i class="fa-solid fa-user text-xl mt-2 ml-2 opacity-50"></i>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-chat" class="screen flex flex-col h-full">
+        <div class="p-4 flex items-center gap-4 border-b border-black/10">
+            <i class="fa-solid fa-arrow-left text-xl" onclick="goTo('screen-main')"></i>
+            <div class="w-10 h-10 rounded-full border border-black/30 overflow-hidden" onclick="goTo('screen-info')">
+                <i class="fa-solid fa-user text-xl mt-1 ml-2 opacity-50"></i>
+            </div>
+            <span class="text-xl font-medium">Косолап Валерій</span>
+        </div>
+
+        <div class="pinned-bar mt-2 flex justify-between items-center">
+            <div class="text-sm">
+                <div class="text-blue-700 text-xs">Прикріплене повідомлення</div>
+                <div class="truncate w-64 opacity-70">Зустрітися в 16:00 в Кафе</div>
+            </div>
+            <i class="fa-solid fa-thumbtack -rotate-45 opacity-40"></i>
+        </div>
+
+        <div class="flex-1 overflow-y-auto p-4 flex flex-col">
+            <div class="text-center text-xs opacity-50 my-4 uppercase tracking-widest">18.02.2026</div>
+            <div class="chat-bubble glass-card">
+                Зустрілися в Арабіці. Валера хоче оформити поліс.
+                <div class="chat-time">16:32</div>
+            </div>
+        </div>
+
+        <div class="p-4 flex items-center gap-3 bg-black/5">
+            <div class="flex-1 glass-card h-12 flex items-center px-4 gap-3">
+                <i class="fa-solid fa-paperclip opacity-50"></i>
+                <input type="text" placeholder="Повідомлення" class="bg-transparent flex-1 outline-none text-black">
+            </div>
+            <div class="w-12 h-12 rounded-full bg-[#1e4d2b] flex items-center justify-center text-white">
+                <i class="fa-solid fa-paper-plane"></i>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-edit" class="screen p-6 overflow-y-auto">
+        <div class="text-center text-xl mb-6">dashboard</div>
+        <div class="flex flex-col items-center mb-8">
+            <div class="w-32 h-32 rounded-full border-2 border-black/40 overflow-hidden mb-2">
+                <i class="fa-solid fa-user text-6xl opacity-20 mt-8 ml-8"></i>
+            </div>
+            <span class="text-xs uppercase opacity-60">Завантажити фото</span>
+        </div>
+
+        <div class="glass-card p-6 space-y-6">
+            <div class="border-b border-black/20">
+                <div class="text-xl font-medium">Сарнавський</div>
+                <div class="text-[10px] opacity-60 uppercase">Прізвище</div>
+            </div>
+            <div class="border-b border-black/20">
+                <div class="text-xl font-medium">Олег</div>
+                <div class="text-[10px] opacity-60 uppercase">Ім'я</div>
+            </div>
+            <div class="flex justify-between items-center">
+                <span class="text-xl">Клієнт</span>
+                <div class="w-12 h-6 bg-green-500 rounded-full relative"><div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full"></div></div>
+            </div>
+        </div>
+        <button onclick="goTo('screen-main')" class="glass-card mt-8 py-4 text-2xl font-medium shadow-lg">Зберегти</button>
+    </div>
+
 </div>
+
+<script>
+    function goTo(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(screenId).classList.add('active');
+    }
+
+    function switchTable(type, el) {
+        document.querySelectorAll('.nav-icon').forEach(i => i.style.opacity = '0.4');
+        el.style.opacity = '1';
+        
+        const title = document.getElementById('tableTitle');
+        const level = document.getElementById('levelTitle');
+        const badges = document.querySelectorAll('.team-badge');
+
+        if(type === 'contacts') {
+            title.innerText = 'Список';
+            level.style.opacity = '0';
+            badges.forEach(b => b.classList.add('hidden'));
+        } else if(type === 'clients') {
+            title.innerText = 'Клієнти';
+            level.style.opacity = '0';
+            badges.forEach(b => b.classList.add('hidden'));
+        } else if(type === 'team') {
+            title.innerText = 'Команда';
+            level.style.opacity = '1';
+            badges.forEach(b => b.classList.remove('hidden'));
+        }
+    }
+
+    // Зміна тем (для тесту в консолі setTheme('gold'))
+    window.setTheme = function(color) {
+        const bg = document.getElementById('mainContainer');
+        const themes = {
+            'graphite': 'linear-gradient(90deg, #1f2937 0%, #4b5563 100%)',
+            'gold': 'linear-gradient(90deg, #d97706 0%, #fcd34d 100%)',
+            'green': 'linear-gradient(90deg, #0891b2 0%, #22c55e 100%)'
+        };
+        bg.style.background = themes[color] || themes['green'];
+    }
+</script>
+
+</body>
+</html>
