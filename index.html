@@ -13,10 +13,9 @@
             height: 100%;
             overflow: hidden;
             font-family: 'Segoe UI', sans-serif;
-            background-color: #000; /* Чорний фон під системну панель */
+            background-color: #000;
         }
 
-        /* Основний фон з градієнтом */
         .app-wrapper {
             display: flex;
             flex-direction: column;
@@ -37,36 +36,37 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-top: -15vh; /* Піднято за вашим запитом */
+            margin-top: -15vh;
         }
 
         .login-text {
-            font-size: 1.7rem;
+            font-size: 1.75rem;
             font-weight: 400;
             color: #2d4a3e;
             opacity: 0.8;
             margin-bottom: 30px;
         }
 
-        /* Овальна скляна кнопка */
         .glass-button {
             background: rgba(255, 255, 255, 0.35);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-radius: 50px;
-            padding: 10px 25px;
+            padding: 12px 28px;
             display: flex;
             align-items: center;
             gap: 12px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
+        /* Наднадійний вбудований логотип Google */
         .google-icon {
-            width: 22px;
-            height: 22px;
-            object-fit: contain;
+            width: 24px;
+            height: 24px;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZmlsbD0iI0VBNDMzNSIgZD0iTTI0IDkuNWMzLjU0IDAgNi43MSAxLjIyIDkuMjEgMy42bDYuODUtNi44NUMzNS45IDIuMzggMzAuNDcgMCAyNCAwIDE0LjYyIDAgNi41MSA1LjM4IDIuNTYgMTMuMjJsNy45OCA2LjE5QzEyLjQzIDEzLjcyIDE3Ljc0IDkuNSAyNCA5LjV6Ii8+PHBhdGggZmlsbD0iIzQyODVGNCIgZD0iTTQ2Ljk4IDI0LjU1YzAtMS41Ny0uMTUtMy4wOS0uMzgtNC41NUgyNHY5LjAyaDEyLjk0Yy0uNTggMi45Ni0yLjI2IDUuNDgtNC43OCA3LjE4bDcuNzMgNmM0LjUxLTQuMTggNy4wOS0xMC4zNiA3LjA5LTE3LjY1eiIvPjxwYXRoIGZpbGw9IiNGQkJDMDUiIGQ9Ik0xMC41MyAyOC41OWMtLjQ4LTEuNDUtLjc2LTIuOTktLjc2LTQuNTlzLjI3LTMuMTQuNzYtNC41OWwtNy45OC02LjE5Qy45MiAxNi40NiAwIDIwLjEyIDAgMjRzLjkyIDcuNTQgMi41NiAxMC43OGw3Ljk3LTYuMTl6Ii8+PHBhdGggZmlsbD0iIzM0QTg1MyIgZD0iTTI0IDQ4YzYuNDggMCAxMS45My0yLjEzIDE1Ljg5LTUuODFsLTcuNzMtNmMtMi4xNSAxLjQ1LTQuOTIgMi4zLTguMTYgMi4zLTYuMjYgMC0xMS41Ny00LjIyLTEzLjQ3LTkuOTFsLTcuOTggNi4xOUM2LjUxIDQyLjYyIDE0LjYyIDQ4IDI0IDQ4eiIvPjwvc3ZnPg==');
+            background-size: contain;
+            background-repeat: no-repeat;
         }
 
         .button-text {
@@ -84,11 +84,9 @@
             font-weight: 400;
         }
 
-        /* Чорна системна панель Android */
         .system-nav-bar {
             background-color: #000000;
-            height: env(safe-area-inset-bottom, 48px);
-            min-height: 48px;
+            height: 48px; /* Фіксована висота для кнопок Android */
             width: 100%;
         }
     </style>
@@ -101,7 +99,7 @@
                 <h1 class="login-text">Login</h1>
 
                 <div class="glass-button">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_Logo.svg" alt="Google" class="google-icon">
+                    <div class="google-icon"></div>
                     <span class="button-text">Continue with Google</span>
                 </div>
             </div>
