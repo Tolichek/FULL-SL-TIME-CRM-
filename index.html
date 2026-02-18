@@ -15,53 +15,47 @@
 
         .app-wrapper { display: flex; flex-direction: column; height: 100vh; }
 
-        /* Градієнт зафіксовано: справа зелений, зліва бірюзовий */
         .bg-gradient-custom {
             flex: 1; position: relative;
             background: linear-gradient(90deg, #1fa5a3 0%, #48d15f 100%);
             display: flex; flex-direction: column;
         }
 
-        .screen { display: none; height: 100%; width: 100%; flex-direction: column; align-items: center; }
+        .screen { display: none; height: 100%; width: 100%; position: absolute; top: 0; left: 0; flex-direction: column; align-items: center; }
         .active { display: flex; }
 
-        /* Стилі Екрана 1 (Зафіксовано) */
-        .main-content-login { margin-top: -15vh; display: flex; flex-direction: column; align-items: center; }
+        /* --- ЕКРАН 1: LOGIN (ПОВНЕ ВІДНОВЛЕННЯ) --- */
+        .login-content {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; height: 100%; margin-top: -15vh;
+        }
         .login-text { font-size: 1.75rem; font-weight: 400; color: #2d4a3e; opacity: 0.8; margin-bottom: 30px; }
         .glass-button {
             background: rgba(255, 255, 255, 0.35); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             border-radius: 50px; padding: 12px 28px; display: flex; align-items: center; gap: 12px;
             border: 1px solid rgba(255, 255, 255, 0.2); cursor: pointer;
         }
-        .google-icon { width: 24px; height: 24px; background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZmlsbD0iI0VBNDMzNSIgZD0iTTI0IDkuNWMzLjU0IDAgNi43MSAxLjIyIDkuMjEgMy42bDYuODUtNi44NUMzNS45IDIuMzggMzAuNDcgMCAyNCAwIDE0LjYyIDAgNi41MSA1LjM4IDIuNTYgMTMuMjJsNy45OCA2LjE5QzEyLjQzIDEzLjcyIDE3Ljc0IDkuNSAyNCA5LjV6Ii8+PHBhdGggZmlsbD0iIzQyODVGNCIgZD0iTTQ2Ljk4IDI0LjU1YzAtMS41Ny0uMTUtMy4wOS0uMzgtNC41NUgyNHY5LjAyaDEyLjk0Yy0uNTggMi45Ni0yLjI2IDUuNDgtNC43OCA3LjE4bDcuNzMgNmM0LjUxLTQuMTggNy4wOS0xMC4zNiA3LjA5LTE3LjY1eiIvPjxwYXRoIGZpbGw9IiNGQkJDMDUiIGQ9Ik0xMC41MyAyOC41OWMtLjQ4LTEuNDUtLjc2LTIuOTktLjc2LTQuNTlzLjI3LTMuMTQuNzYtNC41OWwtNy45OC02LjE5Qy45MiAxNi40NiAwIDIwLjEyIDAgMjRzLjkyIDcuNTQgMi41NiAxMC43OGw3Ljk3LTYuMTl6Ii8+PHBhdGggZmlsbD0iIzM0QTg1MyIgZD0iTTI0IDQ4YzYuNDggMCAxMS45My0yLjEzIDE1Ljg5LTUuODFsLTcuNzMtNmMtMi4xNSAxLjQ1LTQuOTIgMi4zLTguMTYgMi4zLTYuMjYgMC0xMS41Ny00LjIyLTEzLjQ3LTkuOTFsLTcuOTggNi4xOUM2LjUxIDQyLjYyIDE0LjYyIDQ4IDI0IDQ4eiIvPjwvc3ZnPg=='); background-size: contain; background-repeat: no-repeat; }
-        .dashboard-footer { position: absolute; bottom: 15vh; font-size: 2.3rem; color: #2d4a3e; opacity: 0.7; }
+        .google-icon { width: 24px; height: 24px; background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZmlsbD0iI0VBNDMzNSIgZD0iTTI0IDkuNWMzLjU0IDAgNi43MSAxLjIyIDkuMjEgMy42bDYuODUtNi44NUMzNS45IDIuMzggMzAuNDcgMCAyNCAwIDE0LjYyIDAgNi41MSA1LjM4IDIuNTYgMTMuMjJsNy45OCA2LjE5QzEyLjQzIDEzLjcyIDE3Ljc0IDkuNSAyNCA5LjV6Ii8+PHBhdGggZmlsbD0iIzQyODVGNCIgZD0iTTQ2Ljk4IDI0LjU1YzAtMS41Ny0uMTUtMy4wOS0uMzgtNC41NUgyNHY5LjAyaDEyLjk0Yy0uNTggMi45Ni0yLjI2IDUuNDgtNC43OCA3LjE4bDcuNzMgNmM0LjUxLTQuMTggNy4wOS0xMC4zNiA3LjA5LTE3LjY1eiIvPjxwYXRoIGZpbGw9IiNGQkJDMDUiIGQ9Ik0xMC41MyAyOC41OWMtLjQ4LTEuNDUtLjc2LTIuOTktLjc2LTQuNTlzLjI3LTMuMTQuNzYtNC41OWwtNy45OC02LjE5Qy45MiAxNi40NiAwIDIwLjEyIDAgMjRzLjkyIDcuNTQgMi41NiAxMC43OGw3Ljk3LTYuMTl6Ii8+PHBhdGggZmlsbD0iIzQyODVGNCIgZD0iTTQ2Ljk4IDI0LjU1YzAtMS41Ny0uMTUtMy4wOS0uMzgtNC41NUgyNHY5LjAyaDEyLjk0Yy0uNTggMi45Ni0yLjI2IDUuNDgtNC43OCA3LjE4bDcuNzMgNmM0LjUxLTQuMTggNy4wOS0xMC4zNiA3LjA5LTE3LjY1eiIvPjwvc3ZnPg=='); background-size: contain; background-repeat: no-repeat; }
+        .dashboard-footer-login { position: absolute; bottom: 15vh; font-size: 2.3rem; color: #2d4a3e; opacity: 0.7; font-weight: 400; }
 
-        /* СТИЛІ ЕКРАНА 2 (СПИСОК) */
-        .top-label { margin-top: 40px; font-size: 2rem; color: #2d4a3e; opacity: 0.8; }
+        /* --- ЕКРАН 2: СПИСОК --- */
+        .list-top-label { margin-top: 40px; font-size: 2.3rem; color: #2d4a3e; opacity: 0.7; }
         .list-header { align-self: flex-start; margin-left: 10%; margin-top: 20px; font-size: 2.2rem; color: #2d4a3e; font-weight: 500; }
-        
-        .empty-list-msg { margin-top: 50px; opacity: 0.4; color: #2d4a3e; font-style: italic; }
-
-        /* Острівець навігації */
         .nav-island {
             position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
-            width: 65%; height: 60px; display: flex; justify-content: space-around; align-items: center;
+            width: 60%; height: 60px; display: flex; justify-content: space-around; align-items: center;
             background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(12px);
             border-radius: 50px; border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        .nav-icon { font-size: 1.5rem; color: #2d4a3e; opacity: 0.6; cursor: pointer; }
-        .nav-icon.active { opacity: 1; }
-
-        /* Кнопка + та Фото профілю */
-        .profile-zone { position: absolute; bottom: 40px; right: 5%; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .profile-zone { position: absolute; bottom: 40px; right: 5%; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         .btn-add {
-            width: 50px; height: 50px; border-radius: 50%; background: rgba(255, 255, 255, 0.4);
-            display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #2d4a3e;
-            border: 1px solid rgba(255, 255, 255, 0.2); cursor: pointer;
+            width: 45px; height: 45px; border-radius: 50%; background: rgba(255, 255, 255, 0.4);
+            display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: #2d4a3e;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        .user-avatar { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #2d4a3e; object-fit: cover; }
+        .user-avatar-list { width: 55px; height: 55px; border-radius: 50%; border: 1.5px solid #2d4a3e; }
 
-        .system-nav-bar { background-color: #000; height: 48px; width: 100%; }
+        .system-nav-bar { background-color: #000; height: 48px; width: 100%; z-index: 10; }
     </style>
 </head>
 <body>
@@ -70,33 +64,27 @@
     <div class="bg-gradient-custom">
         
         <div id="screen-login" class="screen active">
-            <div class="main-content-login">
+            <div class="login-content">
                 <h1 class="login-text">Login</h1>
                 <div class="glass-button" onclick="showList()">
                     <div class="google-icon"></div>
                     <span style="color: #2d4a3e; font-weight: 500; font-size: 1.05rem;">Continue with Google</span>
                 </div>
             </div>
-            <div class="dashboard-footer">dashboard</div>
+            <div class="dashboard-footer-login">dashboard</div>
         </div>
 
         <div id="screen-list" class="screen">
-            <div class="top-label">dashboard</div>
+            <div class="list-top-label">dashboard</div>
             <div class="list-header">Список</div>
-            
-            <div id="contacts-container" class="empty-list-msg">
-                Тут будуть ваші контакти...
-            </div>
-
             <div class="nav-island">
-                <i class="fa-solid fa-phone nav-icon active"></i>
-                <i class="fa-solid fa-handshake nav-icon"></i>
-                <i class="fa-solid fa-users nav-icon"></i>
+                <i class="fa-solid fa-phone" style="color: #2d4a3e; opacity: 1;"></i>
+                <i class="fa-solid fa-handshake" style="color: #2d4a3e; opacity: 0.5;"></i>
+                <i class="fa-solid fa-users" style="color: #2d4a3e; opacity: 0.5;"></i>
             </div>
-
             <div class="profile-zone">
                 <div class="btn-add">+</div>
-                <img src="https://www.gstatic.com/images/branding/product/2x/avatar_anonymous_72x72dp.png" class="user-avatar" alt="Profile">
+                <div class="user-avatar-list" style="background: rgba(255,255,255,0.2);"></div>
             </div>
         </div>
 
