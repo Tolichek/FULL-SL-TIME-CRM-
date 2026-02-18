@@ -6,6 +6,7 @@
     <meta name="theme-color" content="#000000">
     <title>Starlife CRM</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body, html {
             margin: 0; padding: 0; height: 100%; overflow: hidden;
@@ -19,10 +20,10 @@
             background: linear-gradient(90deg, #1fa5a3 0%, #48d15f 100%);
         }
 
-        .screen { display: none; height: 100%; width: 100%; position: absolute; flex-direction: column; align-items: center; }
+        .screen { display: none; height: 100%; width: 100%; position: absolute; flex-direction: column; }
         .active { display: flex; }
 
-        /* --- ЕКРАН 1: LOGIN (Ваш зафіксований стандарт) --- */
+        /* --- ЕКРАН 1: LOGIN (Зафіксовано) --- */
         .login-content { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; margin-top: -15vh; }
         .login-text { font-size: 1.75rem; font-weight: 400; color: #2d4a3e; opacity: 0.8; margin-bottom: 25px; }
         .glass-button {
@@ -31,37 +32,43 @@
             border: 1px solid rgba(255, 255, 255, 0.2); cursor: pointer;
         }
         .google-icon { width: 24px; height: 24px; background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZmlsbD0iI0VBNDMzNSIgZD0iTTI0IDkuNWMzLjU0IDAgNi43MSAxLjIyIDkuMjEgMy42bDYuODUtNi44NUMzNS45IDIuMzggMzAuNDcgMCAyNCAwIDE0LjYyIDAgNi41MSA1LjM4IDIuNTYgMTMuMjJsNy45OCA2LjE5QzEyLjQzIDEzLjcyIDE3Ljc0IDkuNSAyNCA5LjV6Ii8+PHBhdGggZmlsbD0iIzQyODVGNCIgZD0iTTQ2Ljk4IDI0LjU1YzAtMS41Ny0uMTUtMy4wOS0uMzgtNC41NUgyNHY5LjAyaDEyLjk0Yy0uNTggMi45Ni0yLjI2IDUuNDgtNC43OCA3LjE4bDcuNzMgNmM0LjUxLTQuMTggNy4wOS0xMC4zNiA3LjA5LTE3LjY1eiIvPjxwYXRoIGZpbGw9IiNGQkJDMDUiIGQ9Ik0xMC41MyAyOC41OWMtLjQ4LTEuNDUtLjc2LTIuOTktLjc2LTQuNTlzLjI3LTMuMTQuNzYtNC41OWwtNy45OC02LjE5Qy45MiAxNi40NiAwIDIwLjEyIDAgMjRzLjkyIDcuNTQgMi41NiAxMC43OGw3Ljk3LTYuMTl6Ii8+PHBhdGggZmlsbD0iIzM0QTg1MyIgZD0iTTI0IDQ4YzYuNDggMCAxMS45My0yLjEzIDE1Ljg5LTUuODFsLTcuNzMtNmMtMi4xNSAxLjQ1LTQuOTIgMi4zLTguMTYgMi4zLTYuMjYgMC0xMS41Ny00LjIyLTEzLjQ3LTkuOTFsLTcuOTggNi4xOUM2LjUxIDQyLjYyIDE0LjYyIDQ4IDI0IDQ4eiIvPjwvc3ZnPg=='); background-size: contain; background-repeat: no-repeat; }
-        .dashboard-footer-login { position: absolute; bottom: 15vh; font-size: 2.2rem; color: #2d4a3e; opacity: 0.7; }
+        .dashboard-footer-login { position: absolute; bottom: 15vh; width: 100%; text-align: center; font-size: 2.2rem; color: #2d4a3e; opacity: 0.7; }
 
-        /* --- ЕКРАН 2: СПИСОК (СУВОРО ЗА МАКЕТОМ) --- */
-        .list-top-label { margin-top: 5vh; font-size: 2.2rem; color: #2d4a3e; opacity: 0.7; }
-        .list-header { align-self: flex-start; margin-left: 12%; margin-top: 2vh; font-size: 2.3rem; color: #2d4a3e; font-weight: 500; }
+        /* --- ЕКРАН 2: СПИСОК (Оновлена структура) --- */
+        .header-compact { width: 100%; display: flex; flex-direction: column; padding-top: 10px; }
+        .list-top-label { text-align: center; font-size: 1.4rem; color: #2d4a3e; opacity: 0.7; font-weight: 300; }
+        .list-header { margin-left: 20px; font-size: 1.8rem; color: #2d4a3e; font-weight: 500; margin-top: -5px; }
         
-        /* Острівець навігації */
+        /* Зона списку (пуста) */
+        .contacts-scroll-area { flex: 1; overflow-y: auto; width: 100%; padding: 10px 20px; }
+
+        /* Нижній блок: острівець + додавання */
+        .bottom-controls {
+            position: absolute; bottom: 20px; width: 100%;
+            display: flex; align-items: flex-end; justify-content: space-between; padding: 0 20px;
+        }
+
         .nav-island {
-            position: absolute; bottom: 8vh; left: 12%; right: 28%;
-            height: 60px; display: flex; justify-content: space-around; align-items: center;
-            background: rgba(255, 255, 255, 0.35); border-radius: 40px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 70%; height: 55px; display: flex; justify-content: space-around; align-items: center;
+            background: rgba(255, 255, 255, 0.3); border-radius: 40px; border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .profile-zone { position: absolute; bottom: 8vh; right: 8%; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .side-zone { display: flex; flex-direction: column; align-items: center; gap: 10px; }
         
-        /* Кнопка + */
         .btn-add {
             width: 50px; height: 50px; border-radius: 50%; 
-            background: rgba(255, 255, 255, 0.4); display: flex; align-items: center; justify-content: center; 
-            font-size: 2.2rem; color: #2d4a3e; font-weight: 300; border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.35); display: flex; align-items: center; justify-content: center; 
+            font-size: 2rem; color: #2d4a3e; font-weight: 300; border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
         }
 
-        /* Аватар */
         .user-avatar-list { 
-            width: 60px; height: 60px; border-radius: 50%; 
-            border: 1.5px solid #2d4a3e; background: rgba(0,0,0,0.05);
+            width: 55px; height: 55px; border-radius: 50%; 
+            border: 1px solid #2d4a3e; background: rgba(255,255,255,0.1);
         }
 
-        /* Іконки (використовуємо прості іконки Unicode для надійності) */
-        .nav-icon { font-size: 1.6rem; color: #2d4a3e; opacity: 0.5; }
+        /* Іконки в одному стилі */
+        .nav-icon { font-size: 1.4rem; color: #2d4a3e; opacity: 0.4; cursor: pointer; }
         .nav-icon.active { opacity: 1; }
 
         .system-nav-bar { background-color: #000; height: 48px; width: 100%; }
@@ -84,18 +91,25 @@
         </div>
 
         <div id="screen-list" class="screen">
-            <div class="list-top-label">dashboard</div>
-            <div class="list-header">Список</div>
-            
-            <div class="nav-island">
-                <span class="nav-icon active">📞</span>
-                <span class="nav-icon">🤝</span>
-                <span class="nav-icon">👥</span>
+            <div class="header-compact">
+                <div class="list-top-label">dashboard</div>
+                <div class="list-header">Список</div>
             </div>
 
-            <div class="profile-zone">
-                <div class="btn-add">+</div>
-                <div class="user-avatar-list"></div>
+            <div class="contacts-scroll-area">
+                </div>
+
+            <div class="bottom-controls">
+                <div class="nav-island">
+                    <i class="fa-regular fa-user nav-icon active"></i>
+                    <i class="fa-solid fa-hand-holding-heart nav-icon"></i>
+                    <i class="fa-solid fa-users-viewfinder nav-icon"></i>
+                </div>
+
+                <div class="side-zone">
+                    <div class="btn-add">+</div>
+                    <div class="user-avatar-list"></div>
+                </div>
             </div>
         </div>
 
