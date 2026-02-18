@@ -7,11 +7,9 @@
     <title>Starlife CRM</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
-        
         body, html {
             margin: 0; padding: 0; height: 100%; overflow: hidden;
-            font-family: 'Inter', sans-serif; background-color: #000;
+            font-family: sans-serif; background-color: #000;
         }
 
         .app-wrapper { display: flex; flex-direction: column; height: 100vh; }
@@ -26,52 +24,47 @@
 
         /* --- ЕКРАН 1: LOGIN (Ваш зафіксований стандарт) --- */
         .login-content { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; margin-top: -15vh; }
-        .login-text { font-size: 1.8rem; font-weight: 400; color: #1a332a; opacity: 0.8; margin-bottom: 30px; }
+        .login-text { font-size: 1.75rem; font-weight: 400; color: #2d4a3e; opacity: 0.8; margin-bottom: 25px; }
         .glass-button {
-            background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            border-radius: 50px; padding: 12px 28px; display: flex; align-items: center; gap: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.2); cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(8px);
+            border-radius: 50px; padding: 10px 25px; display: flex; align-items: center; gap: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2); cursor: pointer;
         }
-        .google-icon { width: 22px; height: 22px; background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZmlsbD0iI0VBNDMzNSIgZD0iTTI0IDkuNWMzLjU0IDAgNi43MSAxLjIyIDkuMjEgMy42bDYuODUtNi44NUMzNS45IDIuMzggMzAuNDcgMCAyNCAwIDE0LjYyIDAgNi41MSA1LjM4IDIuNTYgMTMuMjJsNy45OCA2LjE5QzEyLjQzIDEzLjcyIDE3Ljc0IDkuNSAyNCA5LjV6Ii8+PHBhdGggZmlsbD0iIzQyODVGNCIgZD0iTTQ2Ljk4IDI0LjU1YzAtMS41Ny0uMTUtMy4wOS0uMzgtNC41NUgyNHY5LjAyaDEyLjk0Yy0uNTggMi45Ni0yLjI2IDUuNDgtNC43OCA3LjE4bDcuNzMgNmM0LjUxLTQuMTggNy4wOS0xMC4zNiA3LjA5LTE3LjY1eiIvPjxwYXRoIGZpbGw9IiNGQkJDMDUiIGQ9Ik0xMC41MyAyOC41OWMtLjQ4LTEuNDUtLjc2LTIuOTktLjc2LTQuNTlzLjI3LTMuMTQuNzYtNC41OWwtNy45OC02LjE5Qy45MiAxNi40NiAwIDIwLjEyIDAgMjRzLjkyIDcuNTQgMi41NiAxMC43OGw3Ljk3LTYuMTl6Ii8+PHBhdGggZmlsbD0iIzM0QTg1MyIgZD0iTTI0IDQ4YzYuNDggMCAxMS45My0yLjEzIDE1Ljg5LTUuODFsLTcuNzMtNmMtMi4xNSAxLjQ1LTQuOTIgMi4zLTguMTYg2LjkxLTYuMTlDNi41MSA0Mi42MiAxNC42MiA0OCAyNCA0OHoiLz48L3N2Zz4='); background-size: contain; background-repeat: no-repeat; }
-        .dashboard-footer-login { position: absolute; bottom: 15vh; font-size: 2.2rem; color: #1a332a; opacity: 0.7; font-weight: 300; letter-spacing: 1px; }
+        .google-icon { width: 24px; height: 24px; background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCI+PHBhdGggZmlsbD0iI0VBNDMzNSIgZD0iTTI0IDkuNWMzLjU0IDAgNi43MSAxLjIyIDkuMjEgMy42bDYuODUtNi44NUMzNS45IDIuMzggMzAuNDcgMCAyNCAwIDE0LjYyIDAgNi41MSA1LjM4IDIuNTYgMTMuMjJsNy45OCA2LjE5QzEyLjQzIDEzLjcyIDE3Ljc0IDkuNSAyNCA5LjV6Ii8+PHBhdGggZmlsbD0iIzQyODVGNCIgZD0iTTQ2Ljk4IDI0LjU1YzAtMS41Ny0uMTUtMy4wOS0uMzgtNC41NUgyNHY5LjAyaDEyLjk0Yy0uNTggMi45Ni0yLjI2IDUuNDgtNC43OCA3LjE4bDcuNzMgNmM0LjUxLTQuMTggNy4wOS0xMC4zNiA3LjA5LTE3LjY1eiIvPjxwYXRoIGZpbGw9IiNGQkJDMDUiIGQ9Ik0xMC41MyAyOC41OWMtLjQ4LTEuNDUtLjc2LTIuOTktLjc2LTQuNTlzLjI3LTMuMTQuNzYtNC41OWwtNy45OC02LjE5Qy45MiAxNi40NiAwIDIwLjEyIDAgMjRzLjkyIDcuNTQgMi41NiAxMC43OGw3Ljk3LTYuMTl6Ii8+PHBhdGggZmlsbD0iIzM0QTg1MyIgZD0iTTI0IDQ4YzYuNDggMCAxMS45My0yLjEzIDE1Ljg5LTUuODFsLTcuNzMtNmMtMi4xNSAxLjQ1LTQuOTIgMi4zLTguMTYgMi4zLTYuMjYgMC0xMS41Ny00LjIyLTEzLjQ3LTkuOTFsLTcuOTggNi4xOUM2LjUxIDQyLjYyIDE0LjYyIDQ4IDI0IDQ4eiIvPjwvc3ZnPg=='); background-size: contain; background-repeat: no-repeat; }
+        .dashboard-footer-login { position: absolute; bottom: 15vh; font-size: 2.2rem; color: #2d4a3e; opacity: 0.7; }
 
-        /* --- ЕКРАН 2: СПИСОК (ПРОФЕСІЙНИЙ ВІЗУАЛ) --- */
-        .list-top-label { margin-top: 45px; font-size: 2.2rem; color: #1a332a; opacity: 0.6; font-weight: 300; letter-spacing: 1.5px; }
-        .list-header { align-self: flex-start; margin-left: 10%; margin-top: 25px; font-size: 2.1rem; color: #1a332a; font-weight: 500; }
+        /* --- ЕКРАН 2: СПИСОК (СУВОРО ЗА МАКЕТОМ) --- */
+        .list-top-label { margin-top: 5vh; font-size: 2.2rem; color: #2d4a3e; opacity: 0.7; }
+        .list-header { align-self: flex-start; margin-left: 12%; margin-top: 2vh; font-size: 2.3rem; color: #2d4a3e; font-weight: 500; }
         
-        /* Скляний острівець */
+        /* Острівець навігації */
         .nav-island {
-            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
-            width: 62%; height: 64px; display: flex; justify-content: space-around; align-items: center;
-            background: rgba(255, 255, 255, 0.22); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            border-radius: 40px; border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            position: absolute; bottom: 8vh; left: 12%; right: 28%;
+            height: 60px; display: flex; justify-content: space-around; align-items: center;
+            background: rgba(255, 255, 255, 0.35); border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
-        .profile-zone { position: absolute; bottom: 35px; right: 5.5%; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+        .profile-zone { position: absolute; bottom: 8vh; right: 8%; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         
-        /* Скляна кнопка + */
+        /* Кнопка + */
         .btn-add {
-            width: 48px; height: 48px; border-radius: 50%; 
-            background: rgba(255, 255, 255, 0.25); backdrop-filter: blur(10px);
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 2rem; color: #1a332a; font-weight: 300;
-            border: 1px solid rgba(255, 255, 255, 0.3); cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            width: 50px; height: 50px; border-radius: 50%; 
+            background: rgba(255, 255, 255, 0.4); display: flex; align-items: center; justify-content: center; 
+            font-size: 2.2rem; color: #2d4a3e; font-weight: 300; border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
+        /* Аватар */
         .user-avatar-list { 
-            width: 62px; height: 62px; border-radius: 50%; 
-            border: 1.2px solid rgba(26, 51, 42, 0.6); 
-            background: rgba(255,255,255,0.1);
-            overflow: hidden;
+            width: 60px; height: 60px; border-radius: 50%; 
+            border: 1.5px solid #2d4a3e; background: rgba(0,0,0,0.05);
         }
 
-        .system-nav-bar { background-color: #000; height: 48px; width: 100%; position: relative; z-index: 100; }
-        
-        /* Тонкі іконки */
-        .icon-svg { width: 26px; height: 26px; fill: #1a332a; opacity: 0.5; transition: opacity 0.3s; }
-        .icon-svg.active { opacity: 1; }
+        /* Іконки (використовуємо прості іконки Unicode для надійності) */
+        .nav-icon { font-size: 1.6rem; color: #2d4a3e; opacity: 0.5; }
+        .nav-icon.active { opacity: 1; }
+
+        .system-nav-bar { background-color: #000; height: 48px; width: 100%; }
     </style>
 </head>
 <body>
@@ -84,7 +77,7 @@
                 <h1 class="login-text">Login</h1>
                 <div class="glass-button" onclick="showList()">
                     <div class="google-icon"></div>
-                    <span style="color: #1a332a; font-weight: 500; font-size: 1.05rem;">Continue with Google</span>
+                    <span style="color: #2d4a3e; font-weight: 500; font-size: 1.05rem;">Continue with Google</span>
                 </div>
             </div>
             <div class="dashboard-footer-login">dashboard</div>
@@ -95,16 +88,14 @@
             <div class="list-header">Список</div>
             
             <div class="nav-island">
-                <svg class="icon-svg active" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
-                <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9h10v2H7z"/></svg>
-                <svg class="icon-svg" viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+                <span class="nav-icon active">📞</span>
+                <span class="nav-icon">🤝</span>
+                <span class="nav-icon">👥</span>
             </div>
 
             <div class="profile-zone">
                 <div class="btn-add">+</div>
-                <div class="user-avatar-list">
-                    <img src="https://www.gstatic.com/images/branding/product/2x/avatar_anonymous_72x72dp.png" style="width:100%; height:100%; opacity: 0.4;">
-                </div>
+                <div class="user-avatar-list"></div>
             </div>
         </div>
 
