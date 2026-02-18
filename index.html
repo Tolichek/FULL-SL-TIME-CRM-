@@ -321,6 +321,7 @@
         function setFilter(t) { filterType = t; renderBoard(); toggleFilter(); }
         function showUserMenu() { window.history.pushState({m:1}, ""); document.getElementById('user-menu').style.display = 'flex'; }
         function showPersonalData() { window.history.pushState({p:1}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
+        
         function updateEditLevelBadge() { 
             const val = document.getElementById('e-level').value;
             document.getElementById('edit-level-badge').innerText = (val === 'none' || val === '0') ? '' : val; 
@@ -329,6 +330,7 @@
             const val = document.getElementById('me-level').value;
             document.getElementById('me-level-badge').innerText = (val === 'none' || val === '0') ? '' : val; 
         }
+
         async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, level: 'none', created:Date.now()}); openEdit(res.id); }
         function handleAddPartner() { if (currentPath.length === 0) openPartnerSelect(); else createCardForStruct(); }
         async function createCardForStruct() { const pid = currentPath[currentPath.length - 1].id; const res = await db.collection("users").doc(user.uid).collection("clients").add({ isPartner: true, parentId: pid, isStructureOnly: true, level: 'none', created: Date.now() }); openEdit(res.id); }
