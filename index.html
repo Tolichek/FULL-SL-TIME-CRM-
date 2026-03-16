@@ -4,179 +4,213 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="apple-touch-icon" href="https://img.icons8.com/ios-filled/180/ffffff/star.png">
-    <title>SL CRM 4.0</title>
+    <title>SL INFINITY CRM</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Plus+Jakarta+Sans:wght@300;500;800&display=swap" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
     <style>
         :root {
-            --main-bg: #0f0f12;
-            --glass: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --accent: #00f2ff;
-            --text: #ffffff;
+            --accent: #00ffa3;
+            --bg: #050507;
+            --card: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
+            --font-main: 'Plus Jakarta Sans', sans-serif;
+            --font-logo: 'Syncopate', sans-serif;
         }
 
-        body.theme-gold { --accent: #ffcc00; --main-bg: #1a1608; }
-        body.theme-purple { --accent: #d000ff; --main-bg: #12081a; }
-        body.theme-green { --accent: #00ff88; --main-bg: #081a12; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: #fff; height: 100vh; overflow: hidden; }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--main-bg); color: var(--text); height: 100vh; overflow: hidden; }
+        /* Футуристичний фон */
+        .bg-glow { position: fixed; width: 300px; height: 300px; background: var(--accent); filter: blur(150px); opacity: 0.1; z-index: -1; top: 20%; left: -100px; }
+        .bg-glow-2 { position: fixed; width: 300px; height: 300px; background: #7000ff; filter: blur(150px); opacity: 0.1; z-index: -1; bottom: 10%; right: -100px; }
 
-        /* Splash */
-        #splash { position: fixed; inset: 0; background: var(--main-bg); z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .loader-logo { width: 100px; height: 100px; border: 4px solid var(--accent); border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 800; box-shadow: 0 0 30px var(--accent); animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
+        /* Header */
+        header { height: 90px; display: flex; align-items: center; justify-content: space-between; padding: 0 25px; backdrop-filter: blur(10px); z-index: 100; border-bottom: 1px solid var(--border); }
+        .logo { font-family: var(--font-logo); font-size: 18px; letter-spacing: 4px; color: var(--accent); text-shadow: 0 0 15px var(--accent); }
+        .profile-trigger { width: 45px; height: 45px; border-radius: 15px; border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: 0.3s; }
+        .profile-trigger:active { transform: scale(0.9); }
 
-        /* Layout */
-        header { height: 70px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid var(--glass-border); }
-        .user-info { display: flex; align-items: center; gap: 12px; }
-        .avatar-circle { width: 40px; height: 40px; border-radius: 12px; background-size: cover; border: 1.5px solid var(--accent); box-shadow: 0 0 10px var(--accent); }
-        .header-title { font-weight: 800; font-size: 20px; letter-spacing: -1px; text-transform: uppercase; }
-        
-        #viewport { display: flex; width: 100vw; height: calc(100vh - 130px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; }
-        .page { flex: 0 0 100vw; height: 100%; overflow-y: auto; padding: 20px; scroll-snap-align: start; }
+        /* Контент */
+        #main-stage { height: calc(100vh - 160px); overflow-x: auto; display: flex; scroll-snap-type: x mandatory; padding: 20px 0; }
+        .deck { min-width: 100vw; padding: 0 25px; scroll-snap-align: start; overflow-y: auto; }
 
-        /* Kanban & Cards */
-        .column-label { font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--accent); margin-bottom: 15px; display: flex; justify-content: space-between; opacity: 0.8; }
-        .card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 18px; padding: 16px; margin-bottom: 12px; position: relative; backdrop-filter: blur(10px); }
-        .card h3 { font-size: 16px; margin-bottom: 4px; }
-        .card p { font-size: 13px; opacity: 0.5; }
-        .card-lvl { position: absolute; top: 16px; right: 16px; font-size: 20px; font-weight: 800; color: var(--accent); }
+        /* Списки у вигляді карток-груп */
+        .group-container { background: var(--card); border: 1px solid var(--border); border-radius: 30px; padding: 25px; margin-bottom: 30px; backdrop-filter: blur(5px); }
+        .group-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .group-title { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); }
+        .group-count { font-size: 10px; background: var(--accent); color: #000; padding: 2px 8px; border-radius: 5px; font-weight: 800; }
 
-        /* Nav */
-        nav { position: fixed; bottom: 20px; left: 20px; right: 20px; height: 60px; background: rgba(20,20,25,0.8); backdrop-filter: blur(20px); border-radius: 20px; border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-around; z-index: 1000; }
-        .nav-link { font-size: 10px; font-weight: 800; text-transform: uppercase; opacity: 0.4; transition: 0.3s; }
-        .nav-link.active { opacity: 1; color: var(--accent); }
+        /* Картки клієнтів */
+        .client-item { display: flex; align-items: center; gap: 15px; padding: 15px; background: rgba(255,255,255,0.02); border-radius: 20px; margin-bottom: 10px; border: 1px solid transparent; transition: 0.3s; }
+        .client-item:active { background: rgba(255,255,255,0.05); border-color: var(--border); }
+        .client-avatar { width: 40px; height: 40px; border-radius: 12px; background: var(--border); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; color: var(--accent); }
+        .client-info { flex: 1; }
+        .client-name { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+        .client-sub { font-size: 11px; opacity: 0.4; }
+        .client-lvl { font-family: var(--font-logo); font-size: 14px; opacity: 0.8; }
 
-        /* UI Elements */
-        .btn-plus { width: 50px; height: 50px; background: var(--accent); color: #000; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: bold; position: fixed; bottom: 100px; right: 20px; z-index: 100; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-        
-        .modal { position: fixed; inset: 0; background: var(--main-bg); z-index: 20000; display: none; flex-direction: column; padding: 30px; overflow-y: auto; }
-        input, select, textarea { width: 100%; background: var(--glass); border: 1px solid var(--glass-border); border-radius: 12px; padding: 15px; color: #fff; margin-bottom: 15px; outline: none; }
-        label { font-size: 10px; font-weight: 800; margin-bottom: 6px; display: block; opacity: 0.5; }
-        .btn-save { background: var(--accent); color: #000; padding: 18px; border-radius: 15px; font-weight: 800; text-align: center; border: none; cursor: pointer; }
+        /* Навігація */
+        .nav-dock { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); height: 70px; background: rgba(10,10,15,0.8); border: 1px solid var(--border); backdrop-filter: blur(20px); border-radius: 25px; display: flex; align-items: center; padding: 0 10px; gap: 5px; z-index: 1000; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+        .dock-item { height: 50px; padding: 0 20px; display: flex; align-items: center; justify-content: center; border-radius: 18px; transition: 0.3s; cursor: pointer; }
+        .dock-item.active { background: var(--accent); color: #000; font-weight: 800; }
+        .dock-item:not(.active) { color: rgba(255,255,255,0.3); font-size: 11px; font-weight: 600; text-transform: uppercase; }
 
-        .theme-sel { display: flex; gap: 10px; margin-top: 20px; }
-        .t-dot { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff; }
+        /* Екрани */
+        .modal-full { position: fixed; inset: 0; background: var(--bg); z-index: 5000; display: none; flex-direction: column; padding: 30px; animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        input, select, textarea { width: 100%; background: var(--card); border: 1px solid var(--border); padding: 18px; border-radius: 20px; color: #fff; margin-bottom: 15px; font-size: 16px; outline: none; transition: 0.3s; }
+        input:focus { border-color: var(--accent); }
+        .btn-action { background: var(--accent); color: #000; padding: 20px; border-radius: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border: none; width: 100%; margin-top: 10px; }
+
+        /* Floating Add Button */
+        .fab { width: 60px; height: 60px; background: #fff; color: #000; border-radius: 20px; position: fixed; bottom: 120px; right: 30px; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 300; box-shadow: 0 10px 30px rgba(255,255,255,0.1); z-index: 900; }
     </style>
 </head>
 <body>
 
-<div id="splash">
-    <div class="loader-logo">SL</div>
-    <div id="login-box" style="display:none; margin-top:30px;">
-        <button onclick="login()" style="padding:15px 30px; border-radius:12px; border:none; font-weight:800;">GOOGLE LOGIN</button>
-    </div>
-</div>
+<div class="bg-glow"></div>
+<div class="bg-glow-2"></div>
 
 <header>
-    <div class="user-info" onclick="showSettings()">
-        <div id="u-avatar" class="avatar-circle"></div>
-        <div class="header-title">SL CRM</div>
-    </div>
-    <div id="count-total" style="font-size:12px; font-weight:800; background:var(--glass); padding:5px 12px; border-radius:10px;">0</div>
+    <div class="logo">INFINITY</div>
+    <div id="count-all" style="font-size: 10px; font-weight: 800; opacity: 0.5;">0 CLIENTS</div>
+    <div class="profile-trigger" id="u-avatar" onclick="toggleScreen('m-settings')"></div>
 </header>
 
-<div id="viewport">
-    <div id="p-lists" class="page"></div>
-    <div id="p-struct" class="page"><div id="struct-grid" class="struct-grid"></div></div>
-    <div id="p-plan" class="page" style="display:flex; align-items:center; justify-content:center; opacity:0.2;">COMING SOON</div>
+<div id="main-stage">
+    <div class="deck" id="deck-lists"></div>
+    
+    <div class="deck" id="deck-struct">
+        <div style="text-align: center; padding-top: 100px;">
+            <div style="font-size: 10px; font-weight: 800; letter-spacing: 5px; opacity: 0.3; margin-bottom: 20px;">NETWORK VISUALIZER</div>
+            <div id="struct-visual" style="height: 300px; display: flex; align-items: center; justify-content: center;">
+                <div style="width: 80px; height: 80px; border: 1px solid var(--accent); border-radius: 50%; box-shadow: 0 0 20px var(--accent);"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div class="btn-plus" onclick="createCard()">+</div>
+<div class="fab" onclick="createNewClient()">+</div>
 
-<nav>
-    <div class="nav-link active" onclick="jump(0)">Списки</div>
-    <div class="nav-link" onclick="jump(1)">Структура</div>
-    <div class="nav-link" onclick="jump(2)">План</div>
-</nav>
-
-<div id="m-edit" class="modal">
-    <h2 id="m-title" style="margin-bottom:20px;">КАРТКА</h2>
-    <label>ЕТАП</label><select id="f-step"></select>
-    <label>ПРІЗВИЩЕ</label><input type="text" id="f-lname">
-    <label>ІМ'Я</label><input type="text" id="f-fname">
-    <label>ТЕЛЕФОН</label><input type="tel" id="f-phone">
-    <label>РІВЕНЬ</label><select id="f-level"><option value="">None</option><script>for(let i=1;i<=16;i++)document.write(`<option value="${i}">${i}</option>`)</script></select>
-    <label>ПРИМІТКИ</label><textarea id="f-notes" rows="3"></textarea>
-    <div style="display:flex; gap:10px;">
-        <button class="btn-save" style="flex:1" onclick="saveCard()">ЗБЕРЕГТИ</button>
-        <button onclick="closeModal()" style="background:var(--glass); color:#fff; border-radius:15px; padding:0 20px; border:none;">X</button>
-    </div>
-    <div onclick="deleteCard()" style="color:red; text-align:center; margin-top:30px; font-weight:800; font-size:12px;">ВИДАЛИТИ</div>
+<div class="nav-dock">
+    <div class="dock-item active" onclick="jump(0, this)">Lists</div>
+    <div class="dock-item" onclick="jump(1, this)">Network</div>
+    <div class="dock-item" onclick="jump(2, this)">Pulse</div>
 </div>
 
-<div id="m-set" class="modal">
-    <h2>НАЛАШТУВАННЯ</h2>
-    <div class="theme-sel">
-        <div class="t-dot" style="background:#00f2ff" onclick="setTheme('cyan')"></div>
-        <div class="t-dot" style="background:#ffcc00" onclick="setTheme('gold')"></div>
-        <div class="t-dot" style="background:#d000ff" onclick="setTheme('purple')"></div>
-        <div class="t-dot" style="background:#00ff88" onclick="setTheme('green')"></div>
+<div id="m-edit" class="modal-full">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+        <h2 style="font-weight:800; letter-spacing:-1px;">ПРОФІЛЬ</h2>
+        <div onclick="toggleScreen('m-edit')" style="opacity:0.5; font-size:24px;">×</div>
     </div>
-    <button class="btn-save" style="margin-top:auto" onclick="closeModal()">ЗАКРИТИ</button>
-    <div onclick="auth.signOut().then(()=>location.reload())" style="text-align:center; margin-top:20px; opacity:0.5;">Вийти з акаунту</div>
+    <label style="font-size:10px; font-weight:800; margin-bottom:10px; display:block; opacity:0.3;">STATUS</label>
+    <select id="f-step"></select>
+    <input type="text" id="f-lname" placeholder="Прізвище">
+    <input type="text" id="f-fname" placeholder="Ім'я">
+    <input type="tel" id="f-phone" placeholder="Телефон">
+    <select id="f-level"><option value="">Level: None</option><script>for(let i=1;i<=16;i++)document.write(`<option value="${i}">Level ${i}</option>`)</script></select>
+    <textarea id="f-notes" placeholder="Нотатки..." rows="4"></textarea>
+    <button class="btn-action" onclick="saveData()">Update Record</button>
+    <div onclick="deleteEntry()" style="color:#ff4d4d; text-align:center; margin-top:30px; font-size:11px; font-weight:800; letter-spacing:1px;">DELETE PERMANENTLY</div>
+</div>
+
+<div id="m-settings" class="modal-full">
+    <h2 style="font-weight:800; margin-bottom:30px;">SYSTEM</h2>
+    <div style="background:var(--card); border-radius:20px; padding:20px;">
+        <div style="font-size:12px; font-weight:800; margin-bottom:15px; opacity:0.5;">THEME ACCENT</div>
+        <div style="display:flex; gap:15px;">
+            <div onclick="setAcc('#00ffa3')" style="width:40px; height:40px; background:#00ffa3; border-radius:10px;"></div>
+            <div onclick="setAcc('#ff3e3e')" style="width:40px; height:40px; background:#ff3e3e; border-radius:10px;"></div>
+            <div onclick="setAcc('#0070ff')" style="width:40px; height:40px; background:#0070ff; border-radius:10px;"></div>
+            <div onclick="setAcc('#ffcc00')" style="width:40px; height:40px; background:#ffcc00; border-radius:10px;"></div>
+        </div>
+    </div>
+    <button class="btn-action" style="background:#fff; margin-top:auto;" onclick="toggleScreen('m-settings')">Close</button>
 </div>
 
 <script>
-    const fb = { apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY", authDomain: "starlife-crm.firebaseapp.com", projectId: "starlife-crm", storageBucket: "starlife-crm.firebasestorage.app", messagingSenderId: "1022280682130", appId: "1:1022280682130:web:3ea517e8b6d22c7787744b" };
-    firebase.initializeApp(fb);
+    const cfg = { apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY", authDomain: "starlife-crm.firebaseapp.com", projectId: "starlife-crm", storageBucket: "starlife-crm.firebasestorage.app", messagingSenderId: "1022280682130", appId: "1:1022280682130:web:3ea517e8b6d22c7787744b" };
+    firebase.initializeApp(cfg);
     const auth = firebase.auth(), db = firebase.firestore();
-    let user = null, clients = [], editId = null;
+    let user = null, items = [], editId = null;
     const steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Поліс", "Семінар", "Партнер"];
 
     auth.onAuthStateChanged(u => {
-        if(u) { user = u; loadData(); document.getElementById('splash').style.display='none'; }
-        else { document.getElementById('login-box').style.display='block'; }
+        if(u) { user = u; startSync(); }
+        else { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
     });
 
-    function loadData() {
-        db.collection("users").doc(user.uid).collection("clients").onSnapshot(s => {
-            clients = []; s.forEach(d => clients.push({id:d.id, ...d.data()}));
+    function startSync() {
+        document.getElementById('u-avatar').style.backgroundImage = `url(${user.photoURL})`;
+        db.collection("users").doc(user.uid).collection("clients").onSnapshot(snap => {
+            items = []; snap.forEach(doc => items.push({id: doc.id, ...doc.data()}));
             render();
         });
-        document.getElementById('u-avatar').style.backgroundImage = `url(${user.photoURL})`;
     }
 
     function render() {
-        const area = document.getElementById('p-lists'); area.innerHTML = '';
-        document.getElementById('count-total').innerText = clients.length;
+        const container = document.getElementById('deck-lists'); container.innerHTML = '';
+        document.getElementById('count-all').innerText = `${items.length} RECORDS`;
+        
         const sel = document.getElementById('f-step'); sel.innerHTML = '';
 
-        steps.forEach((st, i) => {
-            sel.innerHTML += `<option value="${i}">${st}</option>`;
-            const mine = clients.filter(c => (c.step || 0) == i);
-            let html = `<div class="column-label"><span>${st}</span><span>${mine.length}</span></div>`;
-            mine.forEach(c => {
-                html += `<div class="card" onclick="openEdit('${c.id}')">
-                    <div class="card-lvl">${c.level || ''}</div>
-                    <h3>${c.lname || 'Без'} ${c.fname || 'імені'}</h3>
-                    <p>${c.phone || 'Немає телефону'}</p>
-                </div>`;
+        steps.forEach((name, idx) => {
+            sel.innerHTML += `<option value="${idx}">${name}</option>`;
+            const list = items.filter(i => (i.step || 0) == idx);
+            if(list.length === 0 && idx !== 0) return;
+
+            const group = document.createElement('div');
+            group.className = 'group-container';
+            group.innerHTML = `
+                <div class="group-header">
+                    <div class="group-title">${name}</div>
+                    <div class="group-count">${list.length}</div>
+                </div>
+            `;
+            
+            list.forEach(item => {
+                const el = document.createElement('div');
+                el.className = 'client-item';
+                el.onclick = () => editEntry(item.id);
+                el.innerHTML = `
+                    <div class="client-avatar">${(item.lname || 'S').charAt(0)}</div>
+                    <div class="client-info">
+                        <div class="client-name">${item.lname || ''} ${item.fname || ''}</div>
+                        <div class="client-sub">${item.phone || 'No contact'}</div>
+                    </div>
+                    <div class="client-lvl">${item.level || ''}</div>
+                `;
+                group.appendChild(el);
             });
-            area.innerHTML += `<div style="margin-bottom:40px;">${html}</div>`;
+            container.appendChild(group);
         });
     }
 
-    function jump(i) {
-        document.getElementById('viewport').scrollTo({left: i * window.innerWidth, behavior: 'smooth'});
-        document.querySelectorAll('.nav-link').forEach((l, idx) => l.classList.toggle('active', i === idx));
+    function jump(page, btn) {
+        document.getElementById('main-stage').scrollTo({left: page * window.innerWidth, behavior: 'smooth'});
+        document.querySelectorAll('.dock-item').forEach(d => d.classList.remove('active'));
+        btn.classList.add('active');
     }
 
-    function openEdit(id) {
-        editId = id; const c = clients.find(x => x.id === id);
-        ['lname','fname','phone','notes','level'].forEach(f => document.getElementById('f-'+f).value = c[f] || '');
-        document.getElementById('f-step').value = c.step || 0;
-        document.getElementById('m-edit').style.display = 'flex';
+    function toggleScreen(id) {
+        const el = document.getElementById(id);
+        el.style.display = (el.style.display === 'flex') ? 'none' : 'flex';
     }
 
-    async function saveCard() {
+    function editEntry(id) {
+        editId = id;
+        const it = items.find(x => x.id === id);
+        ['lname','fname','phone','notes','level'].forEach(f => document.getElementById('f-'+f).value = it[f] || '');
+        document.getElementById('f-step').value = it.step || 0;
+        toggleScreen('m-edit');
+    }
+
+    async function saveData() {
         const d = {
             lname: document.getElementById('f-lname').value,
             fname: document.getElementById('f-fname').value,
@@ -184,25 +218,20 @@
             notes: document.getElementById('f-notes').value,
             level: document.getElementById('f-level').value,
             step: parseInt(document.getElementById('f-step').value),
-            updated: Date.now()
+            ts: Date.now()
         };
         await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(d, {merge:true});
-        closeModal();
+        toggleScreen('m-edit');
     }
 
-    async function createCard() {
+    async function createNewClient() {
         const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()});
-        openEdit(res.id);
+        editEntry(res.id);
     }
 
-    async function deleteCard() { if(confirm('Видалити?')) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeModal(); } }
-    function closeModal() { document.querySelectorAll('.modal').forEach(m => m.style.display='none'); editId = null; }
-    function showSettings() { document.getElementById('m-set').style.display='flex'; }
-    function setTheme(t) { document.body.className = 'theme-'+t; localStorage.setItem('crm_theme', t); }
-    function login() { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
-
-    const savedTheme = localStorage.getItem('crm_theme');
-    if(savedTheme) setTheme(savedTheme);
+    async function deleteEntry() { if(confirm('Видалити назавжди?')) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); toggleScreen('m-edit'); } }
+    function setAcc(c) { document.documentElement.style.setProperty('--accent', c); }
 </script>
+
 </body>
 </html>
