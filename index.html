@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="https://img.icons8.com/ios-filled/180/ffffff/star.png">
-    <title>SL TIME CRM 3.1.5</title>
+    <title>SL TIME CRM 2.7.5</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
@@ -32,6 +31,7 @@
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
         body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
+
         ::-webkit-scrollbar { display: none; }
         
         header { display: flex; justify-content: space-between; align-items: center; padding: 0 15px; height: 80px; position: relative; z-index: 1000; background: transparent; }
@@ -51,7 +51,7 @@
 
         .board { display: flex; overflow-x: auto; padding: 10px 20px 55px; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
         .column { min-width: calc(100vw - 40px); scroll-snap-align: center; scroll-snap-stop: always; display: flex; flex-direction: column; gap: 15px; }
-        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 120px; } 
+        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 20px; } 
         .col-head { display: flex; justify-content: space-between; align-items: center; font-size: 14px; text-transform: uppercase; font-weight: bold; height: 36px; }
         .add-btn-center { cursor: pointer; font-size: 32px; font-weight: bold; line-height: 1; display: flex; align-items: center; height: 100%; }
 
@@ -63,8 +63,21 @@
 
         .struct-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 80px 10px 20px; overflow-y: auto; align-content: start; height: 100%; }
         .icon-unit { display: flex; flex-direction: column; align-items: center; position: relative; height: 140px; }
-        .sphere { position: absolute; width: 30px; height: 30px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fff 0%, rgba(255,255,255,0.2) 20%, var(--neon) 60%, rgba(0,0,0,0.5) 100%); display: flex; align-items: center; justify-content: center; z-index: 10; font-size: 15px; font-weight: bold; color: white; border: 0.5px solid rgba(255,255,255,0.4); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); line-height: 0; }
+        
+        .sphere { 
+            position: absolute; width: 30px; height: 30px; border-radius: 50%; 
+            background: radial-gradient(circle at 30% 30%, #fff 0%, rgba(255,255,255,0.2) 20%, var(--neon) 60%, rgba(0,0,0,0.5) 100%);
+            display: flex; align-items: center; justify-content: center; 
+            box-shadow: inset -1px -1px 4px rgba(0,0,0,0.6), 0 4px 10px rgba(0,0,0,0.4); 
+            z-index: 10; font-size: 15px; font-weight: bold; color: white; border: 0.5px solid rgba(255,255,255,0.4);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); line-height: 0;
+        }
         .level-sphere { top: -15px; left: 50%; transform: translateX(-50%); }
+        .opt-sphere { display: none; top: 40px; left: 50%; }
+        .del-sphere { display: none; top: 40px; left: 50%; }
+        .icon-unit.menu-open .opt-sphere { display: flex; transform: translate(-150%, 45%); }
+        .icon-unit.menu-open .del-sphere { display: flex; transform: translate(50%, 45%); }
+
         .photo-sphere { width: 75px; height: 75px; border-radius: 50%; background-size: cover; background-position: center; border: 2px solid rgba(255,255,255,0.4); box-shadow: 0 0 15px var(--neon); z-index: 5; cursor: pointer; }
         .icon-label { margin-top: 20px; font-size: 10px; font-weight: bold; text-align: center; color: white; text-transform: uppercase; width: 100%; display: flex; flex-direction: column; }
         .icon-label span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -154,7 +167,7 @@
         <div id="step-wrapper"><label>ЕТАП</label><select id="e-step"></select></div>
         <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname"><label>ІМ'Я</label><input type="text" id="e-fname"><label>ТЕЛЕФОН</label><input type="tel" id="e-phone">
         <label>ПОЛІС №</label><input type="text" id="e-pnum"><label>ДАТА</label><input type="date" id="e-pdate">
-        <label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><option value="">None</option><script>for(let i=1; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
         <label>ПРИМІТКИ</label>
         <div class="notes-wrapper" id="notes-wrap"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value"></textarea></div>
         <button onclick="manualSave()" style="margin-top:20px; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none;">ЗБЕРЕГТИ ТА ВИЙТИ</button>
@@ -166,7 +179,7 @@
             <div id="me-level-badge" class="edit-level-display"></div>
             <input type="file" id="file-me" hidden accept="image/*" onchange="uploadPhoto(this, 'me')">
         </div>
-        <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname"><label>ІМ'Я</label><input type="text" id="me-fname"><label>РІВЕНЬ</label><select id="me-level" onchange="updateMeLevelBadge()"><option value="">None</option><script>for(let i=1; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname"><label>ІМ'Я</label><input type="text" id="me-fname"><label>РІВЕНЬ</label><select id="me-level" onchange="updateMeLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
         <button onclick="saveMeData()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none;">ЗБЕРЕГТИ ТА ВИЙТИ</button>
     </div>
 
@@ -181,7 +194,7 @@
         const auth = firebase.auth(), db = firebase.firestore(), provider = new firebase.auth.GoogleAuthProvider();
 
         let user = null, clients = [], editId = null, filterType = 'new', currentPhotoBase64 = null;
-        const steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Поліс", "Семінар", "Партнер"];
+        const steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Поліс", "Семінар"];
         let currentPath = [], longPressTimer = null;
 
         const vp = document.getElementById('main-viewport');
@@ -232,7 +245,7 @@
             const counter = document.getElementById('header-counter');
             if(index === 1) {
                 const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
-                counter.innerText = clients.filter(c => c.step == 7 && (c.parentId || 'me') === pid).length;
+                counter.innerText = clients.filter(c => c.isPartner && (c.parentId || 'me') === pid).length;
             } else { counter.innerText = clients.filter(c => !c.isStructureOnly).length; }
         }
 
@@ -251,7 +264,7 @@
                 sc.forEach(c => {
                     const div = document.createElement('div'); div.className = 'card';
                     div.onclick = () => { window.history.pushState({e:1}, ""); openEdit(c.id); };
-                    div.innerHTML = (c.level && c.level != 0 ? `<div class="card-level">${c.level}</div>` : '') + `<div style="font-weight:600;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;">${c.phone||""}</div>`;
+                    div.innerHTML = (c.level ? `<div class="card-level">${c.level}</div>` : '') + `<div style="font-weight:600;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;">${c.phone||""}</div>`;
                     document.getElementById(`list-${i}`).appendChild(div);
                 });
             });
@@ -266,19 +279,13 @@
                 pathBar.appendChild(dot);
             });
             const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
-            clients.filter(c => c.step == 7 && (c.parentId || 'me') === pid).forEach(p => {
+            clients.filter(c => c.isPartner && (c.parentId || 'me') === pid).forEach(p => {
                 const unit = document.createElement('div'); unit.className = 'icon-unit';
-                const lvlSphere = (p.level && p.level != 0 ? `<div class="sphere level-sphere">${p.level}</div>` : '');
-                unit.innerHTML = `${lvlSphere}<div class="photo-sphere" style="background-image:url(${p.photo || ''})"></div><div class="icon-label"><span>${p.lname || ''}</span><span>${p.fname || ''}</span></div>`;
+                unit.innerHTML = `<div class="sphere level-sphere">${p.level || 0}</div><div class="sphere opt-sphere" onclick="event.stopPropagation(); openEdit('${p.id}')">⚙️</div><div class="sphere del-sphere" onclick="event.stopPropagation(); removeFromStruct('${p.id}')">✕</div><div class="photo-sphere" style="background-image:url(${p.photo || ''})"></div><div class="icon-label"><span>${p.lname || ''}</span><span>${p.fname || ''}</span></div>`;
                 const ph = unit.querySelector('.photo-sphere');
-                ph.onmousedown = ph.ontouchstart = (e) => { 
-                    longPressTimer = setTimeout(() => {
-                        openEdit(p.id);
-                        longPressTimer = null;
-                    }, 600); 
-                };
+                ph.onmousedown = ph.ontouchstart = () => { longPressTimer = setTimeout(() => unit.classList.add('menu-open'), 600); };
                 ph.onmouseup = ph.ontouchend = () => clearTimeout(longPressTimer);
-                ph.onclick = () => { if(longPressTimer === null) return; clearTimeout(longPressTimer); currentPath.push({id:p.id, photo:p.photo}); renderStructure(); };
+                ph.onclick = () => { if(!unit.classList.contains('menu-open')) { currentPath.push({id:p.id, photo:p.photo}); renderStructure(); } else unit.classList.remove('menu-open'); };
                 grid.appendChild(unit);
             });
         }
