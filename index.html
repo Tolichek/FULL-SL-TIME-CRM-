@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>SL TIME CRM 2.8.4</title>
+    <title>SL TIME CRM 2.8.5</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
@@ -73,7 +73,7 @@
         .photo-sphere { width: 75px; height: 75px; border-radius: 50%; background-size: cover; background-position: center; border: 2px solid rgba(255,255,255,0.4); box-shadow: 0 0 15px var(--neon); z-index: 5; cursor: pointer; }
         .icon-label { margin-top: 10px; font-size: 10px; font-weight: bold; text-align: center; color: white; text-transform: uppercase; width: 100%; display: flex; flex-direction: column; }
 
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.7); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
         .nav-item { color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 11px; font-weight: bold; }
         .nav-item.active { opacity: 1; text-shadow: 0 0 10px var(--neon); }
 
@@ -217,12 +217,13 @@
         }
 
         function loadClients() {
-            // ФІКС: Повернено оригінальну логіку з snap.forEach (версія 2.7.5)
+            // ФІКС: Повернення до 100% робочого методу завантаження
             db.collection("users").doc(user.uid).collection("clients").onSnapshot(snap => {
-                clients = []; 
-                snap.forEach(d => clients.push({id: d.id, ...d.data()}));
-                renderBoard(); 
-                updateHeaderCounter(); 
+                let temp = [];
+                snap.forEach(d => temp.push({id: d.id, ...d.data()}));
+                clients = temp;
+                renderBoard();
+                updateHeaderCounter();
                 if(Math.round(vp.scrollLeft/(window.innerWidth + 60)) === 1) renderStructure();
             });
         }
@@ -236,7 +237,9 @@
             b.innerHTML = ''; s.innerHTML = '';
             let filtered = [...clients];
             if(filterType === 'az') filtered.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
-            if(filterType === 'new') filtered.sort((a,b) => (b.ts || 0) - (a.ts || 0));
+            // Використовуємо ts або created для сортування
+            if(filterType === 'new') filtered.sort((a,b) => (b.ts || b.created || 0) - (a.ts || a.created || 0));
+            if(filterType === 'old') filtered.sort((a,b) => (a.ts || a.created || 0) - (b.ts || b.created || 0));
             
             steps.forEach((n, i) => {
                 const sc = filtered.filter(c => {
@@ -249,7 +252,8 @@
                 sc.forEach(c => {
                     const div = document.createElement('div'); div.className = 'card';
                     div.onclick = () => { window.history.pushState({e:1}, ""); openEdit(c.id); };
-                    div.innerHTML = (c.level && c.level != 0 ? `<div class="card-level">${c.level}</div>` : '') + `<div style="font-weight:600;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;">${c.phone||""}</div>`;
+                    const lvlHtml = (c.level && c.level != 0) ? `<div class="card-level">${c.level}</div>` : '';
+                    div.innerHTML = lvlHtml + `<div style="font-weight:600;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;">${c.phone||""}</div>`;
                     document.getElementById(`list-${i}`).appendChild(div);
                 });
             });
@@ -264,20 +268,25 @@
                 pathBar.appendChild(dot);
             });
             const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
-            
-            // ФІКС: Структура будується тільки з етапу "Партнер" (індекс 7)
             clients.filter(c => c.step == 7 && (c.parentId || 'me') === pid).forEach(p => {
                 const unit = document.createElement('div'); unit.className = 'icon-unit';
-                const lvlHtml = (p.level && p.level != 0) ? `<div class="sphere level-sphere">${p.level}</div>` : '';
-                unit.innerHTML = `${lvlHtml}<div class="photo-sphere" style="background-image:url(${p.photo || ''})"></div><div class="icon-label"><span>${p.lname || ''}</span><span>${p.fname || ''}</span></div>`;
-                
+                const lvlSphere = (p.level && p.level != 0) ? `<div class="sphere level-sphere">${p.level}</div>` : '';
+                unit.innerHTML = `${lvlSphere}<div class="photo-sphere" style="background-image:url(${p.photo || ''})"></div><div class="icon-label"><span>${p.lname || ''}</span><span>${p.fname || ''}</span></div>`;
                 const ph = unit.querySelector('.photo-sphere');
-                ph.ontouchstart = () => { longPressTimer = setTimeout(() => openEdit(p.id), 600); };
-                ph.ontouchend = () => clearTimeout(longPressTimer);
-                ph.onclick = () => { 
-                    if (!longPressTimer) return;
-                    currentPath.push({id:p.id, photo:p.photo}); 
-                    renderStructure(); 
+                
+                ph.ontouchstart = () => { 
+                    longPressTimer = setTimeout(() => {
+                        openEdit(p.id);
+                        longPressTimer = null;
+                    }, 600); 
+                };
+                ph.ontouchend = () => {
+                    if (longPressTimer) {
+                        clearTimeout(longPressTimer);
+                        longPressTimer = null;
+                        currentPath.push({id:p.id, photo:p.photo}); 
+                        renderStructure();
+                    }
                 };
                 grid.appendChild(unit);
             });
@@ -291,7 +300,16 @@
         }
 
         async function manualSave() { 
-            const d = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, pnum: document.getElementById('e-pnum').value, pdate: document.getElementById('e-pdate').value, notes: document.getElementById('e-notes').value, level: document.getElementById('e-level').value, ts: Date.now() }; 
+            const d = { 
+                lname: document.getElementById('e-lname').value, 
+                fname: document.getElementById('e-fname').value, 
+                phone: document.getElementById('e-phone').value, 
+                pnum: document.getElementById('e-pnum').value, 
+                pdate: document.getElementById('e-pdate').value, 
+                notes: document.getElementById('e-notes').value, 
+                level: document.getElementById('e-level').value, 
+                ts: Date.now() 
+            }; 
             if (document.getElementById('e-step').offsetParent) d.step = parseInt(document.getElementById('e-step').value);
             if(currentPhotoBase64) d.photo = currentPhotoBase64;
             await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(d, {merge:true}); 
@@ -305,7 +323,18 @@
             currentPhotoBase64 = null; closeAllUI(); 
         }
 
-        function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','phone','pnum','pdate','notes','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || ""); document.getElementById('c-photo').style.backgroundImage = `url(${c.photo||''})`; if(c.step !== undefined) document.getElementById('e-step').value = c.step; document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || ""; updateEditLevelBadge(); document.getElementById('edit-screen').style.display='flex'; }
+        function openEdit(id) { 
+            editId = id; 
+            const c = clients.find(x => x.id === id); 
+            if(!c) return;
+            ['lname','fname','phone','pnum','pdate','notes','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || ""); 
+            document.getElementById('c-photo').style.backgroundImage = c.photo ? `url(${c.photo})` : ''; 
+            if(c.step !== undefined) document.getElementById('e-step').value = c.step;
+            document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || ""; 
+            updateEditLevelBadge(); 
+            document.getElementById('edit-screen').style.display='flex'; 
+        }
+
         function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #partner-select-modal').forEach(el => el.style.display = 'none'); editId = null; currentPhotoBase64 = null; }
         function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); }
         function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
@@ -318,8 +347,7 @@
         
         function handleAddPartner() {
             const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
-            const modal = document.getElementById('partner-select-modal'); 
-            const list = document.getElementById('modal-partners-list');
+            const modal = document.getElementById('partner-select-modal'); list = document.getElementById('modal-partners-list');
             list.innerHTML = '';
             clients.filter(c => c.step != 7).forEach(c => {
                 const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; gap:15px; border:1px solid rgba(255,255,255,0.1); cursor:pointer;";
