@@ -3,234 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>SL INFINITY CRM</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Plus+Jakarta+Sans:wght@300;500;800&display=swap" rel="stylesheet">
+    <title>SL NEURAL CORE</title>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
     <style>
         :root {
-            --accent: #00ffa3;
-            --bg: #050507;
-            --card: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.08);
-            --font-main: 'Plus Jakarta Sans', sans-serif;
-            --font-logo: 'Syncopate', sans-serif;
+            --bg: #030303;
+            --accent: #fff;
+            --node: #1a1a1a;
+            --line: rgba(255,255,255,0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg); color: var(--accent); overflow: hidden; height: 100vh; }
+
+        /* Canvas Background */
+        #canvas {
+            width: 3000px; height: 3000px;
+            background-image: radial-gradient(var(--line) 1px, transparent 1px);
+            background-size: 40px 40px;
+            position: absolute; top: -1000px; left: -1000px;
+            transition: transform 0.1s ease-out;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: #fff; height: 100vh; overflow: hidden; }
+        /* UI Overlay */
+        #ui-top { position: fixed; top: 20px; left: 20px; right: 20px; display: flex; justify-content: space-between; z-index: 100; pointer-events: none; }
+        .glass-tag { background: rgba(255,255,255,0.05); padding: 10px 20px; border-radius: 40px; backdrop-filter: blur(10px); border: 1px solid var(--line); pointer-events: auto; }
 
-        /* Футуристичний фон */
-        .bg-glow { position: fixed; width: 300px; height: 300px; background: var(--accent); filter: blur(150px); opacity: 0.1; z-index: -1; top: 20%; left: -100px; }
-        .bg-glow-2 { position: fixed; width: 300px; height: 300px; background: #7000ff; filter: blur(150px); opacity: 0.1; z-index: -1; bottom: 10%; right: -100px; }
+        /* Neural Node */
+        .node {
+            position: absolute;
+            width: 160px; min-height: 80px;
+            background: var(--node);
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            padding: 15px;
+            cursor: move;
+            transition: box-shadow 0.3s;
+            display: flex; flex-direction: column; justify-content: center;
+        }
+        .node:active { box-shadow: 0 0 30px rgba(255,255,255,0.2); }
+        .node input { background: transparent; border: none; color: #fff; font-size: 14px; font-weight: 700; width: 100%; outline: none; }
+        .node span { font-size: 10px; opacity: 0.4; text-transform: uppercase; margin-top: 5px; }
 
-        /* Header */
-        header { height: 90px; display: flex; align-items: center; justify-content: space-between; padding: 0 25px; backdrop-filter: blur(10px); z-index: 100; border-bottom: 1px solid var(--border); }
-        .logo { font-family: var(--font-logo); font-size: 18px; letter-spacing: 4px; color: var(--accent); text-shadow: 0 0 15px var(--accent); }
-        .profile-trigger { width: 45px; height: 45px; border-radius: 15px; border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: 0.3s; }
-        .profile-trigger:active { transform: scale(0.9); }
-
-        /* Контент */
-        #main-stage { height: calc(100vh - 160px); overflow-x: auto; display: flex; scroll-snap-type: x mandatory; padding: 20px 0; }
-        .deck { min-width: 100vw; padding: 0 25px; scroll-snap-align: start; overflow-y: auto; }
-
-        /* Списки у вигляді карток-груп */
-        .group-container { background: var(--card); border: 1px solid var(--border); border-radius: 30px; padding: 25px; margin-bottom: 30px; backdrop-filter: blur(5px); }
-        .group-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .group-title { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); }
-        .group-count { font-size: 10px; background: var(--accent); color: #000; padding: 2px 8px; border-radius: 5px; font-weight: 800; }
-
-        /* Картки клієнтів */
-        .client-item { display: flex; align-items: center; gap: 15px; padding: 15px; background: rgba(255,255,255,0.02); border-radius: 20px; margin-bottom: 10px; border: 1px solid transparent; transition: 0.3s; }
-        .client-item:active { background: rgba(255,255,255,0.05); border-color: var(--border); }
-        .client-avatar { width: 40px; height: 40px; border-radius: 12px; background: var(--border); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; color: var(--accent); }
-        .client-info { flex: 1; }
-        .client-name { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
-        .client-sub { font-size: 11px; opacity: 0.4; }
-        .client-lvl { font-family: var(--font-logo); font-size: 14px; opacity: 0.8; }
-
-        /* Навігація */
-        .nav-dock { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); height: 70px; background: rgba(10,10,15,0.8); border: 1px solid var(--border); backdrop-filter: blur(20px); border-radius: 25px; display: flex; align-items: center; padding: 0 10px; gap: 5px; z-index: 1000; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
-        .dock-item { height: 50px; padding: 0 20px; display: flex; align-items: center; justify-content: center; border-radius: 18px; transition: 0.3s; cursor: pointer; }
-        .dock-item.active { background: var(--accent); color: #000; font-weight: 800; }
-        .dock-item:not(.active) { color: rgba(255,255,255,0.3); font-size: 11px; font-weight: 600; text-transform: uppercase; }
-
-        /* Екрани */
-        .modal-full { position: fixed; inset: 0; background: var(--bg); z-index: 5000; display: none; flex-direction: column; padding: 30px; animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-        input, select, textarea { width: 100%; background: var(--card); border: 1px solid var(--border); padding: 18px; border-radius: 20px; color: #fff; margin-bottom: 15px; font-size: 16px; outline: none; transition: 0.3s; }
-        input:focus { border-color: var(--accent); }
-        .btn-action { background: var(--accent); color: #000; padding: 20px; border-radius: 20px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border: none; width: 100%; margin-top: 10px; }
-
-        /* Floating Add Button */
-        .fab { width: 60px; height: 60px; background: #fff; color: #000; border-radius: 20px; position: fixed; bottom: 120px; right: 30px; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 300; box-shadow: 0 10px 30px rgba(255,255,255,0.1); z-index: 900; }
+        /* Navigation Circle */
+        #nav-ring {
+            position: fixed; bottom: -50px; left: 50%; transform: translateX(-50%);
+            width: 300px; height: 150px; background: #fff; border-radius: 150px 150px 0 0;
+            display: flex; align-items: center; justify-content: center; z-index: 1000;
+        }
+        .btn-main { width: 60px; height: 60px; background: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div class="bg-glow"></div>
-<div class="bg-glow-2"></div>
-
-<header>
-    <div class="logo">INFINITY</div>
-    <div id="count-all" style="font-size: 10px; font-weight: 800; opacity: 0.5;">0 CLIENTS</div>
-    <div class="profile-trigger" id="u-avatar" onclick="toggleScreen('m-settings')"></div>
-</header>
-
-<div id="main-stage">
-    <div class="deck" id="deck-lists"></div>
-    
-    <div class="deck" id="deck-struct">
-        <div style="text-align: center; padding-top: 100px;">
-            <div style="font-size: 10px; font-weight: 800; letter-spacing: 5px; opacity: 0.3; margin-bottom: 20px;">NETWORK VISUALIZER</div>
-            <div id="struct-visual" style="height: 300px; display: flex; align-items: center; justify-content: center;">
-                <div style="width: 80px; height: 80px; border: 1px solid var(--accent); border-radius: 50%; box-shadow: 0 0 20px var(--accent);"></div>
-            </div>
-        </div>
-    </div>
+<div id="ui-top">
+    <div class="glass-tag">SYSTEM: ACTIVE</div>
+    <div class="glass-tag" id="counter">0 NODES</div>
 </div>
 
-<div class="fab" onclick="createNewClient()">+</div>
-
-<div class="nav-dock">
-    <div class="dock-item active" onclick="jump(0, this)">Lists</div>
-    <div class="dock-item" onclick="jump(1, this)">Network</div>
-    <div class="dock-item" onclick="jump(2, this)">Pulse</div>
-</div>
-
-<div id="m-edit" class="modal-full">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-        <h2 style="font-weight:800; letter-spacing:-1px;">ПРОФІЛЬ</h2>
-        <div onclick="toggleScreen('m-edit')" style="opacity:0.5; font-size:24px;">×</div>
+<div id="canvas">
     </div>
-    <label style="font-size:10px; font-weight:800; margin-bottom:10px; display:block; opacity:0.3;">STATUS</label>
-    <select id="f-step"></select>
-    <input type="text" id="f-lname" placeholder="Прізвище">
-    <input type="text" id="f-fname" placeholder="Ім'я">
-    <input type="tel" id="f-phone" placeholder="Телефон">
-    <select id="f-level"><option value="">Level: None</option><script>for(let i=1;i<=16;i++)document.write(`<option value="${i}">Level ${i}</option>`)</script></select>
-    <textarea id="f-notes" placeholder="Нотатки..." rows="4"></textarea>
-    <button class="btn-action" onclick="saveData()">Update Record</button>
-    <div onclick="deleteEntry()" style="color:#ff4d4d; text-align:center; margin-top:30px; font-size:11px; font-weight:800; letter-spacing:1px;">DELETE PERMANENTLY</div>
-</div>
 
-<div id="m-settings" class="modal-full">
-    <h2 style="font-weight:800; margin-bottom:30px;">SYSTEM</h2>
-    <div style="background:var(--card); border-radius:20px; padding:20px;">
-        <div style="font-size:12px; font-weight:800; margin-bottom:15px; opacity:0.5;">THEME ACCENT</div>
-        <div style="display:flex; gap:15px;">
-            <div onclick="setAcc('#00ffa3')" style="width:40px; height:40px; background:#00ffa3; border-radius:10px;"></div>
-            <div onclick="setAcc('#ff3e3e')" style="width:40px; height:40px; background:#ff3e3e; border-radius:10px;"></div>
-            <div onclick="setAcc('#0070ff')" style="width:40px; height:40px; background:#0070ff; border-radius:10px;"></div>
-            <div onclick="setAcc('#ffcc00')" style="width:40px; height:40px; background:#ffcc00; border-radius:10px;"></div>
-        </div>
-    </div>
-    <button class="btn-action" style="background:#fff; margin-top:auto;" onclick="toggleScreen('m-settings')">Close</button>
+<div id="nav-ring">
+    <div class="btn-main" onclick="addNode()">+</div>
 </div>
 
 <script>
-    const cfg = { apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY", authDomain: "starlife-crm.firebaseapp.com", projectId: "starlife-crm", storageBucket: "starlife-crm.firebasestorage.app", messagingSenderId: "1022280682130", appId: "1:1022280682130:web:3ea517e8b6d22c7787744b" };
-    firebase.initializeApp(cfg);
-    const auth = firebase.auth(), db = firebase.firestore();
-    let user = null, items = [], editId = null;
-    const steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Поліс", "Семінар", "Партнер"];
+    const firebaseConfig = { apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY", authDomain: "starlife-crm.firebaseapp.com", projectId: "starlife-crm", storageBucket: "starlife-crm.firebasestorage.app", messagingSenderId: "1022280682130", appId: "1:1022280682130:web:3ea517e8b6d22c7787744b" };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore(), auth = firebase.auth();
+    let user = null, nodes = [];
 
     auth.onAuthStateChanged(u => {
-        if(u) { user = u; startSync(); }
+        if(u) { user = u; loadNodes(); }
         else { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
     });
 
-    function startSync() {
-        document.getElementById('u-avatar').style.backgroundImage = `url(${user.photoURL})`;
-        db.collection("users").doc(user.uid).collection("clients").onSnapshot(snap => {
-            items = []; snap.forEach(doc => items.push({id: doc.id, ...doc.data()}));
-            render();
-        });
-    }
-
-    function render() {
-        const container = document.getElementById('deck-lists'); container.innerHTML = '';
-        document.getElementById('count-all').innerText = `${items.length} RECORDS`;
-        
-        const sel = document.getElementById('f-step'); sel.innerHTML = '';
-
-        steps.forEach((name, idx) => {
-            sel.innerHTML += `<option value="${idx}">${name}</option>`;
-            const list = items.filter(i => (i.step || 0) == idx);
-            if(list.length === 0 && idx !== 0) return;
-
-            const group = document.createElement('div');
-            group.className = 'group-container';
-            group.innerHTML = `
-                <div class="group-header">
-                    <div class="group-title">${name}</div>
-                    <div class="group-count">${list.length}</div>
-                </div>
-            `;
-            
-            list.forEach(item => {
-                const el = document.createElement('div');
-                el.className = 'client-item';
-                el.onclick = () => editEntry(item.id);
-                el.innerHTML = `
-                    <div class="client-avatar">${(item.lname || 'S').charAt(0)}</div>
-                    <div class="client-info">
-                        <div class="client-name">${item.lname || ''} ${item.fname || ''}</div>
-                        <div class="client-sub">${item.phone || 'No contact'}</div>
-                    </div>
-                    <div class="client-lvl">${item.level || ''}</div>
-                `;
-                group.appendChild(el);
+    function loadNodes() {
+        db.collection("users").doc(user.uid).collection("clients").onSnapshot(s => {
+            const container = document.getElementById('canvas');
+            container.innerHTML = '';
+            let i = 0;
+            s.forEach(doc => {
+                const data = doc.data();
+                createNodeUI(doc.id, data, i++);
             });
-            container.appendChild(group);
+            document.getElementById('counter').innerText = s.size + ' NODES';
         });
     }
 
-    function jump(page, btn) {
-        document.getElementById('main-stage').scrollTo({left: page * window.innerWidth, behavior: 'smooth'});
-        document.querySelectorAll('.dock-item').forEach(d => d.classList.remove('active'));
-        btn.classList.add('active');
-    }
+    function createNodeUI(id, data, index) {
+        const div = document.createElement('div');
+        div.className = 'node';
+        // Випадкове або розраховане положення
+        const x = data.posX || (1500 + Math.cos(index) * 300);
+        const y = data.posY || (1500 + Math.sin(index) * 300);
+        div.style.left = x + 'px';
+        div.style.top = y + 'px';
 
-    function toggleScreen(id) {
-        const el = document.getElementById(id);
-        el.style.display = (el.style.display === 'flex') ? 'none' : 'flex';
-    }
-
-    function editEntry(id) {
-        editId = id;
-        const it = items.find(x => x.id === id);
-        ['lname','fname','phone','notes','level'].forEach(f => document.getElementById('f-'+f).value = it[f] || '');
-        document.getElementById('f-step').value = it.step || 0;
-        toggleScreen('m-edit');
-    }
-
-    async function saveData() {
-        const d = {
-            lname: document.getElementById('f-lname').value,
-            fname: document.getElementById('f-fname').value,
-            phone: document.getElementById('f-phone').value,
-            notes: document.getElementById('f-notes').value,
-            level: document.getElementById('f-level').value,
-            step: parseInt(document.getElementById('f-step').value),
-            ts: Date.now()
+        div.innerHTML = `
+            <input value="${data.lname || 'Новий'}" onchange="updateNode('${id}', 'lname', this.value)">
+            <span>Level: ${data.level || '0'}</span>
+        `;
+        
+        // Drag logic
+        let isDragging = false;
+        div.onmousedown = (e) => { isDragging = true; };
+        window.onmousemove = (e) => {
+            if(isDragging) {
+                const newX = e.clientX + window.scrollX + 800; // offset
+                const newY = e.clientY + window.scrollY + 800;
+                div.style.left = newX + 'px';
+                div.style.top = newY + 'px';
+            }
         };
-        await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(d, {merge:true});
-        toggleScreen('m-edit');
+        window.onmouseup = () => { 
+            if(isDragging) {
+                updatePos(id, parseInt(div.style.left), parseInt(div.style.top));
+                isDragging = false; 
+            }
+        };
+
+        document.getElementById('canvas').appendChild(div);
     }
 
-    async function createNewClient() {
-        const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()});
-        editEntry(res.id);
+    async function addNode() {
+        await db.collection("users").doc(user.uid).collection("clients").add({
+            lname: 'Новий контакт',
+            step: 0,
+            posX: 1500,
+            posY: 1500
+        });
     }
 
-    async function deleteEntry() { if(confirm('Видалити назавжди?')) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); toggleScreen('m-edit'); } }
-    function setAcc(c) { document.documentElement.style.setProperty('--accent', c); }
+    async function updateNode(id, field, val) {
+        await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ [field]: val });
+    }
+
+    async function updatePos(id, x, y) {
+        await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ posX: x, posY: y });
+    }
+
+    // Zoom & Pan (Simplified)
+    let zoom = 1;
+    window.onwheel = (e) => {
+        zoom -= e.deltaY * 0.001;
+        document.getElementById('canvas').style.transform = `scale(${zoom})`;
+    };
 </script>
 
 </body>
