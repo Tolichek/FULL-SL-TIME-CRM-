@@ -3,112 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>HumanTree</title>
+    <title>HumanTree CRM</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background: #000; color: #fff; font-family: sans-serif; padding-top: env(safe-area-inset-top); }
-        .node-line { border-left: 1px solid #333; margin-left: 15px; padding-left: 10px; }
-        .full-screen-editor { position: fixed; inset: 0; background: #000; z-index: 100; display: none; padding: 20px; padding-top: 60px; }
+        :root { --bg: #000; --card: #1c1c1e; --border: #2c2c2e; --accent: #0a84ff; }
+        body { background: var(--bg); color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        
+        /* Стиль дерева */
+        .node-container { position: relative; padding-left: 24px; }
+        .node-container::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; width: 1px; background: var(--border); }
+        .node-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 0.5px solid var(--border); }
+        
+        /* Анкета (редактор) */
+        .full-page { position: fixed; inset: 0; background: var(--bg); z-index: 50; display: none; flex-direction: column; }
+        .input-group { background: var(--card); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+        .field { padding: 12px 16px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; }
+        .field:last-child { border-bottom: none; }
+        .field label { width: 100px; font-size: 14px; color: #8e8e93; }
+        .field input { background: transparent; border: none; outline: none; color: #fff; flex: 1; font-size: 16px; }
+        
+        .safe-top { padding-top: env(safe-area-inset-top); }
     </style>
 </head>
-<body>
+<body class="safe-top">
 
-    <div id="app" class="p-4">
-        <h1 class="text-zinc-500 text-xs uppercase mb-4 tracking-widest">Твоя картотека</h1>
-        <div id="tree-container"></div>
-        <button onclick="addNewNode(null)" class="mt-4 text-blue-500 text-sm">+ Додати першу гілку</button>
+    <div id="main-screen" class="p-4">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold">Картотека</h1>
+            <button onclick="addNewNode(null)" class="text-accent text-3xl">+</button>
+        </div>
+        <div id="tree-root"></div>
     </div>
 
-    <div id="editor" class="full-screen-editor overflow-y-auto">
-        <div class="flex justify-between items-center mb-8">
-            <button onclick="closeEditor()" class="text-zinc-400">Скасувати</button>
-            <button onclick="saveNode()" class="bg-blue-600 px-6 py-2 rounded-lg font-bold">Зберегти</button>
+    <div id="editor" class="full-page safe-top">
+        <div class="flex justify-between items-center px-4 py-3 border-b border-[#2c2c2e]">
+            <button onclick="closeEditor()" class="text-accent">Скасувати</button>
+            <span class="font-semibold">Контакт</span>
+            <button onclick="saveNode()" class="text-accent font-bold">Готово</button>
         </div>
 
-        <div class="space-y-6">
-            <div class="flex flex-col items-center">
-                <div class="w-24 h-24 bg-zinc-900 rounded-2xl mb-4 border border-zinc-800 flex items-center justify-center text-zinc-700">ФОТО</div>
-                <input id="edit-name" type="text" placeholder="Прізвище та Ім'я" class="bg-transparent text-2xl text-center w-full outline-none font-bold">
-                <input id="edit-status" type="text" placeholder="Статус" class="bg-transparent text-blue-500 text-center w-full outline-none text-sm mt-2">
+        <div class="flex-1 overflow-y-auto p-4">
+            <div class="flex flex-col items-center py-6">
+                <div class="w-24 h-24 bg-zinc-800 rounded-full mb-3 flex items-center justify-center border border-zinc-700">
+                    <span class="text-[10px] text-zinc-500">ФОТО</span>
+                </div>
+                <button class="text-accent text-xs">Додати фото</button>
             </div>
 
-            <div id="edit-phones" class="space-y-3">
-                <label class="text-xs text-zinc-500 uppercase">Телефони</label>
+            <div class="input-group">
+                <div class="field">
+                    <label>Ім'я</label>
+                    <input id="edit-name" type="text" placeholder="Прізвище та Ім'я">
                 </div>
-            <button onclick="addPhoneField('')" class="text-blue-500 text-sm">+ Додати номер</button>
+                <div class="field">
+                    <label>Статус</label>
+                    <input id="edit-status" type="text" placeholder="Власний статус" class="text-accent">
+                </div>
+            </div>
 
-            <div class="flex flex-col">
-                <label class="text-xs text-zinc-500 uppercase mb-2">Примітка</label>
-                <textarea id="edit-note" class="bg-zinc-900 border border-zinc-800 rounded-xl p-4 min-h-[150px] outline-none"></textarea>
+            <div class="input-group" id="phone-fields">
+                </div>
+            <button onclick="addPhone('')" class="text-accent text-sm px-4 mb-6">+ додати телефон</button>
+
+            <div class="input-group">
+                <div class="field py-0">
+                    <textarea id="edit-note" class="bg-transparent w-full py-3 outline-none min-h-[120px]" placeholder="Примітка..."></textarea>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        let data = JSON.parse(localStorage.getItem('treeData')) || [];
-        let currentNodeId = null;
+        let treeData = JSON.parse(localStorage.getItem('treeData')) || [];
+        let currentId = null;
 
-        function renderTree(nodes, container, parentId = null) {
-            container.innerHTML = '';
-            nodes.filter(n => n.parentId === parentId).forEach(node => {
-                const div = document.createElement('div');
-                div.className = 'mb-2';
-                div.innerHTML = `
-                    <div class="flex items-center gap-3 py-2 border-b border-zinc-900">
-                        <span onclick="openNode('${node.id}')" class="flex-1 cursor-pointer">
-                            <span class="font-bold">${node.name || 'Без імені'}</span>
-                            <span class="text-blue-500 text-xs ml-2">${node.status || ''}</span>
-                        </span>
-                        <button onclick="addNewNode('${node.id}')" class="text-zinc-600 text-xl w-8 h-8">+</button>
+        function render() {
+            const root = document.getElementById('tree-root');
+            root.innerHTML = '';
+            buildTree(null, root);
+        }
+
+        function buildTree(parentId, container) {
+            const children = treeData.filter(n => n.parentId === parentId);
+            if (children.length === 0) return;
+
+            const wrap = document.createElement('div');
+            wrap.className = parentId ? 'node-container' : '';
+            container.appendChild(wrap);
+
+            children.forEach(node => {
+                const row = document.createElement('div');
+                row.className = 'node-row';
+                row.innerHTML = `
+                    <div class="flex-1" onclick="openNode('${node.id}')">
+                        <div class="font-medium">${node.name || 'Новий контакт'}</div>
+                        <div class="text-xs text-accent">${node.status || ''}</div>
                     </div>
-                    <div id="child-${node.id}" class="node-line"></div>
+                    <button onclick="addNewNode('${node.id}')" class="text-zinc-600 px-4 text-2xl">+</button>
                 `;
-                container.appendChild(div);
-                renderTree(nodes, div.querySelector(`#child-${node.id}`), node.id);
+                wrap.appendChild(row);
+                buildTree(node.id, wrap);
             });
         }
 
         function addNewNode(parentId) {
-            const id = Date.now().toString();
-            data.push({ id, parentId, name: '', status: '', phones: [''], note: '' });
+            const id = 'id' + Date.now();
+            treeData.push({ id, parentId, name: '', status: '', phones: [''], note: '' });
             openNode(id);
         }
 
         function openNode(id) {
-            currentNodeId = id;
-            const node = data.find(n => n.id === id);
+            currentId = id;
+            const node = treeData.find(n => n.id === id);
             document.getElementById('edit-name').value = node.name;
             document.getElementById('edit-status').value = node.status;
             document.getElementById('edit-note').value = node.note;
-            document.getElementById('edit-phones').innerHTML = '<label class="text-xs text-zinc-500 uppercase">Телефони</label>';
-            node.phones.forEach(p => addPhoneField(p));
-            document.getElementById('editor').style.display = 'block';
+            
+            const pContainer = document.getElementById('phone-fields');
+            pContainer.innerHTML = '';
+            node.phones.forEach(p => addPhone(p));
+            
+            document.getElementById('editor').style.display = 'flex';
         }
 
-        function addPhoneField(value) {
+        function addPhone(val) {
             const div = document.createElement('div');
-            div.className = 'flex gap-2';
-            div.innerHTML = `<input type="tel" value="${value}" class="bg-zinc-900 p-3 rounded-lg flex-1 outline-none" placeholder="+380...">`;
-            document.getElementById('edit-phones').appendChild(div);
+            div.className = 'field';
+            div.innerHTML = `<label>тел.</label><input type="tel" value="${val}" placeholder="+380...">`;
+            document.getElementById('phone-fields').appendChild(div);
         }
 
         function saveNode() {
-            const node = data.find(n => n.id === currentNodeId);
+            const node = treeData.find(n => n.id === currentId);
             node.name = document.getElementById('edit-name').value;
             node.status = document.getElementById('edit-status').value;
             node.note = document.getElementById('edit-note').value;
-            node.phones = Array.from(document.querySelectorAll('#edit-phones input')).map(i => i.value);
+            node.phones = Array.from(document.querySelectorAll('#phone-fields input')).map(i => i.value);
             
-            localStorage.setItem('treeData', JSON.stringify(data));
+            localStorage.setItem('treeData', JSON.stringify(treeData));
             closeEditor();
-            renderTree(data, document.getElementById('tree-container'));
+            render();
         }
 
-        function closeEditor() {
-            document.getElementById('editor').style.display = 'none';
-        }
+        function closeEditor() { document.getElementById('editor').style.display = 'none'; }
 
-        renderTree(data, document.getElementById('tree-container'));
+        render();
     </script>
 </body>
 </html>
