@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>SL TIME CRM 2.7.6</title>
+    <title>SL TIME CRM 2.7.7</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
@@ -51,7 +51,7 @@
 
         .board { display: flex; overflow-x: auto; padding: 10px 20px 0px; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
         .column { min-width: calc(100vw - 40px); scroll-snap-align: center; scroll-snap-stop: always; display: flex; flex-direction: column; gap: 15px; }
-        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 100px; } /* Збільшено відступ знизу */
+        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 120px; } 
         .col-head { display: flex; justify-content: space-between; align-items: center; font-size: 14px; text-transform: uppercase; font-weight: bold; height: 36px; }
         .add-btn-center { cursor: pointer; font-size: 32px; font-weight: bold; line-height: 1; display: flex; align-items: center; height: 100%; }
 
@@ -194,7 +194,7 @@
         const auth = firebase.auth(), db = firebase.firestore(), provider = new firebase.auth.GoogleAuthProvider();
 
         let user = null, clients = [], editId = null, filterType = 'new', currentPhotoBase64 = null;
-        const steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Поліс", "Семінар", "Партнер"]; // Додано "Партнер"
+        const steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Поліс", "Семінар", "Партнер"];
         let currentPath = [], longPressTimer = null;
 
         const vp = document.getElementById('main-viewport');
@@ -240,9 +240,7 @@
         }
 
         function updateHeaderCounter() {
-            // Виправлений лічильник: рахуємо реальну кількість карток
-            const count = clients.length;
-            document.getElementById('header-counter').innerText = count;
+            document.getElementById('header-counter').innerText = clients.length;
         }
 
         function renderBoard() {
@@ -253,10 +251,15 @@
             else if(filterType === 'new') sorted.sort((a,b) => b.ts - a.ts);
             else sorted.sort((a,b) => a.ts - b.ts);
 
-            steps.forEach(s => {
+            steps.forEach((s, idx) => {
                 const col = document.createElement('div');
                 col.className = 'column';
-                const list = sorted.filter(c => c.step === s);
+                // Фікс: якщо статус картки невідомий або порожній, кидаємо в першу колонку "Список"
+                const list = sorted.filter(c => {
+                    if (idx === 0 && (!c.step || !steps.includes(c.step))) return true;
+                    return c.step === s;
+                });
+                
                 col.innerHTML = `
                     <div class="col-head"><span>${s}</span><span class="add-btn-center" onclick="addNew('${s}')">+</span></div>
                     <div class="cards-area">${list.map(c => `
@@ -292,7 +295,9 @@
             editId = id;
             currentPhotoBase64 = c.photo || null;
             document.getElementById('edit-screen').style.display = 'flex';
-            document.getElementById('e-step').innerHTML = steps.map(s => `<option value="${s}" ${s===c.step?'selected':''}>${s}</option>`).join('');
+            // Фікс: якщо у картки старий етап, підставляємо "Список"
+            const currentStep = steps.includes(c.step) ? c.step : "Список";
+            document.getElementById('e-step').innerHTML = steps.map(s => `<option value="${s}" ${s===currentStep?'selected':''}>${s}</option>`).join('');
             document.getElementById('c-photo').style.backgroundImage = c.photo ? `url(${c.photo})` : '';
             document.getElementById('e-lname').value = c.lname || '';
             document.getElementById('e-fname').value = c.fname || '';
@@ -333,10 +338,8 @@
         function renderStructure() {
             const grid = document.getElementById('struct-grid'), path = document.getElementById('struct-path');
             grid.innerHTML = ''; path.innerHTML = '';
-            
             const currentParentId = currentPath.length > 0 ? currentPath[currentPath.length-1].id : 'me';
             
-            // Кнопка повернення в Path
             const meIcon = document.createElement('div');
             meIcon.className = 'path-dot';
             meIcon.style.backgroundImage = document.getElementById('u-avatar').style.backgroundImage;
@@ -362,7 +365,6 @@
                     <div class="photo-sphere" style="background-image:url(${c.photo || ''})"></div>
                     <div class="icon-label"><span>${c.lname || ''}</span><span>${c.fname || ''}</span></div>
                 `;
-                
                 let moved = false;
                 unit.ontouchstart = () => { moved = false; longPressTimer = setTimeout(() => { unit.classList.add('menu-open'); moved = true; }, 600); };
                 unit.ontouchend = () => { 
@@ -381,17 +383,14 @@
             const list = document.getElementById('modal-partners-list');
             modal.style.display = 'flex';
             list.innerHTML = '';
-            
-            // Показуємо тільки тих, хто на етапі "Семінар" або ще не в структурі
             const potential = clients.filter(c => !c.parentId);
             potential.forEach(c => {
                 const d = document.createElement('div');
                 d.className = 'card';
                 d.style.marginBottom = '10px';
-                d.innerHTML = `<div>${c.lname} ${c.fname}</div><div style="font-size:12px; opacity:0.6;">${c.step}</div>`;
+                d.innerHTML = `<div>${c.lname} ${c.fname}</div><div style="font-size:12px; opacity:0.6;">${c.step || 'Без етапу'}</div>`;
                 d.onclick = async () => {
                     const pid = currentPath.length > 0 ? currentPath[currentPath.length-1].id : 'me';
-                    // При додаванні в команду: змінюємо статус на "Партнер" автоматично
                     await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ 
                         parentId: pid,
                         step: "Партнер" 
@@ -404,10 +403,10 @@
         }
 
         async function unlinkPartner(id) {
-            if(confirm('Видалити з команди? (Картка залишиться в списках)')) {
+            if(confirm('Видалити з команди? (Повернеться на етап Семінар)')) {
                 await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ 
                     parentId: firebase.firestore.FieldValue.delete(),
-                    step: "Семінар" // Повертаємо на семінар, якщо виключили з команди
+                    step: "Семінар"
                 });
                 renderStructure();
             }
