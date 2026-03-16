@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>SL TIME CRM 2.8.5</title>
+    <title>SL TIME CRM 2.8.6</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
@@ -31,7 +31,6 @@
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
         body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
-
         ::-webkit-scrollbar { display: none; }
         
         header { display: flex; justify-content: space-between; align-items: center; padding: 0 15px; height: 80px; position: relative; z-index: 1000; }
@@ -42,7 +41,6 @@
         .total-count { font-size: 14px; font-weight: bold; line-height: 1; opacity: 0.9; }
         .f-lines { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; width: 22px; }
         .f-line { height: 2px; background: white; border-radius: 2px; }
-        .l1 { width: 22px; } .l2 { width: 16px; } .l3 { width: 10px; }
         #header-plus { display: none; font-size: 36px; font-weight: bold; color: white; cursor: pointer; min-width: 50px; text-align: right; }
 
         #main-viewport { display: flex; width: 100vw; height: calc(100vh - 80px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; gap: 60px; }
@@ -217,7 +215,6 @@
         }
 
         function loadClients() {
-            // ФІКС: Повернення до 100% робочого методу завантаження
             db.collection("users").doc(user.uid).collection("clients").onSnapshot(snap => {
                 let temp = [];
                 snap.forEach(d => temp.push({id: d.id, ...d.data()}));
@@ -237,9 +234,7 @@
             b.innerHTML = ''; s.innerHTML = '';
             let filtered = [...clients];
             if(filterType === 'az') filtered.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
-            // Використовуємо ts або created для сортування
-            if(filterType === 'new') filtered.sort((a,b) => (b.ts || b.created || 0) - (a.ts || a.created || 0));
-            if(filterType === 'old') filtered.sort((a,b) => (a.ts || a.created || 0) - (b.ts || b.created || 0));
+            if(filterType === 'new') filtered.sort((a,b) => (b.created || 0) - (a.created || 0));
             
             steps.forEach((n, i) => {
                 const sc = filtered.filter(c => {
@@ -252,8 +247,8 @@
                 sc.forEach(c => {
                     const div = document.createElement('div'); div.className = 'card';
                     div.onclick = () => { window.history.pushState({e:1}, ""); openEdit(c.id); };
-                    const lvlHtml = (c.level && c.level != 0) ? `<div class="card-level">${c.level}</div>` : '';
-                    div.innerHTML = lvlHtml + `<div style="font-weight:600;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;">${c.phone||""}</div>`;
+                    const lvlVal = c.level && c.level !== "" ? `<div class="card-level">${c.level}</div>` : '';
+                    div.innerHTML = lvlVal + `<div style="font-weight:600;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;">${c.phone||""}</div>`;
                     document.getElementById(`list-${i}`).appendChild(div);
                 });
             });
@@ -268,12 +263,13 @@
                 pathBar.appendChild(dot);
             });
             const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
+            
             clients.filter(c => c.step == 7 && (c.parentId || 'me') === pid).forEach(p => {
                 const unit = document.createElement('div'); unit.className = 'icon-unit';
-                const lvlSphere = (p.level && p.level != 0) ? `<div class="sphere level-sphere">${p.level}</div>` : '';
+                const lvlSphere = (p.level && p.level !== "") ? `<div class="sphere level-sphere">${p.level}</div>` : '';
                 unit.innerHTML = `${lvlSphere}<div class="photo-sphere" style="background-image:url(${p.photo || ''})"></div><div class="icon-label"><span>${p.lname || ''}</span><span>${p.fname || ''}</span></div>`;
-                const ph = unit.querySelector('.photo-sphere');
                 
+                const ph = unit.querySelector('.photo-sphere');
                 ph.ontouchstart = () => { 
                     longPressTimer = setTimeout(() => {
                         openEdit(p.id);
@@ -308,7 +304,7 @@
                 pdate: document.getElementById('e-pdate').value, 
                 notes: document.getElementById('e-notes').value, 
                 level: document.getElementById('e-level').value, 
-                ts: Date.now() 
+                created: Date.now() 
             }; 
             if (document.getElementById('e-step').offsetParent) d.step = parseInt(document.getElementById('e-step').value);
             if(currentPhotoBase64) d.photo = currentPhotoBase64;
@@ -343,7 +339,7 @@
         function showPersonalData() { window.history.pushState({p:1}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
         function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
         function updateMeLevelBadge() { document.getElementById('me-level-badge').innerText = document.getElementById('me-level').value; }
-        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, ts:Date.now()}); openEdit(res.id); }
+        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); openEdit(res.id); }
         
         function handleAddPartner() {
             const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
