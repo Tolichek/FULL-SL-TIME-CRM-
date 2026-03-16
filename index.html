@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://img.icons8.com/ios-filled/180/ffffff/star.png">
-    <title>SL TIME CRM 3.0.5</title>
+    <title>SL TIME CRM 2.7.5 FIXED</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
@@ -25,19 +25,23 @@
 
         body.theme-purple { --bg: linear-gradient(180deg, #2e0249 0%, #570a57 50%, #1a1a1b 100%); --card-grad: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); --neon: rgba(219, 0, 255, 0.8); }
         body.theme-graphite { --bg: linear-gradient(180deg, #1a1a1b 0%, #2c2c2e 50%, #000000 100%); --card-grad: linear-gradient(135deg, #3a3a3c 0%, #1a1a1b 100%); --neon: rgba(255, 255, 255, 0.4); }
+        body.theme-blue { --bg: linear-gradient(180deg, #021b49 0%, #0a2e57 50%, #010a1b 100%); --card-grad: linear-gradient(135deg, #052661 0%, #021b49 100%); --neon: rgba(0, 150, 255, 0.8); }
+        body.theme-green { --bg: linear-gradient(180deg, #02331a 0%, #0a492e 50%, #01140a 100%); --card-grad: linear-gradient(135deg, #054126 0%, #02331a 100%); --neon: rgba(0, 255, 133, 0.8); }
+        body.theme-gold { --bg: linear-gradient(180deg, #443501 0%, #755b0a 50%, #1a1401 100%); --card-grad: linear-gradient(135deg, #614d05 0%, #443501 100%); --neon: rgba(255, 215, 0, 0.7); }
+        body.theme-pink { --bg: linear-gradient(180deg, #49022e 0%, #570a3a 50%, #1b0110 100%); --card-grad: linear-gradient(135deg, #61053d 0%, #49022e 100%); --neon: rgba(255, 0, 150, 0.8); }
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
         body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
-
+        ::-webkit-scrollbar { display: none; }
+        
         header { display: flex; justify-content: space-between; align-items: center; padding: 0 15px; height: 80px; position: relative; z-index: 1000; }
         .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); }
         .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 24px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 10px var(--neon); flex: 1; text-align: center; }
 
-        #header-ctrl { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; cursor: pointer; min-width: 50px; }
+        #header-ctrl { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; cursor: pointer; min-width: 50px; height: 44px; }
         .total-count { font-size: 14px; font-weight: bold; }
         .f-lines { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; width: 22px; }
         .f-line { height: 2px; background: white; border-radius: 2px; }
-        .l1 { width: 22px; } .l2 { width: 16px; } .l3 { width: 10px; }
         #header-plus { display: none; font-size: 36px; font-weight: bold; color: white; cursor: pointer; min-width: 50px; text-align: right; }
 
         #main-viewport { display: flex; width: 100vw; height: calc(100vh - 80px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; gap: 60px; }
@@ -45,9 +49,9 @@
 
         .board { display: flex; overflow-x: auto; padding: 10px 20px 0; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
         .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; gap: 15px; }
-        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 150px; } 
+        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 120px; } 
         .col-head { display: flex; justify-content: space-between; align-items: center; font-size: 14px; text-transform: uppercase; font-weight: bold; height: 36px; }
-        .add-btn-center { cursor: pointer; font-size: 32px; }
+        .add-btn-center { cursor: pointer; font-size: 32px; font-weight: bold; }
 
         .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
         .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 30px; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; color: #fff; text-shadow: 0 0 8px var(--neon); }
@@ -70,7 +74,7 @@
         select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
         label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
         .photo-container { position: relative; width: 110px; height: 110px; margin: 0 auto; }
-        .edit-level-badge { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon); width: 60px; text-align: center; }
+        .edit-level-display { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon); width: 60px; text-align: center; }
 
         #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
         .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -92,6 +96,7 @@
     <div id="filter-popup">
         <div class="f-item" onclick="setFilter('az')">А-Я</div>
         <div class="f-item" onclick="setFilter('new')">Нові</div>
+        <div class="f-item" onclick="setFilter('old')">Старі</div>
     </div>
 
     <div id="main-viewport">
@@ -110,7 +115,7 @@
         <span onclick="removeClient()" style="position: absolute; top: 25px; right: 25px; color: #ff4d4d; font-size: 12px; text-transform: uppercase; cursor: pointer;">Видалити</span>
         <div class="photo-container" onclick="document.getElementById('file-client').click()">
             <div id="c-photo" style="width:110px; height:110px; border-radius:50%; background-size:cover; border:1px solid silver;"></div>
-            <div id="edit-lvl-display" class="edit-level-badge"></div>
+            <div id="edit-lvl-display" class="edit-level-display"></div>
             <input type="file" id="file-client" hidden accept="image/*" onchange="uploadPhoto(this, 'client')">
         </div>
         <label>ЕТАП</label><select id="e-step"></select>
@@ -123,7 +128,7 @@
     <div id="user-menu">
         <div style="font-size:18px; font-weight:bold; margin-bottom:30px; text-align:center;">НАЛАШТУВАННЯ</div>
         <button onclick="showPersonalData()" style="padding:15px; background:rgba(255,255,255,0.1); color:white; border-radius:12px; width:100%; font-weight:bold; margin-bottom:10px; border:1px solid silver;">ОСОБИСТІ ДАНІ</button>
-        <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗАКРИТИ</button>
+        <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗАКРИТИ</button>
         <div style="text-align:center; color:#ff4d4d; margin-top:30px; cursor:pointer;" onclick="logout()">ВИЙТИ</div>
     </div>
 
@@ -142,6 +147,7 @@
 
         let user = null, clients = [], editId = null, filterType = 'new', currentPhotoBase64 = null;
         const steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Поліс", "Семінар", "Партнер"];
+        let currentPath = [], longPressTimer = null;
 
         const vp = document.getElementById('main-viewport');
         vp.addEventListener('scroll', () => {
@@ -190,7 +196,7 @@
                 const area = col.querySelector('.cards-area');
                 sc.forEach(c => {
                     const div = document.createElement('div'); div.className = 'card';
-                    div.onclick = () => { editId = c.id; openEdit(c.id); };
+                    div.onclick = () => { openEdit(c.id); };
                     const lvl = (c.level && c.level != 0) ? `<div class="card-level">${c.level}</div>` : '';
                     div.innerHTML = lvl + `<div style="font-weight:600;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;">${c.phone||""}</div>`;
                     area.appendChild(div);
@@ -202,14 +208,22 @@
         function renderStructure() {
             const grid = document.getElementById('struct-grid'), pathBar = document.getElementById('struct-path');
             grid.innerHTML = ''; pathBar.innerHTML = '';
+            currentPath.forEach((p, idx) => {
+                const dot = document.createElement('div'); dot.className = 'path-dot'; dot.style.backgroundImage = `url(${p.photo || ''})`;
+                dot.onclick = () => { currentPath = currentPath.slice(0, idx + 1); renderStructure(); };
+                pathBar.appendChild(dot);
+            });
             const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
             clients.filter(c => c.step == 7 && (c.parentId || 'me') === pid).forEach(p => {
                 const unit = document.createElement('div'); unit.className = 'icon-unit';
                 const lvl = (p.level && p.level != 0) ? `<div class="sphere level-sphere">${p.level}</div>` : '';
                 unit.innerHTML = `${lvl}<div class="photo-sphere" style="background-image:url(${p.photo || ''})"></div><div class="icon-label"><span>${p.lname || ''}</span><span>${p.fname || ''}</span></div>`;
                 const ph = unit.querySelector('.photo-sphere');
-                ph.ontouchstart = () => { longPressTimer = setTimeout(() => openEdit(p.id), 600); };
-                ph.ontouchend = () => { clearTimeout(longPressTimer); if(longPressTimer) { currentPath.push({id:p.id, photo:p.photo}); renderStructure(); } };
+                ph.ontouchstart = (e) => { longPressTimer = setTimeout(() => openEdit(p.id), 600); };
+                ph.ontouchend = (e) => { 
+                    const wasLong = !longPressTimer; clearTimeout(longPressTimer); longPressTimer = null;
+                    if (!wasLong) { currentPath.push({id:p.id, photo:p.photo}); renderStructure(); }
+                };
                 grid.appendChild(unit);
             });
         }
@@ -230,8 +244,8 @@
             currentPhotoBase64 = null; closeAllUI(); 
         }
 
-        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); openEdit(res.id); }
-        function handleAddPartner() { createCard(); }
+        async function createCard(step = 0, pid = null) { const d = {step: step, created: Date.now()}; if(pid) d.parentId = pid; const res = await db.collection("users").doc(user.uid).collection("clients").add(d); openEdit(res.id); }
+        function handleAddPartner() { const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me'; createCard(7, pid); }
         function uploadPhoto(input, type) { const file = input.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = e => { currentPhotoBase64 = e.target.result; document.getElementById(type === 'me' ? 'me-photo' : 'c-photo').style.backgroundImage = `url(${currentPhotoBase64})`; }; reader.readAsDataURL(file); }
         function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen').forEach(el => el.style.display = 'none'); editId = null; }
         function showUserMenu() { document.getElementById('user-menu').style.display = 'flex'; window.history.pushState({m:1}, ""); }
