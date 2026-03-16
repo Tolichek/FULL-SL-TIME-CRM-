@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>SL TIME CRM 2.7.7</title>
+    <title>SL TIME CRM 2.7.8</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
@@ -69,7 +69,7 @@
             background: radial-gradient(circle at 30% 30%, #fff 0%, rgba(255,255,255,0.2) 20%, var(--neon) 60%, rgba(0,0,0,0.5) 100%);
             display: flex; align-items: center; justify-content: center; 
             box-shadow: inset -1px -1px 4px rgba(0,0,0,0.6), 0 4px 10px rgba(0,0,0,0.4); 
-            z-index: 10; font-size: 15px; font-weight: bold; color: white; border: 0.5px solid rgba(255,255,255,0.4);
+            z-index: 100; font-size: 15px; font-weight: bold; color: white; border: 0.5px solid rgba(255,255,255,0.4);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); line-height: 0;
         }
         .level-sphere { top: -15px; left: 50%; transform: translateX(-50%); }
@@ -167,7 +167,7 @@
         <div id="step-wrapper"><label>ЕТАП</label><select id="e-step"></select></div>
         <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname"><label>ІМ'Я</label><input type="text" id="e-fname"><label>ТЕЛЕФОН</label><input type="tel" id="e-phone">
         <label>ПОЛІС №</label><input type="text" id="e-pnum"><label>ДАТА</label><input type="date" id="e-pdate">
-        <label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><option value="">None</option><script>for(let i=1; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
         <label>ПРИМІТКИ</label>
         <div class="notes-wrapper" id="notes-wrap"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value"></textarea></div>
         <button onclick="manualSave()" style="margin-top:20px; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none;">ЗБЕРЕГТИ ТА ВИЙТИ</button>
@@ -179,7 +179,7 @@
             <div id="me-level-badge" class="edit-level-display"></div>
             <input type="file" id="file-me" hidden accept="image/*" onchange="uploadPhoto(this, 'me')">
         </div>
-        <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname"><label>ІМ'Я</label><input type="text" id="me-fname"><label>РІВЕНЬ</label><select id="me-level" onchange="updateMeLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname"><label>ІМ'Я</label><input type="text" id="me-fname"><label>РІВЕНЬ</label><select id="me-level" onchange="updateMeLevelBadge()"><option value="">None</option><script>for(let i=1; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
         <button onclick="saveMeData()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none;">ЗБЕРЕГТИ ТА ВИЙТИ</button>
     </div>
 
@@ -225,7 +225,8 @@
             const photo = data.myPhoto || user.photoURL;
             document.getElementById('u-avatar').style.backgroundImage = `url(${photo})`;
             document.getElementById('me-photo').style.backgroundImage = `url(${photo})`;
-            if(data.myLevel) { document.getElementById('me-level').value = data.myLevel; updateMeLevelBadge(); }
+            document.getElementById('me-level').value = data.myLevel || "";
+            updateMeLevelBadge();
             if(data.meLname) document.getElementById('me-lname').value = data.meLname;
             if(data.meFname) document.getElementById('me-fname').value = data.meFname;
         }
@@ -239,9 +240,7 @@
             });
         }
 
-        function updateHeaderCounter() {
-            document.getElementById('header-counter').innerText = clients.length;
-        }
+        function updateHeaderCounter() { document.getElementById('header-counter').innerText = clients.length; }
 
         function renderBoard() {
             const b = document.getElementById('main-board');
@@ -254,19 +253,21 @@
             steps.forEach((s, idx) => {
                 const col = document.createElement('div');
                 col.className = 'column';
-                // Фікс: якщо статус картки невідомий або порожній, кидаємо в першу колонку "Список"
                 const list = sorted.filter(c => {
                     if (idx === 0 && (!c.step || !steps.includes(c.step))) return true;
                     return c.step === s;
                 });
                 
+                // Кнопка "+" тільки в першій колонці
+                const addBtn = (idx === 0) ? `<span class="add-btn-center" onclick="addNew('${s}')">+</span>` : '';
+                
                 col.innerHTML = `
-                    <div class="col-head"><span>${s}</span><span class="add-btn-center" onclick="addNew('${s}')">+</span></div>
+                    <div class="col-head"><span>${s}</span>${addBtn}</div>
                     <div class="cards-area">${list.map(c => `
                         <div class="card" onclick="editCard('${c.id}')">
                             <div style="font-weight:bold; font-size:16px;">${c.lname || ''} ${c.fname || ''}</div>
                             <div style="font-size:12px; opacity:0.6; margin-top:5px;">${c.phone || ''}</div>
-                            <div class="card-level">${c.level || 0}</div>
+                            ${(c.level && c.level > 0) ? `<div class="card-level">${c.level}</div>` : ''}
                         </div>
                     `).join('')}</div>`;
                 b.appendChild(col);
@@ -284,7 +285,7 @@
             document.getElementById('e-phone').value = '';
             document.getElementById('e-pnum').value = '';
             document.getElementById('e-pdate').value = '';
-            document.getElementById('e-level').value = 0;
+            document.getElementById('e-level').value = "";
             document.getElementById('e-notes').value = '';
             updateEditLevelBadge();
         }
@@ -295,7 +296,6 @@
             editId = id;
             currentPhotoBase64 = c.photo || null;
             document.getElementById('edit-screen').style.display = 'flex';
-            // Фікс: якщо у картки старий етап, підставляємо "Список"
             const currentStep = steps.includes(c.step) ? c.step : "Список";
             document.getElementById('e-step').innerHTML = steps.map(s => `<option value="${s}" ${s===currentStep?'selected':''}>${s}</option>`).join('');
             document.getElementById('c-photo').style.backgroundImage = c.photo ? `url(${c.photo})` : '';
@@ -304,13 +304,14 @@
             document.getElementById('e-phone').value = c.phone || '';
             document.getElementById('e-pnum').value = c.pnum || '';
             document.getElementById('e-pdate').value = c.pdate || '';
-            document.getElementById('e-level').value = c.level || 0;
+            document.getElementById('e-level').value = c.level || "";
             document.getElementById('e-notes').value = c.notes || '';
             document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || '';
             updateEditLevelBadge();
         }
 
         async function manualSave() {
+            const lvl = document.getElementById('e-level').value;
             const data = {
                 lname: document.getElementById('e-lname').value,
                 fname: document.getElementById('e-fname').value,
@@ -318,7 +319,7 @@
                 step: document.getElementById('e-step').value,
                 pnum: document.getElementById('e-pnum').value,
                 pdate: document.getElementById('e-pdate').value,
-                level: parseInt(document.getElementById('e-level').value),
+                level: lvl ? parseInt(lvl) : null,
                 notes: document.getElementById('e-notes').value,
                 photo: currentPhotoBase64,
                 ts: Date.now()
@@ -358,13 +359,18 @@
             subordinates.forEach(c => {
                 const unit = document.createElement('div');
                 unit.className = 'icon-unit';
+                
+                // Рівень тільки якщо > 0
+                const lvlSphere = (c.level && c.level > 0) ? `<div class="sphere level-sphere">${c.level}</div>` : '';
+                
                 unit.innerHTML = `
-                    <div class="sphere level-sphere">${c.level || 0}</div>
+                    ${lvlSphere}
                     <div class="sphere opt-sphere" onclick="event.stopPropagation(); editCard('${c.id}')">✎</div>
                     <div class="sphere del-sphere" onclick="event.stopPropagation(); unlinkPartner('${c.id}')">✕</div>
                     <div class="photo-sphere" style="background-image:url(${c.photo || ''})"></div>
                     <div class="icon-label"><span>${c.lname || ''}</span><span>${c.fname || ''}</span></div>
                 `;
+                
                 let moved = false;
                 unit.ontouchstart = () => { moved = false; longPressTimer = setTimeout(() => { unit.classList.add('menu-open'); moved = true; }, 600); };
                 unit.ontouchend = () => { 
@@ -391,10 +397,7 @@
                 d.innerHTML = `<div>${c.lname} ${c.fname}</div><div style="font-size:12px; opacity:0.6;">${c.step || 'Без етапу'}</div>`;
                 d.onclick = async () => {
                     const pid = currentPath.length > 0 ? currentPath[currentPath.length-1].id : 'me';
-                    await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ 
-                        parentId: pid,
-                        step: "Партнер" 
-                    });
+                    await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ parentId: pid, step: "Партнер" });
                     modal.style.display = 'none';
                     renderStructure();
                 };
@@ -418,21 +421,18 @@
             const reader = new FileReader();
             reader.onload = e => {
                 const base64 = e.target.result;
-                if(type === 'client') {
-                    currentPhotoBase64 = base64;
-                    document.getElementById('c-photo').style.backgroundImage = `url(${base64})`;
-                } else {
-                    document.getElementById('me-photo').style.backgroundImage = `url(${base64})`;
-                }
+                if(type === 'client') { currentPhotoBase64 = base64; document.getElementById('c-photo').style.backgroundImage = `url(${base64})`; }
+                else { document.getElementById('me-photo').style.backgroundImage = `url(${base64})`; }
             };
             reader.readAsDataURL(file);
         }
 
         async function saveMeData() {
+            const lvl = document.getElementById('me-level').value;
             const data = {
                 meLname: document.getElementById('me-lname').value,
                 meFname: document.getElementById('me-fname').value,
-                myLevel: parseInt(document.getElementById('me-level').value),
+                myLevel: lvl ? parseInt(lvl) : null,
                 myPhoto: document.getElementById('me-photo').style.backgroundImage.slice(5, -2).replace(/"/g, "")
             };
             await db.collection("users").doc(user.uid).set(data, {merge:true});
@@ -445,10 +445,7 @@
         function showPersonalData() { document.getElementById('personal-data-screen').style.display = 'flex'; }
         function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
         function setFilter(f) { filterType = f; toggleFilter(); renderBoard(); }
-        function closeAllUI() { 
-            document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #partner-select-modal').forEach(s => s.style.display='none');
-            editId = null;
-        }
+        function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #partner-select-modal').forEach(s => s.style.display='none'); editId = null; }
         function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
         function updateMeLevelBadge() { document.getElementById('me-level-badge').innerText = document.getElementById('me-level').value; }
         function login() { auth.signInWithRedirect(provider); }
