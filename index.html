@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://img.icons8.com/ios-filled/180/ffffff/star.png">
-    <title>SL TIME CRM 3.3.9</title>
+    <title>SL TIME CRM 3.4.0</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
@@ -23,7 +23,7 @@
             --neon-text: #fff;
         }
 
-        body.theme-purple { --bg: linear-gradient(180deg, #2e0249 0%, #570a57 50%, #1a1a1b 100%); --card-grad: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); --neon: rgba(219, 0, 255, 0.8); }
+        body.theme-purple { --bg: linear-gradient(180deg, #2e0249 0%, #570a57 50%, #1a1a1b 100%); --card-grad: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); }
         body.theme-graphite { --bg: linear-gradient(180deg, #1a1a1b 0%, #2c2c2e 50%, #000000 100%); --card-grad: linear-gradient(135deg, #3a3a3c 0%, #1a1a1b 100%); --neon: rgba(255, 255, 255, 0.4); }
         body.theme-blue { --bg: linear-gradient(180deg, #021b49 0%, #0a2e57 50%, #010a1b 100%); --card-grad: linear-gradient(135deg, #052661 0%, #021b49 100%); --neon: rgba(0, 150, 255, 0.8); }
         body.theme-green { --bg: linear-gradient(180deg, #02331a 0%, #0a492e 50%, #01140a 100%); --card-grad: linear-gradient(135deg, #054126 0%, #02331a 100%); --neon: rgba(0, 255, 133, 0.8); }
@@ -43,7 +43,7 @@
         .f-lines { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; width: 22px; }
         .f-line { height: 2px; background: white; border-radius: 2px; }
         .l1 { width: 22px; } .l2 { width: 16px; } .l3 { width: 10px; }
-        #header-plus { display: none; font-size: 36px; font-weight: bold; color: white; cursor: pointer; min-width: 50px; text-align: right; }
+        #header-plus { display: none; font-size: 36px; font-weight: bold; cursor: pointer; min-width: 50px; text-align: right; }
 
         #main-viewport { display: flex; width: 100vw; height: calc(100vh - 80px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; gap: 60px; }
         .app-container { flex: 0 0 100vw; width: 100vw; height: 100%; scroll-snap-align: start; overflow: hidden; position: relative; }
@@ -179,6 +179,8 @@
             const data = doc.data() || {};
             document.getElementById('u-avatar').style.backgroundImage = `url(${data.myPhoto || user.photoURL})`;
             document.getElementById('me-photo').style.backgroundImage = `url(${data.myPhoto || user.photoURL})`;
+            const theme = localStorage.getItem('crm_theme') || data.theme || 'purple';
+            document.body.className = 'theme-' + theme;
         }
 
         function loadClients() {
@@ -195,6 +197,7 @@
             let filtered = [...clients];
             if(filterType === 'az') filtered.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
             if(filterType === 'new') filtered.sort((a,b) => (b.created || 0) - (a.created || 0));
+            if(filterType === 'old') filtered.sort((a,b) => (a.created || 0) - (b.created || 0));
             
             steps.forEach((n, i) => {
                 const sc = filtered.filter(c => (c.step == i || (i === 0 && (c.step === undefined || c.step === null))));
