@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>SL TIME CRM 2.7.5</title>
+    <title>SL TIME CRM 2.7.6</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
@@ -49,9 +49,9 @@
         #main-viewport { display: flex; width: 100vw; height: calc(100vh - 80px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; gap: 60px; }
         .app-container { flex: 0 0 100vw; width: 100vw; height: 100%; scroll-snap-align: start; scroll-snap-stop: always; overflow: hidden; position: relative; }
 
-        .board { display: flex; overflow-x: auto; padding: 10px 20px 55px; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
+        .board { display: flex; overflow-x: auto; padding: 10px 20px 0px; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
         .column { min-width: calc(100vw - 40px); scroll-snap-align: center; scroll-snap-stop: always; display: flex; flex-direction: column; gap: 15px; }
-        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 20px; } 
+        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 100px; } /* Збільшено відступ знизу */
         .col-head { display: flex; justify-content: space-between; align-items: center; font-size: 14px; text-transform: uppercase; font-weight: bold; height: 36px; }
         .add-btn-center { cursor: pointer; font-size: 32px; font-weight: bold; line-height: 1; display: flex; align-items: center; height: 100%; }
 
@@ -82,7 +82,7 @@
         .icon-label { margin-top: 20px; font-size: 10px; font-weight: bold; text-align: center; color: white; text-transform: uppercase; width: 100%; display: flex; flex-direction: column; }
         .icon-label span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.7); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.85); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
         .nav-item { color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33%; height: 100%; font-size: 11px; font-weight: bold; }
         .nav-item.active { opacity: 1; text-shadow: 0 0 10px var(--neon); }
 
@@ -167,7 +167,7 @@
         <div id="step-wrapper"><label>ЕТАП</label><select id="e-step"></select></div>
         <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname"><label>ІМ'Я</label><input type="text" id="e-fname"><label>ТЕЛЕФОН</label><input type="tel" id="e-phone">
         <label>ПОЛІС №</label><input type="text" id="e-pnum"><label>ДАТА</label><input type="date" id="e-pdate">
-        <label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><option value="none">none</option><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
         <label>ПРИМІТКИ</label>
         <div class="notes-wrapper" id="notes-wrap"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value"></textarea></div>
         <button onclick="manualSave()" style="margin-top:20px; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none;">ЗБЕРЕГТИ ТА ВИЙТИ</button>
@@ -179,7 +179,7 @@
             <div id="me-level-badge" class="edit-level-display"></div>
             <input type="file" id="file-me" hidden accept="image/*" onchange="uploadPhoto(this, 'me')">
         </div>
-        <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname"><label>ІМ'Я</label><input type="text" id="me-fname"><label>РІВЕНЬ</label><select id="me-level" onchange="updateMeLevelBadge()"><option value="none">none</option><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname"><label>ІМ'Я</label><input type="text" id="me-fname"><label>РІВЕНЬ</label><select id="me-level" onchange="updateMeLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
         <button onclick="saveMeData()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none;">ЗБЕРЕГТИ ТА ВИЙТИ</button>
     </div>
 
@@ -194,7 +194,7 @@
         const auth = firebase.auth(), db = firebase.firestore(), provider = new firebase.auth.GoogleAuthProvider();
 
         let user = null, clients = [], editId = null, filterType = 'new', currentPhotoBase64 = null;
-        const steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Поліс", "Семінар"];
+        const steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Поліс", "Семінар", "Партнер"]; // Додано "Партнер"
         let currentPath = [], longPressTimer = null;
 
         const vp = document.getElementById('main-viewport');
@@ -225,128 +225,234 @@
             const photo = data.myPhoto || user.photoURL;
             document.getElementById('u-avatar').style.backgroundImage = `url(${photo})`;
             document.getElementById('me-photo').style.backgroundImage = `url(${photo})`;
-            document.getElementById('me-lname').value = data.meLname || "";
-            document.getElementById('me-fname').value = data.meFname || "";
-            document.getElementById('me-level').value = data.meLevel || "none";
-            updateMeLevelBadge();
-            const theme = localStorage.getItem('crm_theme') || data.theme || 'purple';
-            document.body.className = 'theme-' + theme;
+            if(data.myLevel) { document.getElementById('me-level').value = data.myLevel; updateMeLevelBadge(); }
+            if(data.meLname) document.getElementById('me-lname').value = data.meLname;
+            if(data.meFname) document.getElementById('me-fname').value = data.meFname;
         }
 
         function loadClients() {
-            db.collection("users").doc(user.uid).collection("clients").onSnapshot(snap => {
-                clients = []; snap.forEach(d => clients.push({id: d.id, ...d.data()}));
-                renderBoard(); updateHeaderCounter(); if(Math.round(vp.scrollLeft/(window.innerWidth + 60)) === 1) renderStructure();
+            db.collection("users").doc(user.uid).collection("clients").onSnapshot(ss => {
+                clients = ss.docs.map(d => ({id:d.id, ...d.data()}));
+                renderBoard();
+                renderStructure();
+                updateHeaderCounter();
             });
         }
 
         function updateHeaderCounter() {
-            const index = Math.round(vp.scrollLeft / (window.innerWidth + 60));
-            const counter = document.getElementById('header-counter');
-            if(index === 1) {
-                const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
-                counter.innerText = clients.filter(c => c.isPartner && (c.parentId || 'me') === pid).length;
-            } else { counter.innerText = clients.filter(c => !c.isStructureOnly).length; }
+            // Виправлений лічильник: рахуємо реальну кількість карток
+            const count = clients.length;
+            document.getElementById('header-counter').innerText = count;
         }
 
         function renderBoard() {
-            const b = document.getElementById('main-board'), s = document.getElementById('e-step');
-            b.innerHTML = ''; s.innerHTML = '';
-            let filtered = clients.filter(c => !c.isStructureOnly);
-            if(filterType === 'az') filtered.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
-            if(filterType === 'new') filtered.sort((a,b) => b.created - a.created);
-            if(filterType === 'old') filtered.sort((a,b) => a.created - b.created);
-            steps.forEach((n, i) => {
-                const sc = filtered.filter(c => c.step == i);
-                const col = document.createElement('div'); col.className = 'column';
-                col.innerHTML = `<div class="col-head"><div>${n}&nbsp;&nbsp;&nbsp;&nbsp;<span>${sc.length}</span></div>${i==0 ? '<div class="add-btn-center" onclick="createCard()">+</div>' : '<div></div>'}<div></div></div><div id="list-${i}" class="cards-area"></div>`;
-                b.appendChild(col); s.innerHTML += `<option value="${i}">${n}</option>`;
-                sc.forEach(c => {
-                    const div = document.createElement('div'); div.className = 'card';
-                    div.onclick = () => { window.history.pushState({e:1}, ""); openEdit(c.id); };
-                    const hasLevel = c.level && c.level !== 'none' && c.level !== '0';
-                    div.innerHTML = (hasLevel ? `<div class="card-level">${c.level}</div>` : '') + `<div style="font-weight:600;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;">${c.phone||""}</div>`;
-                    document.getElementById(`list-${i}`).appendChild(div);
-                });
+            const b = document.getElementById('main-board');
+            b.innerHTML = '';
+            let sorted = [...clients];
+            if(filterType === 'az') sorted.sort((a,b) => (a.lname||'').localeCompare(b.lname||''));
+            else if(filterType === 'new') sorted.sort((a,b) => b.ts - a.ts);
+            else sorted.sort((a,b) => a.ts - b.ts);
+
+            steps.forEach(s => {
+                const col = document.createElement('div');
+                col.className = 'column';
+                const list = sorted.filter(c => c.step === s);
+                col.innerHTML = `
+                    <div class="col-head"><span>${s}</span><span class="add-btn-center" onclick="addNew('${s}')">+</span></div>
+                    <div class="cards-area">${list.map(c => `
+                        <div class="card" onclick="editCard('${c.id}')">
+                            <div style="font-weight:bold; font-size:16px;">${c.lname || ''} ${c.fname || ''}</div>
+                            <div style="font-size:12px; opacity:0.6; margin-top:5px;">${c.phone || ''}</div>
+                            <div class="card-level">${c.level || 0}</div>
+                        </div>
+                    `).join('')}</div>`;
+                b.appendChild(col);
             });
         }
 
+        function addNew(step) {
+            editId = 'new_' + Date.now();
+            currentPhotoBase64 = null;
+            document.getElementById('edit-screen').style.display = 'flex';
+            document.getElementById('e-step').innerHTML = steps.map(s => `<option value="${s}" ${s===step?'selected':''}>${s}</option>`).join('');
+            document.getElementById('c-photo').style.backgroundImage = '';
+            document.getElementById('e-lname').value = '';
+            document.getElementById('e-fname').value = '';
+            document.getElementById('e-phone').value = '';
+            document.getElementById('e-pnum').value = '';
+            document.getElementById('e-pdate').value = '';
+            document.getElementById('e-level').value = 0;
+            document.getElementById('e-notes').value = '';
+            updateEditLevelBadge();
+        }
+
+        function editCard(id) {
+            const c = clients.find(x => x.id === id);
+            if(!c) return;
+            editId = id;
+            currentPhotoBase64 = c.photo || null;
+            document.getElementById('edit-screen').style.display = 'flex';
+            document.getElementById('e-step').innerHTML = steps.map(s => `<option value="${s}" ${s===c.step?'selected':''}>${s}</option>`).join('');
+            document.getElementById('c-photo').style.backgroundImage = c.photo ? `url(${c.photo})` : '';
+            document.getElementById('e-lname').value = c.lname || '';
+            document.getElementById('e-fname').value = c.fname || '';
+            document.getElementById('e-phone').value = c.phone || '';
+            document.getElementById('e-pnum').value = c.pnum || '';
+            document.getElementById('e-pdate').value = c.pdate || '';
+            document.getElementById('e-level').value = c.level || 0;
+            document.getElementById('e-notes').value = c.notes || '';
+            document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || '';
+            updateEditLevelBadge();
+        }
+
+        async function manualSave() {
+            const data = {
+                lname: document.getElementById('e-lname').value,
+                fname: document.getElementById('e-fname').value,
+                phone: document.getElementById('e-phone').value,
+                step: document.getElementById('e-step').value,
+                pnum: document.getElementById('e-pnum').value,
+                pdate: document.getElementById('e-pdate').value,
+                level: parseInt(document.getElementById('e-level').value),
+                notes: document.getElementById('e-notes').value,
+                photo: currentPhotoBase64,
+                ts: Date.now()
+            };
+            if(editId.startsWith('new_')) await db.collection("users").doc(user.uid).collection("clients").add(data);
+            else await db.collection("users").doc(user.uid).collection("clients").doc(editId).update(data);
+            closeAllUI();
+        }
+
+        function removeClient() {
+            if(confirm('Видалити?')) {
+                db.collection("users").doc(user.uid).collection("clients").doc(editId).delete();
+                closeAllUI();
+            }
+        }
+
         function renderStructure() {
-            const grid = document.getElementById('struct-grid'), pathBar = document.getElementById('struct-path');
-            grid.innerHTML = ''; pathBar.innerHTML = '';
+            const grid = document.getElementById('struct-grid'), path = document.getElementById('struct-path');
+            grid.innerHTML = ''; path.innerHTML = '';
+            
+            const currentParentId = currentPath.length > 0 ? currentPath[currentPath.length-1].id : 'me';
+            
+            // Кнопка повернення в Path
+            const meIcon = document.createElement('div');
+            meIcon.className = 'path-dot';
+            meIcon.style.backgroundImage = document.getElementById('u-avatar').style.backgroundImage;
+            meIcon.onclick = () => { currentPath = []; renderStructure(); };
+            path.appendChild(meIcon);
+            
             currentPath.forEach((p, idx) => {
-                const dot = document.createElement('div'); dot.className = 'path-dot'; dot.style.backgroundImage = `url(${p.photo || ''})`;
+                const dot = document.createElement('div');
+                dot.className = 'path-dot';
+                dot.style.backgroundImage = `url(${p.photo})`;
                 dot.onclick = () => { currentPath = currentPath.slice(0, idx + 1); renderStructure(); };
-                pathBar.appendChild(dot);
+                path.appendChild(dot);
             });
-            const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
-            clients.filter(c => c.isPartner && (c.parentId || 'me') === pid).forEach(p => {
-                const unit = document.createElement('div'); unit.className = 'icon-unit';
-                const showLevel = p.level && p.level !== 'none' && p.level !== '0' ? p.level : '';
-                unit.innerHTML = `<div class="sphere level-sphere">${showLevel}</div><div class="sphere opt-sphere" onclick="event.stopPropagation(); openEdit('${p.id}')">⚙️</div><div class="sphere del-sphere" onclick="event.stopPropagation(); removeFromStruct('${p.id}')">✕</div><div class="photo-sphere" style="background-image:url(${p.photo || ''})"></div><div class="icon-label"><span>${p.lname || ''}</span><span>${p.fname || ''}</span></div>`;
-                const ph = unit.querySelector('.photo-sphere');
-                ph.onmousedown = ph.ontouchstart = () => { longPressTimer = setTimeout(() => unit.classList.add('menu-open'), 600); };
-                ph.onmouseup = ph.ontouchend = () => clearTimeout(longPressTimer);
-                ph.onclick = () => { if(!unit.classList.contains('menu-open')) { currentPath.push({id:p.id, photo:p.photo}); renderStructure(); } else unit.classList.remove('menu-open'); };
+
+            const subordinates = clients.filter(c => c.parentId === currentParentId);
+            subordinates.forEach(c => {
+                const unit = document.createElement('div');
+                unit.className = 'icon-unit';
+                unit.innerHTML = `
+                    <div class="sphere level-sphere">${c.level || 0}</div>
+                    <div class="sphere opt-sphere" onclick="event.stopPropagation(); editCard('${c.id}')">✎</div>
+                    <div class="sphere del-sphere" onclick="event.stopPropagation(); unlinkPartner('${c.id}')">✕</div>
+                    <div class="photo-sphere" style="background-image:url(${c.photo || ''})"></div>
+                    <div class="icon-label"><span>${c.lname || ''}</span><span>${c.fname || ''}</span></div>
+                `;
+                
+                let moved = false;
+                unit.ontouchstart = () => { moved = false; longPressTimer = setTimeout(() => { unit.classList.add('menu-open'); moved = true; }, 600); };
+                unit.ontouchend = () => { 
+                    clearTimeout(longPressTimer); 
+                    if(!moved) {
+                        if(unit.classList.contains('menu-open')) unit.classList.remove('menu-open');
+                        else { currentPath.push(c); renderStructure(); }
+                    }
+                };
                 grid.appendChild(unit);
             });
         }
 
+        function handleAddPartner() {
+            const modal = document.getElementById('partner-select-modal');
+            const list = document.getElementById('modal-partners-list');
+            modal.style.display = 'flex';
+            list.innerHTML = '';
+            
+            // Показуємо тільки тих, хто на етапі "Семінар" або ще не в структурі
+            const potential = clients.filter(c => !c.parentId);
+            potential.forEach(c => {
+                const d = document.createElement('div');
+                d.className = 'card';
+                d.style.marginBottom = '10px';
+                d.innerHTML = `<div>${c.lname} ${c.fname}</div><div style="font-size:12px; opacity:0.6;">${c.step}</div>`;
+                d.onclick = async () => {
+                    const pid = currentPath.length > 0 ? currentPath[currentPath.length-1].id : 'me';
+                    // При додаванні в команду: змінюємо статус на "Партнер" автоматично
+                    await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ 
+                        parentId: pid,
+                        step: "Партнер" 
+                    });
+                    modal.style.display = 'none';
+                    renderStructure();
+                };
+                list.appendChild(d);
+            });
+        }
+
+        async function unlinkPartner(id) {
+            if(confirm('Видалити з команди? (Картка залишиться в списках)')) {
+                await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ 
+                    parentId: firebase.firestore.FieldValue.delete(),
+                    step: "Семінар" // Повертаємо на семінар, якщо виключили з команди
+                });
+                renderStructure();
+            }
+        }
+
         function uploadPhoto(input, type) {
-            const file = input.files[0]; if(!file) return;
+            const file = input.files[0];
+            if(!file) return;
             const reader = new FileReader();
-            reader.onload = e => { currentPhotoBase64 = e.target.result; document.getElementById(type === 'me' ? 'me-photo' : 'c-photo').style.backgroundImage = `url(${currentPhotoBase64})`; };
+            reader.onload = e => {
+                const base64 = e.target.result;
+                if(type === 'client') {
+                    currentPhotoBase64 = base64;
+                    document.getElementById('c-photo').style.backgroundImage = `url(${base64})`;
+                } else {
+                    document.getElementById('me-photo').style.backgroundImage = `url(${base64})`;
+                }
+            };
             reader.readAsDataURL(file);
         }
 
-        async function manualSave() { 
-            const d = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, pnum: document.getElementById('e-pnum').value, pdate: document.getElementById('e-pdate').value, notes: document.getElementById('e-notes').value, level: document.getElementById('e-level').value, updated: Date.now() }; 
-            if (document.getElementById('e-step').offsetParent) d.step = parseInt(document.getElementById('e-step').value);
-            if(currentPhotoBase64) d.photo = currentPhotoBase64;
-            await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(d, {merge:true}); 
-            currentPhotoBase64 = null; closeAllUI(); 
+        async function saveMeData() {
+            const data = {
+                meLname: document.getElementById('me-lname').value,
+                meFname: document.getElementById('me-fname').value,
+                myLevel: parseInt(document.getElementById('me-level').value),
+                myPhoto: document.getElementById('me-photo').style.backgroundImage.slice(5, -2).replace(/"/g, "")
+            };
+            await db.collection("users").doc(user.uid).set(data, {merge:true});
+            loadUserConfig();
+            closeAllUI();
         }
 
-        async function saveMeData() { 
-            const d = { meLname: document.getElementById('me-lname').value, meFname: document.getElementById('me-fname').value, meLevel: document.getElementById('me-level').value }; 
-            if(currentPhotoBase64) d.myPhoto = currentPhotoBase64;
-            await db.collection("users").doc(user.uid).set(d, {merge:true}); 
-            currentPhotoBase64 = null; closeAllUI(); 
-        }
-
-        function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','phone','pnum','pdate','notes','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || "none"); document.getElementById('c-photo').style.backgroundImage = `url(${c.photo||''})`; document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || ""; updateEditLevelBadge(); document.getElementById('edit-screen').style.display='flex'; }
-        function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #partner-select-modal').forEach(el => el.style.display = 'none'); editId = null; currentPhotoBase64 = null; }
         function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); }
+        function showUserMenu() { document.getElementById('user-menu').style.display = 'flex'; }
+        function showPersonalData() { document.getElementById('personal-data-screen').style.display = 'flex'; }
         function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
-        function setFilter(t) { filterType = t; renderBoard(); toggleFilter(); }
-        function showUserMenu() { window.history.pushState({m:1}, ""); document.getElementById('user-menu').style.display = 'flex'; }
-        function showPersonalData() { window.history.pushState({p:1}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
-        
-        function updateEditLevelBadge() { 
-            const val = document.getElementById('e-level').value;
-            document.getElementById('edit-level-badge').innerText = (val === 'none' || val === '0') ? '' : val; 
+        function setFilter(f) { filterType = f; toggleFilter(); renderBoard(); }
+        function closeAllUI() { 
+            document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #partner-select-modal').forEach(s => s.style.display='none');
+            editId = null;
         }
-        function updateMeLevelBadge() { 
-            const val = document.getElementById('me-level').value;
-            document.getElementById('me-level-badge').innerText = (val === 'none' || val === '0') ? '' : val; 
-        }
-
-        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, level: 'none', created:Date.now()}); openEdit(res.id); }
-        function handleAddPartner() { if (currentPath.length === 0) openPartnerSelect(); else createCardForStruct(); }
-        async function createCardForStruct() { const pid = currentPath[currentPath.length - 1].id; const res = await db.collection("users").doc(user.uid).collection("clients").add({ isPartner: true, parentId: pid, isStructureOnly: true, level: 'none', created: Date.now() }); openEdit(res.id); }
-        function openPartnerSelect() {
-            const list = document.getElementById('modal-partners-list'); list.innerHTML = '';
-            clients.filter(c => c.step === 6 && !c.isPartner && !c.isStructureOnly).forEach(c => {
-                const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; gap:15px; border:1px solid rgba(255,255,255,0.1);";
-                row.innerHTML = `<div style="width:44px; height:44px; border-radius:50%; background-size:cover; background-image:url(${c.photo||''})"></div><div>${c.lname || ''} ${c.fname || ''}</div>`;
-                row.onclick = async () => { await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ isPartner: true, parentId: 'me' }); window.history.back(); };
-                list.appendChild(row);
-            });
-            document.getElementById('partner-select-modal').style.display = 'flex'; window.history.pushState({s:1}, "");
-        }
-        async function removeFromStruct(id) { if(confirm("Прибрати?")) await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ isPartner: false, parentId: null, isStructureOnly: false }); }
-        async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAllUI(); } }
-        function login() { auth.signInWithPopup(provider); }
+        function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
+        function updateMeLevelBadge() { document.getElementById('me-level-badge').innerText = document.getElementById('me-level').value; }
+        function login() { auth.signInWithRedirect(provider); }
         function logout() { auth.signOut().then(() => location.reload()); }
     </script>
 </body>
