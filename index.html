@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>SL TIME CRM 2.8.2</title>
+    <title>SL TIME CRM 2.8.3</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
@@ -36,7 +36,6 @@
         header { display: flex; justify-content: space-between; align-items: center; padding: 0 15px; height: 80px; position: relative; z-index: 1000; }
         .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); }
         .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 6vw; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 10px var(--neon), 0 0 20px var(--neon), 0 0 40px var(--neon); letter-spacing: 0.5px; flex: 1; text-align: center; }
-        @media screen and (min-width: 450px) { .header-title { font-size: 26px; } }
 
         #header-ctrl { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; cursor: pointer; min-width: 50px; }
         .total-count { font-size: 14px; font-weight: bold; line-height: 1; opacity: 0.9; }
@@ -50,7 +49,7 @@
 
         .board { display: flex; overflow-x: auto; padding: 10px 20px 0; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
         .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; gap: 15px; }
-        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 120px; } /* Фікс 1: Відступ знизу */
+        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 120px; } 
         .col-head { display: flex; justify-content: space-between; align-items: center; font-size: 14px; text-transform: uppercase; font-weight: bold; height: 36px; }
         .add-btn-center { cursor: pointer; font-size: 32px; font-weight: bold; display: flex; align-items: center; }
 
@@ -177,7 +176,6 @@
         const auth = firebase.auth(), db = firebase.firestore(), provider = new firebase.auth.GoogleAuthProvider();
 
         let user = null, clients = [], editId = null, filterType = 'new', currentPhotoBase64 = null;
-        // Фікс 3: Додано "Партнер" (індекс 7)
         const steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Поліс", "Семінар", "Партнер"];
         let currentPath = [], longPressTimer = null;
 
@@ -233,17 +231,19 @@
             b.innerHTML = ''; s.innerHTML = '';
             let filtered = [...clients];
             if(filterType === 'az') filtered.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
-            if(filterType === 'new') filtered.sort((a,b) => b.created - a.created);
-            if(filterType === 'old') filtered.sort((a,b) => a.created - b.created);
+            if(filterType === 'new') filtered.sort((a,b) => b.ts || 0 - a.ts || 0);
             steps.forEach((n, i) => {
-                const sc = filtered.filter(c => c.step == i);
+                const sc = filtered.filter(c => {
+                    // Гнучка фільтрація: якщо статусу немає, кидаємо в 0-й список ("Список")
+                    if (i === 0 && (c.step === undefined || c.step === null)) return true;
+                    return c.step == i;
+                });
                 const col = document.createElement('div'); col.className = 'column';
                 col.innerHTML = `<div class="col-head"><div>${n}&nbsp;&nbsp;<span>${sc.length}</span></div>${i==0 ? '<div class="add-btn-center" onclick="createCard()">+</div>' : '<div></div>'}</div><div id="list-${i}" class="cards-area"></div>`;
                 b.appendChild(col); s.innerHTML += `<option value="${i}">${n}</option>`;
                 sc.forEach(c => {
                     const div = document.createElement('div'); div.className = 'card';
                     div.onclick = () => { window.history.pushState({e:1}, ""); openEdit(c.id); };
-                    // Фікс 2: Рівень тільки якщо не 0
                     div.innerHTML = (c.level && c.level != 0 ? `<div class="card-level">${c.level}</div>` : '') + `<div style="font-weight:600;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;">${c.phone||""}</div>`;
                     document.getElementById(`list-${i}`).appendChild(div);
                 });
@@ -259,14 +259,13 @@
                 pathBar.appendChild(dot);
             });
             const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
-            // Фікс 3: Структура будується тільки з тих, хто на етапі 7 (Партнер)
             clients.filter(c => c.step == 7 && (c.parentId || 'me') === pid).forEach(p => {
                 const unit = document.createElement('div'); unit.className = 'icon-unit';
                 unit.innerHTML = (p.level && p.level != 0 ? `<div class="sphere level-sphere">${p.level}</div>` : '') + `<div class="photo-sphere" style="background-image:url(${p.photo || ''})"></div><div class="icon-label"><span>${p.lname || ''}</span><span>${p.fname || ''}</span></div>`;
                 const ph = unit.querySelector('.photo-sphere');
-                ph.ontouchstart = () => { longPressTimer = setTimeout(() => openEdit(p.id), 600); }; // Фікс 3: Довгий тап -> картка
+                ph.ontouchstart = () => { longPressTimer = setTimeout(() => openEdit(p.id), 600); };
                 ph.ontouchend = () => clearTimeout(longPressTimer);
-                ph.onclick = () => { currentPath.push({id:p.id, photo:p.photo}); renderStructure(); }; // Фікс 3: Короткий тап -> глибше
+                ph.onclick = () => { currentPath.push({id:p.id, photo:p.photo}); renderStructure(); };
                 grid.appendChild(unit);
             });
         }
@@ -279,7 +278,7 @@
         }
 
         async function manualSave() { 
-            const d = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, pnum: document.getElementById('e-pnum').value, pdate: document.getElementById('e-pdate').value, notes: document.getElementById('e-notes').value, level: document.getElementById('e-level').value, updated: Date.now() }; 
+            const d = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, pnum: document.getElementById('e-pnum').value, pdate: document.getElementById('e-pdate').value, notes: document.getElementById('e-notes').value, level: document.getElementById('e-level').value, ts: Date.now() }; 
             if (document.getElementById('e-step').offsetParent) d.step = parseInt(document.getElementById('e-step').value);
             if(currentPhotoBase64) d.photo = currentPhotoBase64;
             await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(d, {merge:true}); 
@@ -293,7 +292,7 @@
             currentPhotoBase64 = null; closeAllUI(); 
         }
 
-        function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','phone','pnum','pdate','notes','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || ""); document.getElementById('c-photo').style.backgroundImage = `url(${c.photo||''})`; document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || ""; updateEditLevelBadge(); document.getElementById('edit-screen').style.display='flex'; }
+        function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','phone','pnum','pdate','notes','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || ""); document.getElementById('c-photo').style.backgroundImage = `url(${c.photo||''})`; document.getElementById('e-step').value = c.step !== undefined ? c.step : 0; document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || ""; updateEditLevelBadge(); document.getElementById('edit-screen').style.display='flex'; }
         function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #partner-select-modal').forEach(el => el.style.display = 'none'); editId = null; currentPhotoBase64 = null; }
         function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); }
         function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
@@ -302,16 +301,14 @@
         function showPersonalData() { window.history.pushState({p:1}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
         function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
         function updateMeLevelBadge() { document.getElementById('me-level-badge').innerText = document.getElementById('me-level').value; }
-        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); openEdit(res.id); }
+        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, ts:Date.now()}); openEdit(res.id); }
         
-        // Фікс 3: Спрощене додавання партнера
         function handleAddPartner() {
             const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
             const modal = document.getElementById('partner-select-modal'); list = document.getElementById('modal-partners-list');
             list.innerHTML = '';
-            // Показуємо всіх, хто НЕ партнер, щоб призначити їм parentId і статус Партнер
             clients.filter(c => c.step != 7).forEach(c => {
-                const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; gap:15px; border:1px solid rgba(255,255,255,0.1);";
+                const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; gap:15px; border:1px solid rgba(255,255,255,0.1); cursor:pointer;";
                 row.innerHTML = `<div style="width:44px; height:44px; border-radius:50%; background-size:cover; background-image:url(${c.photo||''})"></div><div>${c.lname || ''} ${c.fname || ''}</div>`;
                 row.onclick = async () => { await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ step: 7, parentId: pid }); window.history.back(); };
                 list.appendChild(row);
