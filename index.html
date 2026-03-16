@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://via.placeholder.com/180x180/2e0249/ffffff?text=SL">
-    <title>SL TIME CRM 2.8.7</title>
+    <title>SL TIME CRM 2.8.8</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
@@ -34,29 +34,29 @@
         body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
         ::-webkit-scrollbar { display: none; }
         
-        header { display: flex; justify-content: space-between; align-items: center; padding: 0 15px; height: 80px; position: relative; z-index: 1000; background: transparent; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 0 15px; height: 80px; position: relative; z-index: 1000; }
         .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); flex-shrink: 0; }
-        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 6vw; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 10px var(--neon), 0 0 20px var(--neon), 0 0 40px var(--neon); letter-spacing: 0.5px; flex: 1; text-align: center; white-space: nowrap; overflow: visible; }
+        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 6vw; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 10px var(--neon), 0 0 20px var(--neon), 0 0 40px var(--neon); letter-spacing: 0.5px; flex: 1; text-align: center; white-space: nowrap; }
 
-        #header-ctrl { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; cursor: pointer; min-width: 50px; height: 44px; flex-shrink: 0; }
+        #header-ctrl { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; cursor: pointer; min-width: 50px; height: 44px; }
         .total-count { font-size: 14px; font-weight: bold; line-height: 1; opacity: 0.9; }
         .f-lines { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; width: 22px; }
         .f-line { height: 2px; background: white; border-radius: 2px; }
-        #header-plus { display: none; font-size: 36px; font-weight: bold; color: white; cursor: pointer; min-width: 50px; text-align: right; line-height: 1; flex-shrink: 0; }
+        #header-plus { display: none; font-size: 36px; font-weight: bold; color: white; cursor: pointer; min-width: 50px; text-align: right; line-height: 1; }
 
-        #main-viewport { display: flex; width: 100vw; height: calc(100vh - 80px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; gap: 60px; }
-        .app-container { flex: 0 0 100vw; width: 100vw; height: 100%; scroll-snap-align: start; scroll-snap-stop: always; overflow: hidden; position: relative; }
+        #main-viewport { display: flex; width: 100vw; height: calc(100vh - 80px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; gap: 60px; }
+        .app-container { flex: 0 0 100vw; width: 100vw; height: 100%; scroll-snap-align: start; overflow: hidden; position: relative; }
 
         .board { display: flex; overflow-x: auto; padding: 10px 20px 0; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
-        .column { min-width: calc(100vw - 40px); scroll-snap-align: center; scroll-snap-stop: always; display: flex; flex-direction: column; gap: 15px; }
-        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 120px; } /* Фікс 1: Збільшений зазор */
+        .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; gap: 15px; }
+        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 150px; } 
         .col-head { display: flex; justify-content: space-between; align-items: center; font-size: 14px; text-transform: uppercase; font-weight: bold; height: 36px; }
-        .add-btn-center { cursor: pointer; font-size: 32px; font-weight: bold; line-height: 1; display: flex; align-items: center; height: 100%; }
+        .add-btn-center { cursor: pointer; font-size: 32px; font-weight: bold; display: flex; align-items: center; height: 100%; }
 
         .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
         .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 30px; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; color: #fff; text-shadow: 0 0 8px var(--neon); }
 
-        #struct-path { position: absolute; top: 0; left: 0; right: 0; display: none; align-items: center; padding: 0 20px; gap: 10px; overflow-x: auto; height: 50px; background: transparent; z-index: 500; }
+        #struct-path { position: absolute; top: 0; left: 0; right: 0; display: none; align-items: center; padding: 0 20px; gap: 10px; height: 50px; background: transparent; z-index: 500; }
         .path-dot { width: 32px; height: 32px; border-radius: 50%; background-size: cover; background-position: center; border: 1.5px solid white; flex-shrink: 0; }
 
         .struct-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 80px 10px 20px; overflow-y: auto; align-content: start; height: 100%; }
@@ -74,8 +74,8 @@
         .photo-sphere { width: 75px; height: 75px; border-radius: 50%; background-size: cover; background-position: center; border: 2px solid rgba(255,255,255,0.4); box-shadow: 0 0 15px var(--neon); z-index: 5; cursor: pointer; }
         .icon-label { margin-top: 10px; font-size: 10px; font-weight: bold; text-align: center; color: white; text-transform: uppercase; width: 100%; display: flex; flex-direction: column; }
 
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.7); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
-        .nav-item { color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33%; height: 100%; font-size: 11px; font-weight: bold; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
+        .nav-item { color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; font-size: 11px; font-weight: bold; }
         .nav-item.active { opacity: 1; text-shadow: 0 0 10px var(--neon); }
 
         #edit-screen, #user-menu, #personal-data-screen, #partner-select-modal { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
@@ -86,7 +86,8 @@
         .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
         .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; font-size: 16px; }
         #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; font-size: 16px; outline: none; }
-        .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
+        .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; }
     </style>
 </head>
 <body class="theme-purple">
@@ -131,7 +132,7 @@
     </div>
 
     <div id="edit-screen">
-        <span onclick="removeClient()" style="position: absolute; top: 25px; right: 25px; color: #ff4d4d; font-size: 12px; text-transform: uppercase; cursor: pointer;">Видалити</span>
+        <span onclick="removeClient()" style="position: absolute; top: 25px; right: 25px; color: #ff4d4d; font-size: 12px; text-transform: uppercase; cursor:pointer;">Видалити</span>
         <div class="photo-container" onclick="document.getElementById('file-client').click()">
             <div id="c-photo" style="width:110px; height:110px; border-radius:50%; background-size:cover; border:1px solid silver;"></div>
             <div id="edit-level-badge" class="edit-level-display"></div>
@@ -146,28 +147,12 @@
         <button onclick="manualSave()" style="margin-top:20px; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none;">ЗБЕРЕГТИ ТА ВИЙТИ</button>
     </div>
 
-    <div id="personal-data-screen">
-        <div class="photo-container" onclick="document.getElementById('file-me').click()">
-            <div id="me-photo" style="width:110px; height:110px; border-radius:50%; background-size:cover;"></div>
-            <div id="me-level-badge" class="edit-level-display"></div>
-            <input type="file" id="file-me" hidden accept="image/*" onchange="uploadPhoto(this, 'me')">
-        </div>
-        <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname"><label>ІМ'Я</label><input type="text" id="me-fname"><label>РІВЕНЬ</label><select id="me-level" onchange="updateMeLevelBadge()"><option value="">None</option><script>for(let i=1; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
-        <button onclick="saveMeData()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none;">ЗБЕРЕГТИ ТА ВИЙТИ</button>
-    </div>
-
-    <div id="partner-select-modal">
-        <div id="modal-partners-list" style="flex:1; overflow-y:auto; padding-top:20px;"></div>
-        <button onclick="window.history.back()" style="padding:18px; width:100%; border-radius:30px; background:white; color:black; font-weight:bold; border:none;">НАЗАД</button>
-    </div>
-
     <script>
         const firebaseConfig = { apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY", authDomain: "starlife-crm.firebaseapp.com", projectId: "starlife-crm", storageBucket: "starlife-crm.firebasestorage.app", messagingSenderId: "1022280682130", appId: "1:1022280682130:web:3ea517e8b6d22c7787744b" };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth(), db = firebase.firestore(), provider = new firebase.auth.GoogleAuthProvider();
 
         let user = null, clients = [], editId = null, filterType = 'new', currentPhotoBase64 = null;
-        // Фікс 2: Список ПАРТНЕРИ
         const steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Поліс", "Семінар", "Партнер"];
         let currentPath = [], longPressTimer = null;
 
@@ -185,7 +170,7 @@
         function lock() { window.history.pushState({l:1}, ""); }
         window.onload = lock;
         window.onpopstate = () => {
-            if (editId || document.getElementById('user-menu').style.display==='flex' || document.getElementById('partner-select-modal').style.display==='flex' || document.getElementById('personal-data-screen').style.display==='flex') { closeAllUI(); lock(); return; }
+            if (editId || document.getElementById('user-menu').style.display==='flex' || document.getElementById('personal-data-screen').style.display==='flex') { closeAllUI(); lock(); return; }
             if (currentPath.length > 0) { currentPath.pop(); renderStructure(); lock(); return; }
             if (vp.scrollLeft > 0) { jumpToPage(0); lock(); return; }
             lock();
@@ -199,12 +184,7 @@
             const photo = data.myPhoto || user.photoURL;
             document.getElementById('u-avatar').style.backgroundImage = `url(${photo})`;
             document.getElementById('me-photo').style.backgroundImage = `url(${photo})`;
-            document.getElementById('me-lname').value = data.meLname || "";
-            document.getElementById('me-fname').value = data.meFname || "";
-            document.getElementById('me-level').value = data.meLevel || "";
             updateMeLevelBadge();
-            const theme = localStorage.getItem('crm_theme') || data.theme || 'purple';
-            document.body.className = 'theme-' + theme;
         }
 
         function loadClients() {
@@ -214,9 +194,7 @@
             });
         }
 
-        function updateHeaderCounter() {
-            document.getElementById('header-counter').innerText = clients.length;
-        }
+        function updateHeaderCounter() { document.getElementById('header-counter').innerText = clients.length; }
 
         function renderBoard() {
             const b = document.getElementById('main-board'), s = document.getElementById('e-step');
@@ -230,14 +208,13 @@
                     return c.step == i;
                 });
                 const col = document.createElement('div'); col.className = 'column';
-                col.innerHTML = `<div class="col-head"><div>${n}&nbsp;&nbsp;&nbsp;&nbsp;<span>${sc.length}</span></div>${i==0 ? '<div class="add-btn-center" onclick="createCard()">+</div>' : '<div></div>'}<div></div></div><div id="list-${i}" class="cards-area"></div>`;
+                col.innerHTML = `<div class="col-head"><div>${n}&nbsp;&nbsp;<span>${sc.length}</span></div>${i==0 ? '<div class="add-btn-center" onclick="createCard()">+</div>' : '<div></div>'}</div><div id="list-${i}" class="cards-area"></div>`;
                 b.appendChild(col); s.innerHTML += `<option value="${i}">${n}</option>`;
                 sc.forEach(c => {
                     const div = document.createElement('div'); div.className = 'card';
                     div.onclick = () => { window.history.pushState({e:1}, ""); openEdit(c.id); };
-                    // Фікс 4: Прибираємо 0 з рівнів
-                    const lvlHtml = (c.level && c.level != 0) ? `<div class="card-level">${c.level}</div>` : '';
-                    div.innerHTML = lvlHtml + `<div style="font-weight:600;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;">${c.phone||""}</div>`;
+                    const lvlVal = (c.level && c.level != 0) ? `<div class="card-level">${c.level}</div>` : '';
+                    div.innerHTML = lvlVal + `<div style="font-weight:600;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;">${c.phone||""}</div>`;
                     document.getElementById(`list-${i}`).appendChild(div);
                 });
             });
@@ -252,39 +229,27 @@
                 pathBar.appendChild(dot);
             });
             const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
-            
-            // Фікс 5: Відображення в структурі тільки партнерів (step 7)
             clients.filter(c => c.step == 7 && (c.parentId || 'me') === pid).forEach(p => {
                 const unit = document.createElement('div'); unit.className = 'icon-unit';
                 const lvlSphere = (p.level && p.level != 0) ? `<div class="sphere level-sphere">${p.level}</div>` : '';
                 unit.innerHTML = `${lvlSphere}<div class="photo-sphere" style="background-image:url(${p.photo || ''})"></div><div class="icon-label"><span>${p.lname || ''}</span><span>${p.fname || ''}</span></div>`;
-                
                 const ph = unit.querySelector('.photo-sphere');
-                
-                // Фікс 3: Тапи
-                ph.ontouchstart = (e) => { 
-                    longPressTimer = setTimeout(() => {
-                        openEdit(p.id); // Довгий тап -> Картка
-                        longPressTimer = null;
-                    }, 600); 
-                };
-                ph.ontouchend = (e) => {
-                    if (longPressTimer) {
-                        clearTimeout(longPressTimer);
-                        longPressTimer = null;
-                        currentPath.push({id:p.id, photo:p.photo}); // Короткий тап -> Глибше
-                        renderStructure();
-                    }
+                ph.ontouchstart = (e) => { longPressTimer = setTimeout(() => openEdit(p.id), 600); };
+                ph.ontouchend = (e) => { 
+                    clearTimeout(longPressTimer); 
+                    if (longPressTimer) { currentPath.push({id:p.id, photo:p.photo}); renderStructure(); }
                 };
                 grid.appendChild(unit);
             });
         }
 
-        function uploadPhoto(input, type) {
-            const file = input.files[0]; if(!file) return;
-            const reader = new FileReader();
-            reader.onload = e => { currentPhotoBase64 = e.target.result; document.getElementById(type === 'me' ? 'me-photo' : 'c-photo').style.backgroundImage = `url(${currentPhotoBase64})`; };
-            reader.readAsDataURL(file);
+        function openEdit(id) { 
+            editId = id; const c = clients.find(x => x.id === id); 
+            ['lname','fname','phone','pnum','pdate','notes','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || ""); 
+            document.getElementById('c-photo').style.backgroundImage = c.photo ? `url(${c.photo})` : ''; 
+            if(c.step !== undefined) document.getElementById('e-step').value = c.step;
+            document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || ""; 
+            updateEditLevelBadge(); document.getElementById('edit-screen').style.display='flex'; 
         }
 
         async function manualSave() { 
@@ -295,24 +260,6 @@
             currentPhotoBase64 = null; closeAllUI(); 
         }
 
-        async function saveMeData() { 
-            const d = { meLname: document.getElementById('me-lname').value, meFname: document.getElementById('me-fname').value, meLevel: document.getElementById('me-level').value }; 
-            if(currentPhotoBase64) d.myPhoto = currentPhotoBase64;
-            await db.collection("users").doc(user.uid).set(d, {merge:true}); 
-            currentPhotoBase64 = null; closeAllUI(); 
-        }
-
-        function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); if(!c) return; ['lname','fname','phone','pnum','pdate','notes','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || ""); document.getElementById('c-photo').style.backgroundImage = c.photo ? `url(${c.photo})` : ''; if(c.step !== undefined) document.getElementById('e-step').value = c.step; document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || ""; updateEditLevelBadge(); document.getElementById('edit-screen').style.display='flex'; }
-        function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #partner-select-modal').forEach(el => el.style.display = 'none'); editId = null; currentPhotoBase64 = null; }
-        function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); }
-        function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
-        function setFilter(t) { filterType = t; renderBoard(); toggleFilter(); }
-        function showUserMenu() { window.history.pushState({m:1}, ""); document.getElementById('user-menu').style.display = 'flex'; }
-        function showPersonalData() { window.history.pushState({p:1}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
-        function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
-        function updateMeLevelBadge() { document.getElementById('me-level-badge').innerText = document.getElementById('me-level').value; }
-        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); openEdit(res.id); }
-        
         function handleAddPartner() {
             const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
             const modal = document.getElementById('partner-select-modal'); list = document.getElementById('modal-partners-list');
@@ -325,6 +272,12 @@
             });
             modal.style.display = 'flex'; window.history.pushState({s:1}, "");
         }
+
+        function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #partner-select-modal').forEach(el => el.style.display = 'none'); editId = null; }
+        function showUserMenu() { document.getElementById('user-menu').style.display = 'flex'; }
+        function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
+        function updateMeLevelBadge() { document.getElementById('me-level-badge').innerText = document.getElementById('me-level').value; }
+        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); openEdit(res.id); }
         async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAllUI(); } }
         function login() { auth.signInWithPopup(provider); }
         function logout() { auth.signOut().then(() => location.reload()); }
