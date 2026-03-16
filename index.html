@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://via.placeholder.com/180x180/2e0249/ffffff?text=SL">
-    <title>SL TIME CRM 3.0.0</title>
+    <title>SL TIME CRM 3.0.1</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
@@ -35,13 +35,12 @@
 
         header { display: flex; justify-content: space-between; align-items: center; padding: 0 15px; height: 80px; position: relative; z-index: 1000; }
         .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); flex-shrink: 0; }
-        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 24px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 10px var(--neon); flex: 1; text-align: center; }
+        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 22px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 10px var(--neon); flex: 1; text-align: center; }
 
         #header-ctrl { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 2px; cursor: pointer; min-width: 50px; height: 44px; }
         .total-count { font-size: 14px; font-weight: bold; line-height: 1; }
         .f-lines { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; width: 22px; }
         .f-line { height: 2px; background: white; border-radius: 2px; }
-        .l1 { width: 22px; } .l2 { width: 16px; } .l3 { width: 10px; }
         #header-plus { display: none; font-size: 36px; font-weight: bold; color: white; cursor: pointer; min-width: 50px; text-align: right; line-height: 1; }
 
         #main-viewport { display: flex; width: 100vw; height: calc(100vh - 80px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; gap: 60px; }
@@ -75,10 +74,7 @@
         select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
         label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
         .photo-container { position: relative; width: 110px; height: 110px; margin: 0 auto; cursor: pointer; }
-        .edit-level-display { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon); width: 60px; text-align: center; }
-        
-        .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
-        .theme-btn { padding: 16px; text-align: center; cursor: pointer; border-radius: 12px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; color: white; }
+        .edit-level-badge { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon); width: 60px; text-align: center; }
 
         #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
         .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -89,11 +85,6 @@
         const st = localStorage.getItem('crm_theme');
         if(st) document.body.className = 'theme-' + st;
     </script>
-
-    <div id="splash" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;">
-        <div style="width:160px;height:160px;border:2px solid silver;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:bold;color:white;">SL</div>
-        <div id="login-ui" style="display:none; margin-top:40px;"><button onclick="login()" style="background:white;border:none;padding:12px 30px;border-radius:25px;font-weight:bold;">Увійти через Google</button></div>
-    </div>
 
     <header id="app-header">
         <div class="avatar" id="u-avatar" onclick="showUserMenu()"></div>
@@ -126,14 +117,6 @@
     <div id="user-menu">
         <div style="font-size:18px; font-weight:bold; margin-bottom:30px; text-align:center;">НАЛАШТУВАННЯ</div>
         <button onclick="showPersonalData()" style="padding:15px; background:rgba(255,255,255,0.1); color:white; border-radius:12px; width:100%; font-weight:bold; margin-bottom:10px; border:1px solid silver;">ОСОБИСТІ ДАНІ</button>
-        <div class="theme-grid">
-            <div onclick="setTheme('purple')" style="background:linear-gradient(135deg,#3d0561,#2e0249)" class="theme-btn">Фіолет</div>
-            <div onclick="setTheme('graphite')" style="background:linear-gradient(135deg,#3a3a3c,#1a1a1b)" class="theme-btn">Графіт</div>
-            <div onclick="setTheme('blue')" style="background:linear-gradient(135deg,#052661,#021b49)" class="theme-btn">Синій</div>
-            <div onclick="setTheme('green')" style="background:linear-gradient(135deg,#054126,#02331a)" class="theme-btn">Зелений</div>
-            <div onclick="setTheme('gold')" style="background:linear-gradient(135deg,#614d05,#443501)" class="theme-btn">Золото</div>
-            <div onclick="setTheme('pink')" style="background:linear-gradient(135deg,#61053d,#49022e)" class="theme-btn">Рожевий</div>
-        </div>
         <button onclick="window.history.back()" style="margin-top:auto; padding:18px; background:white; border:none; border-radius:30px; width:100%; font-weight:bold; color:black;">ЗАКРИТИ</button>
         <div style="text-align:center; color:#ff4d4d; margin-top:30px; cursor:pointer; font-weight:bold;" onclick="logout()">ВИЙТИ</div>
     </div>
@@ -142,7 +125,7 @@
         <span onclick="removeClient()" style="position: absolute; top: 25px; right: 25px; color: #ff4d4d; font-size: 12px; text-transform: uppercase; cursor: pointer;">Видалити</span>
         <div class="photo-container" onclick="document.getElementById('file-client').click()">
             <div id="c-photo" style="width:110px; height:110px; border-radius:50%; background-size:cover; border:1px solid silver;"></div>
-            <div id="edit-level-badge" class="edit-level-display"></div>
+            <div id="edit-level-badge-display" class="edit-level-badge"></div>
             <input type="file" id="file-client" hidden accept="image/*" onchange="uploadPhoto(this, 'client')">
         </div>
         <label>ЕТАП</label><select id="e-step"></select>
@@ -151,16 +134,6 @@
         <label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><option value="">None</option><script>for(let i=1; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
         <label>ПРИМІТКИ</label><textarea id="e-notes" style="width:100%; background:transparent; border-bottom:1px solid rgba(255,255,255,0.2); color:white; min-height:100px; outline:none; resize:none;"></textarea>
         <button onclick="manualSave()" style="margin-top:20px; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none;">ЗБЕРЕГТИ ТА ВИЙТИ</button>
-    </div>
-
-    <div id="personal-data-screen">
-        <div class="photo-container" onclick="document.getElementById('file-me').click()">
-            <div id="me-photo" style="width:110px; height:110px; border-radius:50%; background-size:cover;"></div>
-            <div id="me-level-badge" class="edit-level-display"></div>
-            <input type="file" id="file-me" hidden accept="image/*" onchange="uploadPhoto(this, 'me')">
-        </div>
-        <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname"><label>ІМ'Я</label><input type="text" id="me-fname"><label>РІВЕНЬ</label><select id="me-level" onchange="updateMeLevelBadge()"><option value="">None</option><script>for(let i=1; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
-        <button onclick="saveMeData()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none;">ЗБЕРЕГТИ ТА ВИЙТИ</button>
     </div>
 
     <script>
@@ -185,25 +158,14 @@
         function jumpToPage(index) { vp.scrollTo({ left: index * (window.innerWidth + 60), behavior: 'smooth' }); }
         function lock() { window.history.pushState({l:1}, ""); }
         window.onload = lock;
-        window.onpopstate = () => {
-            if (editId || document.getElementById('user-menu').style.display==='flex' || document.getElementById('personal-data-screen').style.display==='flex') { closeAllUI(); lock(); return; }
-            if (currentPath.length > 0) { currentPath.pop(); renderStructure(); lock(); return; }
-            if (vp.scrollLeft > 0) { jumpToPage(0); lock(); return; }
-            lock();
-        };
+        window.onpopstate = () => { if (editId || document.getElementById('user-menu').style.display==='flex') { closeAllUI(); lock(); return; } if (currentPath.length > 0) { currentPath.pop(); renderStructure(); lock(); return; } if (vp.scrollLeft > 0) { jumpToPage(0); lock(); return; } lock(); };
 
-        auth.onAuthStateChanged(async u => { if(u) { user = u; document.getElementById('splash').style.display = 'none'; await loadUserConfig(); loadClients(); lock(); } else { document.getElementById('login-ui').style.display = 'block'; } });
+        auth.onAuthStateChanged(async u => { if(u) { user = u; document.getElementById('splash').style.display = 'none'; loadUserConfig(); loadClients(); lock(); } else { document.getElementById('login-ui').style.display = 'block'; } });
 
         async function loadUserConfig() {
             const doc = await db.collection("users").doc(user.uid).get();
             const data = doc.data() || {};
-            const photo = data.myPhoto || user.photoURL;
-            document.getElementById('u-avatar').style.backgroundImage = `url(${photo})`;
-            document.getElementById('me-photo').style.backgroundImage = `url(${photo})`;
-            document.getElementById('me-lname').value = data.meLname || "";
-            document.getElementById('me-fname').value = data.meFname || "";
-            document.getElementById('me-level').value = data.meLevel || "";
-            updateMeLevelBadge();
+            document.getElementById('u-avatar').style.backgroundImage = `url(${data.myPhoto || user.photoURL})`;
         }
 
         function loadClients() {
@@ -253,10 +215,8 @@
                 const ph = unit.querySelector('.photo-sphere');
                 ph.ontouchstart = () => { longPressTimer = setTimeout(() => openEdit(p.id), 600); };
                 ph.ontouchend = () => { 
-                    const wasLongPress = !longPressTimer; 
-                    clearTimeout(longPressTimer); 
-                    longPressTimer = null;
-                    if (!wasLongPress) { currentPath.push({id:p.id, photo:p.photo}); renderStructure(); }
+                    const wasLong = !longPressTimer; clearTimeout(longPressTimer); longPressTimer = null;
+                    if (!wasLong) { currentPath.push({id:p.id, photo:p.photo}); renderStructure(); }
                 };
                 grid.appendChild(unit);
             });
@@ -278,38 +238,14 @@
             currentPhotoBase64 = null; closeAllUI(); 
         }
 
-        async function saveMeData() { 
-            const d = { meLname: document.getElementById('me-lname').value, meFname: document.getElementById('me-fname').value, meLevel: document.getElementById('me-level').value }; 
-            if(currentPhotoBase64) d.myPhoto = currentPhotoBase64;
-            await db.collection("users").doc(user.uid).set(d, {merge:true}); 
-            currentPhotoBase64 = null; closeAllUI(); 
-        }
-
-        function handleAddPartner() {
-            const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
-            createCard(7, pid);
-        }
-
-        async function createCard(step = 0, pid = null) { 
-            const d = {step: step, created: Date.now()};
-            if(pid) d.parentId = pid;
-            const res = await db.collection("users").doc(user.uid).collection("clients").add(d); 
-            openEdit(res.id); 
-        }
-
-        function uploadPhoto(input, type) {
-            const file = input.files[0]; if(!file) return;
-            const reader = new FileReader();
-            reader.onload = e => { currentPhotoBase64 = e.target.result; document.getElementById(type === 'me' ? 'me-photo' : 'c-photo').style.backgroundImage = `url(${currentPhotoBase64})`; };
-            reader.readAsDataURL(file);
-        }
-
+        function handleAddPartner() { const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me'; createCard(7, pid); }
+        async function createCard(step = 0, pid = null) { const d = {step: step, created: Date.now()}; if(pid) d.parentId = pid; const res = await db.collection("users").doc(user.uid).collection("clients").add(d); openEdit(res.id); }
+        function uploadPhoto(input, type) { const file = input.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = e => { currentPhotoBase64 = e.target.result; document.getElementById(type === 'me' ? 'me-photo' : 'c-photo').style.backgroundImage = `url(${currentPhotoBase64})`; }; reader.readAsDataURL(file); }
         function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen').forEach(el => el.style.display = 'none'); editId = null; }
         function showUserMenu() { window.history.pushState({m:1}, ""); document.getElementById('user-menu').style.display = 'flex'; }
         function showPersonalData() { window.history.pushState({p:1}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
-        function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
+        function updateEditLevelBadge() { document.getElementById('edit-level-badge-display').innerText = document.getElementById('e-level').value; }
         function updateMeLevelBadge() { document.getElementById('me-level-badge').innerText = document.getElementById('me-level').value; }
-        function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); }
         function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
         function setFilter(t) { filterType = t; renderBoard(); toggleFilter(); }
         async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAllUI(); } }
@@ -318,4 +254,3 @@
     </script>
 </body>
 </html>
-
