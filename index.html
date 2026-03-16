@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://img.icons8.com/ios-filled/180/ffffff/star.png">
-    <title>SL TIME CRM 3.4.1</title>
+    <title>SL TIME CRM 3.4.3</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
@@ -23,7 +23,7 @@
             --neon-text: #fff;
         }
 
-        body.theme-purple { --bg: linear-gradient(180deg, #2e0249 0%, #570a57 50%, #1a1a1b 100%); --card-grad: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); --neon: rgba(219, 0, 255, 0.8); }
+        body.theme-purple { --bg: linear-gradient(180deg, #2e0249 0%, #570a57 50%, #1a1a1b 100%); --card-grad: linear-gradient(135deg, #3d0561 0%, #2e0249 100%); }
         body.theme-graphite { --bg: linear-gradient(180deg, #1a1a1b 0%, #2c2c2e 50%, #000000 100%); --card-grad: linear-gradient(135deg, #3a3a3c 0%, #1a1a1b 100%); --neon: rgba(255, 255, 255, 0.4); }
         body.theme-blue { --bg: linear-gradient(180deg, #021b49 0%, #0a2e57 50%, #010a1b 100%); --card-grad: linear-gradient(135deg, #052661 0%, #021b49 100%); --neon: rgba(0, 150, 255, 0.8); }
         body.theme-green { --bg: linear-gradient(180deg, #02331a 0%, #0a492e 50%, #01140a 100%); --card-grad: linear-gradient(135deg, #054126 0%, #02331a 100%); --neon: rgba(0, 255, 133, 0.8); }
@@ -34,16 +34,16 @@
         body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
         ::-webkit-scrollbar { display: none; }
         
-        header { display: flex; justify-content: space-between; align-items: center; padding: 0 15px; height: 80px; position: relative; z-index: 1000; background: transparent; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 0 15px; height: 80px; position: relative; z-index: 1000; }
         .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); flex-shrink: 0; }
         .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 24px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 10px var(--neon); flex: 1; text-align: center; }
 
-        #header-ctrl { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 4px; cursor: pointer; min-width: 50px; height: 44px; flex-shrink: 0; }
-        .total-count { font-size: 14px; font-weight: bold; line-height: 1; opacity: 0.9; }
+        #header-ctrl { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 4px; cursor: pointer; min-width: 50px; }
+        .total-count { font-size: 14px; font-weight: bold; }
         .f-lines { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; width: 22px; }
         .f-line { height: 2px; background: white; border-radius: 2px; }
         .l1 { width: 22px; } .l2 { width: 16px; } .l3 { width: 10px; }
-        #header-plus { display: none; font-size: 36px; font-weight: bold; color: white; cursor: pointer; min-width: 50px; text-align: right; line-height: 1; flex-shrink: 0; }
+        #header-plus { display: none; font-size: 36px; font-weight: bold; cursor: pointer; min-width: 50px; text-align: right; }
 
         #main-viewport { display: flex; width: 100vw; height: calc(100vh - 80px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; gap: 60px; }
         .app-container { flex: 0 0 100vw; width: 100vw; height: 100%; scroll-snap-align: start; overflow: hidden; position: relative; }
@@ -52,31 +52,28 @@
         .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; gap: 15px; }
         .cards-area { flex: 1; overflow-y: auto; padding-bottom: 150px; } 
         .col-head { display: flex; justify-content: space-between; align-items: center; font-size: 14px; text-transform: uppercase; font-weight: bold; height: 36px; }
-        .add-btn-center { cursor: pointer; font-size: 32px; font-weight: bold; line-height: 1; display: flex; align-items: center; }
+        .add-btn-center { cursor: pointer; font-size: 32px; }
 
         .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
         .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 30px; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; color: #fff; text-shadow: 0 0 8px var(--neon); }
 
         .struct-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 80px 10px 20px; overflow-y: auto; align-content: start; height: 100%; }
         .icon-unit { display: flex; flex-direction: column; align-items: center; position: relative; height: 140px; }
-        .sphere { position: absolute; width: 30px; height: 30px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fff 0%, var(--neon) 60%, #000 100%); display: flex; align-items: center; justify-content: center; z-index: 10; font-size: 14px; font-weight: bold; color: white; border: 0.5px solid rgba(255,255,255,0.4); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); line-height: 0; }
+        .sphere { position: absolute; width: 30px; height: 30px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fff 0%, var(--neon) 60%, #000 100%); display: flex; align-items: center; justify-content: center; z-index: 10; font-size: 14px; font-weight: bold; color: white; border: 0.5px solid rgba(255,255,255,0.4); }
         .level-sphere { top: -15px; left: 50%; transform: translateX(-50%); }
         .photo-sphere { width: 75px; height: 75px; border-radius: 50%; background-size: cover; background-position: center; border: 2px solid rgba(255,255,255,0.4); box-shadow: 0 0 15px var(--neon); z-index: 5; cursor: pointer; }
         .icon-label { margin-top: 20px; font-size: 10px; font-weight: bold; text-align: center; text-transform: uppercase; color: white; display: flex; flex-direction: column; width: 100%; }
-        .icon-label span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
         .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 55px; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); display: flex; justify-content: space-around; align-items: center; z-index: 1000; border-top: 1px solid rgba(255,255,255,0.1); }
-        .nav-item { color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33%; height: 100%; font-size: 11px; font-weight: bold; }
+        .nav-item { color: #fff; opacity: 0.4; cursor: pointer; font-size: 11px; font-weight: bold; width: 33%; text-align: center; }
         .nav-item.active { opacity: 1; text-shadow: 0 0 10px var(--neon); }
 
         #edit-screen, #user-menu, #personal-data-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
         select, input, textarea { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
         label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
         .photo-container { position: relative; width: 110px; height: 110px; margin: 0 auto; cursor: pointer; }
-        .edit-level-display { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon); width: 60px; text-align: center; }
+        .edit-level-badge { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon); width: 60px; text-align: center; }
 
-        #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
-        .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
         .theme-btn { padding: 16px; text-align: center; cursor: pointer; border-radius: 12px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; color: white; }
     </style>
@@ -94,10 +91,10 @@
         <div id="header-plus" onclick="handleAddPartner()">+</div>
     </header>
 
-    <div id="filter-popup">
-        <div class="f-item" onclick="setFilter('az')">А-Я</div>
-        <div class="f-item" onclick="setFilter('new')">Нові</div>
-        <div class="f-item" onclick="setFilter('old')">Старі</div>
+    <div id="filter-popup" style="position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1);">
+        <div class="f-item" style="padding: 15px 25px; border-bottom: 1px solid rgba(255,255,255,0.05);" onclick="setFilter('az')">А-Я</div>
+        <div class="f-item" style="padding: 15px 25px; border-bottom: 1px solid rgba(255,255,255,0.05);" onclick="setFilter('new')">Нові</div>
+        <div class="f-item" style="padding: 15px 25px;" onclick="setFilter('old')">Старі</div>
     </div>
 
     <div id="main-viewport">
