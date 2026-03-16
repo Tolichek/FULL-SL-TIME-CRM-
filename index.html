@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>SL TIME CRM 2.7.8</title>
+    <title>SL TIME CRM 2.7.9</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
@@ -69,10 +69,10 @@
             background: radial-gradient(circle at 30% 30%, #fff 0%, rgba(255,255,255,0.2) 20%, var(--neon) 60%, rgba(0,0,0,0.5) 100%);
             display: flex; align-items: center; justify-content: center; 
             box-shadow: inset -1px -1px 4px rgba(0,0,0,0.6), 0 4px 10px rgba(0,0,0,0.4); 
-            z-index: 100; font-size: 15px; font-weight: bold; color: white; border: 0.5px solid rgba(255,255,255,0.4);
+            z-index: 200; font-size: 15px; font-weight: bold; color: white; border: 0.5px solid rgba(255,255,255,0.4);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); line-height: 0;
         }
-        .level-sphere { top: -15px; left: 50%; transform: translateX(-50%); }
+        .level-sphere { top: -15px; left: 50%; transform: translateX(-50%); z-index: 10; }
         .opt-sphere { display: none; top: 40px; left: 50%; }
         .del-sphere { display: none; top: 40px; left: 50%; }
         .icon-unit.menu-open .opt-sphere { display: flex; transform: translate(-150%, 45%); }
@@ -257,10 +257,7 @@
                     if (idx === 0 && (!c.step || !steps.includes(c.step))) return true;
                     return c.step === s;
                 });
-                
-                // Кнопка "+" тільки в першій колонці
                 const addBtn = (idx === 0) ? `<span class="add-btn-center" onclick="addNew('${s}')">+</span>` : '';
-                
                 col.innerHTML = `
                     <div class="col-head"><span>${s}</span>${addBtn}</div>
                     <div class="cards-area">${list.map(c => `
@@ -326,7 +323,7 @@
             };
             if(editId.startsWith('new_')) await db.collection("users").doc(user.uid).collection("clients").add(data);
             else await db.collection("users").doc(user.uid).collection("clients").doc(editId).update(data);
-            closeAllUI();
+            closeAllUI(); // Повернення туди, де був користувач
         }
 
         function removeClient() {
@@ -359,8 +356,6 @@
             subordinates.forEach(c => {
                 const unit = document.createElement('div');
                 unit.className = 'icon-unit';
-                
-                // Рівень тільки якщо > 0
                 const lvlSphere = (c.level && c.level > 0) ? `<div class="sphere level-sphere">${c.level}</div>` : '';
                 
                 unit.innerHTML = `
@@ -372,12 +367,23 @@
                 `;
                 
                 let moved = false;
-                unit.ontouchstart = () => { moved = false; longPressTimer = setTimeout(() => { unit.classList.add('menu-open'); moved = true; }, 600); };
-                unit.ontouchend = () => { 
+                unit.ontouchstart = (e) => { 
+                    moved = false; 
+                    longPressTimer = setTimeout(() => { 
+                        unit.classList.add('menu-open'); 
+                        moved = true; 
+                    }, 600); 
+                };
+                unit.ontouchend = (e) => { 
                     clearTimeout(longPressTimer); 
                     if(!moved) {
-                        if(unit.classList.contains('menu-open')) unit.classList.remove('menu-open');
-                        else { currentPath.push(c); renderStructure(); }
+                        // Якщо меню відкрите і тицьнули НЕ по кнопках (кнопки мають stopPropagation)
+                        if(unit.classList.contains('menu-open')) {
+                            unit.classList.remove('menu-open');
+                        } else {
+                            currentPath.push(c); 
+                            renderStructure();
+                        }
                     }
                 };
                 grid.appendChild(unit);
@@ -445,7 +451,10 @@
         function showPersonalData() { document.getElementById('personal-data-screen').style.display = 'flex'; }
         function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
         function setFilter(f) { filterType = f; toggleFilter(); renderBoard(); }
-        function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #partner-select-modal').forEach(s => s.style.display='none'); editId = null; }
+        function closeAllUI() { 
+            document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #partner-select-modal').forEach(s => s.style.display='none'); 
+            editId = null; 
+        }
         function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
         function updateMeLevelBadge() { document.getElementById('me-level-badge').innerText = document.getElementById('me-level').value; }
         function login() { auth.signInWithRedirect(provider); }
