@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>SL TIME CRM 2.7.5</title>
+    <link rel="apple-touch-icon" href="https://img.icons8.com/ios-filled/180/ffffff/star.png">
+    <title>SL TIME CRM 3.2.0</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
@@ -43,7 +44,6 @@
         .total-count { font-size: 14px; font-weight: bold; line-height: 1; opacity: 0.9; }
         .f-lines { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; width: 22px; }
         .f-line { height: 2px; background: white; border-radius: 2px; }
-        .l1 { width: 22px; } .l2 { width: 16px; } .l3 { width: 10px; }
         #header-plus { display: none; font-size: 36px; font-weight: bold; color: white; cursor: pointer; min-width: 50px; text-align: right; line-height: 1; flex-shrink: 0; }
 
         #main-viewport { display: flex; width: 100vw; height: calc(100vh - 80px); overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; gap: 60px; }
@@ -51,7 +51,7 @@
 
         .board { display: flex; overflow-x: auto; padding: 10px 20px 55px; gap: 20px; height: 100%; scroll-snap-type: x mandatory; }
         .column { min-width: calc(100vw - 40px); scroll-snap-align: center; scroll-snap-stop: always; display: flex; flex-direction: column; gap: 15px; }
-        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 20px; } 
+        .cards-area { flex: 1; overflow-y: auto; padding-bottom: 120px; } 
         .col-head { display: flex; justify-content: space-between; align-items: center; font-size: 14px; text-transform: uppercase; font-weight: bold; height: 36px; }
         .add-btn-center { cursor: pointer; font-size: 32px; font-weight: bold; line-height: 1; display: flex; align-items: center; height: 100%; }
 
@@ -63,21 +63,8 @@
 
         .struct-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 80px 10px 20px; overflow-y: auto; align-content: start; height: 100%; }
         .icon-unit { display: flex; flex-direction: column; align-items: center; position: relative; height: 140px; }
-        
-        .sphere { 
-            position: absolute; width: 30px; height: 30px; border-radius: 50%; 
-            background: radial-gradient(circle at 30% 30%, #fff 0%, rgba(255,255,255,0.2) 20%, var(--neon) 60%, rgba(0,0,0,0.5) 100%);
-            display: flex; align-items: center; justify-content: center; 
-            box-shadow: inset -1px -1px 4px rgba(0,0,0,0.6), 0 4px 10px rgba(0,0,0,0.4); 
-            z-index: 10; font-size: 15px; font-weight: bold; color: white; border: 0.5px solid rgba(255,255,255,0.4);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); line-height: 0;
-        }
+        .sphere { position: absolute; width: 30px; height: 30px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fff 0%, rgba(255,255,255,0.2) 20%, var(--neon) 60%, rgba(0,0,0,0.5) 100%); display: flex; align-items: center; justify-content: center; z-index: 10; font-size: 15px; font-weight: bold; color: white; border: 0.5px solid rgba(255,255,255,0.4); }
         .level-sphere { top: -15px; left: 50%; transform: translateX(-50%); }
-        .opt-sphere { display: none; top: 40px; left: 50%; }
-        .del-sphere { display: none; top: 40px; left: 50%; }
-        .icon-unit.menu-open .opt-sphere { display: flex; transform: translate(-150%, 45%); }
-        .icon-unit.menu-open .del-sphere { display: flex; transform: translate(50%, 45%); }
-
         .photo-sphere { width: 75px; height: 75px; border-radius: 50%; background-size: cover; background-position: center; border: 2px solid rgba(255,255,255,0.4); box-shadow: 0 0 15px var(--neon); z-index: 5; cursor: pointer; }
         .icon-label { margin-top: 20px; font-size: 10px; font-weight: bold; text-align: center; color: white; text-transform: uppercase; width: 100%; display: flex; flex-direction: column; }
         .icon-label span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -86,15 +73,12 @@
         .nav-item { color: #fff; opacity: 0.4; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 33%; height: 100%; font-size: 11px; font-weight: bold; }
         .nav-item.active { opacity: 1; text-shadow: 0 0 10px var(--neon); }
 
-        #edit-screen, #user-menu, #personal-data-screen, #partner-select-modal { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
+        #edit-screen, #user-menu, #personal-data-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 20px 25px 100px; overflow-y: auto; }
         select, input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); color: white; padding: 12px 0; margin-bottom: 20px; outline: none; font-size: 16px; }
         label { font-size: 10px; opacity: 0.5; text-transform: uppercase; margin-bottom: 2px; display: block; }
         .photo-container { position: relative; width: 110px; height: 110px; margin: 0 auto; cursor: pointer; }
         .edit-level-display { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon); width: 60px; text-align: center; }
-        
-        .notes-wrapper { display: grid; position: relative; width: 100%; margin-bottom: 50px; }
-        .notes-wrapper::after { content: attr(data-replicated-value) " "; white-space: pre-wrap; visibility: hidden; grid-area: 1 / 1 / 2 / 2; padding: 10px 0; min-height: 100px; font-size: 16px; }
-        #e-notes { grid-area: 1 / 1 / 2 / 2; width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); resize: none; overflow: hidden; padding: 10px 0; font-size: 16px; outline: none; }
+        #e-notes { width: 100%; background: transparent; color: white; border: none; border-bottom: 1px solid rgba(255,255,255,0.2); min-height: 100px; font-size: 16px; outline: none; resize: none; margin-bottom: 50px; }
 
         #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
         .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -167,25 +151,18 @@
         <div id="step-wrapper"><label>ЕТАП</label><select id="e-step"></select></div>
         <label>ПРІЗВИЩЕ</label><input type="text" id="e-lname"><label>ІМ'Я</label><input type="text" id="e-fname"><label>ТЕЛЕФОН</label><input type="tel" id="e-phone">
         <label>ПОЛІС №</label><input type="text" id="e-pnum"><label>ДАТА</label><input type="date" id="e-pdate">
-        <label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
-        <label>ПРИМІТКИ</label>
-        <div class="notes-wrapper" id="notes-wrap"><textarea id="e-notes" oninput="this.parentNode.dataset.replicatedValue = this.value"></textarea></div>
+        <label>РІВЕНЬ</label><select id="e-level" onchange="updateEditLevelBadge()"><option value="">None</option><script>for(let i=1; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <label>ПРИМІТКИ</label><textarea id="e-notes"></textarea>
         <button onclick="manualSave()" style="margin-top:20px; padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none;">ЗБЕРЕГТИ ТА ВИЙТИ</button>
     </div>
 
     <div id="personal-data-screen">
         <div class="photo-container" onclick="document.getElementById('file-me').click()">
             <div id="me-photo" style="width:110px; height:110px; border-radius:50%; background-size:cover;"></div>
-            <div id="me-level-badge" class="edit-level-display"></div>
             <input type="file" id="file-me" hidden accept="image/*" onchange="uploadPhoto(this, 'me')">
         </div>
-        <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname"><label>ІМ'Я</label><input type="text" id="me-fname"><label>РІВЕНЬ</label><select id="me-level" onchange="updateMeLevelBadge()"><script>for(let i=0; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <label>ПРІЗВИЩЕ</label><input type="text" id="me-lname"><label>ІМ'Я</label><input type="text" id="me-fname">
         <button onclick="saveMeData()" style="padding:18px; background:white; border-radius:30px; width:100%; font-weight:bold; color:black; border:none;">ЗБЕРЕГТИ ТА ВИЙТИ</button>
-    </div>
-
-    <div id="partner-select-modal">
-        <div id="modal-partners-list" style="flex:1; overflow-y:auto; padding-top:20px;"></div>
-        <button onclick="window.history.back()" style="padding:18px; width:100%; border-radius:30px; background:white; color:black; font-weight:bold; border:none;">НАЗАД</button>
     </div>
 
     <script>
@@ -194,7 +171,7 @@
         const auth = firebase.auth(), db = firebase.firestore(), provider = new firebase.auth.GoogleAuthProvider();
 
         let user = null, clients = [], editId = null, filterType = 'new', currentPhotoBase64 = null;
-        const steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Поліс", "Семінар"];
+        const steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Поліс", "Семінар", "Партнер"];
         let currentPath = [], longPressTimer = null;
 
         const vp = document.getElementById('main-viewport');
@@ -210,27 +187,17 @@
         function jumpToPage(index) { vp.scrollTo({ left: index * (window.innerWidth + 60), behavior: 'smooth' }); }
         function lock() { window.history.pushState({l:1}, ""); }
         window.onload = lock;
-        window.onpopstate = () => {
-            if (editId || document.getElementById('user-menu').style.display==='flex' || document.getElementById('partner-select-modal').style.display==='flex' || document.getElementById('personal-data-screen').style.display==='flex') { closeAllUI(); lock(); return; }
-            if (currentPath.length > 0) { currentPath.pop(); renderStructure(); lock(); return; }
-            if (vp.scrollLeft > 0) { jumpToPage(0); lock(); return; }
-            lock();
-        };
+        window.onpopstate = () => { if (editId || document.getElementById('user-menu').style.display==='flex' || document.getElementById('personal-data-screen').style.display==='flex') { closeAllUI(); lock(); return; } if (currentPath.length > 0) { currentPath.pop(); renderStructure(); lock(); return; } if (vp.scrollLeft > 0) { jumpToPage(0); lock(); return; } lock(); };
 
-        auth.onAuthStateChanged(async u => { if(u) { user = u; document.getElementById('splash').style.display = 'none'; await loadUserConfig(); loadClients(); lock(); } else { document.getElementById('login-ui').style.display = 'block'; } });
+        auth.onAuthStateChanged(async u => { if(u) { user = u; document.getElementById('splash').style.display = 'none'; loadUserConfig(); loadClients(); lock(); } else { document.getElementById('login-ui').style.display = 'block'; } });
 
         async function loadUserConfig() {
             const doc = await db.collection("users").doc(user.uid).get();
             const data = doc.data() || {};
-            const photo = data.myPhoto || user.photoURL;
-            document.getElementById('u-avatar').style.backgroundImage = `url(${photo})`;
-            document.getElementById('me-photo').style.backgroundImage = `url(${photo})`;
+            document.getElementById('u-avatar').style.backgroundImage = `url(${data.myPhoto || user.photoURL})`;
+            document.getElementById('me-photo').style.backgroundImage = `url(${data.myPhoto || user.photoURL})`;
             document.getElementById('me-lname').value = data.meLname || "";
             document.getElementById('me-fname').value = data.meFname || "";
-            document.getElementById('me-level').value = data.meLevel || "";
-            updateMeLevelBadge();
-            const theme = localStorage.getItem('crm_theme') || data.theme || 'purple';
-            document.body.className = 'theme-' + theme;
         }
 
         function loadClients() {
@@ -240,33 +207,27 @@
             });
         }
 
-        function updateHeaderCounter() {
-            const index = Math.round(vp.scrollLeft / (window.innerWidth + 60));
-            const counter = document.getElementById('header-counter');
-            if(index === 1) {
-                const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
-                counter.innerText = clients.filter(c => c.isPartner && (c.parentId || 'me') === pid).length;
-            } else { counter.innerText = clients.filter(c => !c.isStructureOnly).length; }
-        }
+        function updateHeaderCounter() { document.getElementById('header-counter').innerText = clients.length; }
 
         function renderBoard() {
             const b = document.getElementById('main-board'), s = document.getElementById('e-step');
             b.innerHTML = ''; s.innerHTML = '';
-            let filtered = clients.filter(c => !c.isStructureOnly);
+            let filtered = [...clients];
             if(filterType === 'az') filtered.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
-            if(filterType === 'new') filtered.sort((a,b) => b.created - a.created);
-            if(filterType === 'old') filtered.sort((a,b) => a.created - b.created);
+            if(filterType === 'new') filtered.sort((a,b) => (b.created || 0) - (a.created || 0));
             steps.forEach((n, i) => {
-                const sc = filtered.filter(c => c.step == i);
+                const sc = filtered.filter(c => (c.step == i || (i === 0 && (c.step === undefined || c.step === null))));
                 const col = document.createElement('div'); col.className = 'column';
-                col.innerHTML = `<div class="col-head"><div>${n}&nbsp;&nbsp;&nbsp;&nbsp;<span>${sc.length}</span></div>${i==0 ? '<div class="add-btn-center" onclick="createCard()">+</div>' : '<div></div>'}<div></div></div><div id="list-${i}" class="cards-area"></div>`;
-                b.appendChild(col); s.innerHTML += `<option value="${i}">${n}</option>`;
+                col.innerHTML = `<div class="col-head"><div>${n}&nbsp;&nbsp;<span>${sc.length}</span></div>${i==0 ? '<div class="add-btn-center" onclick="createCard()">+</div>' : ''}</div><div class="cards-area"></div>`;
+                const area = col.querySelector('.cards-area');
                 sc.forEach(c => {
                     const div = document.createElement('div'); div.className = 'card';
-                    div.onclick = () => { window.history.pushState({e:1}, ""); openEdit(c.id); };
-                    div.innerHTML = (c.level ? `<div class="card-level">${c.level}</div>` : '') + `<div style="font-weight:600;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;">${c.phone||""}</div>`;
-                    document.getElementById(`list-${i}`).appendChild(div);
+                    div.onclick = () => { openEdit(c.id); };
+                    const lvlVal = (c.level && c.level != 0) ? `<div class="card-level">${c.level}</div>` : '';
+                    div.innerHTML = lvlVal + `<div style="font-weight:600;">${c.lname||""} ${c.fname||""}</div><div style="opacity:0.6;font-size:13px;">${c.phone||""}</div>`;
+                    area.appendChild(div);
                 });
+                b.appendChild(col); s.innerHTML += `<option value="${i}">${n}</option>`;
             });
         }
 
@@ -279,62 +240,33 @@
                 pathBar.appendChild(dot);
             });
             const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me';
-            clients.filter(c => c.isPartner && (c.parentId || 'me') === pid).forEach(p => {
+            clients.filter(c => c.step == 7 && (c.parentId || 'me') === pid).forEach(p => {
                 const unit = document.createElement('div'); unit.className = 'icon-unit';
-                unit.innerHTML = `<div class="sphere level-sphere">${p.level || 0}</div><div class="sphere opt-sphere" onclick="event.stopPropagation(); openEdit('${p.id}')">⚙️</div><div class="sphere del-sphere" onclick="event.stopPropagation(); removeFromStruct('${p.id}')">✕</div><div class="photo-sphere" style="background-image:url(${p.photo || ''})"></div><div class="icon-label"><span>${p.lname || ''}</span><span>${p.fname || ''}</span></div>`;
+                const lvlSphere = (p.level && p.level != 0 ? `<div class="sphere level-sphere">${p.level}</div>` : '');
+                unit.innerHTML = `${lvlSphere}<div class="photo-sphere" style="background-image:url(${p.photo || ''})"></div><div class="icon-label"><span>${p.lname || ''}</span><span>${p.fname || ''}</span></div>`;
                 const ph = unit.querySelector('.photo-sphere');
-                ph.onmousedown = ph.ontouchstart = () => { longPressTimer = setTimeout(() => unit.classList.add('menu-open'), 600); };
-                ph.onmouseup = ph.ontouchend = () => clearTimeout(longPressTimer);
-                ph.onclick = () => { if(!unit.classList.contains('menu-open')) { currentPath.push({id:p.id, photo:p.photo}); renderStructure(); } else unit.classList.remove('menu-open'); };
+                ph.ontouchstart = (e) => { longPressTimer = setTimeout(() => openEdit(p.id), 600); };
+                ph.ontouchend = (e) => { 
+                    const wasLong = !longPressTimer; clearTimeout(longPressTimer); longPressTimer = null;
+                    if (!wasLong) { currentPath.push({id:p.id, photo:p.photo}); renderStructure(); }
+                };
                 grid.appendChild(unit);
             });
         }
 
-        function uploadPhoto(input, type) {
-            const file = input.files[0]; if(!file) return;
-            const reader = new FileReader();
-            reader.onload = e => { currentPhotoBase64 = e.target.result; document.getElementById(type === 'me' ? 'me-photo' : 'c-photo').style.backgroundImage = `url(${currentPhotoBase64})`; };
-            reader.readAsDataURL(file);
-        }
-
-        async function manualSave() { 
-            const d = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, pnum: document.getElementById('e-pnum').value, pdate: document.getElementById('e-pdate').value, notes: document.getElementById('e-notes').value, level: document.getElementById('e-level').value, updated: Date.now() }; 
-            if (document.getElementById('e-step').offsetParent) d.step = parseInt(document.getElementById('e-step').value);
-            if(currentPhotoBase64) d.photo = currentPhotoBase64;
-            await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(d, {merge:true}); 
-            currentPhotoBase64 = null; closeAllUI(); 
-        }
-
-        async function saveMeData() { 
-            const d = { meLname: document.getElementById('me-lname').value, meFname: document.getElementById('me-fname').value, meLevel: document.getElementById('me-level').value }; 
-            if(currentPhotoBase64) d.myPhoto = currentPhotoBase64;
-            await db.collection("users").doc(user.uid).set(d, {merge:true}); 
-            currentPhotoBase64 = null; closeAllUI(); 
-        }
-
-        function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','phone','pnum','pdate','notes','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || ""); document.getElementById('c-photo').style.backgroundImage = `url(${c.photo||''})`; document.getElementById('notes-wrap').dataset.replicatedValue = c.notes || ""; updateEditLevelBadge(); document.getElementById('edit-screen').style.display='flex'; }
-        function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen, #partner-select-modal').forEach(el => el.style.display = 'none'); editId = null; currentPhotoBase64 = null; }
+        function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); if(!c) return; ['lname','fname','phone','pnum','pdate','notes','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || ""); document.getElementById('c-photo').style.backgroundImage = c.photo ? `url(${c.photo})` : ''; document.getElementById('e-step').value = c.step || 0; updateEditLevelBadge(); document.getElementById('edit-screen').style.display='flex'; }
+        async function manualSave() { const d = { lname: document.getElementById('e-lname').value, fname: document.getElementById('e-fname').value, phone: document.getElementById('e-phone').value, pnum: document.getElementById('e-pnum').value, pdate: document.getElementById('e-pdate').value, notes: document.getElementById('e-notes').value, level: document.getElementById('e-level').value, created: Date.now() }; d.step = parseInt(document.getElementById('e-step').value); if(currentPhotoBase64) d.photo = currentPhotoBase64; await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(d, {merge:true}); currentPhotoBase64 = null; closeAllUI(); }
+        async function saveMeData() { const d = { meLname: document.getElementById('me-lname').value, meFname: document.getElementById('me-fname').value }; if(currentPhotoBase64) d.myPhoto = currentPhotoBase64; await db.collection("users").doc(user.uid).set(d, {merge:true}); currentPhotoBase64 = null; closeAllUI(); }
+        function handleAddPartner() { const pid = currentPath.length > 0 ? currentPath[currentPath.length - 1].id : 'me'; createCard(7, pid); }
+        async function createCard(step = 0, pid = null) { const d = {step: step, created: Date.now()}; if(pid) d.parentId = pid; const res = await db.collection("users").doc(user.uid).collection("clients").add(d); openEdit(res.id); }
+        function uploadPhoto(input, type) { const file = input.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = e => { currentPhotoBase64 = e.target.result; document.getElementById(type === 'me' ? 'me-photo' : 'c-photo').style.backgroundImage = `url(${currentPhotoBase64})`; }; reader.readAsDataURL(file); }
+        function closeAllUI() { document.querySelectorAll('#edit-screen, #user-menu, #personal-data-screen').forEach(el => el.style.display = 'none'); editId = null; }
+        function showUserMenu() { document.getElementById('user-menu').style.display = 'flex'; }
+        function showPersonalData() { document.getElementById('personal-data-screen').style.display = 'flex'; }
+        function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
         function setTheme(t) { document.body.className = 'theme-' + t; localStorage.setItem('crm_theme', t); }
         function toggleFilter() { const p = document.getElementById('filter-popup'); p.style.display = p.style.display==='flex'?'none':'flex'; }
         function setFilter(t) { filterType = t; renderBoard(); toggleFilter(); }
-        function showUserMenu() { window.history.pushState({m:1}, ""); document.getElementById('user-menu').style.display = 'flex'; }
-        function showPersonalData() { window.history.pushState({p:1}, ""); document.getElementById('personal-data-screen').style.display = 'flex'; }
-        function updateEditLevelBadge() { document.getElementById('edit-level-badge').innerText = document.getElementById('e-level').value; }
-        function updateMeLevelBadge() { document.getElementById('me-level-badge').innerText = document.getElementById('me-level').value; }
-        async function createCard() { const res = await db.collection("users").doc(user.uid).collection("clients").add({step:0, created:Date.now()}); openEdit(res.id); }
-        function handleAddPartner() { if (currentPath.length === 0) openPartnerSelect(); else createCardForStruct(); }
-        async function createCardForStruct() { const pid = currentPath[currentPath.length - 1].id; const res = await db.collection("users").doc(user.uid).collection("clients").add({ isPartner: true, parentId: pid, isStructureOnly: true, created: Date.now() }); openEdit(res.id); }
-        function openPartnerSelect() {
-            const list = document.getElementById('modal-partners-list'); list.innerHTML = '';
-            clients.filter(c => c.step === 6 && !c.isPartner && !c.isStructureOnly).forEach(c => {
-                const row = document.createElement('div'); row.style = "padding:15px; background:rgba(255,255,255,0.05); border-radius:12px; margin-bottom:12px; display:flex; align-items:center; gap:15px; border:1px solid rgba(255,255,255,0.1);";
-                row.innerHTML = `<div style="width:44px; height:44px; border-radius:50%; background-size:cover; background-image:url(${c.photo||''})"></div><div>${c.lname || ''} ${c.fname || ''}</div>`;
-                row.onclick = async () => { await db.collection("users").doc(user.uid).collection("clients").doc(c.id).update({ isPartner: true, parentId: 'me' }); window.history.back(); };
-                list.appendChild(row);
-            });
-            document.getElementById('partner-select-modal').style.display = 'flex'; window.history.pushState({s:1}, "");
-        }
-        async function removeFromStruct(id) { if(confirm("Прибрати?")) await db.collection("users").doc(user.uid).collection("clients").doc(id).update({ isPartner: false, parentId: null, isStructureOnly: false }); }
         async function removeClient() { if(confirm("Видалити?")) { await db.collection("users").doc(user.uid).collection("clients").doc(editId).delete(); closeAllUI(); } }
         function login() { auth.signInWithPopup(provider); }
         function logout() { auth.signOut().then(() => location.reload()); }
