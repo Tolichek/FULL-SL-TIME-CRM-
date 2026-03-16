@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>SL TIME CRM 2.7.9</title>
+    <title>SL TIME CRM 2.8.0</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
@@ -69,14 +69,14 @@
             background: radial-gradient(circle at 30% 30%, #fff 0%, rgba(255,255,255,0.2) 20%, var(--neon) 60%, rgba(0,0,0,0.5) 100%);
             display: flex; align-items: center; justify-content: center; 
             box-shadow: inset -1px -1px 4px rgba(0,0,0,0.6), 0 4px 10px rgba(0,0,0,0.4); 
-            z-index: 200; font-size: 15px; font-weight: bold; color: white; border: 0.5px solid rgba(255,255,255,0.4);
+            z-index: 50; font-size: 15px; font-weight: bold; color: white; border: 0.5px solid rgba(255,255,255,0.4);
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); line-height: 0;
         }
         .level-sphere { top: -15px; left: 50%; transform: translateX(-50%); z-index: 10; }
         .opt-sphere { display: none; top: 40px; left: 50%; }
         .del-sphere { display: none; top: 40px; left: 50%; }
-        .icon-unit.menu-open .opt-sphere { display: flex; transform: translate(-150%, 45%); }
-        .icon-unit.menu-open .del-sphere { display: flex; transform: translate(50%, 45%); }
+        .icon-unit.menu-open .opt-sphere { display: flex; transform: translate(-150%, 45%); z-index: 100; }
+        .icon-unit.menu-open .del-sphere { display: flex; transform: translate(50%, 45%); z-index: 100; }
 
         .photo-sphere { width: 75px; height: 75px; border-radius: 50%; background-size: cover; background-position: center; border: 2px solid rgba(255,255,255,0.4); box-shadow: 0 0 15px var(--neon); z-index: 5; cursor: pointer; }
         .icon-label { margin-top: 20px; font-size: 10px; font-weight: bold; text-align: center; color: white; text-transform: uppercase; width: 100%; display: flex; flex-direction: column; }
@@ -323,7 +323,7 @@
             };
             if(editId.startsWith('new_')) await db.collection("users").doc(user.uid).collection("clients").add(data);
             else await db.collection("users").doc(user.uid).collection("clients").doc(editId).update(data);
-            closeAllUI(); // Повернення туди, де був користувач
+            closeAllUI(); 
         }
 
         function removeClient() {
@@ -360,8 +360,8 @@
                 
                 unit.innerHTML = `
                     ${lvlSphere}
-                    <div class="sphere opt-sphere" onclick="event.stopPropagation(); editCard('${c.id}')">✎</div>
-                    <div class="sphere del-sphere" onclick="event.stopPropagation(); unlinkPartner('${c.id}')">✕</div>
+                    <div class="sphere opt-sphere" onclick="event.stopPropagation(); editCard('${c.id}');">✎</div>
+                    <div class="sphere del-sphere" onclick="event.stopPropagation(); unlinkPartner('${c.id}');">✕</div>
                     <div class="photo-sphere" style="background-image:url(${c.photo || ''})"></div>
                     <div class="icon-label"><span>${c.lname || ''}</span><span>${c.fname || ''}</span></div>
                 `;
@@ -377,7 +377,6 @@
                 unit.ontouchend = (e) => { 
                     clearTimeout(longPressTimer); 
                     if(!moved) {
-                        // Якщо меню відкрите і тицьнули НЕ по кнопках (кнопки мають stopPropagation)
                         if(unit.classList.contains('menu-open')) {
                             unit.classList.remove('menu-open');
                         } else {
