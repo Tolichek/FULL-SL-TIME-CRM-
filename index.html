@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://img.icons8.com/ios-filled/180/ffffff/star.png">
-    <title>SL TIME CRM 3.3.8</title>
+    <title>SL TIME CRM 3.3.9</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
@@ -195,7 +195,6 @@
             let filtered = [...clients];
             if(filterType === 'az') filtered.sort((a,b) => (a.lname||"").localeCompare(b.lname||""));
             if(filterType === 'new') filtered.sort((a,b) => (b.created || 0) - (a.created || 0));
-            if(filterType === 'old') filtered.sort((a,b) => (a.created || 0) - (b.created || 0));
             
             steps.forEach((n, i) => {
                 const sc = filtered.filter(c => (c.step == i || (i === 0 && (c.step === undefined || c.step === null))));
