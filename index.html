@@ -3,94 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>HumanTree CRM</title>
+    <title>HumanTree</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root { --bg: #0f1115; --card: #161b22; --accent: #3081f7; --text: #c9d1d9; }
-        body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        .tree-line { position: relative; padding-left: 20px; border-left: 1px solid #30363d; margin-left: 10px; }
-        .input-flat { background: transparent; border: none; border-bottom: 1px solid #30363d; width: 100%; padding: 8px 0; outline: none; transition: 0.3s; }
-        .input-flat:focus { border-bottom-color: var(--accent); }
-        .card { background: var(--card); border: 1px solid #30363d; border-radius: 12px; padding: 20px; }
-        .btn-icon { width: 32px; height: 32px; display: flex; items-center; justify-content: center; border-radius: 8px; background: #21262d; }
+        body { background: #000; color: #fff; font-family: sans-serif; padding-top: env(safe-area-inset-top); }
+        .node-line { border-left: 1px solid #333; margin-left: 15px; padding-left: 10px; }
+        .full-screen-editor { position: fixed; inset: 0; background: #000; z-index: 100; display: none; padding: 20px; padding-top: 60px; }
     </style>
 </head>
-<body class="flex flex-col h-screen overflow-hidden">
+<body>
 
-    <header class="h-14 border-b border-[#30363d] flex items-center px-4 justify-between bg-[#161b22]">
-        <span class="font-bold tracking-tight text-white">HumanTree <span class="text-blue-500">v1.0</span></span>
-        <div class="flex gap-2">
-            <button onclick="saveData()" class="bg-blue-600 text-xs px-3 py-1 rounded-md text-white">Зберегти</button>
+    <div id="app" class="p-4">
+        <h1 class="text-zinc-500 text-xs uppercase mb-4 tracking-widest">Твоя картотека</h1>
+        <div id="tree-container"></div>
+        <button onclick="addNewNode(null)" class="mt-4 text-blue-500 text-sm">+ Додати першу гілку</button>
+    </div>
+
+    <div id="editor" class="full-screen-editor overflow-y-auto">
+        <div class="flex justify-between items-center mb-8">
+            <button onclick="closeEditor()" class="text-zinc-400">Скасувати</button>
+            <button onclick="saveNode()" class="bg-blue-600 px-6 py-2 rounded-lg font-bold">Зберегти</button>
         </div>
-    </header>
 
-    <main class="flex flex-1 overflow-hidden">
-        <aside class="w-1/3 border-r border-[#30363d] overflow-y-auto p-2 bg-[#0d1117]">
-            <div id="tree-root">
-                <div class="text-xs uppercase text-zinc-500 mb-2 px-2">Картотека</div>
-                <div class="py-1 px-2 bg-blue-900/20 text-blue-400 rounded cursor-pointer">👤 Анатолій (Я)</div>
-                <div class="tree-line">
-                    <div class="py-1 px-2 hover:bg-zinc-800 rounded cursor-pointer text-sm">👤 Новий контакт...</div>
-                </div>
+        <div class="space-y-6">
+            <div class="flex flex-col items-center">
+                <div class="w-24 h-24 bg-zinc-900 rounded-2xl mb-4 border border-zinc-800 flex items-center justify-center text-zinc-700">ФОТО</div>
+                <input id="edit-name" type="text" placeholder="Прізвище та Ім'я" class="bg-transparent text-2xl text-center w-full outline-none font-bold">
+                <input id="edit-status" type="text" placeholder="Статус" class="bg-transparent text-blue-500 text-center w-full outline-none text-sm mt-2">
             </div>
-            <button class="w-full mt-4 border border-dashed border-zinc-700 py-2 rounded text-xs text-zinc-500 hover:border-blue-500">+ Нова гілка</button>
-        </aside>
 
-        <section class="flex-1 overflow-y-auto p-4 md:p-8 bg-[#0f1115]">
-            <div class="max-w-xl mx-auto space-y-6">
-                
-                <div class="flex items-center gap-6 mb-8">
-                    <div class="relative group">
-                        <div class="w-24 h-24 bg-zinc-800 rounded-3xl flex items-center justify-center border border-zinc-700 overflow-hidden">
-                            <span class="text-[10px] text-zinc-500">PHOTO</span>
-                        </div>
-                        <button class="absolute -bottom-2 -right-2 btn-icon bg-blue-600 text-white shadow-lg">✎</button>
-                    </div>
-                    <div class="flex-1">
-                        <input type="text" placeholder="ПІБ" class="text-2xl font-bold bg-transparent border-none outline-none w-full text-white" value="Надутий Анатолій">
-                        <input type="text" placeholder="Статус (напр. VIP, Партнер...)" class="text-blue-400 bg-transparent border-none outline-none w-full text-sm">
-                    </div>
+            <div id="edit-phones" class="space-y-3">
+                <label class="text-xs text-zinc-500 uppercase">Телефони</label>
                 </div>
+            <button onclick="addPhoneField('')" class="text-blue-500 text-sm">+ Додати номер</button>
 
-                <div class="card">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-xs font-bold uppercase text-zinc-500">Контактні дані</h3>
-                        <button onclick="addPhone()" class="text-blue-500 text-xs">+ Додати номер</button>
-                    </div>
-                    <div id="phones-container" class="space-y-3">
-                        <div class="flex items-center gap-3">
-                            <div class="btn-icon text-zinc-500">📞</div>
-                            <input type="tel" placeholder="+380..." class="input-flat">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h3 class="text-xs font-bold uppercase text-zinc-500 mb-2">Додаткова інформація</h3>
-                    <textarea class="w-full bg-transparent border-none outline-none text-sm min-h-[100px] resize-none" placeholder="Історія зустрічей, важливі дати, нотатки..."></textarea>
-                </div>
-
+            <div class="flex flex-col">
+                <label class="text-xs text-zinc-500 uppercase mb-2">Примітка</label>
+                <textarea id="edit-note" class="bg-zinc-900 border border-zinc-800 rounded-xl p-4 min-h-[150px] outline-none"></textarea>
             </div>
-        </section>
-    </main>
+        </div>
+    </div>
 
     <script>
-        function addPhone() {
-            const container = document.getElementById('phones-container');
-            const div = document.createElement('div');
-            div.className = 'flex items-center gap-3 animate-slide-down';
-            div.innerHTML = `
-                <div class="btn-icon text-zinc-500">📞</div>
-                <input type="tel" placeholder="+380..." class="input-flat">
-                <button onclick="this.parentElement.remove()" class="text-zinc-600 hover:text-red-500">✕</button>
-            `;
-            container.appendChild(div);
+        let data = JSON.parse(localStorage.getItem('treeData')) || [];
+        let currentNodeId = null;
+
+        function renderTree(nodes, container, parentId = null) {
+            container.innerHTML = '';
+            nodes.filter(n => n.parentId === parentId).forEach(node => {
+                const div = document.createElement('div');
+                div.className = 'mb-2';
+                div.innerHTML = `
+                    <div class="flex items-center gap-3 py-2 border-b border-zinc-900">
+                        <span onclick="openNode('${node.id}')" class="flex-1 cursor-pointer">
+                            <span class="font-bold">${node.name || 'Без імені'}</span>
+                            <span class="text-blue-500 text-xs ml-2">${node.status || ''}</span>
+                        </span>
+                        <button onclick="addNewNode('${node.id}')" class="text-zinc-600 text-xl w-8 h-8">+</button>
+                    </div>
+                    <div id="child-${node.id}" class="node-line"></div>
+                `;
+                container.appendChild(div);
+                renderTree(nodes, div.querySelector(`#child-${node.id}`), node.id);
+            });
         }
 
-        function saveData() {
-            alert('Дані збережено локально (імітація)');
-            // Тут ми додамо логіку збереження в LocalStorage
+        function addNewNode(parentId) {
+            const id = Date.now().toString();
+            data.push({ id, parentId, name: '', status: '', phones: [''], note: '' });
+            openNode(id);
         }
+
+        function openNode(id) {
+            currentNodeId = id;
+            const node = data.find(n => n.id === id);
+            document.getElementById('edit-name').value = node.name;
+            document.getElementById('edit-status').value = node.status;
+            document.getElementById('edit-note').value = node.note;
+            document.getElementById('edit-phones').innerHTML = '<label class="text-xs text-zinc-500 uppercase">Телефони</label>';
+            node.phones.forEach(p => addPhoneField(p));
+            document.getElementById('editor').style.display = 'block';
+        }
+
+        function addPhoneField(value) {
+            const div = document.createElement('div');
+            div.className = 'flex gap-2';
+            div.innerHTML = `<input type="tel" value="${value}" class="bg-zinc-900 p-3 rounded-lg flex-1 outline-none" placeholder="+380...">`;
+            document.getElementById('edit-phones').appendChild(div);
+        }
+
+        function saveNode() {
+            const node = data.find(n => n.id === currentNodeId);
+            node.name = document.getElementById('edit-name').value;
+            node.status = document.getElementById('edit-status').value;
+            node.note = document.getElementById('edit-note').value;
+            node.phones = Array.from(document.querySelectorAll('#edit-phones input')).map(i => i.value);
+            
+            localStorage.setItem('treeData', JSON.stringify(data));
+            closeEditor();
+            renderTree(data, document.getElementById('tree-container'));
+        }
+
+        function closeEditor() {
+            document.getElementById('editor').style.display = 'none';
+        }
+
+        renderTree(data, document.getElementById('tree-container'));
     </script>
 </body>
 </html>
