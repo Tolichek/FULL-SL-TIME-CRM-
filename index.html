@@ -4,63 +4,137 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>SL CRM RESTORED</title>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/ios-filled/180/ffffff/star.png">
+    <title>SL TIME CRM 3.6.0 - TOTAL RESTORE</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
+
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
     <style>
-        body { background: #1a0826; color: white; font-family: sans-serif; margin: 0; padding: 20px; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; margin-bottom: 15px; }
-        .card h3 { margin: 0 0 5px 0; }
-        .card p { margin: 0; opacity: 0.6; font-size: 14px; }
-        .step-title { font-size: 12px; text-transform: uppercase; color: #d000ff; margin: 20px 0 10px; border-bottom: 1px solid rgba(208,0,255,0.3); padding-bottom: 5px; }
+        :root {
+            --bg: linear-gradient(180deg, #2e0249 0%, #570a57 50%, #1a1a1b 100%);
+            --card-grad: linear-gradient(135deg, #3d0561 0%, #2e0249 100%);
+            --accent: #ffffff;
+            --neon: rgba(219, 0, 255, 0.8);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
+        body, html { height: 100%; background: var(--bg); color: var(--accent); overflow: hidden; }
+        ::-webkit-scrollbar { display: none; }
+        
+        header { display: flex; justify-content: space-between; align-items: center; padding: 0 15px; height: 80px; position: relative; z-index: 1000; }
+        .avatar { width: 44px; height: 44px; border-radius: 50%; background-size: cover; border: 2px solid rgba(255,255,255,0.4); cursor: pointer; background-position: center; box-shadow: 0 0 15px var(--neon); }
+        .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 24px; font-weight: 700; flex: 1; text-align: center; }
+        .total-count { font-size: 18px; font-weight: bold; min-width: 44px; text-align: right; }
+
+        #main-viewport { display: flex; width: 100vw; height: calc(100vh - 80px); overflow-y: auto; flex-direction: column; padding: 20px; padding-bottom: 100px; }
+        
+        .step-group { margin-bottom: 30px; }
+        .step-header { font-size: 14px; font-weight: 800; text-transform: uppercase; color: var(--neon); margin-bottom: 15px; border-bottom: 1px solid rgba(219, 0, 255, 0.3); padding-bottom: 5px; display: flex; justify-content: space-between; }
+        
+        .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 12px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
+        .card h3 { font-size: 18px; margin-bottom: 5px; }
+        .card p { font-size: 14px; opacity: 0.6; }
+        .card-level { position: absolute; top: 22px; right: 22px; font-size: 24px; font-weight: 800; font-family: 'Montserrat Alternates', sans-serif; }
+
+        #edit-screen { position: fixed; inset: 0; background: var(--bg); z-index: 9000; display: none; flex-direction: column; padding: 25px; overflow-y: auto; }
+        input, select, textarea { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 15px; margin-bottom: 20px; border-radius: 10px; font-size: 16px; }
+        .btn-save { padding: 20px; background: white; color: black; border-radius: 15px; font-weight: 800; border: none; text-transform: uppercase; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h2>SL Time CRM</h2>
-        <div id="total">0</div>
+    <div id="splash" style="position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:bold;">SL</div>
+
+    <header>
+        <div class="avatar" id="u-avatar"></div>
+        <div class="header-title">SL Time CRM</div>
+        <div id="header-counter" class="total-count">0</div>
+    </header>
+
+    <div id="main-viewport"></div>
+
+    <div id="edit-screen">
+        <h2 style="margin-bottom:20px;">РЕДАГУВАННЯ</h2>
+        <select id="e-step"></select>
+        <input type="text" id="e-lname" placeholder="Прізвище">
+        <input type="text" id="e-fname" placeholder="Ім'я">
+        <input type="tel" id="e-phone" placeholder="Телефон">
+        <select id="e-level"><option value="">Рівень</option><script>for(let i=1; i<=16; i++) document.write(`<option value="${i}">${i}</option>`);</script></select>
+        <textarea id="e-notes" placeholder="Нотатки" rows="4"></textarea>
+        <button class="btn-save" onclick="manualSave()">Зберегти та закрити</button>
+        <button style="margin-top:15px; background:none; border:none; color:white; opacity:0.5;" onclick="closeEdit()">СКАСУВАТИ</button>
     </div>
-    <div id="board"></div>
 
     <script>
         const firebaseConfig = { apiKey: "AIzaSyBLi2NoAigr1CDQm98iZHUZXNeDzJMwwxY", authDomain: "starlife-crm.firebaseapp.com", projectId: "starlife-crm", storageBucket: "starlife-crm.firebasestorage.app", messagingSenderId: "1022280682130", appId: "1:1022280682130:web:3ea517e8b6d22c7787744b" };
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore(), auth = firebase.auth();
+        const auth = firebase.auth(), db = firebase.firestore();
+
+        let user = null, clients = [], editId = null;
         const steps = ["Список", "Бесіда", "Розробка", "Презентація", "Ліфт", "Поліс", "Семінар", "Партнер"];
 
-        auth.onAuthStateChanged(user => {
-            if(user) {
-                db.collection("users").doc(user.uid).collection("clients").onSnapshot(snap => {
-                    const clients = [];
-                    snap.forEach(doc => clients.push({id: doc.id, ...doc.data()}));
-                    document.getElementById('total').innerText = clients.length;
-                    render(clients);
-                });
-            } else {
-                auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-            }
+        auth.onAuthStateChanged(async u => { 
+            user = u; document.getElementById('splash').style.display = 'none'; 
+            if(u) { loadData(); } 
+            else { auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); } 
         });
 
-        function render(clients) {
-            const board = document.getElementById('board');
-            board.innerHTML = '';
-            steps.forEach((stepName, stepIdx) => {
-                const filtered = clients.filter(c => (c.step || 0) == stepIdx);
-                if(filtered.length > 0 || stepIdx === 0) {
+        function loadData() {
+            db.collection("users").doc(user.uid).collection("clients").onSnapshot(snap => {
+                clients = []; snap.forEach(d => clients.push({id: d.id, ...d.data()}));
+                document.getElementById('header-counter').innerText = clients.length;
+                render();
+            });
+            document.getElementById('u-avatar').style.backgroundImage = `url(${user.photoURL})`;
+        }
+
+        function render() {
+            const container = document.getElementById('main-viewport');
+            const stepSelect = document.getElementById('e-step');
+            container.innerHTML = ''; stepSelect.innerHTML = '';
+            
+            steps.forEach((name, idx) => {
+                stepSelect.innerHTML += `<option value="${idx}">${name}</option>`;
+                const group = clients.filter(c => (c.step || 0) == idx);
+                
+                if(group.length > 0 || idx === 0) {
                     const section = document.createElement('div');
-                    section.innerHTML = `<div class="step-title">${stepName} (${filtered.length})</div>`;
-                    filtered.forEach(c => {
-                        section.innerHTML += `
-                            <div class="card">
-                                <h3>${c.lname || ''} ${c.fname || 'Без імені'}</h3>
-                                <p>${c.phone || 'Немає номеру'}</p>
-                            </div>`;
+                    section.className = 'step-group';
+                    section.innerHTML = `<div class="step-header"><span>${name}</span><span>${group.length}</span></div>`;
+                    group.forEach(c => {
+                        const div = document.createElement('div');
+                        div.className = 'card';
+                        div.onclick = () => openEdit(c.id);
+                        div.innerHTML = `
+                            <div class="card-level">${c.level || ''}</div>
+                            <h3>${c.lname || ''} ${c.fname || ''}</h3>
+                            <p>${c.phone || ''}</p>
+                        `;
+                        section.appendChild(div);
                     });
-                    board.appendChild(section);
+                    container.appendChild(section);
                 }
             });
+        }
+
+        function openEdit(id) { editId = id; const c = clients.find(x => x.id === id); ['lname','fname','phone','notes','level'].forEach(k => document.getElementById('e-'+k).value = c[k] || ""); document.getElementById('e-step').value = c.step || 0; document.getElementById('edit-screen').style.display='flex'; }
+        function closeEdit() { document.getElementById('edit-screen').style.display='none'; editId = null; }
+        async function manualSave() {
+            const d = {
+                lname: document.getElementById('e-lname').value,
+                fname: document.getElementById('e-fname').value,
+                phone: document.getElementById('e-phone').value,
+                notes: document.getElementById('e-notes').value,
+                level: document.getElementById('e-level').value,
+                step: parseInt(document.getElementById('e-step').value),
+                updated: Date.now()
+            };
+            await db.collection("users").doc(user.uid).collection("clients").doc(editId).set(d, {merge:true});
+            closeEdit();
         }
     </script>
 </body>
