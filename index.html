@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://img.icons8.com/ios-filled/180/ffffff/star.png">
-    <title>SL TIME CRM 3.4.3</title>
+    <title>SL TIME CRM 3.4.4</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@700&display=swap" rel="stylesheet">
 
@@ -39,7 +39,7 @@
         .header-title { font-family: 'Montserrat Alternates', sans-serif; font-size: 24px; font-weight: 700; color: var(--neon-text); text-shadow: 0 0 10px var(--neon); flex: 1; text-align: center; }
 
         #header-ctrl { display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 4px; cursor: pointer; min-width: 50px; }
-        .total-count { font-size: 14px; font-weight: bold; }
+        .total-count { font-size: 14px; font-weight: bold; line-height: 1; margin-bottom: 2px; }
         .f-lines { display: flex; flex-direction: column; gap: 4px; align-items: flex-end; width: 22px; }
         .f-line { height: 2px; background: white; border-radius: 2px; }
         .l1 { width: 22px; } .l2 { width: 16px; } .l3 { width: 10px; }
@@ -52,7 +52,7 @@
         .column { min-width: calc(100vw - 40px); scroll-snap-align: center; display: flex; flex-direction: column; gap: 15px; }
         .cards-area { flex: 1; overflow-y: auto; padding-bottom: 150px; } 
         .col-head { display: flex; justify-content: space-between; align-items: center; font-size: 14px; text-transform: uppercase; font-weight: bold; height: 36px; }
-        .add-btn-center { cursor: pointer; font-size: 32px; }
+        .add-btn-center { cursor: pointer; font-size: 32px; font-weight: bold; }
 
         .card { background: var(--card-grad); padding: 22px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); margin-top: 15px; cursor: pointer; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3), 0 0 12px var(--neon); }
         .card-level { position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 30px; font-weight: bold; font-family: 'Montserrat Alternates', sans-serif; color: #fff; text-shadow: 0 0 8px var(--neon); }
@@ -74,6 +74,8 @@
         .photo-container { position: relative; width: 110px; height: 110px; margin: 0 auto; cursor: pointer; }
         .edit-level-badge { position: absolute; top: 50%; left: -65px; transform: translateY(-50%); font-family: 'Montserrat Alternates', sans-serif; font-size: 60px; font-weight: bold; color: #fff; text-shadow: 0 0 15px var(--neon); width: 60px; text-align: center; }
 
+        #filter-popup { position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1); }
+        .f-item { padding: 15px 25px; font-size: 14px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 20px 0; }
         .theme-btn { padding: 16px; text-align: center; cursor: pointer; border-radius: 12px; font-weight: bold; font-size: 12px; border: 1px solid rgba(255,255,255,0.2); text-transform: uppercase; color: white; }
     </style>
@@ -91,10 +93,10 @@
         <div id="header-plus" onclick="handleAddPartner()">+</div>
     </header>
 
-    <div id="filter-popup" style="position: absolute; top: 70px; right: 20px; background: rgba(0,0,0,0.95); border-radius: 12px; display: none; flex-direction: column; z-index: 2000; border: 1px solid rgba(255,255,255,0.1);">
-        <div class="f-item" style="padding: 15px 25px; border-bottom: 1px solid rgba(255,255,255,0.05);" onclick="setFilter('az')">А-Я</div>
-        <div class="f-item" style="padding: 15px 25px; border-bottom: 1px solid rgba(255,255,255,0.05);" onclick="setFilter('new')">Нові</div>
-        <div class="f-item" style="padding: 15px 25px;" onclick="setFilter('old')">Старі</div>
+    <div id="filter-popup">
+        <div class="f-item" onclick="setFilter('az')">А-Я</div>
+        <div class="f-item" onclick="setFilter('new')">Нові</div>
+        <div class="f-item" onclick="setFilter('old')">Старі</div>
     </div>
 
     <div id="main-viewport">
@@ -128,7 +130,7 @@
         <span onclick="removeClient()" style="position: absolute; top: 25px; right: 25px; color: #ff4d4d; font-size: 12px; text-transform: uppercase; cursor: pointer;">Видалити</span>
         <div class="photo-container" onclick="document.getElementById('file-client').click()">
             <div id="c-photo" style="width:110px; height:110px; border-radius:50%; background-size:cover; border:1px solid silver;"></div>
-            <div id="edit-lvl-display" class="edit-level-badge"></div>
+            <div id="edit-lvl-display" class="edit-level-display"></div>
             <input type="file" id="file-client" hidden accept="image/*" onchange="uploadPhoto(this, 'client')">
         </div>
         <label>ЕТАП</label><select id="e-step"></select>
