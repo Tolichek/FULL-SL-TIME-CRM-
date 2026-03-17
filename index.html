@@ -6,16 +6,17 @@
     
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#121212">
     
-    <link rel="manifest" href="data:application/manifest+json,{%22id%22:%22humantree_pwa%22,%22name%22:%22HumanTree%22,%22short_name%22:%22HumanTree%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22#121212%22,%22theme_color%22:%22#121212%22}">
+    <link rel="manifest" href="data:application/manifest+json,{%22id%22:%22humantree_v3%22,%22name%22:%22HumanTree%22,%22short_name%22:%22HumanTree%22,%22start_url%22:%22index.html%22,%22display%22:%22standalone%22,%22background_color%22:%22#121212%22,%22theme_color%22:%22#121212%22,%22orientation%22:%22portrait%22}">
 
     <title>HumanTree</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --bg: #121212; --card: #1e1e1e; --border: #2a2a2a; }
-        body { background: var(--bg); color: #e0e0e0; font-family: sans-serif; margin: 0; padding: env(safe-area-inset-top) 0 0 0; overflow-x: hidden; }
+        body { background: var(--bg); color: #e0e0e0; font-family: sans-serif; margin: 0; padding: env(safe-area-inset-top) 0 0 0; overflow: hidden; height: 100vh; }
         
         .level-0 { border-left: 2px solid #3b82f6; }
         .level-1 { border-left: 2px solid #10b981; }
@@ -36,12 +37,12 @@
         input[type="date"] { color-scheme: dark; font-size: 14px; }
         textarea { resize: none; overflow: hidden; min-height: 24px; }
         
-        .btn-plus { color: #3b82f6; font-size: 13px; padding: 8px 16px; display: block; margin-bottom: 10px; }
+        .btn-plus { color: #3b82f6; font-size: 13px; padding: 8px 16px; display: block; margin-bottom: 10px; text-align: left; }
     </style>
 </head>
 <body>
 
-    <div id="main-screen" class="p-2">
+    <div id="main-screen" class="p-2 h-full overflow-y-auto">
         <div class="flex justify-end pr-2">
             <button onclick="addNewNode(null)" class="text-blue-500 text-4xl leading-none">+</button>
         </div>
@@ -54,7 +55,7 @@
             <button onclick="saveNode()" class="text-blue-500 font-bold text-lg">Готово</button>
         </div>
 
-        <div class="p-4 pb-24">
+        <div class="p-4 pb-32">
             <div class="flex flex-col items-center mb-6">
                 <input type="file" id="photo-input" hidden accept="image/*" onchange="previewPhoto(this)">
                 <div id="photo-preview" onclick="document.getElementById('photo-input').click()" class="w-20 h-20 bg-[#252525] rounded-full flex items-center justify-center border border-[#333] overflow-hidden">
@@ -143,10 +144,10 @@
             currentPhoto = node.photo || '';
             document.getElementById('photo-preview').innerHTML = currentPhoto ? `<img src="${currentPhoto}" class="w-full h-full object-cover">` : `<span class="text-[10px] text-zinc-600">ФОТО</span>`;
             
-            const pCont = document.getElementById('phone-container'); pCont.innerHTML = '';
+            document.getElementById('phone-container').innerHTML = '';
             (node.phones || []).forEach(p => addPhoneField(p));
             
-            const nCont = document.getElementById('note-container'); nCont.innerHTML = '';
+            document.getElementById('note-container').innerHTML = '';
             (node.notes || []).forEach(n => addNoteField(n));
             
             document.getElementById('editor').style.display = 'flex';
@@ -155,14 +156,14 @@
         function addPhoneField(val) {
             const div = document.createElement('div');
             div.className = 'input-group';
-            div.innerHTML = `<div class="field"><label>моб.</label><input type="tel" value="${val}"></div>`;
+            div.innerHTML = `<div class="field"><label>моб.</label><input type="tel" class="phone-input" value="${val}"></div>`;
             document.getElementById('phone-container').appendChild(div);
         }
 
         function addNoteField(val) {
             const div = document.createElement('div');
             div.className = 'input-group';
-            div.innerHTML = `<div class="field"><textarea oninput="autoH(this)">${val}</textarea></div>`;
+            div.innerHTML = `<div class="field"><textarea class="note-input" oninput="autoH(this)">${val}</textarea></div>`;
             document.getElementById('note-container').appendChild(div);
             autoH(div.querySelector('textarea'));
         }
@@ -170,18 +171,18 @@
         function autoH(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
 
         function saveNode() {
-            const index = treeData.findIndex(n => n.id === currentId);
-            if (index === -1) return;
+            const node = treeData.find(n => n.id === currentId);
+            if (!node) return;
 
-            treeData[index].status = document.getElementById('edit-status').value;
-            treeData[index].surname = document.getElementById('edit-surname').value;
-            treeData[index].name = document.getElementById('edit-name').value;
-            treeData[index].email = document.getElementById('edit-email').value;
-            treeData[index].bday = document.getElementById('edit-bday').value;
-            treeData[index].photo = currentPhoto;
+            node.status = document.getElementById('edit-status').value;
+            node.surname = document.getElementById('edit-surname').value;
+            node.name = document.getElementById('edit-name').value;
+            node.email = document.getElementById('edit-email').value;
+            node.bday = document.getElementById('edit-bday').value;
+            node.photo = currentPhoto;
             
-            treeData[index].phones = Array.from(document.querySelectorAll('#phone-container input')).map(i => i.value).filter(v => v.trim());
-            treeData[index].notes = Array.from(document.querySelectorAll('#note-container textarea')).map(t => t.value).filter(v => v.trim());
+            node.phones = Array.from(document.querySelectorAll('.phone-input')).map(i => i.value).filter(v => v.trim());
+            node.notes = Array.from(document.querySelectorAll('.note-input')).map(t => t.value).filter(v => v.trim());
             
             localStorage.setItem('treeData', JSON.stringify(treeData));
             document.getElementById('editor').style.display = 'none';
