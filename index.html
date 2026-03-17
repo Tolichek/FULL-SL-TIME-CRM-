@@ -8,9 +8,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#121212">
-    <meta name="application-name" content="HumanTree">
     
-    <link rel="manifest" href="data:application/manifest+json,{%22id%22:%22humantree_pwa%22,%22name%22:%22HumanTree%22,%22short_name%22:%22HumanTree%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22#121212%22,%22theme_color%22:%22#121212%22,%22orientation%22:%22portrait%22}">
+    <link rel="manifest" href="data:application/manifest+json,{%22id%22:%22humantree_pwa%22,%22name%22:%22HumanTree%22,%22short_name%22:%22HumanTree%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22#121212%22,%22theme_color%22:%22#121212%22}">
 
     <title>HumanTree</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -171,15 +170,18 @@
         function autoH(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
 
         function saveNode() {
-            const node = treeData.find(n => n.id === currentId);
-            node.status = document.getElementById('edit-status').value;
-            node.surname = document.getElementById('edit-surname').value;
-            node.name = document.getElementById('edit-name').value;
-            node.email = document.getElementById('edit-email').value;
-            node.bday = document.getElementById('edit-bday').value;
-            node.photo = currentPhoto;
-            node.phones = Array.from(document.querySelectorAll('#phone-container input')).map(i => i.value).filter(v => v.trim());
-            node.notes = Array.from(document.querySelectorAll('#note-container textarea')).map(t => t.value).filter(v => v.trim());
+            const index = treeData.findIndex(n => n.id === currentId);
+            if (index === -1) return;
+
+            treeData[index].status = document.getElementById('edit-status').value;
+            treeData[index].surname = document.getElementById('edit-surname').value;
+            treeData[index].name = document.getElementById('edit-name').value;
+            treeData[index].email = document.getElementById('edit-email').value;
+            treeData[index].bday = document.getElementById('edit-bday').value;
+            treeData[index].photo = currentPhoto;
+            
+            treeData[index].phones = Array.from(document.querySelectorAll('#phone-container input')).map(i => i.value).filter(v => v.trim());
+            treeData[index].notes = Array.from(document.querySelectorAll('#note-container textarea')).map(t => t.value).filter(v => v.trim());
             
             localStorage.setItem('treeData', JSON.stringify(treeData));
             document.getElementById('editor').style.display = 'none';
