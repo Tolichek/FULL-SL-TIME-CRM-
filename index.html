@@ -17,20 +17,24 @@
         .node-row { display: flex; align-items: center; padding: 12px 0 12px 12px; border-bottom: 1px solid #1a1a1a; position: relative; background: rgba(255,255,255,0.02); }
         .full-page { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: none; flex-direction: column; padding-top: env(safe-area-inset-top); }
         .input-group { background: var(--card); border-radius: 8px; overflow: hidden; margin-bottom: 10px; border: 1px solid var(--border); }
-        .field { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 4px; }
+        .field { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
         .field:last-child { border-bottom: none; }
         .field label { font-size: 11px; color: var(--accent); width: 85px; text-transform: uppercase; flex-shrink: 0; font-weight: bold; }
         
+        /* Спеціальний стиль для паспорта без зазорів */
+        .passport-row { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; }
+        .passport-row label { font-size: 11px; color: var(--accent); text-transform: uppercase; font-weight: bold; margin-right: 8px; }
+        .pass-tag { color: var(--accent); font-weight: bold; font-size: 10px; text-transform: uppercase; margin-right: 4px; flex-shrink: 0; }
+        .pass-input-ser { background: transparent; border: none; outline: none; color: #fff; width: 40px; font-size: 16px; margin-right: 8px; }
+        .pass-input-num { background: transparent; border: none; outline: none; color: #fff; flex: 1; font-size: 16px; }
+
         .field input, .field textarea, .field select { background: transparent; border: none; outline: none; color: #fff; flex: 1; font-size: 16px; width: 100%; }
         #edit-status { color: var(--accent) !important; font-weight: bold; }
 
-        .label-green-small { color: var(--accent); font-weight: bold; font-size: 10px; text-transform: uppercase; margin-right: 2px; }
         textarea { resize: none; overflow: hidden; min-height: 24px; display: block; width: 100%; }
         .btn-plus { color: var(--blue); font-size: 13px; padding: 8px 16px; display: block; margin-bottom: 10px; text-align: left; }
         .age-badge { font-size: 12px; color: var(--accent); margin-left: auto; font-weight: bold; }
         
-        /* Чат */
-        #history-content { user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
         .chat-date { text-align: center; font-size: 10px; color: var(--accent); margin: 15px 0 5px; text-transform: uppercase; font-weight: bold; }
         .chat-bubble { background: #2b2b2b; padding: 10px 14px; border-radius: 15px 15px 15px 2px; margin-bottom: 8px; max-width: 85%; align-self: flex-start; position: relative; }
         .chat-time { font-size: 9px; color: var(--accent); float: right; margin-top: 5px; margin-left: 10px; font-weight: bold; }
@@ -43,7 +47,7 @@
 
     <div id="main-screen" class="p-2 h-full overflow-y-auto">
         <div class="flex justify-between items-center px-2 mb-4">
-            <span class="label-green-small !text-[12px]">Список / Структура</span>
+            <span class="text-accent font-bold text-xs uppercase">Список / Структура</span>
             <button onclick="addNewNode(null)" class="text-blue-500 text-4xl leading-none">+</button>
         </div>
         <div id="tree-root"></div>
@@ -69,17 +73,21 @@
                 <div id="patr-main-cont"></div>
             </div>
             <button id="btn-patr-main" onclick="addPatrField('main')" class="btn-plus">+ Додати по-батькові</button>
+            
             <div id="phone-container"></div>
             <button onclick="addPhoneField('')" class="btn-plus">+ Додати мобільний</button>
+
             <div class="input-group"><div class="field"><label>Дата нар.</label><input id="edit-bday" type="date" onchange="updateAge(this, 'age-display')"><span id="age-display" class="age-badge"></span></div></div>
+
             <div class="input-group">
-                <div class="field">
+                <div class="passport-row">
                     <label>Паспорт</label>
-                    <span class="label-green-small">серія</span><input id="edit-pass-ser" type="text" class="w-10 !flex-none">
-                    <span class="label-green-small">№</span><input id="edit-pass-num" type="text" class="!flex-1">
+                    <span class="pass-tag">серія</span><input id="edit-pass-ser" type="text" class="pass-input-ser">
+                    <span class="pass-tag">№</span><input id="edit-pass-num" type="text" class="pass-input-num">
                 </div>
                 <div class="field"><label>ІНН</label><input id="edit-inn" type="text"></div>
             </div>
+
             <div class="input-group">
                 <div class="field"><label>Область</label><input id="edit-region" type="text"></div>
                 <div class="field"><label>Нас. пункт</label><input id="edit-city" type="text"></div>
@@ -92,7 +100,8 @@
                 <button id="btn-apt" onclick="addExtraAddr('apt')" class="btn-plus">+ Квартира</button>
                 <button id="btn-zip" onclick="addExtraAddr('zip')" class="btn-plus">+ Індекс</button>
             </div>
-            <button onclick="openHistory()" class="w-full py-4 bg-zinc-800 rounded-lg text-white font-bold mt-4 uppercase">Історія</button>
+
+            <button onclick="openHistory()" class="w-full py-4 bg-zinc-800 rounded-lg text-white font-bold mt-4 uppercase tracking-widest">Історія</button>
             <button onclick="openInsurance(0)" class="w-full py-4 bg-zinc-800 rounded-lg text-white font-medium mt-4 uppercase">Поліс</button>
             <div id="extra-ins-list"></div>
             <button onclick="addNewInsurance()" class="btn-plus mt-2">+ Додати ще один поліс</button>
@@ -128,6 +137,7 @@
         let treeData = JSON.parse(localStorage.getItem('treeData')) || [];
         let currentId = null, currentPhoto = '', activeInsIdx = 0, selectedMsgIdx = null;
 
+        // Кнопка назад
         window.onpopstate = (e) => {
             if (document.getElementById('ins-editor').style.display === 'flex') closeInsurance();
             else if (document.getElementById('history-screen').style.display === 'flex') closeHistory();
@@ -145,7 +155,7 @@
                 const wrap = document.createElement('div');
                 wrap.className = `level-${level % 4}`;
                 container.appendChild(wrap);
-                wrap.innerHTML = `<div class="node-row"><div class="flex-1" onclick="openNode('${node.id}')"><div class="label-green-small mb-1">${node.status || ''}</div><div class="text-lg font-light">${node.surname || ''} ${node.name || '...'}</div></div><button onclick="addNewNode('${node.id}')" class="text-blue-500 text-2xl px-4 font-light">+</button></div>`;
+                wrap.innerHTML = `<div class="node-row"><div class="flex-1" onclick="openNode('${node.id}')"><div class="label-green text-[10px] mb-1">${node.status || ''}</div><div class="text-lg font-light">${node.surname || ''} ${node.name || '...'}</div></div><button onclick="addNewNode('${node.id}')" class="text-blue-500 text-2xl px-4 font-light">+</button></div>`;
                 buildTree(node.id, wrap, level + 1);
             });
         }
@@ -192,19 +202,20 @@
                 b.innerHTML = `${msg.text} <span class="chat-time">${dObj.toLocaleTimeString('uk-UA',{hour:'2-digit',minute:'2-digit'})}</span>`;
                 let timer;
                 b.oncontextmenu = (e) => e.preventDefault();
-                b.ontouchstart = b.onmousedown = (e) => { timer = setTimeout(() => showMenu(e, idx), 600); };
+                b.ontouchstart = b.onmousedown = (e) => { 
+                    const pos = {x: e.clientX || e.touches[0].clientX, y: e.clientY || e.touches[0].clientY};
+                    timer = setTimeout(() => showMenu(pos, idx), 600); 
+                };
                 b.ontouchend = b.onmouseup = b.onmouseleave = () => clearTimeout(timer);
                 cont.appendChild(b);
             });
             cont.scrollTop = cont.scrollHeight;
         }
 
-        function showMenu(e, idx) {
-            e.preventDefault(); e.stopImmediatePropagation();
+        function showMenu(pos, idx) {
             selectedMsgIdx = idx; const menu = document.getElementById('context-menu');
-            const x = (e.clientX || e.touches[0].clientX), y = (e.clientY || e.touches[0].clientY);
-            menu.style.left = (x > window.innerWidth - 160 ? x - 150 : x) + 'px';
-            menu.style.top = (y - 40) + 'px'; menu.style.display = 'block';
+            menu.style.left = (pos.x > window.innerWidth - 160 ? pos.x - 150 : pos.x) + 'px';
+            menu.style.top = (pos.y - 40) + 'px'; menu.style.display = 'block';
             setTimeout(() => document.onclick = () => { menu.style.display = 'none'; document.onclick = null; }, 10);
         }
 
@@ -217,7 +228,7 @@
         }
 
         function openInsurance(idx) {
-            activeInsIdx = idx; const n = treeData.find(x => x.id === currentId); if(!n.insurances) n.insurances = [{}];
+            activeInsIdx = idx; const n = treeData.find(x => x.id === currentId);
             const ins = n.insurances[idx]; history.pushState({p:3}, '');
             document.getElementById('ins-fields-root').innerHTML = `
                 <div class="input-group">
