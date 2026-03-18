@@ -48,7 +48,6 @@
 
         .photo-wrap { position: relative; width: 100px; height: 100px; margin: 0 auto 20px; }
         .btn-del-main { position: absolute; right: -70px; top: 0; color: #ef4444; font-size: 10px; font-weight: bold; text-transform: uppercase; }
-        .text-blue-500.text-sm { font-weight: normal; }
     </style>
 </head>
 <body oncontextmenu="return false;">
@@ -187,11 +186,11 @@
 
         function saveNode() {
             const n = treeData.find(x => x.id === currentId);
-            n.photo = currentPhotoBase64; // ФОТО ЗБЕРІГАЄТЬСЯ ТУТ
+            n.photo = currentPhotoBase64;
             n.status = document.getElementById('edit-status').value;
             n.surname = document.getElementById('edit-surname').value;
             n.name = document.getElementById('edit-name').value;
-            n.patronymic = document.getElementById('inp-main-patr')?.value || n.patronymic || '';
+            n.patronymic = document.getElementById('inp-main-patr')?.value || '';
             n.bday = document.getElementById('edit-bday').value;
             n.pass_ser = document.getElementById('edit-pass-ser').value;
             n.pass_num = document.getElementById('edit-pass-num').value;
@@ -200,9 +199,9 @@
             n.city = document.getElementById('edit-city').value;
             n.street = document.getElementById('edit-street').value;
             n.house = document.getElementById('edit-house').value;
-            n.corp = document.getElementById('edit-corp')?.value || n.corp || '';
-            n.apt = document.getElementById('edit-apt')?.value || n.apt || '';
-            n.zip = document.getElementById('edit-zip')?.value || n.zip || '';
+            n.corp = document.getElementById('edit-corp')?.value || '';
+            n.apt = document.getElementById('edit-apt')?.value || '';
+            n.zip = document.getElementById('edit-zip')?.value || '';
             n.phones = Array.from(document.querySelectorAll('.phone-data')).map(i => i.value).filter(v => v.trim());
             localStorage.setItem('treeData', JSON.stringify(treeData));
             closeEditor(); render();
