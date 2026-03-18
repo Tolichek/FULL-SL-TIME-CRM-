@@ -9,6 +9,7 @@
         :root { --bg: #121212; --card: #1e1e1e; --border: #2a2a2a; --accent: #10b981; --blue: #3b82f6; }
         body { background: var(--bg); color: #e0e0e0; font-family: sans-serif; margin: 0; padding: env(safe-area-inset-top) 0 0 0; overflow: hidden; height: 100vh; }
         
+        /* Структура списку */
         .level-0 { border-left: 3px solid #3b82f6; margin-bottom: 4px; }
         .level-1 { border-left: 3px solid #10b981; margin-left: 12px; }
         .level-2 { border-left: 3px solid #ef4444; margin-left: 12px; }
@@ -27,18 +28,20 @@
         .pass-tag { color: var(--accent); font-size: 10px; text-transform: uppercase; font-weight: bold; }
         .pass-input { background: transparent; border: none; outline: none; color: #fff; font-size: 16px; }
 
-        /* Чат */
+        /* Історія / Чат */
         #history-content { user-select: none; -webkit-user-select: none; }
         .chat-date { text-align: center; font-size: 10px; color: var(--accent); margin: 15px 0 5px; text-transform: uppercase; font-weight: bold; }
         .chat-bubble { background: #2b2b2b; padding: 10px 14px; border-radius: 15px 15px 15px 2px; margin-bottom: 8px; max-width: 85%; align-self: flex-start; }
         .chat-time { font-size: 9px; color: var(--accent); float: right; margin-top: 5px; margin-left: 10px; font-weight: bold; }
         
-        /* Меню та модалки */
+        /* Модалки */
         #context-menu, #confirm-dialog { position: fixed; background: #252525; border-radius: 12px; display: none; z-index: 300; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 1px solid #444; overflow: hidden; }
         .menu-item, .dialog-btn { padding: 14px 24px; font-size: 15px; text-align: center; border-bottom: 1px solid #333; color: #fff; }
-        .menu-item:active, .dialog-btn:active { background: #333; }
         
-        #history-input { background: #121212; border: 1px solid #333; border-radius: 8px; padding: 10px; color: #fff; width: 100%; min-height: 40px; max-height: 120px; resize: none; overflow-y: auto; }
+        textarea { resize: none; overflow: hidden; min-height: 24px; display: block; width: 100%; background: transparent; border: none; outline: none; color: #fff; }
+        #history-input { background: #121212; border: 1px solid #333; border-radius: 8px; padding: 10px; min-height: 40px; }
+        .btn-plus { color: var(--blue); font-size: 13px; padding: 8px 16px; display: block; margin-bottom: 10px; text-align: left; }
+        .age-badge { font-size: 12px; color: var(--accent); margin-left: auto; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -46,7 +49,7 @@
     <div id="main-screen" class="p-2 h-full overflow-y-auto">
         <div class="flex justify-between items-center px-2 mb-4">
             <span class="text-accent font-bold text-xs uppercase">Список / Структура</span>
-            <button onclick="addNewNode(null)" class="text-blue-500 text-4xl">+</button>
+            <button onclick="addNewNode(null)" class="text-blue-500 text-4xl leading-none">+</button>
         </div>
         <div id="tree-root"></div>
     </div>
@@ -61,7 +64,14 @@
                 <div class="field"><label>Статус</label><input id="edit-status" type="text" style="color:var(--accent); font-weight:bold;"></div>
                 <div class="field"><label>Прізвище</label><input id="edit-surname" type="text"></div>
                 <div class="field"><label>Ім'я</label><input id="edit-name" type="text"></div>
+                <div id="patr-main-cont"></div>
             </div>
+            <button id="btn-patr-main" onclick="addPatrField('main')" class="btn-plus">+ Додати по-батькові</button>
+
+            <div id="phone-container"></div>
+            <button onclick="addPhoneField('')" class="btn-plus">+ Додати мобільний</button>
+
+            <div class="input-group"><div class="field"><label>Дата нар.</label><input id="edit-bday" type="date" onchange="updateAge(this, 'age-display')"><span id="age-display" class="age-badge"></span></div></div>
 
             <div class="input-group">
                 <div class="field">
@@ -71,10 +81,26 @@
                         <span class="pass-tag">№</span><input id="edit-pass-num" class="pass-input flex-1">
                     </div>
                 </div>
+                <div class="field"><label>ІНН</label><input id="edit-inn" type="text"></div>
             </div>
 
-            <button onclick="openHistory()" class="w-full py-4 bg-zinc-800 rounded-lg text-white font-bold mt-4 uppercase">Історія</button>
+            <div class="input-group">
+                <div class="field"><label>Область</label><input id="edit-region" type="text"></div>
+                <div class="field"><label>Нас. пункт</label><input id="edit-city" type="text"></div>
+                <div class="field"><label>Вулиця</label><input id="edit-street" type="text"></div>
+                <div class="field"><label>Будинок</label><input id="edit-house" type="text"></div>
+                <div id="extra-addr-cont"></div>
+            </div>
+            <div class="flex gap-2">
+                <button id="btn-corp" onclick="addExtraAddr('corp')" class="btn-plus">+ Корпус</button>
+                <button id="btn-apt" onclick="addExtraAddr('apt')" class="btn-plus">+ Квартира</button>
+                <button id="btn-zip" onclick="addExtraAddr('zip')" class="btn-plus">+ Індекс</button>
+            </div>
+
+            <button onclick="openHistory()" class="w-full py-4 bg-zinc-800 rounded-lg text-white font-bold mt-4 uppercase tracking-widest">Історія</button>
             <button onclick="openInsurance(0)" class="w-full py-4 bg-zinc-800 rounded-lg text-white font-medium mt-4 uppercase">Поліс</button>
+            <div id="extra-ins-list"></div>
+            <button onclick="addNewInsurance()" class="btn-plus mt-2">+ Додати ще один поліс</button>
         </div>
     </div>
 
@@ -85,8 +111,8 @@
         </div>
         <div id="history-content" class="flex-1 overflow-y-auto p-4 flex flex-col"></div>
         <div class="p-3 bg-[#1e1e1e] flex gap-2 items-end">
-            <textarea id="history-input" placeholder="Напишіть..."></textarea>
-            <button id="send-btn" onclick="addHistoryMsg()" class="text-blue-500 text-3xl pb-1">➤</button>
+            <textarea id="history-input" placeholder="Напишіть..." oninput="autoH(this)"></textarea>
+            <button onclick="addHistoryMsg()" class="text-blue-500 text-3xl pb-1">➤</button>
         </div>
     </div>
 
@@ -94,29 +120,28 @@
         <div class="menu-item" onclick="startEditMsg()">Редагувати</div>
         <div class="menu-item text-red-500" onclick="showDelDialog()">Видалити</div>
     </div>
-
     <div id="confirm-dialog" class="w-64">
         <div class="p-6 text-center border-b border-[#333]">Видалити?</div>
-        <div class="flex">
-            <div class="dialog-btn flex-1 border-r border-[#333]" onclick="closeModal()">Назад</div>
-            <div class="dialog-btn flex-1 text-red-500 font-bold" onclick="confirmDelete()">ОК</div>
-        </div>
+        <div class="flex"><div class="dialog-btn flex-1 border-r border-[#333]" onclick="closeModal()">Назад</div><div class="dialog-btn flex-1 text-red-500 font-bold" onclick="confirmDelete()">ОК</div></div>
     </div>
 
     <script>
         let treeData = JSON.parse(localStorage.getItem('treeData')) || [];
         let currentId = null, activeInsIdx = 0, selectedMsgIdx = null, editMode = false;
 
+        window.onpopstate = () => {
+            if (document.getElementById('history-screen').style.display === 'flex') closeHistory();
+            else closeEditor();
+        };
+
         function render() {
-            const root = document.getElementById('tree-root');
-            root.innerHTML = '';
+            const root = document.getElementById('tree-root'); root.innerHTML = '';
             buildTree(null, root, 0);
         }
 
         function buildTree(parentId, container, level) {
             treeData.filter(n => n.parentId === parentId).forEach(node => {
-                const wrap = document.createElement('div');
-                wrap.className = `level-${level % 4}`;
+                const wrap = document.createElement('div'); wrap.className = `level-${level % 4}`;
                 container.appendChild(wrap);
                 wrap.innerHTML = `<div class="node-row"><div class="flex-1" onclick="openNode('${node.id}')"><div class="text-[10px] text-accent font-bold mb-1">${node.status || ''}</div><div class="text-lg font-light">${node.surname || ''} ${node.name || '...'}</div></div><button onclick="addNewNode('${node.id}')" class="text-blue-500 text-2xl px-4">+</button></div>`;
                 buildTree(node.id, wrap, level + 1);
@@ -130,12 +155,18 @@
             document.getElementById('edit-name').value = n.name || '';
             document.getElementById('edit-pass-ser').value = n.pass_ser || '';
             document.getElementById('edit-pass-num').value = n.pass_num || '';
+            document.getElementById('edit-inn').value = n.inn || '';
+            document.getElementById('edit-region').value = n.region || '';
+            document.getElementById('edit-city').value = n.city || '';
+            document.getElementById('edit-street').value = n.street || '';
+            document.getElementById('edit-house').value = n.house || '';
+            document.getElementById('extra-addr-cont').innerHTML = '';
+            ['corp', 'apt', 'zip'].forEach(t => { if(n[t]) addExtraAddr(t, n[t]); else document.getElementById('btn-'+t).style.display = 'block'; });
+            document.getElementById('phone-container').innerHTML = '';
+            (n.phones || []).forEach(p => addPhoneField(p));
             document.getElementById('editor').style.display = 'flex';
             history.pushState({p:1}, '');
         }
-
-        function openHistory() { history.pushState({p:2}, ''); document.getElementById('history-screen').style.display = 'flex'; renderHistory(); }
-        function closeHistory() { document.getElementById('history-screen').style.display = 'none'; }
 
         function renderHistory() {
             const cont = document.getElementById('history-content'); cont.innerHTML = '';
@@ -146,7 +177,6 @@
                 if(date !== lastDate) { cont.innerHTML += `<div class="chat-date">${date}</div>`; lastDate = date; }
                 const b = document.createElement('div'); b.className = "chat-bubble";
                 b.innerHTML = `${msg.text} <span class="chat-time">${dObj.toLocaleTimeString('uk-UA',{hour:'2-digit',minute:'2-digit'})}</span>`;
-                
                 let timer;
                 b.ontouchstart = b.onmousedown = (e) => { 
                     const p = {x: e.clientX || e.touches[0].clientX, y: e.clientY || e.touches[0].clientY};
@@ -158,60 +188,44 @@
             cont.scrollTop = cont.scrollHeight;
         }
 
-        function showMenu(p, idx) {
-            selectedMsgIdx = idx; const m = document.getElementById('context-menu');
-            m.style.display = 'block';
-            m.style.left = Math.min(p.x, window.innerWidth - 160) + 'px';
-            m.style.top = (p.y - 80) + 'px';
-            document.onclick = (e) => { if(!m.contains(e.target)) closeModal(); };
-        }
-
-        function startEditMsg() {
-            const n = treeData.find(x => x.id === currentId);
-            const input = document.getElementById('history-input');
-            input.value = n.history[selectedMsgIdx].text;
-            editMode = true; closeModal();
-            input.focus();
-        }
-
+        function showMenu(p, idx) { selectedMsgIdx = idx; const m = document.getElementById('context-menu'); m.style.display = 'block'; m.style.left = Math.min(p.x, window.innerWidth - 160) + 'px'; m.style.top = (p.y - 80) + 'px'; document.onclick = (e) => { if(!m.contains(e.target)) closeModal(); }; }
+        function startEditMsg() { const n = treeData.find(x => x.id === currentId); const input = document.getElementById('history-input'); input.value = n.history[selectedMsgIdx].text; editMode = true; closeModal(); autoH(input); input.focus(); }
         function addHistoryMsg() {
             const input = document.getElementById('history-input'); if(!input.value.trim()) return;
-            const n = treeData.find(x => x.id === currentId);
-            if(!n.history) n.history = [];
-            
-            if(editMode) {
-                n.history[selectedMsgIdx].text = input.value;
-                editMode = false;
-            } else {
-                n.history.push({ text: input.value, time: new Date().toISOString() });
-            }
+            const n = treeData.find(x => x.id === currentId); if(!n.history) n.history = [];
+            if(editMode) { n.history[selectedMsgIdx].text = input.value; editMode = false; }
+            else { n.history.push({ text: input.value, time: new Date().toISOString() }); }
             input.value = ''; input.style.height = '40px'; renderHistory();
         }
 
-        function showDelDialog() { closeModal(); const d = document.getElementById('confirm-dialog'); d.style.display = 'block'; d.style.left = '50%'; d.style.top = '50%'; d.style.transform = 'translate(-50%, -50%)'; }
+        function showDelDialog() { closeModal(); const d = document.getElementById('confirm-dialog'); d.style.display = 'block'; d.style.left='50%'; d.style.top='50%'; d.style.transform='translate(-50%,-50%)'; }
         function confirmDelete() { const n = treeData.find(x => x.id === currentId); n.history.splice(selectedMsgIdx, 1); closeModal(); renderHistory(); }
         function closeModal() { document.getElementById('context-menu').style.display = 'none'; document.getElementById('confirm-dialog').style.display = 'none'; }
-
+        
+        function openHistory() { history.pushState({p:2}, ''); document.getElementById('history-screen').style.display = 'flex'; renderHistory(); }
+        function closeHistory() { document.getElementById('history-screen').style.display = 'none'; }
+        function closeEditor() { document.getElementById('editor').style.display = 'none'; }
         function saveNode() {
             const n = treeData.find(x => x.id === currentId);
-            n.status = document.getElementById('edit-status').value;
-            n.surname = document.getElementById('edit-surname').value;
-            n.name = document.getElementById('edit-name').value;
-            n.pass_ser = document.getElementById('edit-pass-ser').value;
-            n.pass_num = document.getElementById('edit-pass-num').value;
-            localStorage.setItem('treeData', JSON.stringify(treeData));
-            document.getElementById('editor').style.display = 'none';
-            render();
+            n.status = document.getElementById('edit-status').value; n.surname = document.getElementById('edit-surname').value;
+            n.name = document.getElementById('edit-name').value; n.pass_ser = document.getElementById('edit-pass-ser').value;
+            n.pass_num = document.getElementById('edit-pass-num').value; n.inn = document.getElementById('edit-inn').value;
+            n.region = document.getElementById('edit-region').value; n.city = document.getElementById('edit-city').value;
+            n.street = document.getElementById('edit-street').value; n.house = document.getElementById('edit-house').value;
+            n.corp = document.getElementById('edit-corp')?.value || n.corp || ''; n.apt = document.getElementById('edit-apt')?.value || n.apt || '';
+            n.zip = document.getElementById('edit-zip')?.value || n.zip || '';
+            n.phones = Array.from(document.querySelectorAll('.phone-data')).map(i => i.value).filter(v => v.trim());
+            localStorage.setItem('treeData', JSON.stringify(treeData)); closeEditor(); render();
         }
 
+        function addPatrField(t, v='') { document.getElementById('patr-main-cont').innerHTML = `<div class="field"><label>По-батькові</label><input id="inp-main-patr" type="text" value="${v}"></div>`; document.getElementById('btn-patr-main').style.display = 'none'; }
+        function addExtraAddr(t, v='') { const div = document.createElement('div'); div.className = 'field'; const labels = {corp:'Корпус', apt:'Квартира', zip:'Індекс'}; div.innerHTML = `<label>${labels[t]}</label><input id="edit-${t}" type="text" value="${v}">`; document.getElementById('extra-addr-cont').appendChild(div); document.getElementById('btn-'+t).style.display = 'none'; }
+        function addPhoneField(v) { const div = document.createElement('div'); div.className = 'input-group'; div.innerHTML = `<div class="field"><label>моб.</label><input type="tel" class="phone-data" value="${v}"></div>`; document.getElementById('phone-container').appendChild(div); }
+        function calculateAge(d) { if(!d) return ''; const b = new Date(d), t = new Date(); let a = t.getFullYear()-b.getFullYear(); if(t.getMonth()<b.getMonth() || (t.getMonth()===b.getMonth() && t.getDate()<b.getDate())) a--; return a + ' р.'; }
+        function updateAge(el, id) { document.getElementById(id).innerText = calculateAge(el.value); }
+        function autoH(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
         function addNewNode(parentId) { const id = 'id' + Date.now(); treeData.push({ id, parentId, surname:'', name:'', insurances:[{}], history:[] }); openNode(id); }
-        function closeEditor() { document.getElementById('editor').style.display = 'none'; }
-
-        window.onpopstate = () => {
-            if(document.getElementById('history-screen').style.display === 'flex') closeHistory();
-            else closeEditor();
-        };
-
+        
         render();
     </script>
 </body>
