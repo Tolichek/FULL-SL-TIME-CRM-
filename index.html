@@ -29,21 +29,18 @@
         #edit-status { color: var(--accent) !important; font-weight: bold; }
 
         textarea { resize: none; overflow: hidden; min-height: 24px; display: block; width: 100%; background: transparent; border: none; outline: none; color: #fff; }
-        #history-input { background: #121212; border: 1px solid #333; border-radius: 8px; padding: 10px; min-height: 40px; }
+        #history-input { background: #121212; border: 1px solid #333; border-radius: 8px; padding: 10px; min-height: 40px; font-size: 16px; }
         .btn-plus { color: var(--blue); font-size: 13px; padding: 8px 16px; display: block; margin-bottom: 10px; text-align: left; }
         .age-badge { font-size: 12px; color: var(--accent); margin-left: auto; font-weight: bold; }
 
-        /* Чат */
         #history-content { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; user-select: none; -webkit-user-select: none; }
         .chat-date { text-align: center; font-size: 10px; color: var(--accent); margin: 15px 0 5px; text-transform: uppercase; font-weight: bold; }
         .chat-bubble { background: #2b2b2b; padding: 10px 14px; border-radius: 15px 15px 15px 2px; margin-bottom: 8px; max-width: 85%; align-self: flex-start; }
         .chat-time { font-size: 9px; color: var(--accent); float: right; margin-top: 5px; margin-left: 10px; font-weight: bold; }
         
-        .history-footer { padding: 10px; background: #1e1e1e; border-top: 1px solid #333; display: flex; align-items: flex-end; gap: 10px; }
-        
         #context-menu, #confirm-dialog { position: fixed; background: #252525; border-radius: 12px; display: none; z-index: 500; border: 1px solid #444; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,1); }
         .menu-item { padding: 16px 24px; font-size: 15px; text-align: left; border-bottom: 1px solid #333; color: #fff; min-width: 160px; }
-        .dialog-btn { padding: 14px; text-align: center; flex: 1; font-size: 15px; border-top: 1px solid #333; }
+        .dialog-btn { padding: 14px; text-align: center; flex: 1; font-size: 15px; border-top: 1px solid #333; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -62,13 +59,6 @@
             <button onclick="saveNode()" class="text-blue-500 font-bold text-lg">Готово</button>
         </div>
         <div class="p-4 pb-32">
-            <div class="flex items-center gap-6 mb-6">
-                <input type="file" id="photo-input" hidden accept="image/*" onchange="processPhoto(this)">
-                <div id="photo-preview" onclick="document.getElementById('photo-input').click()" class="w-20 h-20 bg-[#252525] rounded-full flex items-center justify-center border border-[#333] overflow-hidden flex-shrink-0">
-                    <span class="text-[10px] text-zinc-600">ФОТО</span>
-                </div>
-                <button onclick="deleteNode()" class="text-red-600 text-xs font-bold uppercase">Видалити</button>
-            </div>
             <div class="input-group">
                 <div class="field"><label>Статус</label><input id="edit-status" type="text"></div>
                 <div class="field"><label>Прізвище</label><input id="edit-surname" type="text"></div>
@@ -80,7 +70,9 @@
             <div id="phone-container"></div>
             <button onclick="addPhoneField('')" class="btn-plus">+ Додати мобільний</button>
 
-            <div class="input-group"><div class="field"><label>Дата нар.</label><input id="edit-bday" type="date" onchange="updateAge(this, 'age-display')"><span id="age-display" class="age-badge"></span></div></div>
+            <div class="input-group">
+                <div class="field"><label>Дата нар.</label><input id="edit-bday" type="date" onchange="updateAge(this, 'age-display')"><span id="age-display" class="age-badge"></span></div>
+            </div>
 
             <div class="input-group">
                 <div class="field">
@@ -119,7 +111,7 @@
             <span class="font-bold">Історія дій</span><div class="w-10"></div>
         </div>
         <div id="history-content"></div>
-        <div class="history-footer">
+        <div class="p-3 bg-[#1e1e1e] flex gap-2 items-end">
             <textarea id="history-input" placeholder="Напишіть..." oninput="autoH(this)"></textarea>
             <button onclick="addHistoryMsg()" class="text-blue-500 text-3xl pb-1">➤</button>
         </div>
@@ -136,12 +128,12 @@
     <div id="context-menu"><div class="menu-item" onclick="startEditMsg()">Редагувати</div><div class="menu-item text-red-500" onclick="showDelDialog()">Видалити</div></div>
     <div id="confirm-dialog" class="w-64">
         <div class="p-6 text-center">Видалити?</div>
-        <div class="flex"><div class="dialog-btn border-r border-[#333]" onclick="closeModal()">Скасувати</div><div class="dialog-btn text-red-500 font-bold" onclick="confirmDelete()">ОК</div></div>
+        <div class="flex"><div class="dialog-btn border-r border-[#333]" onclick="closeModal()">Назад</div><div class="dialog-btn text-red-500 font-bold" onclick="confirmDelete()">ОК</div></div>
     </div>
 
     <script>
         let treeData = JSON.parse(localStorage.getItem('treeData')) || [];
-        let currentId = null, currentPhoto = '', activeInsIdx = 0, selectedMsgIdx = null, editMode = false;
+        let currentId = null, activeInsIdx = 0, selectedMsgIdx = null, editMode = false;
 
         window.onpopstate = () => {
             if (document.getElementById('ins-editor').style.display === 'flex') closeInsurance();
@@ -182,8 +174,6 @@
             document.getElementById('edit-house').value = n.house || '';
             document.getElementById('extra-addr-cont').innerHTML = '';
             ['corp', 'apt', 'zip'].forEach(t => { if(n[t]) addExtraAddr(t, n[t]); else document.getElementById('btn-'+t).style.display = 'block'; });
-            currentPhoto = n.photo || '';
-            document.getElementById('photo-preview').innerHTML = currentPhoto ? `<img src="${currentPhoto}" class="w-full h-full object-cover">` : `<span class="text-[10px] text-zinc-600">ФОТО</span>`;
             document.getElementById('phone-container').innerHTML = '';
             (n.phones || []).forEach(p => addPhoneField(p));
             renderExtraInsButtons();
@@ -224,7 +214,6 @@
             `;
             (ins.notes || []).forEach(nt => addInsNote(nt));
             document.getElementById('ins-editor').style.display = 'flex';
-            history.pushState({p:3}, '');
             setTimeout(() => { document.querySelectorAll('#ins-editor textarea').forEach(t => autoH(t)); }, 200);
         }
 
@@ -259,20 +248,18 @@
             n.corp = document.getElementById('edit-corp')?.value || n.corp || '';
             n.apt = document.getElementById('edit-apt')?.value || n.apt || '';
             n.zip = document.getElementById('edit-zip')?.value || n.zip || '';
-            n.photo = currentPhoto;
             n.phones = Array.from(document.querySelectorAll('.phone-data')).map(i => i.value).filter(v => v.trim());
             localStorage.setItem('treeData', JSON.stringify(treeData));
             closeEditor(); render();
         }
 
-        function openHistory() { history.pushState({p:2}, ''); document.getElementById('history-screen').style.display = 'flex'; renderHistory(); }
-        function closeHistory() { document.getElementById('history-screen').style.display = 'none'; }
-        function closeEditor() { document.getElementById('editor').style.display = 'none'; }
         function renderHistory() {
             const cont = document.getElementById('history-content'); cont.innerHTML = '';
             const n = treeData.find(x => x.id === currentId);
+            let lastDate = "";
             (n.history || []).forEach((msg, idx) => {
                 const dObj = new Date(msg.time), date = dObj.toLocaleDateString('uk-UA');
+                if(date !== lastDate) { cont.innerHTML += `<div class="chat-date">${date}</div>`; lastDate = date; }
                 const b = document.createElement('div'); b.className = "chat-bubble";
                 b.innerHTML = `${msg.text} <span class="chat-time">${dObj.toLocaleTimeString('uk-UA',{hour:'2-digit',minute:'2-digit'})}</span>`;
                 let timer;
@@ -304,8 +291,10 @@
         function calculateAge(d) { if(!d) return ''; const b = new Date(d), t = new Date(); let a = t.getFullYear()-b.getFullYear(); if(t.getMonth()<b.getMonth() || (t.getMonth()===b.getMonth() && t.getDate()<b.getDate())) a--; return a + ' р.'; }
         function updateAge(el, id) { document.getElementById(id).innerText = calculateAge(el.value); }
         function autoH(el) { el.style.height = '40px'; if(el.scrollHeight > 40) el.style.height = el.scrollHeight + 'px'; }
-        function processPhoto(input) { if (input.files && input.files[0]) { const reader = new FileReader(); reader.onload = e => { const img = new Image(); img.onload = () => { const canvas = document.createElement('canvas'); const max = 300; let w = img.width, h = img.height; if (w > h) { if (w > max) { h *= max / w; w = max; } } else { if (h > max) { w *= max / h; h = max; } } canvas.width = w; canvas.height = h; canvas.getContext('2d').drawImage(img, 0, 0, w, h); currentPhoto = canvas.toDataURL('image/jpeg', 0.5); document.getElementById('photo-preview').innerHTML = `<img src="${currentPhoto}" class="w-full h-full object-cover">`; }; img.src = e.target.result; }; reader.readAsDataURL(input.files[0]); } }
         function addNewNode(parentId) { const id = 'id' + Date.now(); treeData.push({ id, parentId, surname:'', name:'', insurances:[{}], history:[] }); openNode(id); }
+        function openHistory() { history.pushState({p:2}, ''); document.getElementById('history-screen').style.display = 'flex'; renderHistory(); }
+        function closeHistory() { document.getElementById('history-screen').style.display = 'none'; }
+        function closeEditor() { document.getElementById('editor').style.display = 'none'; }
         function renderExtraInsButtons() { const cont = document.getElementById('extra-ins-list'); cont.innerHTML = ''; const n = treeData.find(x => x.id === currentId); (n.insurances || []).forEach((ins, i) => { if(i > 0) { const b = document.createElement('button'); b.className = "w-full py-3 bg-zinc-900 border border-zinc-800 rounded-lg text-white mt-2 uppercase text-xs"; b.innerText = `Поліс ${i + 1}`; b.onclick = () => openInsurance(i); cont.appendChild(b); } }); }
         function addNewInsurance() { const n = treeData.find(x => x.id === currentId); if(!n.insurances) n.insurances = [{}]; n.insurances.push({notes:[]}); renderExtraInsButtons(); }
         render();
