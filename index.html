@@ -9,19 +9,17 @@
         :root { --bg: #121212; --card: #1e1e1e; --border: #2a2a2a; --accent: #10b981; --blue: #3b82f6; }
         body { background: var(--bg); color: #e0e0e0; font-family: sans-serif; margin: 0; padding: env(safe-area-inset-top) 0 0 0; overflow-x: hidden; height: 100vh; }
         
-        /* Та сама яскрава структура */
         .level-0 { border-left: 3px solid #3b82f6; margin-bottom: 4px; }
         .level-1 { border-left: 3px solid #10b981; margin-left: 12px; }
         .level-2 { border-left: 3px solid #ef4444; margin-left: 12px; }
         .level-3 { border-left: 3px solid #f59e0b; margin-left: 12px; }
 
         .node-row { display: flex; align-items: center; padding: 12px 0 12px 12px; border-bottom: 1px solid #1a1a1a; position: relative; background: rgba(255,255,255,0.02); }
-        
         .full-page { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: none; flex-direction: column; padding-top: env(safe-area-inset-top); }
         .input-group { background: var(--card); border-radius: 8px; overflow: hidden; margin-bottom: 10px; border: 1px solid var(--border); }
         .field { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
         .field:last-child { border-bottom: none; }
-        .field label { font-size: 11px; color: var(--accent); width: 85px; text-transform: uppercase; flex-shrink: 0; font-weight: bold; }
+        .field label { font-size: 11px; color: var(--accent); width: 95px; text-transform: uppercase; flex-shrink: 0; font-weight: bold; }
         .label-green { color: var(--accent); font-weight: bold; font-size: 11px; text-transform: uppercase; }
         .field input, .field textarea, .field select { background: transparent; border: none; outline: none; color: #fff; flex: 1; font-size: 16px; width: 100%; }
         
@@ -30,16 +28,19 @@
         .btn-plus { color: var(--blue); font-size: 13px; padding: 8px 16px; display: block; margin-bottom: 10px; text-align: left; }
         .age-badge { font-size: 12px; color: var(--accent); margin-left: auto; font-weight: bold; }
         .status-text { color: var(--accent); font-weight: bold; font-size: 10px; text-transform: uppercase; }
-        .list-header { color: var(--accent); font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; }
-        .small-blue-plus { color: var(--blue); font-size: 24px; font-weight: 300; padding: 0 15px; }
+        
+        /* Стилі Історії (Chat) */
+        .chat-date { text-align: center; font-size: 10px; color: #555; margin: 15px 0 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .chat-bubble { background: #2b2b2b; padding: 10px 14px; border-radius: 15px 15px 15px 2px; margin-bottom: 8px; max-width: 85%; align-self: flex-start; position: relative; word-wrap: break-word; }
+        .chat-time { font-size: 9px; color: #666; float: right; margin-top: 5px; margin-left: 10px; }
     </style>
 </head>
 <body>
 
     <div id="main-screen" class="p-2 h-full overflow-y-auto">
         <div class="flex justify-between items-center px-2 mb-4">
-            <span class="list-header">Список / Структура</span>
-            <button onclick="addNewNode(null)" class="text-blue-500 text-4xl leading-none">+</button>
+            <span class="label-green">Список / Структура</span>
+            <button onclick="addNewNode(null)" class="text-blue-500 text-4xl">+</button>
         </div>
         <div id="tree-root"></div>
     </div>
@@ -60,7 +61,7 @@
             </div>
 
             <div class="input-group">
-                <div class="field"><label>Статус</label><input id="edit-status" type="text" class="text-blue-400 font-bold"></div>
+                <div class="field"><label>Статус</label><input id="edit-status" type="text" class="text-accent font-bold"></div>
                 <div class="field"><label>Прізвище</label><input id="edit-surname" type="text"></div>
                 <div class="field"><label>Ім'я</label><input id="edit-name" type="text"></div>
                 <div id="patr-main-cont"></div>
@@ -78,28 +79,41 @@
                 <div class="field">
                     <label>Паспорт</label>
                     <span class="label-green">серія</span><input id="edit-pass-ser" type="text" class="w-10 flex-none text-center">
-                    <span class="label-green">№</span><input id="edit-pass-num" type="text">
+                    <span class="label-green">№</span><input id="edit-pass-num" type="text" style="width: 100px;">
                 </div>
                 <div class="field"><label>ІНН</label><input id="edit-inn" type="text"></div>
             </div>
 
             <div class="input-group">
-                <div class="field"><label>Місто</label><input id="edit-city" type="text"></div>
+                <div class="field"><label>Область</label><input id="edit-region" type="text"></div>
+                <div class="field"><label>Нас. пункт</label><input id="edit-city" type="text"></div>
                 <div class="field"><label>Вулиця</label><input id="edit-street" type="text"></div>
                 <div class="field"><label>Будинок</label><input id="edit-house" type="text"></div>
                 <div id="extra-addr-cont"></div>
             </div>
             <div class="flex gap-2">
+                <button id="btn-corp" onclick="addExtraAddr('corp')" class="btn-plus">+ Корпус</button>
                 <button id="btn-apt" onclick="addExtraAddr('apt')" class="btn-plus">+ Квартира</button>
                 <button id="btn-zip" onclick="addExtraAddr('zip')" class="btn-plus">+ Індекс</button>
             </div>
 
+            <button onclick="openHistory()" class="w-full py-4 bg-zinc-800 rounded-lg text-blue-400 font-bold mt-4 uppercase tracking-widest">Історія</button>
             <button onclick="openInsurance(0)" class="w-full py-4 bg-zinc-800 rounded-lg text-white font-medium mt-4 uppercase">Поліс</button>
             <div id="extra-ins-list"></div>
             <button onclick="addNewInsurance()" class="btn-plus mt-2">+ Додати ще один поліс</button>
+        </div>
+    </div>
 
-            <div id="note-container" class="mt-6"></div>
-            <button onclick="addNoteField('')" class="btn-plus">+ Додати примітку</button>
+    <div id="history-screen" class="full-page">
+        <div class="flex justify-between items-center px-4 py-3 border-b border-[#2a2a2a] bg-[#121212]">
+            <button onclick="document.getElementById('history-screen').style.display='none'" class="text-blue-500">Назад</button>
+            <span class="font-bold">Історія дій</span>
+            <div class="w-10"></div>
+        </div>
+        <div id="history-content" class="flex-1 overflow-y-auto p-4 flex flex-col"></div>
+        <div class="p-3 border-t border-[#2a2a2a] bg-[#1e1e1e] flex gap-2">
+            <textarea id="history-input" placeholder="Напишіть щось..." class="bg-[#121212] rounded-lg p-2 text-white" oninput="autoH(this)"></textarea>
+            <button onclick="addHistoryMsg()" class="text-blue-500 font-bold px-2">Відправити</button>
         </div>
     </div>
 
@@ -117,10 +131,10 @@
         let currentId = null;
         let currentPhoto = '';
         let activeInsIdx = 0;
+        let editingHistoryIdx = null;
 
         window.onpopstate = () => {
-            if (document.getElementById('ins-editor').style.display === 'flex') closeInsurance();
-            else if (document.getElementById('editor').style.display === 'flex') closeEditor();
+            document.querySelectorAll('.full-page').forEach(p => p.style.display = 'none');
         };
 
         function render() {
@@ -141,33 +155,11 @@
                             <div class="status-text mb-1">${node.status || ''}</div>
                             <div class="text-lg font-light">${node.surname || ''} ${node.name || '...'}</div>
                         </div>
-                        <button onclick="addNewNode('${node.id}')" class="small-blue-plus">+</button>
+                        <button onclick="addNewNode('${node.id}')" class="text-blue-500 text-2xl px-4 font-light">+</button>
                     </div>
                 `;
                 buildTree(node.id, wrap, level + 1);
             });
-        }
-
-        function processPhoto(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = e => {
-                    const img = new Image();
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        const max = 400;
-                        let w = img.width, h = img.height;
-                        if (w > h) { if (w > max) { h *= max / w; w = max; } }
-                        else { if (h > max) { w *= max / h; h = max; } }
-                        canvas.width = w; canvas.height = h;
-                        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                        currentPhoto = canvas.toDataURL('image/jpeg', 0.6);
-                        document.getElementById('photo-preview').innerHTML = `<img src="${currentPhoto}" class="w-full h-full object-cover">`;
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
         }
 
         function openNode(id) {
@@ -185,23 +177,99 @@
             document.getElementById('edit-pass-ser').value = n.pass_ser || '';
             document.getElementById('edit-pass-num').value = n.pass_num || '';
             document.getElementById('edit-inn').value = n.inn || '';
+            document.getElementById('edit-region').value = n.region || '';
             document.getElementById('edit-city').value = n.city || '';
             document.getElementById('edit-street').value = n.street || '';
             document.getElementById('edit-house').value = n.house || '';
+            
             document.getElementById('extra-addr-cont').innerHTML = '';
-            document.getElementById('btn-apt').style.display = n.apt ? 'none' : 'block';
-            document.getElementById('btn-zip').style.display = n.zip ? 'none' : 'block';
-            if(n.apt) addExtraAddr('apt', n.apt);
-            if(n.zip) addExtraAddr('zip', n.zip);
+            ['corp', 'apt', 'zip'].forEach(t => {
+                document.getElementById('btn-'+t).style.display = n[t] ? 'none' : 'block';
+                if(n[t]) addExtraAddr(t, n[t]);
+            });
+
             currentPhoto = n.photo || '';
             document.getElementById('photo-preview').innerHTML = currentPhoto ? `<img src="${currentPhoto}" class="w-full h-full object-cover">` : `<span class="text-[10px] text-zinc-600">ФОТО</span>`;
             document.getElementById('phone-container').innerHTML = '';
             (n.phones || []).forEach(p => addPhoneField(p));
-            document.getElementById('note-container').innerHTML = '';
-            (n.notes || []).forEach(nt => addNoteField(nt));
             renderExtraInsButtons();
             document.getElementById('editor').style.display = 'flex';
-            setTimeout(() => { document.querySelectorAll('textarea').forEach(t => autoH(t)); }, 200);
+        }
+
+        function openHistory() {
+            const n = treeData.find(x => x.id === currentId);
+            if(!n.history) n.history = [];
+            document.getElementById('history-screen').style.display = 'flex';
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const cont = document.getElementById('history-content');
+            cont.innerHTML = '';
+            const n = treeData.find(x => x.id === currentId);
+            let lastDate = "";
+            n.history.forEach((msg, idx) => {
+                const date = new Date(msg.time).toLocaleDateString('uk-UA');
+                if(date !== lastDate) {
+                    cont.innerHTML += `<div class="chat-date">${date}</div>`;
+                    lastDate = date;
+                }
+                const time = new Date(msg.time).toLocaleTimeString('uk-UA', {hour: '2-digit', minute:'2-digit'});
+                const bubble = document.createElement('div');
+                bubble.className = "chat-bubble";
+                bubble.innerHTML = `${msg.text} <span class="chat-time">${time}</span>`;
+                
+                // Довге натискання
+                let timer;
+                bubble.onmousedown = bubble.ontouchstart = () => {
+                    timer = setTimeout(() => {
+                        if(confirm('Редагувати повідомлення?')) {
+                            const newTxt = prompt('Змінити текст:', msg.text);
+                            if(newTxt) { msg.text = newTxt; renderHistory(); }
+                        } else if(confirm('Видалити?')) {
+                            n.history.splice(idx, 1); renderHistory();
+                        }
+                    }, 600);
+                };
+                bubble.onmouseup = bubble.onmouseleave = bubble.ontouchend = () => clearTimeout(timer);
+                
+                cont.appendChild(bubble);
+            });
+            cont.scrollTop = cont.scrollHeight;
+        }
+
+        function addHistoryMsg() {
+            const input = document.getElementById('history-input');
+            if(!input.value.trim()) return;
+            const n = treeData.find(x => x.id === currentId);
+            n.history.push({ text: input.value, time: new Date().toISOString() });
+            input.value = '';
+            autoH(input);
+            renderHistory();
+        }
+
+        function saveNode() {
+            const n = treeData.find(x => x.id === currentId);
+            n.status = document.getElementById('edit-status').value;
+            n.surname = document.getElementById('edit-surname').value;
+            n.name = document.getElementById('edit-name').value;
+            n.patronymic = document.getElementById('inp-main-patr')?.value || '';
+            n.bday = document.getElementById('edit-bday').value;
+            n.pass_ser = document.getElementById('edit-pass-ser').value;
+            n.pass_num = document.getElementById('edit-pass-num').value;
+            n.inn = document.getElementById('edit-inn').value;
+            n.region = document.getElementById('edit-region').value;
+            n.city = document.getElementById('edit-city').value;
+            n.street = document.getElementById('edit-street').value;
+            n.house = document.getElementById('edit-house').value;
+            n.corp = document.getElementById('edit-corp')?.value || '';
+            n.apt = document.getElementById('edit-apt')?.value || '';
+            n.zip = document.getElementById('edit-zip')?.value || '';
+            n.photo = currentPhoto;
+            n.phones = Array.from(document.querySelectorAll('.phone-data')).map(i => i.value).filter(v => v.trim());
+            localStorage.setItem('treeData', JSON.stringify(treeData));
+            closeEditor();
+            render();
         }
 
         function openInsurance(idx) {
@@ -209,7 +277,6 @@
             const n = treeData.find(x => x.id === currentId);
             if(!n.insurances) n.insurances = [{}];
             const ins = n.insurances[idx];
-            history.pushState({p:2}, '');
             const root = document.getElementById('ins-fields-root');
             root.innerHTML = `
                 <div class="input-group">
@@ -219,11 +286,6 @@
                 </div>
                 <div class="input-group">
                     <div class="field"><label>Дата нар.</label><input id="ins-bday" type="date" value="${ins.bday || ''}" onchange="updateAge(this, 'ia')"><span id="ia" class="age-badge">${calculateAge(ins.bday)}</span></div>
-                    <div class="field"><label>Стать</label><select id="ins-gen"><option value="жінка" ${ins.gender==='жінка'?'selected':''}>жінка</option><option value="чоловік" ${ins.gender==='чоловік'?'selected':''}>чоловік</option></select></div>
-                </div>
-                <div class="input-group">
-                    <div class="field"><label>Зріст/см</label><input id="ins-h" type="number" value="${ins.height || ''}"></div>
-                    <div class="field"><label>Вага/кг</label><input id="ins-w" type="number" value="${ins.weight || ''}"></div>
                 </div>
                 <div class="input-group">
                     <div class="field"><label>Оформлено</label><input id="ins-start" type="date" value="${ins.date_start || ''}"></div>
@@ -237,23 +299,11 @@
                     <div class="field"><label>№ Захисту</label><input id="ins-nz" type="text" value="${ins.n_zahyst || ''}"></div>
                     <div class="field"><label>Сума Захисту</label><input id="ins-sz" type="text" value="${ins.s_zahyst || ''}"></div>
                 </div>
-                <div class="input-group">
-                    <div class="field"><label>Роль</label><select id="ins-role"><option value="Батько" ${ins.role==='Батько'?'selected':''}>Батько</option><option value="Мати" ${ins.role==='Мати'?'selected':''}>Мати</option></select></div>
-                    <div class="field"><label>Прізвище</label><input id="ins-psur" type="text" value="${ins.p_sur || ''}"></div>
-                    <div class="field"><label>Ім'я</label><input id="ins-pnam" type="text" value="${ins.p_nam || ''}"></div>
-                    <div id="ins-p-pat-cont"></div>
-                </div>
-                <button id="btn-ins-p-pat" onclick="addInsParentPatr('${ins.p_pat || ''}')" class="btn-plus">+ По-батькові</button>
-                <div class="input-group">
-                    <div class="field"><label>Дата нар.</label><input id="ins-pbday" type="date" value="${ins.p_bday || ''}" onchange="updateAge(this, 'ipa')"><span id="ipa" class="age-badge">${calculateAge(ins.p_bday)}</span></div>
-                </div>
                 <div id="ins-notes-cont"></div>
                 <button onclick="addInsNote('')" class="btn-plus">+ Додати примітку</button>
             `;
-            if(ins.p_pat) addInsParentPatr(ins.p_pat);
             (ins.notes || []).forEach(nt => addInsNote(nt));
             document.getElementById('ins-editor').style.display = 'flex';
-            setTimeout(() => { document.querySelectorAll('#ins-editor textarea').forEach(t => autoH(t)); }, 100);
         }
 
         function closeInsurance() {
@@ -263,9 +313,6 @@
             ins.name = document.getElementById('ins-nam').value;
             ins.patronymic = document.getElementById('ins-pat').value;
             ins.bday = document.getElementById('ins-bday').value;
-            ins.gender = document.getElementById('ins-gen').value;
-            ins.height = document.getElementById('ins-h').value;
-            ins.weight = document.getElementById('ins-w').value;
             ins.date_start = document.getElementById('ins-start').value;
             ins.term = document.getElementById('ins-term').value;
             ins.total = document.getElementById('ins-tot').value;
@@ -273,62 +320,25 @@
             ins.s_nakop = document.getElementById('ins-sn').value;
             ins.n_zahyst = document.getElementById('ins-nz').value;
             ins.s_zahyst = document.getElementById('ins-sz').value;
-            ins.role = document.getElementById('ins-role').value;
-            ins.p_sur = document.getElementById('ins-psur').value;
-            ins.p_nam = document.getElementById('ins-pnam').value;
-            ins.p_pat = document.getElementById('ins-p-pat-val')?.value || '';
-            ins.p_bday = document.getElementById('ins-pbday').value;
             ins.notes = Array.from(document.querySelectorAll('.ins-note-data')).map(t => t.value).filter(v => v.trim());
             document.getElementById('ins-editor').style.display = 'none';
-        }
-
-        function saveNode() {
-            const n = treeData.find(x => x.id === currentId);
-            n.status = document.getElementById('edit-status').value;
-            n.surname = document.getElementById('edit-surname').value;
-            n.name = document.getElementById('edit-name').value;
-            n.patronymic = document.getElementById('inp-main-patr')?.value || '';
-            n.bday = document.getElementById('edit-bday').value;
-            n.pass_ser = document.getElementById('edit-pass-ser').value;
-            n.pass_num = document.getElementById('edit-pass-num').value;
-            n.inn = document.getElementById('edit-inn').value;
-            n.city = document.getElementById('edit-city').value;
-            n.street = document.getElementById('edit-street').value;
-            n.house = document.getElementById('edit-house').value;
-            n.apt = document.getElementById('edit-apt')?.value || '';
-            n.zip = document.getElementById('edit-zip')?.value || '';
-            n.photo = currentPhoto;
-            n.phones = Array.from(document.querySelectorAll('.phone-data')).map(i => i.value).filter(v => v.trim());
-            n.notes = Array.from(document.querySelectorAll('.note-data')).map(t => t.value).filter(v => v.trim());
-            localStorage.setItem('treeData', JSON.stringify(treeData));
-            closeEditor();
-            render();
         }
 
         function addPatrField(type, v='') {
             document.getElementById('patr-main-cont').innerHTML = `<div class="field"><label>По-батькові</label><input id="inp-main-patr" type="text" value="${v}"></div>`;
             document.getElementById('btn-patr-main').style.display = 'none';
         }
-        function addInsParentPatr(v) {
-            document.getElementById('ins-p-pat-cont').innerHTML = `<div class="field"><label>По-батькові</label><input id="ins-p-pat-val" type="text" value="${v}"></div>`;
-            document.getElementById('btn-ins-p-pat').style.display = 'none';
-        }
         function addExtraAddr(t, v='') {
             const div = document.createElement('div'); div.className = 'field';
-            div.innerHTML = `<label>${t==='apt'?'Квартира':'Індекс'}</label><input id="edit-${t}" type="text" value="${v}">`;
+            const labels = {corp:'Корпус', apt:'Квартира', zip:'Індекс'};
+            div.innerHTML = `<label>${labels[t]}</label><input id="edit-${t}" type="text" value="${v}">`;
             document.getElementById('extra-addr-cont').appendChild(div);
-            document.getElementById(`btn-${t}`).style.display = 'none';
+            document.getElementById('btn-'+t).style.display = 'none';
         }
         function addPhoneField(v) {
             const div = document.createElement('div'); div.className = 'input-group';
             div.innerHTML = `<div class="field"><label>моб.</label><input type="tel" class="phone-data" value="${v}"></div>`;
             document.getElementById('phone-container').appendChild(div);
-        }
-        function addNoteField(v) {
-            const div = document.createElement('div'); div.className = 'input-group';
-            div.innerHTML = `<div class="field"><textarea class="note-data" oninput="autoH(this)">${v}</textarea></div>`;
-            document.getElementById('note-container').appendChild(div);
-            autoH(div.querySelector('textarea'));
         }
         function addInsNote(v) {
             const div = document.createElement('div'); div.className = 'input-group';
@@ -365,9 +375,32 @@
         }
         function updateAge(el, id) { document.getElementById(id).innerText = calculateAge(el.value); }
         function autoH(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
+        
+        function processPhoto(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = e => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const max = 300; // Ще менше для економії пам'яті
+                        let w = img.width, h = img.height;
+                        if (w > h) { if (w > max) { h *= max / w; w = max; } }
+                        else { if (h > max) { w *= max / h; h = max; } }
+                        canvas.width = w; canvas.height = h;
+                        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+                        currentPhoto = canvas.toDataURL('image/jpeg', 0.5);
+                        document.getElementById('photo-preview').innerHTML = `<img src="${currentPhoto}" class="w-full h-full object-cover">`;
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        
         function addNewNode(parentId) {
             const id = 'id' + Date.now();
-            treeData.push({ id, parentId, surname:'', name:'', insurances:[{notes:[]}] });
+            treeData.push({ id, parentId, surname:'', name:'', insurances:[{notes:[]}], history:[] });
             openNode(id);
         }
         function closeEditor() { document.getElementById('editor').style.display = 'none'; }
