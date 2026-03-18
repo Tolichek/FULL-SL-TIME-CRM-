@@ -29,18 +29,18 @@
         .btn-plus { color: var(--blue); font-size: 13px; padding: 8px 16px; display: block; margin-bottom: 10px; text-align: left; }
         .age-badge { font-size: 12px; color: var(--accent); margin-left: auto; font-weight: bold; }
 
-        /* Історія без виділення тексту */
-        #history-screen { display: none; flex-direction: column; height: 100%; position: fixed; inset: 0; z-index: 200; background: var(--bg); user-select: none; -webkit-user-select: none; }
+        /* Історія БЕЗ виділення тексту */
+        #history-screen { display: none; flex-direction: column; height: 100%; position: fixed; inset: 0; z-index: 200; background: var(--bg); user-select: none; -webkit-user-select: none; overscroll-behavior: contain; }
         #history-content { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; }
         .chat-date { text-align: center; font-size: 10px; color: var(--accent); margin: 15px 0 5px; text-transform: uppercase; font-weight: bold; }
         .chat-bubble { background: #2b2b2b; padding: 10px 14px; border-radius: 15px 15px 15px 2px; margin-bottom: 8px; max-width: 85%; align-self: flex-start; white-space: pre-wrap; position: relative; }
         .chat-time { font-size: 9px; color: var(--accent); float: right; margin-top: 5px; margin-left: 10px; font-weight: bold; }
         
         .history-footer { padding: 10px; background: #1e1e1e; border-top: 1px solid #333; display: flex; align-items: flex-end; gap: 10px; }
-        #history-input { background: #121212; border: 1px solid #333; border-radius: 8px; padding: 10px; color: #fff; flex: 1; min-height: 40px; max-height: 150px; resize: none; font-size: 16px; user-select: text; -webkit-user-select: text; }
+        #history-input { background: #121212; border: 1px solid #333; border-radius: 8px; padding: 10px; color: #fff; flex: 1; min-height: 40px; max-height: 150px; font-size: 16px; user-select: text; -webkit-user-select: text; }
 
         #context-menu, #confirm-dialog { position: fixed; background: #252525; border-radius: 12px; display: none; z-index: 500; border: 1px solid #444; box-shadow: 0 10px 40px rgba(0,0,0,1); }
-        .menu-item, .dialog-btn { padding: 14px 24px; font-size: 15px; text-align: center; border-bottom: 1px solid #333; color: #fff; }
+        .menu-item, .dialog-btn { padding: 16px 24px; font-size: 15px; text-align: center; border-bottom: 1px solid #333; color: #fff; }
 
         .photo-wrap { position: relative; width: 100px; height: 100px; margin: 0 auto 20px; }
         .btn-del-main { position: absolute; right: -70px; top: 0; color: #ef4444; font-size: 10px; font-weight: bold; text-transform: uppercase; }
@@ -70,6 +70,7 @@
                 </div>
                 <button onclick="deleteNode()" class="btn-del-main">Видалити</button>
             </div>
+
             <div class="input-group">
                 <div class="field"><label>Статус</label><input id="edit-status" type="text"></div>
                 <div class="field"><label>Прізвище</label><input id="edit-surname" type="text"></div>
@@ -204,35 +205,6 @@
             closeEditor(); render();
         }
 
-        function renderHistory() {
-            const cont = document.getElementById('history-content'); cont.innerHTML = '';
-            const n = treeData.find(x => x.id === currentId);
-            let lastDate = "";
-            (n.history || []).forEach((msg, idx) => {
-                const dObj = new Date(msg.time), date = dObj.toLocaleDateString('uk-UA');
-                if(date !== lastDate) { cont.innerHTML += `<div class="chat-date">${date}</div>`; lastDate = date; }
-                const b = document.createElement('div'); b.className = "chat-bubble";
-                b.innerHTML = `${msg.text} <span class="chat-time">${dObj.toLocaleTimeString('uk-UA',{hour:'2-digit',minute:'2-digit'})}</span>`;
-                let timer;
-                b.ontouchstart = b.onmousedown = (e) => { 
-                    e.preventDefault(); 
-                    const p = {x: e.clientX || (e.touches ? e.touches[0].clientX : 0), y: e.clientY || (e.touches ? e.touches[0].clientY : 0)};
-                    timer = setTimeout(() => showMenu(p, idx), 600); 
-                };
-                b.ontouchend = b.onmouseup = () => clearTimeout(timer);
-                cont.appendChild(b);
-            });
-            cont.scrollTop = cont.scrollHeight;
-        }
-
-        function addHistoryMsg() {
-            const input = document.getElementById('history-input'); if(!input.value.trim()) return;
-            const n = treeData.find(x => x.id === currentId); if(!n.history) n.history = [];
-            if(editMode) { n.history[selectedMsgIdx].text = input.value; editMode = false; }
-            else { n.history.push({ text: input.value, time: new Date().toISOString() }); }
-            input.value = ''; input.style.height = '40px'; renderHistory();
-        }
-
         function openInsurance(idx) {
             activeInsIdx = idx; const n = treeData.find(x => x.id === currentId); if(!n.insurances) n.insurances = [{}];
             const ins = n.insurances[idx];
@@ -268,6 +240,7 @@
             (ins.notes || []).forEach(nt => addInsNote(nt));
             document.getElementById('ins-editor').style.display = 'flex';
             history.pushState({p:3}, '');
+            setTimeout(() => { document.querySelectorAll('.ins-note-data').forEach(t => autoH(t)); }, 200);
         }
 
         function closeInsurance() {
@@ -277,14 +250,36 @@
             ins.gender = document.getElementById('ins-gen').value; ins.height = document.getElementById('ins-h').value;
             ins.weight = document.getElementById('ins-w').value; ins.date_start = document.getElementById('ins-start').value;
             ins.total = document.getElementById('ins-tot').value; ins.n_nakop = document.getElementById('ins-nn').value;
-            ins.s_nakop = document.getElementById('sn' ? document.getElementById('ins-sn').value : ''); ins.n_zahyst = document.getElementById('ins-nz').value;
-            ins.s_zahyst = document.getElementById('sz' ? document.getElementById('ins-sz').value : ''); ins.role = document.getElementById('ins-role').value;
-            ins.p_sur = document.getElementById('ins-psur').value; ins.p_nam = document.getElementById('ins-pnam').value;
-            ins.p_bday = document.getElementById('ins-pbday').value;
+            ins.s_nakop = document.getElementById('ins-sn') ? document.getElementById('ins-sn').value : (ins.s_nakop || '');
+            ins.n_zahyst = document.getElementById('ins-nz').value;
+            ins.s_zahyst = document.getElementById('ins-sz') ? document.getElementById('ins-sz').value : (ins.s_zahyst || '');
+            ins.role = document.getElementById('ins-role').value; ins.p_sur = document.getElementById('ins-psur').value;
+            ins.p_nam = document.getElementById('ins-pnam').value; ins.p_bday = document.getElementById('ins-pbday').value;
             ins.notes = Array.from(document.querySelectorAll('.ins-note-data')).map(t => t.value).filter(v => v.trim());
             document.getElementById('ins-editor').style.display = 'none';
         }
 
+        function renderHistory() {
+            const cont = document.getElementById('history-content'); cont.innerHTML = '';
+            const n = treeData.find(x => x.id === currentId);
+            let lastDate = "";
+            (n.history || []).forEach((msg, idx) => {
+                const dObj = new Date(msg.time), date = dObj.toLocaleDateString('uk-UA');
+                if(date !== lastDate) { cont.innerHTML += `<div class="chat-date">${date}</div>`; lastDate = date; }
+                const b = document.createElement('div'); b.className = "chat-bubble";
+                b.innerHTML = `${msg.text} <span class="chat-time">${dObj.toLocaleTimeString('uk-UA',{hour:'2-digit',minute:'2-digit'})}</span>`;
+                let timer;
+                b.ontouchstart = b.onmousedown = (e) => { 
+                    const p = {x: e.clientX || (e.touches ? e.touches[0].clientX : 0), y: e.clientY || (e.touches ? e.touches[0].clientY : 0)};
+                    timer = setTimeout(() => showMenu(p, idx), 600); 
+                };
+                b.ontouchend = b.onmouseup = () => clearTimeout(timer);
+                cont.appendChild(b);
+            });
+            cont.scrollTop = cont.scrollHeight;
+        }
+
+        function addHistoryMsg() { const input = document.getElementById('history-input'); if(!input.value.trim()) return; const n = treeData.find(x => x.id === currentId); if(!n.history) n.history = []; if(editMode) { n.history[selectedMsgIdx].text = input.value; editMode = false; } else { n.history.push({ text: input.value, time: new Date().toISOString() }); } input.value = ''; input.style.height = '40px'; renderHistory(); }
         function startEditMsg() { const n = treeData.find(x => x.id === currentId); const input = document.getElementById('history-input'); input.value = n.history[selectedMsgIdx].text; editMode = true; closeModal(); autoH(input); input.focus(); }
         function showMenu(p, idx) { selectedMsgIdx = idx; const m = document.getElementById('context-menu'); m.style.display = 'block'; m.style.left = Math.min(p.x, window.innerWidth - 170) + 'px'; m.style.top = (p.y - 100) + 'px'; setTimeout(() => { document.onclick = (e) => { if(!m.contains(e.target)) closeModal(); }; }, 10); }
         function showDelDialog() { closeModal(); const d = document.getElementById('confirm-dialog'); d.style.display = 'block'; d.style.left='50%'; d.style.top='50%'; d.style.transform='translate(-50%,-50%)'; }
