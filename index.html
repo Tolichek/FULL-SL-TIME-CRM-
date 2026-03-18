@@ -264,11 +264,12 @@
             (ins.notes || []).forEach(n => addInsNoteField(n));
             updateAgeDisplay({value: ins.bday}, 'ins-age-display');
 
+            document.getElementById('editor').style.display = 'flex';
+            
+            // Перерахунок висоти після відтворення DOM
             setTimeout(() => {
                 document.querySelectorAll('textarea').forEach(t => autoH(t));
             }, 50);
-
-            document.getElementById('editor').style.display = 'flex';
         }
 
         function addPatronymic(type, val = '') {
@@ -315,6 +316,10 @@
         function openInsurance() { 
             history.pushState({page: 'insurance'}, '');
             document.getElementById('insurance-editor').style.display = 'flex'; 
+            // Перерахунок висоти в новому вікні
+            setTimeout(() => {
+                document.getElementById('insurance-editor').querySelectorAll('textarea').forEach(t => autoH(t));
+            }, 50);
         }
         function closeInsurance() { 
             document.getElementById('insurance-editor').style.display = 'none'; 
