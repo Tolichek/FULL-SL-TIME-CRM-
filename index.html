@@ -111,7 +111,7 @@
 
     <script>
         let treeData = JSON.parse(localStorage.getItem('treeData')) || [];
-        let currentId = null, currentPhotoBase64 = '', activeInsIdx = 0, selectedMsgIdx = null, editMode = false;
+        let currentId = null, currentPhotoBase64 = '', activeInsIdx = 0, selectedMsgIdx = null;
 
         function render() {
             const root = document.getElementById('tree-root'); root.innerHTML = '';
@@ -181,10 +181,6 @@
             const ins = n.insurances[idx];
             document.getElementById('ins-fields-root').innerHTML = `
                 <div class="input-group">
-                    <div class="field"><label>Прізвище</label><input id="ins-sur" value="${ins.surname||''}"></div>
-                    <div class="field"><label>Ім'я</label><input id="ins-nam" value="${ins.name||''}"></div>
-                </div>
-                <div class="input-group">
                     <div class="field"><label>Дата нар.</label><input id="ins-bday" type="date" value="${ins.bday||''}" onchange="updateAge(this, 'ia')"><span id="ia" class="age-badge">${calculateAge(ins.bday)}</span></div>
                     <div class="field"><label>Строк</label><select id="ins-term">
                         <option value="на 10 років" ${ins.term==='на 10 років'?'selected':''}>на 10 років</option>
@@ -214,7 +210,6 @@
 
         function closeInsurance() {
             const n = treeData.find(x => x.id === currentId), ins = n.insurances[activeInsIdx];
-            ins.surname = document.getElementById('ins-sur').value; ins.name = document.getElementById('ins-nam').value;
             ins.bday = document.getElementById('ins-bday').value; ins.term = document.getElementById('ins-term').value;
             ins.total = document.getElementById('ins-tot').value; ins.n_nakop = document.getElementById('ins-nn').value;
             ins.s_nakop = document.getElementById('ins-sn').value; ins.n_zahyst = document.getElementById('ins-nz').value;
@@ -231,15 +226,12 @@
             (n.history || []).forEach((msg, idx) => {
                 const b = document.createElement('div'); b.className = "chat-bubble";
                 b.innerHTML = `${msg.text} <span class="chat-time">${new Date(msg.time).toLocaleTimeString('uk-UA',{hour:'2-digit',minute:'2-digit'})}</span>`;
-                b.oncontextmenu = (e) => { e.preventDefault(); showMenu({x:e.clientX, y:e.clientY}, idx); };
                 cont.appendChild(b);
             });
             cont.scrollTop = cont.scrollHeight;
         }
 
         function addHistoryMsg() { const input = document.getElementById('history-input'); if(!input.value.trim()) return; const n = treeData.find(x => x.id === currentId); n.history.push({text:input.value, time:new Date().toISOString()}); input.value=''; renderHistory(); }
-        function showMenu(p, idx) { selectedMsgIdx = idx; const m = document.getElementById('context-menu'); m.style.display = 'block'; m.style.left = p.x+'px'; m.style.top = p.y+'px'; }
-        function closeModal() { document.getElementById('context-menu').style.display = 'none'; document.getElementById('confirm-dialog').style.display = 'none'; }
         function previewPhoto(input) { if (input.files && input.files[0]) { const reader = new FileReader(); reader.onload = e => { currentPhotoBase64 = e.target.result; document.getElementById('edit-photo-preview').src = currentPhotoBase64; document.getElementById('edit-photo-preview').style.display = 'block'; document.getElementById('photo-placeholder').style.display = 'none'; }; reader.readAsDataURL(input.files[0]); } }
         function addNewNode(parentId) { const id = 'id' + Date.now(); treeData.push({ id, parentId: parentId || null, surname: '', name: '', status: '', phones: [], photo: '', history: [], insurances: [{}] }); localStorage.setItem('treeData', JSON.stringify(treeData)); render(); openNode(id); }
         function closeEditor() { document.getElementById('editor').style.display = 'none'; }
