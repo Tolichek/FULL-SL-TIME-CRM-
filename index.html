@@ -26,7 +26,7 @@
         .pass-tag { color: var(--accent); font-size: 10px; text-transform: uppercase; font-weight: bold; margin-right: 4px; }
 
         textarea { resize: none; overflow: hidden; min-height: 24px; display: block; width: 100%; background: transparent; border: none; outline: none; color: #fff; white-space: pre-wrap; }
-        .btn-plus { color: var(--blue); font-size: 13px; padding: 8px 16px; display: block; margin-bottom: 10px; text-align: left; }
+        .btn-plus { color: var(--accent); font-size: 13px; padding: 8px 16px; display: block; margin-bottom: 10px; text-align: left; font-weight: bold; }
         .age-badge { font-size: 12px; color: var(--accent); margin-left: auto; font-weight: bold; }
 
         #history-screen { display: none; flex-direction: column; height: 100%; position: fixed; inset: 0; z-index: 200; background: var(--bg); user-select: none; -webkit-user-select: none; }
@@ -219,11 +219,18 @@
                 </div>
                 <div class="input-group">
                     <div class="field"><label>Оформлено</label><input id="ins-start" type="date" value="${ins.date_start||''}"></div>
+                    <div class="field"><label>Строк (р.)</label><input id="ins-term" value="${ins.term||''}"></div>
                     <div class="field"><label>Сума полісу</label><input id="ins-tot" value="${ins.total||''}"></div>
                     <div class="field"><label>№ Накоп.</label><input id="ins-nn" value="${ins.n_nakop||''}"></div>
                     <div class="field"><label>Сума Накоп.</label><input id="ins-sn" value="${ins.s_nakop||''}"></div>
                     <div class="field"><label>№ Захисту</label><input id="ins-nz" value="${ins.n_zahyst||''}"></div>
                     <div class="field"><label>Сума Захисту</label><input id="ins-sz" value="${ins.s_zahyst||''}"></div>
+                </div>
+                <div class="input-group">
+                    <div class="field"><label>Роль</label><select id="ins-role"><option value="Батько" ${ins.role==='Батько'?'selected':''}>Батько</option><option value="Мати" ${ins.role==='Мати'?'selected':''}>Мати</option></select></div>
+                    <div class="field"><label>Прізвище</label><input id="ins-psur" value="${ins.p_sur||''}"></div>
+                    <div class="field"><label>Ім'я</label><input id="ins-pnam" value="${ins.p_nam||''}"></div>
+                    <div class="field"><label>Дата нар.</label><input id="ins-pbday" type="date" value="${ins.p_bday||''}"></div>
                 </div>
                 <div id="ins-notes-cont"></div>
                 <button onclick="addInsNote('')" class="btn-plus">+ Додати примітку</button>
@@ -239,10 +246,11 @@
             ins.surname = document.getElementById('ins-sur').value; ins.name = document.getElementById('ins-nam').value;
             ins.patronymic = document.getElementById('ins-pat').value; ins.bday = document.getElementById('ins-bday').value;
             ins.gender = document.getElementById('ins-gen').value; ins.date_start = document.getElementById('ins-start').value;
-            ins.total = document.getElementById('ins-tot').value; ins.n_nakop = document.getElementById('ins-nn').value;
-            ins.s_nakop = document.getElementById('ins-sn') ? document.getElementById('ins-sn').value : (ins.s_nakop || '');
-            ins.n_zahyst = document.getElementById('ins-nz').value;
-            ins.s_zahyst = document.getElementById('ins-sz') ? document.getElementById('ins-sz').value : (ins.s_zahyst || '');
+            ins.term = document.getElementById('ins-term').value; ins.total = document.getElementById('ins-tot').value;
+            ins.n_nakop = document.getElementById('ins-nn').value; ins.s_nakop = document.getElementById('ins-sn').value;
+            ins.n_zahyst = document.getElementById('ins-nz').value; ins.s_zahyst = document.getElementById('ins-sz').value;
+            ins.role = document.getElementById('ins-role').value; ins.p_sur = document.getElementById('ins-psur').value;
+            ins.p_nam = document.getElementById('ins-pnam').value; ins.p_bday = document.getElementById('ins-pbday').value;
             ins.notes = Array.from(document.querySelectorAll('.ins-note-data')).map(t => t.value).filter(v => v.trim());
             document.getElementById('ins-editor').style.display = 'none';
         }
