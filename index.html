@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>HumanTree Stable</title>
+    <title>HumanTree FINAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --bg: #121212; --card: #1e1e1e; --border: #2a2a2a; --accent: #10b981; --blue: #3b82f6; }
         body { background: var(--bg); color: #e0e0e0; font-family: sans-serif; margin: 0; padding: env(safe-area-inset-top) 0 0 0; overflow: hidden; height: 100vh; }
         
-        /* Гілки */
         .level-0 { border-left: 2px solid var(--blue); margin-bottom: 6px; }
         .level-1 { border-left: 2px solid var(--accent); margin-left: 12px; }
         .level-2 { border-left: 2px solid #ef4444; margin-left: 12px; }
@@ -18,29 +17,21 @@
         .node-row { display: flex; align-items: center; padding: 10px 0 10px 12px; border-bottom: 1px solid #1a1a1a; background: rgba(255,255,255,0.02); }
         .full-page { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: none; flex-direction: column; padding-top: env(safe-area-inset-top); }
         
-        /* КНОПКА ГОТОВО ЗАКРІПЛЕНА */
-        .editor-header { 
-            position: sticky; 
-            top: 0; 
-            background: #121212; 
-            z-index: 110; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 12px 16px; 
-            border-bottom: 1px solid var(--border); 
-        }
-
+        .editor-header { position: sticky; top: 0; background: #121212; z-index: 110; display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); }
         .input-group { background: var(--card); border-radius: 8px; overflow: hidden; margin-bottom: 16px; border: 1px solid var(--border); }
         .field { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
         .field label { font-size: 11px; color: var(--accent); width: 85px; text-transform: uppercase; flex-shrink: 0; font-weight: bold; }
-        .field input { background: transparent; border: none; outline: none; color: #fff; flex: 1; font-size: 16px; width: 100%; }
+        .field input, .field select { background: transparent; border: none; outline: none; color: #fff; flex: 1; font-size: 16px; width: 100%; }
 
         #edit-status { color: var(--accent) !important; font-weight: bold; text-transform: uppercase; }
-        .btn-plus { color: var(--blue); font-size: 14px; padding: 10px 16px; display: block; margin-bottom: 12px; text-align: left; }
+        .btn-plus { color: var(--blue); font-size: 14px; padding: 10px 16px; display: block; margin-bottom: 12px; text-align: left; font-weight: normal; }
         .age-badge { font-size: 12px; color: var(--accent) !important; margin-left: auto; font-weight: bold; }
         .photo-wrap { position: relative; width: 100px; height: 100px; margin: 20px auto; }
         .btn-del-main { position: absolute; right: -70px; top: 0; color: #ef4444; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        
+        #confirm-dialog { position: fixed; background: #252525; border-radius: 12px; display: none; z-index: 500; border: 1px solid #444; box-shadow: 0 10px 40px rgba(0,0,0,1); width: auto; }
+        .dialog-btn { padding: 12px 20px; font-size: 14px; text-align: center; color: #fff; cursor: pointer; flex: 1; white-space: nowrap; }
+        .dialog-btn:first-child { border-right: 1px solid #333; }
     </style>
 </head>
 <body>
@@ -58,7 +49,6 @@
             <button onclick="closeEditor()" class="text-blue-500 text-sm">Скасувати</button>
             <button onclick="saveNode()" class="text-blue-500 font-bold text-lg">Готово</button>
         </div>
-        
         <div class="p-4 pb-32">
             <div class="photo-wrap">
                 <input type="file" id="photo-input" hidden accept="image/*" onchange="previewPhoto(this)">
@@ -68,15 +58,31 @@
                 </div>
                 <button onclick="deleteNode()" class="btn-del-main">Видалити</button>
             </div>
-            
             <div class="input-group">
-                <div class="field"><label>Статус</label><input id="edit-status" type="text" placeholder="..."></div>
-                <div class="field"><label>Прізвище</label><input id="edit-surname" type="text" placeholder="..."></div>
-                <div class="field"><label>Ім'я</label><input id="edit-name" type="text" placeholder="..."></div>
+                <div class="field"><label>Статус</label><input id="edit-status" type="text"></div>
+                <div class="field"><label>Прізвище</label><input id="edit-surname" type="text"></div>
+                <div class="field"><label>Ім'я</label><input id="edit-name" type="text"></div>
             </div>
             <div id="phone-container"></div>
             <button onclick="addPhoneField('')" class="btn-plus">+ Додати мобільний</button>
             <div class="input-group"><div class="field"><label>Дата нар.</label><input id="edit-bday" type="date" onchange="updateAge(this, 'age-display')"><span id="age-display" class="age-badge"></span></div></div>
+            <button onclick="openInsurance(0)" class="w-full py-4 bg-zinc-800 rounded-lg text-white font-medium mt-4 uppercase">Поліс</button>
+        </div>
+    </div>
+
+    <div id="ins-editor" class="full-page overflow-y-auto">
+        <div class="editor-header">
+            <button onclick="closeInsurance()" class="text-blue-500 text-sm">Назад</button>
+            <div class="text-white font-bold">Поліс</div><div class="w-10"></div>
+        </div>
+        <div class="p-4 pb-32" id="ins-fields-root"></div>
+    </div>
+
+    <div id="confirm-dialog">
+        <div class="p-6 text-center text-sm border-b border-[#333]">Видалити?</div>
+        <div class="flex">
+            <div class="dialog-btn text-zinc-400" onclick="closeModal()">Назад</div>
+            <div id="confirm-ok-btn" class="dialog-btn text-red-500 font-bold">ОК</div>
         </div>
     </div>
 
@@ -84,6 +90,7 @@
         let treeData = JSON.parse(localStorage.getItem('treeData')) || [];
         let currentId = null;
         let currentPhotoBase64 = '';
+        let activeInsIdx = 0;
 
         function render() {
             const root = document.getElementById('tree-root'); root.innerHTML = '';
@@ -114,17 +121,42 @@
         }
 
         function saveNode() {
-            const node = treeData.find(x => x.id === currentId);
-            if(node) {
-                node.status = document.getElementById('edit-status').value;
-                node.surname = document.getElementById('edit-surname').value;
-                node.name = document.getElementById('edit-name').value;
-                node.photo = currentPhotoBase64;
-                node.bday = document.getElementById('edit-bday').value;
-                node.phones = Array.from(document.querySelectorAll('.phone-data')).map(i => i.value);
+            const n = treeData.find(x => x.id === currentId);
+            if(n) {
+                n.status = document.getElementById('edit-status').value;
+                n.surname = document.getElementById('edit-surname').value;
+                n.name = document.getElementById('edit-name').value;
+                n.photo = currentPhotoBase64;
+                n.bday = document.getElementById('edit-bday').value;
+                n.phones = Array.from(document.querySelectorAll('.phone-data')).map(i => i.value);
                 localStorage.setItem('treeData', JSON.stringify(treeData));
                 closeEditor(); render();
             }
+        }
+
+        function openInsurance(idx) {
+            activeInsIdx = idx; const n = treeData.find(x => x.id === currentId); if(!n.insurances) n.insurances = [{}];
+            const ins = n.insurances[idx];
+            document.getElementById('ins-fields-root').innerHTML = `
+                <div class="input-group">
+                    <div class="field"><label>Дата нар.</label><input id="ins-bday" type="date" value="${ins.bday||''}" onchange="updateAge(this, 'ia')"><span id="ia" class="age-badge">${calculateAge(ins.bday)}</span></div>
+                    <div class="field"><label>Строк</label><select id="ins-term">
+                        <option value="на 10 років" ${ins.term==='на 10 років'?'selected':''}>на 10 років</option>
+                        <option value="до 65 років" ${ins.term==='до 65 років'?'selected':''}>до 65 років</option>
+                    </select></div>
+                </div>
+                <div class="input-group">
+                    <div class="field"><label>Роль</label><select id="ins-role"><option value="Батько">Батько</option><option value="Мати">Мати</option></select></div>
+                </div>`;
+            document.getElementById('ins-editor').style.display = 'flex';
+        }
+
+        function closeInsurance() {
+            const n = treeData.find(x => x.id === currentId);
+            const ins = n.insurances[activeInsIdx];
+            ins.bday = document.getElementById('ins-bday').value;
+            ins.term = document.getElementById('ins-term').value;
+            document.getElementById('ins-editor').style.display = 'none';
         }
 
         function previewPhoto(input) {
@@ -135,7 +167,6 @@
                     document.getElementById('edit-photo-preview').src = currentPhotoBase64;
                     document.getElementById('edit-photo-preview').style.display = 'block';
                     document.getElementById('photo-placeholder').style.display = 'none';
-                    // Зберігаємо фото в об'єкт відразу
                     const n = treeData.find(x => x.id === currentId);
                     if(n) n.photo = currentPhotoBase64;
                 };
@@ -145,7 +176,7 @@
 
         function addNewNode(parentId) {
             const id = 'id' + Date.now();
-            treeData.push({ id, parentId: parentId || null, surname: '', name: '', status: '', phones: [], photo: '' });
+            treeData.push({ id, parentId: parentId || null, surname: '', name: '', status: '', phones: [], photo: '', insurances: [{}] });
             localStorage.setItem('treeData', JSON.stringify(treeData));
             render(); openNode(id);
         }
@@ -154,7 +185,16 @@
         function addPhoneField(v) { const div = document.createElement('div'); div.className = 'input-group'; div.innerHTML = `<div class="field"><label>моб.</label><input type="tel" class="phone-data" value="${v}"></div>`; document.getElementById('phone-container').appendChild(div); }
         function calculateAge(d) { if(!d) return ''; const b = new Date(d), t = new Date(); let a = t.getFullYear()-b.getFullYear(); if(t.getMonth()<b.getMonth() || (t.getMonth()===b.getMonth() && t.getDate()<b.getDate())) a--; return a + ' р.'; }
         function updateAge(el, id) { document.getElementById(id).innerText = calculateAge(el.value); }
-        function deleteNode() { if(confirm('Видалити?')) { treeData = treeData.filter(n => n.id !== currentId); localStorage.setItem('treeData', JSON.stringify(treeData)); closeEditor(); render(); } }
+        function closeModal() { document.getElementById('confirm-dialog').style.display = 'none'; }
+        function deleteNode() {
+            const d = document.getElementById('confirm-dialog');
+            document.getElementById('confirm-ok-btn').onclick = () => {
+                treeData = treeData.filter(n => n.id !== currentId);
+                localStorage.setItem('treeData', JSON.stringify(treeData));
+                closeEditor(); closeModal(); render();
+            };
+            d.style.display = 'block'; d.style.left = '50%'; d.style.top = '50%'; d.style.transform = 'translate(-50%, -50%)';
+        }
         render();
     </script>
 </body>
