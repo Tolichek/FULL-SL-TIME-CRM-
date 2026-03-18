@@ -35,7 +35,7 @@
         .field input, .field textarea, .field select { background: transparent; border: none; outline: none; color: #fff; flex: 1; font-size: 16px; width: 100%; }
         
         input[type="date"] { color-scheme: dark; font-size: 14px; width: 110px; }
-        textarea { resize: none; overflow: hidden; min-height: 24px; display: block; }
+        textarea { resize: none; overflow: hidden; min-height: 24px; display: block; width: 100%; }
         .btn-plus { color: #3b82f6; font-size: 13px; padding: 8px 16px; display: block; margin-bottom: 10px; text-align: left; }
         .age-badge { font-size: 12px; color: #888; margin-left: auto; }
     </style>
@@ -148,7 +148,6 @@
         let currentPhoto = '';
         const colors = ['level-0', 'level-1', 'level-2', 'level-3'];
 
-        // Кнопка "Назад" на телефоні
         window.onpopstate = function() {
             if (document.getElementById('insurance-editor').style.display === 'flex') {
                 closeInsurance();
@@ -265,7 +264,10 @@
             (ins.notes || []).forEach(n => addInsNoteField(n));
             updateAgeDisplay({value: ins.bday}, 'ins-age-display');
 
-            document.querySelectorAll('textarea').forEach(t => autoH(t));
+            setTimeout(() => {
+                document.querySelectorAll('textarea').forEach(t => autoH(t));
+            }, 50);
+
             document.getElementById('editor').style.display = 'flex';
         }
 
