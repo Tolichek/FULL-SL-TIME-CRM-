@@ -75,6 +75,26 @@
             <div id="phone-container"></div>
             <button onclick="addPhoneField('')" class="btn-plus">+ Додати мобільний</button>
 
+            <div class="input-group">
+                <div class="field">
+                    <label>Паспорт</label>
+                    <input id="edit-pass-ser" type="text" placeholder="Серія" class="w-20 flex-none">
+                    <input id="edit-pass-num" type="text" placeholder="Номер">
+                </div>
+                <div class="field"><label>ІНН</label><input id="edit-inn" type="text"></div>
+            </div>
+
+            <div class="input-group">
+                <div class="field"><label>Місто</label><input id="edit-city" type="text"></div>
+                <div class="field"><label>Вулиця</label><input id="edit-street" type="text"></div>
+                <div class="field"><label>Будинок</label><input id="edit-house" type="text"></div>
+                <div id="extra-address-fields"></div>
+            </div>
+            <div class="flex gap-2">
+                <button id="btn-add-apt" onclick="addExtraAddress('apt')" class="btn-plus">+ Квартира</button>
+                <button id="btn-add-zip" onclick="addExtraAddress('zip')" class="btn-plus">+ Індекс</button>
+            </div>
+
             <div id="email-container"></div>
             <button onclick="addEmailField('')" class="btn-plus">+ Додати EMAIL</button>
 
@@ -212,6 +232,7 @@
             const id = 'id' + Date.now();
             treeData.push({ 
                 id, parentId, name:'', surname:'', patronymic:'', status:'', phones:[], emails:[], bday:'', notes:[], photo:'',
+                pass_ser:'', pass_num:'', inn:'', city:'', street:'', house:'', apt:'', zip:'',
                 insurance: { surname:'', name:'', patronymic:'', bday:'', gender:'', height:'', weight:'', total:'', n_nakop:'', s_nakop:'', n_zahyst:'', s_zahyst:'', notes:[] }
             });
             openNode(id);
@@ -226,10 +247,26 @@
             document.getElementById('edit-surname').value = node.surname || '';
             document.getElementById('edit-name').value = node.name || '';
             
+            // По-батькові
             const patrMain = document.getElementById('patronymic-field-main');
             patrMain.innerHTML = '';
             document.getElementById('btn-add-patr-main').style.display = node.patronymic ? 'none' : 'block';
             if(node.patronymic) addPatronymic('main', node.patronymic);
+
+            // Паспорт / Адреса
+            document.getElementById('edit-pass-ser').value = node.pass_ser || '';
+            document.getElementById('edit-pass-num').value = node.pass_num || '';
+            document.getElementById('edit-inn').value = node.inn || '';
+            document.getElementById('edit-city').value = node.city || '';
+            document.getElementById('edit-street').value = node.street || '';
+            document.getElementById('edit-house').value = node.house || '';
+
+            const extraAddr = document.getElementById('extra-address-fields');
+            extraAddr.innerHTML = '';
+            document.getElementById('btn-add-apt').style.display = node.apt ? 'none' : 'block';
+            document.getElementById('btn-add-zip').style.display = node.zip ? 'none' : 'block';
+            if(node.apt) addExtraAddress('apt', node.apt);
+            if(node.zip) addExtraAddress('zip', node.zip);
 
             document.getElementById('edit-bday').value = node.bday || '';
             updateAgeDisplay({value: node.bday}, 'age-display');
@@ -243,6 +280,7 @@
             document.getElementById('note-container').innerHTML = '';
             (node.notes || []).forEach(n => addNoteField(n));
             
+            // Дані страхування
             const ins = node.insurance || {};
             document.getElementById('ins-surname').value = ins.surname || '';
             document.getElementById('ins-name').value = ins.name || '';
@@ -265,17 +303,23 @@
             updateAgeDisplay({value: ins.bday}, 'ins-age-display');
 
             document.getElementById('editor').style.display = 'flex';
-            
-            // Перерахунок висоти після відтворення DOM
-            setTimeout(() => {
-                document.querySelectorAll('textarea').forEach(t => autoH(t));
-            }, 50);
+            setTimeout(() => { document.querySelectorAll('textarea').forEach(t => autoH(t)); }, 50);
         }
 
         function addPatronymic(type, val = '') {
             const container = document.getElementById(`patronymic-field-${type}`);
             container.innerHTML = `<div class="field"><label>По-батькові</label><input id="edit-patr-${type}" type="text" value="${val}"></div>`;
             document.getElementById(`btn-add-patr-${type}`).style.display = 'none';
+        }
+
+        function addExtraAddress(type, val = '') {
+            const container = document.getElementById('extra-address-fields');
+            const div = document.createElement('div');
+            div.className = 'field';
+            const label = type === 'apt' ? 'Квартира' : 'Індекс';
+            div.innerHTML = `<label>${label}</label><input id="edit-${type}" type="text" value="${val}">`;
+            container.appendChild(div);
+            document.getElementById(`btn-add-${type}`).style.display = 'none';
         }
 
         function addPhoneField(val) {
@@ -316,14 +360,9 @@
         function openInsurance() { 
             history.pushState({page: 'insurance'}, '');
             document.getElementById('insurance-editor').style.display = 'flex'; 
-            // Перерахунок висоти в новому вікні
-            setTimeout(() => {
-                document.getElementById('insurance-editor').querySelectorAll('textarea').forEach(t => autoH(t));
-            }, 50);
+            setTimeout(() => { document.getElementById('insurance-editor').querySelectorAll('textarea').forEach(t => autoH(t)); }, 50);
         }
-        function closeInsurance() { 
-            document.getElementById('insurance-editor').style.display = 'none'; 
-        }
+        function closeInsurance() { document.getElementById('insurance-editor').style.display = 'none'; }
 
         function saveNode() {
             const index = treeData.findIndex(n => n.id === currentId);
@@ -334,6 +373,18 @@
             treeData[index].name = document.getElementById('edit-name').value;
             const patrMainInput = document.getElementById('edit-patr-main');
             treeData[index].patronymic = patrMainInput ? patrMainInput.value : '';
+
+            // Збереження нових полів
+            treeData[index].pass_ser = document.getElementById('edit-pass-ser').value;
+            treeData[index].pass_num = document.getElementById('edit-pass-num').value;
+            treeData[index].inn = document.getElementById('edit-inn').value;
+            treeData[index].city = document.getElementById('edit-city').value;
+            treeData[index].street = document.getElementById('edit-street').value;
+            treeData[index].house = document.getElementById('edit-house').value;
+            const aptInput = document.getElementById('edit-apt');
+            treeData[index].apt = aptInput ? aptInput.value : '';
+            const zipInput = document.getElementById('edit-zip');
+            treeData[index].zip = zipInput ? zipInput.value : '';
 
             treeData[index].bday = document.getElementById('edit-bday').value;
             treeData[index].photo = currentPhoto;
