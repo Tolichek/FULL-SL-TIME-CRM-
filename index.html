@@ -76,7 +76,7 @@
                 <button id="btn-zip" onclick="addExtraAddr('zip')" class="btn-plus">+ Індекс</button>
             </div>
 
-            <button onclick="openInsurance(0)" class="w-full py-4 bg-zinc-800 rounded-lg text-white font-medium mt-4">ПОЛІС</button>
+            <button onclick="openInsurance(0)" class="w-full py-4 bg-zinc-800 rounded-lg text-white font-medium mt-4 uppercase">Поліс</button>
             <div id="extra-ins-list"></div>
             <button onclick="addNewInsurance()" class="btn-plus mt-2">+ Додати ще один поліс</button>
 
@@ -91,8 +91,7 @@
             <div class="text-white font-bold">Поліс</div>
             <div class="w-10"></div>
         </div>
-        <div class="p-4 pb-32" id="ins-fields-root">
-            </div>
+        <div class="p-4 pb-32" id="ins-fields-root"></div>
     </div>
 
     <script>
@@ -163,6 +162,7 @@
 
             renderExtraInsButtons();
             document.getElementById('editor').style.display = 'flex';
+            setTimeout(() => { document.querySelectorAll('textarea').forEach(t => autoH(t)); }, 50);
         }
 
         function renderExtraInsButtons() {
@@ -173,8 +173,8 @@
             n.insurances.forEach((ins, i) => {
                 if(i === 0) return;
                 const b = document.createElement('button');
-                b.className = "w-full py-3 bg-zinc-900 border border-zinc-800 rounded-lg text-white mt-2";
-                b.innerText = `ПОЛІС ${i + 1}`;
+                b.className = "w-full py-3 bg-zinc-900 border border-zinc-800 rounded-lg text-white mt-2 uppercase text-xs tracking-widest";
+                b.innerText = `Поліс ${i + 1}`;
                 b.onclick = () => openInsurance(i);
                 cont.appendChild(b);
             });
@@ -183,14 +183,14 @@
         function addNewInsurance() {
             const n = treeData.find(x => x.id === currentId);
             if(!n.insurances) n.insurances = [{}];
-            n.insurances.push({});
+            n.insurances.push({notes:[]});
             renderExtraInsButtons();
         }
 
         function openInsurance(idx) {
             activeInsIdx = idx;
             const n = treeData.find(x => x.id === currentId);
-            if(!n.insurances) n.insurances = [{}];
+            if(!n.insurances) n.insurances = [{notes:[]}];
             const ins = n.insurances[idx];
             
             history.pushState({p:2}, '');
@@ -221,9 +221,19 @@
                     <div class="field"><label>Ім'я</label><input id="ins-pnam" type="text" value="${ins.p_nam || ''}"></div>
                     <div class="field"><label>Дата нар.</label><input id="ins-pbday" type="date" value="${ins.p_bday || ''}" onchange="updateAge(this, 'ipa')"><span id="ipa" class="age-badge">${calculateAge(ins.p_bday)}</span></div>
                 </div>
+                <div id="ins-notes-cont"></div>
+                <button onclick="addInsNote('')" class="btn-plus">+ Додати примітку</button>
             `;
+            (ins.notes || []).forEach(nt => addInsNote(nt));
             document.getElementById('ins-editor').style.display = 'flex';
-            setTimeout(() => { document.querySelectorAll('textarea').forEach(t => autoH(t)); }, 50);
+            setTimeout(() => { document.querySelectorAll('#ins-editor textarea').forEach(t => autoH(t)); }, 50);
+        }
+
+        function addInsNote(v) {
+            const div = document.createElement('div'); div.className = 'input-group';
+            div.innerHTML = `<div class="field"><textarea class="ins-note-data" oninput="autoH(this)">${v}</textarea></div>`;
+            document.getElementById('ins-notes-cont').appendChild(div);
+            autoH(div.querySelector('textarea'));
         }
 
         function closeInsurance() {
@@ -244,6 +254,7 @@
             ins.p_sur = document.getElementById('ins-psur').value;
             ins.p_nam = document.getElementById('ins-pnam').value;
             ins.p_bday = document.getElementById('ins-pbday').value;
+            ins.notes = Array.from(document.querySelectorAll('.ins-note-data')).map(t => t.value).filter(v => v.trim());
             document.getElementById('ins-editor').style.display = 'none';
         }
 
@@ -270,7 +281,6 @@
             render();
         }
 
-        // Helpers
         function addPatrField(type, v='') {
             document.getElementById('patr-main-cont').innerHTML = `<div class="field"><label>По-батькові</label><input id="inp-main-patr" type="text" value="${v}"></div>`;
             document.getElementById('btn-patr-main').style.display = 'none';
@@ -313,7 +323,7 @@
         }
         function addNewNode(parentId) {
             const id = 'id' + Date.now();
-            treeData.push({ id, parentId, surname:'', name:'', insurances:[{}] });
+            treeData.push({ id, parentId, surname:'', name:'', insurances:[{notes:[]}] });
             openNode(id);
         }
         function closeEditor() { document.getElementById('editor').style.display = 'none'; }
