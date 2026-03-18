@@ -16,6 +16,7 @@
         .field { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
         .field:last-child { border-bottom: none; }
         .field label { font-size: 11px; color: var(--accent); width: 85px; text-transform: uppercase; flex-shrink: 0; font-weight: bold; }
+        .label-green { color: var(--accent); font-weight: bold; font-size: 11px; text-transform: uppercase; }
         .field input, .field textarea, .field select { background: transparent; border: none; outline: none; color: #fff; flex: 1; font-size: 16px; width: 100%; }
         input[type="date"] { color-scheme: dark; font-size: 14px; }
         textarea { resize: none; overflow: hidden; min-height: 24px; display: block; width: 100%; }
@@ -72,9 +73,9 @@
             <div class="input-group">
                 <div class="field">
                     <label>Паспорт</label>
-                    <span class="text-zinc-600 text-xs">серія</span>
+                    <span class="label-green">серія</span>
                     <input id="edit-pass-ser" type="text" class="w-12 flex-none">
-                    <span class="text-zinc-600 text-xs">№</span>
+                    <span class="label-green">№</span>
                     <input id="edit-pass-num" type="text">
                 </div>
                 <div class="field"><label>ІНН</label><input id="edit-inn" type="text"></div>
@@ -183,6 +184,8 @@
 
             renderExtraInsButtons();
             document.getElementById('editor').style.display = 'flex';
+            
+            setTimeout(() => { document.querySelectorAll('textarea').forEach(t => autoH(t)); }, 100);
         }
 
         function openInsurance(idx) {
@@ -235,6 +238,7 @@
             if(ins.p_patr) addInsParentPatr(ins.p_patr);
             (ins.notes || []).forEach(nt => addInsNote(nt));
             document.getElementById('ins-editor').style.display = 'flex';
+            setTimeout(() => { document.querySelectorAll('#ins-editor textarea').forEach(t => autoH(t)); }, 100);
         }
 
         function closeInsurance() {
@@ -278,7 +282,10 @@
             n.house = document.getElementById('edit-house').value;
             n.apt = document.getElementById('edit-apt')?.value || '';
             n.zip = document.getElementById('edit-zip')?.value || '';
+            
+            // Збереження фото
             n.photo = currentPhoto;
+            
             n.phones = Array.from(document.querySelectorAll('.phone-data')).map(i => i.value).filter(v => v.trim());
             n.notes = Array.from(document.querySelectorAll('.note-data')).map(t => t.value).filter(v => v.trim());
 
@@ -349,6 +356,7 @@
 
         function updateAge(el, id) { document.getElementById(id).innerText = calculateAge(el.value); }
         function autoH(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
+        
         function previewPhoto(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -359,13 +367,16 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
+        
         function addNewNode(parentId) {
             const id = 'id' + Date.now();
             treeData.push({ id, parentId, surname:'', name:'', insurances:[{notes:[]}] });
             openNode(id);
         }
+        
         function closeEditor() { document.getElementById('editor').style.display = 'none'; }
         function deleteNode() { if(confirm('Видалити?')) { treeData = treeData.filter(x => x.id !== currentId); localStorage.setItem('treeData', JSON.stringify(treeData)); closeEditor(); render(); } }
+        
         function addExtraAddr(t, v='') {
             const div = document.createElement('div'); div.className = 'field';
             div.innerHTML = `<label>${t==='apt'?'Квартира':'Індекс'}</label><input id="edit-${t}" type="text" value="${v}">`;
