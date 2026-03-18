@@ -81,7 +81,6 @@
                 <button id="btn-apt" onclick="addExtraAddr('apt')" class="btn-plus">+ Квартира</button>
                 <button id="btn-zip" onclick="addExtraAddr('zip')" class="btn-plus">+ Індекс</button>
             </div>
-            <button onclick="openHistory()" class="w-full py-4 bg-zinc-800 rounded-lg text-white font-bold mt-4 uppercase">Історія</button>
             <button onclick="openInsurance(0)" class="w-full py-4 bg-zinc-800 rounded-lg text-white font-medium mt-4 uppercase">Поліс</button>
         </div>
     </div>
@@ -154,7 +153,7 @@
                 n.corp = document.getElementById('edit-corp')?.value || n.corp || '';
                 n.apt = document.getElementById('edit-apt')?.value || n.apt || '';
                 n.zip = document.getElementById('edit-zip')?.value || n.zip || '';
-                n.phones = Array.from(document.querySelectorAll('.phone-data')).map(i => i.value);
+                n.phones = Array.from(document.querySelectorAll('.phone-data')).map(i => i.value).filter(v => v.trim());
                 localStorage.setItem('treeData', JSON.stringify(treeData));
                 closeEditor(); render();
             }
@@ -179,11 +178,6 @@
                     </select></div>
                 </div>
                 <div class="input-group">
-                    <div class="field"><label>Строк</label><select id="ins-term">
-                        <option value="на 10 років" ${ins.term==='на 10 років'?'selected':''}>на 10 років</option>
-                        <option value="на 15 років" ${ins.term==='на 15 років'?'selected':''}>на 15 років</option>
-                        <option value="до 65 років" ${ins.term==='до 65 років'?'selected':''}>до 65 років</option>
-                    </select></div>
                     <div class="field"><label>Сума полісу</label><input id="ins-tot" value="${ins.total||''}"></div>
                     <div class="field"><label>№ Накоп.</label><input id="ins-nn" value="${ins.n_nakop||''}"></div>
                     <div class="field"><label>Сума Накоп.</label><input id="ins-sn" value="${ins.s_nakop||''}"></div>
@@ -191,10 +185,7 @@
                     <div class="field"><label>Сума Захисту</label><input id="ins-sz" value="${ins.s_zahyst||''}"></div>
                 </div>
                 <div class="input-group">
-                    <div class="field"><label>Роль</label><select id="ins-role">
-                        <option value="Батько" ${ins.role==='Батько'?'selected':''}>Батько</option>
-                        <option value="Мати" ${ins.role==='Мати'?'selected':''}>Мати</option>
-                    </select></div>
+                    <div class="field"><label>Роль</label><select id="ins-role"><option value="Батько" ${ins.role==='Батько'?'selected':''}>Батько</option><option value="Мати" ${ins.role==='Мати'?'selected':''}>Мати</option></select></div>
                     <div class="field"><label>Прізвище</label><input id="ins-psur" value="${ins.p_sur||''}"></div>
                     <div class="field"><label>Ім'я</label><input id="ins-pnam" value="${ins.p_nam||''}"></div>
                     <div class="field"><label>Дата нар.</label><input id="ins-pbday" type="date" value="${ins.p_bday||''}" onchange="updateAge(this, 'ipa')"><span id="ipa" class="age-badge">${calculateAge(ins.p_bday)}</span></div>
@@ -209,13 +200,12 @@
             const n = treeData.find(x => x.id === currentId), ins = n.insurances[activeInsIdx];
             ins.surname = document.getElementById('ins-sur').value; ins.name = document.getElementById('ins-nam').value;
             ins.patronymic = document.getElementById('ins-pat').value; ins.bday = document.getElementById('ins-bday').value;
-            ins.gender = document.getElementById('ins-gen').value; ins.term = document.getElementById('ins-term').value;
-            ins.total = document.getElementById('ins-tot').value; ins.n_nakop = document.getElementById('ins-nn').value;
-            ins.s_nakop = document.getElementById('ins-sn').value; ins.n_zahyst = document.getElementById('ins-nz').value;
-            ins.s_zahyst = document.getElementById('ins-sz').value; ins.role = document.getElementById('ins-role').value;
-            ins.p_sur = document.getElementById('ins-psur').value; ins.p_nam = document.getElementById('ins-pnam').value;
-            ins.p_bday = document.getElementById('ins-pbday').value;
-            ins.notes = Array.from(document.querySelectorAll('.ins-note-data')).map(t => t.value);
+            ins.gender = document.getElementById('ins-gen').value; ins.total = document.getElementById('ins-tot').value;
+            ins.n_nakop = document.getElementById('ins-nn').value; ins.s_nakop = document.getElementById('ins-sn').value;
+            ins.n_zahyst = document.getElementById('ins-nz').value; ins.s_zahyst = document.getElementById('ins-sz').value;
+            ins.role = document.getElementById('ins-role').value; ins.p_sur = document.getElementById('ins-psur').value;
+            ins.p_nam = document.getElementById('ins-pnam').value; ins.p_bday = document.getElementById('ins-pbday').value;
+            ins.notes = Array.from(document.querySelectorAll('.ins-note-data')).map(t => t.value).filter(v => v.trim());
             document.getElementById('ins-editor').style.display = 'none';
         }
 
@@ -225,12 +215,24 @@
         function addPatrField(t, v='') { document.getElementById('patr-main-cont').innerHTML = `<div class="field"><label>По-батькові</label><input id="inp-main-patr" type="text" value="${v}"></div>`; document.getElementById('btn-patr-main').style.display = 'none'; }
         function addExtraAddr(t, v='') { const div = document.createElement('div'); div.className = 'field'; const labels = {corp:'Корпус', apt:'Квартира', zip:'Індекс'}; div.innerHTML = `<label>${labels[t]}</label><input id="edit-${t}" type="text" value="${v}">`; document.getElementById('extra-addr-cont').appendChild(div); if(document.getElementById('btn-'+t)) document.getElementById('btn-'+t).style.display = 'none'; }
         function addPhoneField(v) { const div = document.createElement('div'); div.className = 'input-group'; div.innerHTML = `<div class="field"><label>моб.</label><input type="tel" class="phone-data" value="${v}"></div>`; document.getElementById('phone-container').appendChild(div); }
-        function addInsNote(v) { const div = document.createElement('div'); div.className = 'input-group'; div.innerHTML = `<div class="field"><textarea class="ins-note-data" oninput="autoH(this)">${v}</textarea></div>`; autoH(div.querySelector('textarea')); }
+        function addInsNote(v) { const div = document.createElement('div'); div.className = 'input-group'; div.innerHTML = `<textarea class="ins-note-data" oninput="autoH(this)">${v}</textarea>`; autoH(div.querySelector('textarea')); document.getElementById('ins-notes-cont').appendChild(div); }
         function calculateAge(d) { if(!d) return ''; const b = new Date(d), t = new Date(); let a = t.getFullYear()-b.getFullYear(); if(t.getMonth()<b.getMonth() || (t.getMonth()===b.getMonth() && t.getDate()<b.getDate())) a--; return a + ' р.'; }
         function updateAge(el, id) { document.getElementById(id).innerText = calculateAge(el.value); }
         function autoH(el) { el.style.height = '40px'; if(el.scrollHeight > 40) el.style.height = el.scrollHeight + 'px'; }
-        function deleteNode() { if(confirm('Видалити?')) { treeData = treeData.filter(n => n.id !== currentId); localStorage.setItem('treeData', JSON.stringify(treeData)); closeEditor(); render(); } }
         function closeModal() { document.getElementById('confirm-dialog').style.display = 'none'; }
+        function deleteNode() {
+            const d = document.getElementById('confirm-dialog');
+            document.getElementById('confirm-ok-btn').onclick = () => {
+                const nodeToDelete = treeData.find(n => n.id === currentId);
+                const parentId = nodeToDelete.parentId;
+                // Всі діти переходять до дідуся/бабусі
+                treeData.forEach(n => { if(n.parentId === currentId) n.parentId = parentId; });
+                treeData = treeData.filter(n => n.id !== currentId);
+                localStorage.setItem('treeData', JSON.stringify(treeData));
+                closeEditor(); closeModal(); render();
+            };
+            d.style.display = 'block'; d.style.left = '50%'; d.style.top = '50%'; d.style.transform = 'translate(-50%, -50%)';
+        }
         render();
     </script>
 </body>
