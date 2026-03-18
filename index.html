@@ -31,12 +31,13 @@
         .input-group { background: var(--card); border-radius: 8px; overflow: hidden; margin-bottom: 10px; border: 1px solid var(--border); }
         .field { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
         .field:last-child { border-bottom: none; }
-        .field label { font-size: 11px; color: #555; width: 80px; text-transform: uppercase; }
-        .field input, .field textarea { background: transparent; border: none; outline: none; color: #fff; flex: 1; font-size: 16px; width: 100%; }
+        .field label { font-size: 11px; color: #555; width: 85px; text-transform: uppercase; flex-shrink: 0; }
+        .field input, .field textarea, .field select { background: transparent; border: none; outline: none; color: #fff; flex: 1; font-size: 16px; width: 100%; }
         
-        input[type="date"] { color-scheme: dark; font-size: 14px; }
+        input[type="date"] { color-scheme: dark; font-size: 14px; width: 120px; }
         textarea { resize: none; overflow: hidden; min-height: 24px; }
         .btn-plus { color: #3b82f6; font-size: 13px; padding: 8px 16px; display: block; margin-bottom: 10px; text-align: left; }
+        .age-badge { font-size: 12px; color: #888; margin-left: auto; }
     </style>
 </head>
 <body>
@@ -55,31 +56,80 @@
         </div>
 
         <div class="p-4 pb-32">
-            <div class="flex flex-col items-center mb-6">
+            <div class="flex items-center gap-6 mb-6">
                 <input type="file" id="photo-input" hidden accept="image/*" onchange="previewPhoto(this)">
-                <div id="photo-preview" onclick="document.getElementById('photo-input').click()" class="w-20 h-20 bg-[#252525] rounded-full flex items-center justify-center border border-[#333] overflow-hidden">
+                <div id="photo-preview" onclick="document.getElementById('photo-input').click()" class="w-20 h-20 bg-[#252525] rounded-full flex items-center justify-center border border-[#333] overflow-hidden flex-shrink-0">
                     <span class="text-[10px] text-zinc-600">ФОТО</span>
                 </div>
+                <button onclick="deleteNode()" class="text-red-600 text-xs font-bold uppercase tracking-widest">Видалити</button>
             </div>
 
             <div class="input-group">
                 <div class="field"><label>Статус</label><input id="edit-status" type="text" class="text-blue-400 font-bold"></div>
-                <div class="field"><label>Прізвище</label><input id="edit-surname" type="text"></div>
-                <div class="field"><label>Ім'я</label><input id="edit-name" type="text"></div>
+                <div class="field"><label>ПІП</label><input id="edit-fullname" type="text"></div>
             </div>
 
             <div id="phone-container"></div>
             <button onclick="addPhoneField('')" class="btn-plus">+ Додати мобільний</button>
 
+            <div id="email-container"></div>
+            <button onclick="addEmailField('')" class="btn-plus">+ Додати EMAIL</button>
+
             <div class="input-group">
-                <div class="field"><label>Email</label><input id="edit-email" type="email"></div>
-                <div class="field"><label>Дата</label><input id="edit-bday" type="date"></div>
+                <div class="field">
+                    <label>Дата нар.</label>
+                    <input id="edit-bday" type="date" onchange="updateAgeDisplay(this, 'age-display')">
+                    <span id="age-display" class="age-badge"></span>
+                </div>
             </div>
 
             <div id="note-container"></div>
             <button onclick="addNoteField('')" class="btn-plus">+ Додати примітку</button>
 
-            <button onclick="deleteNode()" class="w-full py-8 text-red-900 text-[10px] uppercase tracking-widest mt-10 border-t border-[#2a2a2a]">Видалити анкету</button>
+            <button onclick="openInsurance()" class="w-full py-4 bg-zinc-800 rounded-lg text-white font-medium mt-4">Застрахована особа</button>
+        </div>
+    </div>
+
+    <div id="insurance-editor" class="full-page overflow-y-auto">
+        <div class="flex justify-between items-center px-4 py-3 border-b border-[#2a2a2a] sticky top-0 bg-[#121212] z-10">
+            <button onclick="closeInsurance()" class="text-blue-500 text-sm">Назад</button>
+            <div class="text-white font-bold">Застрахована особа</div>
+            <div class="w-10"></div>
+        </div>
+
+        <div class="p-4 pb-32">
+            <div class="input-group">
+                <div class="field"><label>ПІП</label><textarea id="ins-pip" oninput="autoH(this)"></textarea></div>
+                <div class="field">
+                    <label>Дата нар.</label>
+                    <input id="ins-bday" type="date" onchange="updateAgeDisplay(this, 'ins-age-display')">
+                    <span id="ins-age-display" class="age-badge"></span>
+                </div>
+                <div class="field">
+                    <label>Стать</label>
+                    <select id="ins-gender">
+                        <option value="не вказано">—</option>
+                        <option value="жінка">жінка</option>
+                        <option value="чоловік">чоловік</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <div class="field"><label>Зріст / см</label><input id="ins-height" type="number"></div>
+                <div class="field"><label>Вага / кг</label><input id="ins-weight" type="number"></div>
+            </div>
+
+            <div class="input-group">
+                <div class="field"><label>Сума полісу</label><input id="ins-total" type="text" placeholder="грн"></div>
+                <div class="field"><label>№ Накоп.</label><input id="ins-num-nakop" type="text"></div>
+                <div class="field"><label>Сума Накоп.</label><input id="ins-sum-nakop" type="text"></div>
+                <div class="field"><label>№ Захисту</label><input id="ins-num-zahyst" type="text"></div>
+                <div class="field"><label>Сума Захисту</label><input id="ins-sum-zahyst" type="text"></div>
+            </div>
+
+            <div id="ins-note-container"></div>
+            <button onclick="addInsNoteField('')" class="btn-plus">+ Додати примітку</button>
         </div>
     </div>
 
@@ -106,13 +156,27 @@
                 row.innerHTML = `
                     <div class="flex-1" onclick="openNode('${node.id}')">
                         <div class="text-[9px] text-blue-400 uppercase font-bold leading-none mb-1">${node.status || ''}</div>
-                        <div class="text-lg font-light tracking-tight">${node.surname || ''} ${node.name || '...'}</div>
+                        <div class="text-lg font-light tracking-tight">${node.fullname || '...'}</div>
                     </div>
                     <button onclick="addNewNode('${node.id}')" class="text-zinc-800 px-4 text-2xl font-light">+</button>
                 `;
                 wrap.appendChild(row);
                 buildTree(node.id, wrap, level + 1);
             });
+        }
+
+        function calculateAge(bday) {
+            if (!bday) return '';
+            const birthDate = new Date(bday);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+            return age + ' р.';
+        }
+
+        function updateAgeDisplay(el, displayId) {
+            document.getElementById(displayId).innerText = calculateAge(el.value);
         }
 
         function previewPhoto(input) {
@@ -128,7 +192,10 @@
 
         function addNewNode(parentId) {
             const id = 'id' + Date.now();
-            treeData.push({ id, parentId, name:'', surname:'', status:'', phones:[], email:'', bday:'', notes:[], photo:'' });
+            treeData.push({ 
+                id, parentId, fullname:'', status:'', phones:[], emails:[], bday:'', notes:[], photo:'',
+                insurance: { pip:'', bday:'', gender:'', height:'', weight:'', total:'', n_nakop:'', s_nakop:'', n_zahyst:'', s_zahyst:'', notes:[] }
+            });
             openNode(id);
         }
 
@@ -136,22 +203,38 @@
             currentId = id;
             const node = treeData.find(n => n.id === id);
             document.getElementById('edit-status').value = node.status || '';
-            document.getElementById('edit-surname').value = node.surname || '';
-            document.getElementById('edit-name').value = node.name || '';
-            document.getElementById('edit-email').value = node.email || '';
+            document.getElementById('edit-fullname').value = node.fullname || '';
             document.getElementById('edit-bday').value = node.bday || '';
+            updateAgeDisplay({value: node.bday}, 'age-display');
             currentPhoto = node.photo || '';
             
             document.getElementById('photo-preview').innerHTML = currentPhoto ? `<img src="${currentPhoto}" class="w-full h-full object-cover">` : `<span class="text-[10px] text-zinc-600">ФОТО</span>`;
             
-            const pCont = document.getElementById('phone-container');
-            pCont.innerHTML = '';
+            document.getElementById('phone-container').innerHTML = '';
             (node.phones || []).forEach(p => addPhoneField(p));
             
-            const nCont = document.getElementById('note-container');
-            nCont.innerHTML = '';
+            document.getElementById('email-container').innerHTML = '';
+            (node.emails || []).forEach(e => addEmailField(e));
+            
+            document.getElementById('note-container').innerHTML = '';
             (node.notes || []).forEach(n => addNoteField(n));
             
+            // Завантаження даних страхування в поля (для прихованого редактора)
+            const ins = node.insurance || {};
+            document.getElementById('ins-pip').value = ins.pip || '';
+            document.getElementById('ins-bday').value = ins.bday || '';
+            document.getElementById('ins-gender').value = ins.gender || 'не вказано';
+            document.getElementById('ins-height').value = ins.height || '';
+            document.getElementById('ins-weight').value = ins.weight || '';
+            document.getElementById('ins-total').value = ins.total || '';
+            document.getElementById('ins-num-nakop').value = ins.n_nakop || '';
+            document.getElementById('ins-sum-nakop').value = ins.s_nakop || '';
+            document.getElementById('ins-num-zahyst').value = ins.n_zahyst || '';
+            document.getElementById('ins-sum-zahyst').value = ins.s_zahyst || '';
+            document.getElementById('ins-note-container').innerHTML = '';
+            (ins.notes || []).forEach(n => addInsNoteField(n));
+            updateAgeDisplay({value: ins.bday}, 'ins-age-display');
+
             document.getElementById('editor').style.display = 'flex';
         }
 
@@ -162,6 +245,13 @@
             document.getElementById('phone-container').appendChild(div);
         }
 
+        function addEmailField(val) {
+            const div = document.createElement('div');
+            div.className = 'input-group';
+            div.innerHTML = `<div class="field"><label>email</label><input type="email" class="email-data" value="${val}"></div>`;
+            document.getElementById('email-container').appendChild(div);
+        }
+
         function addNoteField(val) {
             const div = document.createElement('div');
             div.className = 'input-group';
@@ -170,24 +260,50 @@
             autoH(div.querySelector('textarea'));
         }
 
+        function addInsNoteField(val) {
+            const div = document.createElement('div');
+            div.className = 'input-group';
+            div.innerHTML = `<div class="field"><textarea class="ins-note-data" oninput="autoH(this)">${val}</textarea></div>`;
+            document.getElementById('ins-note-container').appendChild(div);
+            autoH(div.querySelector('textarea'));
+        }
+
         function autoH(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
+
+        function openInsurance() { document.getElementById('insurance-editor').style.display = 'flex'; }
+        function closeInsurance() { document.getElementById('insurance-editor').style.display = 'none'; }
 
         function saveNode() {
             const index = treeData.findIndex(n => n.id === currentId);
             if (index === -1) return;
 
             treeData[index].status = document.getElementById('edit-status').value;
-            treeData[index].surname = document.getElementById('edit-surname').value;
-            treeData[index].name = document.getElementById('edit-name').value;
-            treeData[index].email = document.getElementById('edit-email').value;
+            treeData[index].fullname = document.getElementById('edit-fullname').value;
             treeData[index].bday = document.getElementById('edit-bday').value;
             treeData[index].photo = currentPhoto;
             
             treeData[index].phones = Array.from(document.querySelectorAll('.phone-data')).map(i => i.value).filter(v => v.trim());
+            treeData[index].emails = Array.from(document.querySelectorAll('.email-data')).map(i => i.value).filter(v => v.trim());
             treeData[index].notes = Array.from(document.querySelectorAll('.note-data')).map(t => t.value).filter(v => v.trim());
             
+            // Збереження даних страхування
+            treeData[index].insurance = {
+                pip: document.getElementById('ins-pip').value,
+                bday: document.getElementById('ins-bday').value,
+                gender: document.getElementById('ins-gender').value,
+                height: document.getElementById('ins-height').value,
+                weight: document.getElementById('ins-weight').value,
+                total: document.getElementById('ins-total').value,
+                n_nakop: document.getElementById('ins-num-nakop').value,
+                s_nakop: document.getElementById('ins-sum-nakop').value,
+                n_zahyst: document.getElementById('ins-num-zahyst').value,
+                s_zahyst: document.getElementById('ins-sum-zahyst').value,
+                notes: Array.from(document.querySelectorAll('.ins-note-data')).map(t => t.value).filter(v => v.trim())
+            };
+
             localStorage.setItem('treeData', JSON.stringify(treeData));
             document.getElementById('editor').style.display = 'none';
+            document.getElementById('insurance-editor').style.display = 'none';
             render();
         }
 
