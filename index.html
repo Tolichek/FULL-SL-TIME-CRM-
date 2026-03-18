@@ -3,37 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-touch-fullscreen" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#121212">
-    
-    <link rel="manifest" href="data:application/manifest+json,{%22id%22:%22ht_v4%22,%22name%22:%22HumanTree%22,%22short_name%22:%22HumanTree%22,%22start_url%22:%22/%22,%22display%22:%22standalone%22,%22background_color%22:%22#121212%22,%22theme_color%22:%22#121212%22}">
-
     <title>HumanTree</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --bg: #121212; --card: #1e1e1e; --border: #2a2a2a; --accent: #10b981; }
         body { background: var(--bg); color: #e0e0e0; font-family: sans-serif; margin: 0; padding: env(safe-area-inset-top) 0 0 0; overflow-x: hidden; height: 100vh; }
-        
-        .level-0 { border-left: 2px solid #3b82f6; }
-        .level-1 { border-left: 2px solid #10b981; }
-        .level-2 { border-left: 2px solid #ef4444; }
-        .level-3 { border-left: 2px solid #f59e0b; }
-
         .node-container { margin-left: 10px; padding-left: 14px; }
         .node-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #1a1a1a; position: relative; }
         .node-row::before { content: ''; position: absolute; left: -14px; top: 50%; width: 10px; height: 1px; background: rgba(255,255,255,0.1); }
-        
         .full-page { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: none; flex-direction: column; padding-top: env(safe-area-inset-top); }
         .input-group { background: var(--card); border-radius: 8px; overflow: hidden; margin-bottom: 10px; border: 1px solid var(--border); }
         .field { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
         .field:last-child { border-bottom: none; }
         .field label { font-size: 11px; color: var(--accent); width: 85px; text-transform: uppercase; flex-shrink: 0; font-weight: bold; }
         .field input, .field textarea, .field select { background: transparent; border: none; outline: none; color: #fff; flex: 1; font-size: 16px; width: 100%; }
-        
         input[type="date"] { color-scheme: dark; font-size: 14px; }
         textarea { resize: none; overflow: hidden; min-height: 24px; display: block; width: 100%; }
         .btn-plus { color: #3b82f6; font-size: 13px; padding: 8px 16px; display: block; margin-bottom: 10px; text-align: left; }
@@ -70,15 +53,15 @@
                 <div class="field"><label>Статус</label><input id="edit-status" type="text" class="text-blue-400 font-bold"></div>
                 <div class="field"><label>Прізвище</label><input id="edit-surname" type="text"></div>
                 <div class="field"><label>Ім'я</label><input id="edit-name" type="text"></div>
-                <div id="patronymic-field-main"></div>
+                <div id="patr-main-cont"></div>
             </div>
-            <button id="btn-add-patr-main" onclick="addPatronymic('main')" class="btn-plus">+ Додати по-батькові</button>
+            <button id="btn-patr-main" onclick="addPatrField('main')" class="btn-plus">+ Додати по-батькові</button>
 
             <div id="phone-container"></div>
             <button onclick="addPhoneField('')" class="btn-plus">+ Додати мобільний</button>
 
             <div class="input-group">
-                <div class="field"><label>Паспорт</label><input id="edit-pass-ser" type="text" placeholder="Серія" class="w-16 flex-none"><input id="edit-pass-num" type="text" placeholder="Номер"></div>
+                <div class="field"><label>Паспорт</label><input id="edit-pass-ser" type="text" placeholder="Сер" class="w-12 flex-none"><input id="edit-pass-num" type="text" placeholder="Номер"></div>
                 <div class="field"><label>ІНН</label><input id="edit-inn" type="text"></div>
             </div>
 
@@ -86,127 +69,238 @@
                 <div class="field"><label>Місто</label><input id="edit-city" type="text"></div>
                 <div class="field"><label>Вулиця</label><input id="edit-street" type="text"></div>
                 <div class="field"><label>Будинок</label><input id="edit-house" type="text"></div>
-                <div id="extra-address-fields"></div>
+                <div id="extra-addr-cont"></div>
             </div>
             <div class="flex gap-2">
-                <button id="btn-add-apt" onclick="addExtraAddress('apt')" class="btn-plus">+ Квартира</button>
-                <button id="btn-add-zip" onclick="addExtraAddress('zip')" class="btn-plus">+ Індекс</button>
+                <button id="btn-apt" onclick="addExtraAddr('apt')" class="btn-plus">+ Квартира</button>
+                <button id="btn-zip" onclick="addExtraAddr('zip')" class="btn-plus">+ Індекс</button>
             </div>
 
-            <div id="email-container"></div>
-            <button onclick="addEmailField('')" class="btn-plus">+ Додати EMAIL</button>
-
-            <div class="input-group">
-                <div class="field"><label>Дата нар.</label><input id="edit-bday" type="date" onchange="updateAgeDisplay(this, 'age-display')"><span id="age-display" class="age-badge"></span></div>
-            </div>
-
-            <div id="insurance-list"></div>
-            <button onclick="addInsuranceCard()" class="w-full py-4 bg-zinc-800 rounded-lg text-blue-400 font-bold mt-4">+ ПОЛІС</button>
+            <button onclick="openInsurance(0)" class="w-full py-4 bg-zinc-800 rounded-lg text-white font-medium mt-4">ПОЛІС</button>
+            <div id="extra-ins-list"></div>
+            <button onclick="addNewInsurance()" class="btn-plus mt-2">+ Додати ще один поліс</button>
 
             <div id="note-container" class="mt-6"></div>
             <button onclick="addNoteField('')" class="btn-plus">+ Додати примітку</button>
         </div>
     </div>
 
-    <div id="insurance-editor" class="full-page overflow-y-auto">
+    <div id="ins-editor" class="full-page overflow-y-auto">
         <div class="flex justify-between items-center px-4 py-3 border-b border-[#2a2a2a] sticky top-0 bg-[#121212] z-10">
             <button onclick="closeInsurance()" class="text-blue-500 text-sm">Назад</button>
             <div class="text-white font-bold">Поліс</div>
-            <button onclick="saveInsuranceData()" class="text-blue-500 font-bold">Зберегти</button>
+            <div class="w-10"></div>
         </div>
-
-        <div class="p-4 pb-32">
-            <div class="input-group">
-                <div class="field"><label>Прізвище</label><textarea id="ins-surname" oninput="autoH(this)"></textarea></div>
-                <div class="field"><label>Ім'я</label><textarea id="ins-name" oninput="autoH(this)"></textarea></div>
-                <div id="patr-ins-container"></div>
+        <div class="p-4 pb-32" id="ins-fields-root">
             </div>
-            <button id="btn-ins-patr" onclick="addInsPatr('')" class="btn-plus">+ По-батькові</button>
-
-            <div class="input-group">
-                <div class="field"><label>Дата нар.</label><input id="ins-bday" type="date" onchange="updateAgeDisplay(this, 'ins-age-display')"><span id="ins-age-display" class="age-badge"></span></div>
-                <div class="field"><label>Стать</label><select id="ins-gender"><option value="не вказано">—</option><option value="жінка">жінка</option><option value="чоловік">чоловік</option></select></div>
-                <div class="field"><label>Зріст/см</label><input id="ins-height" type="number"></div>
-                <div class="field"><label>Вага/кг</label><input id="ins-weight" type="number"></div>
-            </div>
-
-            <div class="input-group">
-                <div class="field"><label>Оформлено</label><input id="ins-date-start" type="date"></div>
-                <div class="field"><label>Сума полісу</label><input id="ins-total" type="text" placeholder="грн"></div>
-                <div class="field"><label>№ Накоп.</label><input id="ins-num-nakop" type="text"></div>
-                <div class="field"><label>Сума Накоп.</label><input id="ins-sum-nakop" type="text"></div>
-                <div class="field"><label>№ Захисту</label><input id="ins-num-zahyst" type="text"></div>
-                <div class="field"><label>Сума Захисту</label><input id="ins-sum-zahyst" type="text"></div>
-            </div>
-
-            <div class="input-group">
-                <div class="field"><label>Роль</label><select id="ins-parent-role"><option value="Батько">Батько</option><option value="Мати">Мати</option></select></div>
-                <div class="field"><label>Прізвище</label><input id="ins-parent-surname" type="text"></div>
-                <div class="field"><label>Ім'я</label><input id="ins-parent-name" type="text"></div>
-                <div id="patr-parent-container"></div>
-            </div>
-            <button id="btn-parent-patr" onclick="addParentPatr('')" class="btn-plus">+ По-батькові</button>
-            <div class="input-group">
-                <div class="field"><label>Дата нар.</label><input id="ins-parent-bday" type="date" onchange="updateAgeDisplay(this, 'ins-parent-age')"><span id="ins-parent-age" class="age-badge"></span></div>
-            </div>
-
-            <div id="ins-note-container"></div>
-            <button onclick="addInsNoteField('')" class="btn-plus">+ Додати примітку</button>
-            
-            <button onclick="deleteCurrentInsurance()" class="w-full py-4 text-red-500 text-xs uppercase mt-10">Видалити цей поліс</button>
-        </div>
     </div>
 
     <script>
         let treeData = JSON.parse(localStorage.getItem('treeData')) || [];
         let currentId = null;
         let currentPhoto = '';
-        let currentInsIdx = null; // Для редагування конкретного полісу
-        const colors = ['level-0', 'level-1', 'level-2', 'level-3'];
+        let activeInsIdx = 0;
 
         window.onpopstate = () => {
-            if (document.getElementById('insurance-editor').style.display === 'flex') closeInsurance();
+            if (document.getElementById('ins-editor').style.display === 'flex') closeInsurance();
             else if (document.getElementById('editor').style.display === 'flex') closeEditor();
         };
 
         function render() {
             const root = document.getElementById('tree-root');
             root.innerHTML = '';
-            buildTree(null, root, 0);
+            treeData.filter(n => n.parentId === null).forEach(n => buildNode(n, root, 0));
         }
 
-        function buildTree(parentId, container, level) {
-            const children = treeData.filter(n => n.parentId === parentId);
-            children.forEach(node => {
-                const wrap = document.createElement('div');
-                wrap.className = parentId ? `node-container ${colors[level % 4]}` : '';
-                container.appendChild(wrap);
-                const row = document.createElement('div');
-                row.className = 'node-row';
-                const displayName = `${node.surname || ''} ${node.name || '...'}`.trim();
-                row.innerHTML = `
+        function buildNode(node, container, level) {
+            const wrap = document.createElement('div');
+            wrap.className = level > 0 ? `node-container level-${level % 4}` : '';
+            container.appendChild(wrap);
+            wrap.innerHTML = `
+                <div class="node-row">
                     <div class="flex-1" onclick="openNode('${node.id}')">
-                        <div class="status-text leading-none mb-1">${node.status || ''}</div>
-                        <div class="text-lg font-light tracking-tight">${displayName}</div>
+                        <div class="status-text mb-1">${node.status || ''}</div>
+                        <div class="text-lg font-light">${node.surname || ''} ${node.name || '...'}</div>
                     </div>
-                    <button onclick="addNewNode('${node.id}')" class="text-zinc-800 px-4 text-2xl font-light">+</button>
-                `;
-                wrap.appendChild(row);
-                buildTree(node.id, wrap, level + 1);
+                    <button onclick="addNewNode('${node.id}')" class="text-zinc-800 px-4 text-2xl">+</button>
+                </div>
+            `;
+            treeData.filter(n => n.parentId === node.id).forEach(c => buildNode(c, wrap, level + 1));
+        }
+
+        function openNode(id) {
+            currentId = id;
+            const n = treeData.find(x => x.id === id);
+            history.pushState({p:1}, '');
+            document.getElementById('edit-status').value = n.status || '';
+            document.getElementById('edit-surname').value = n.surname || '';
+            document.getElementById('edit-name').value = n.name || '';
+            
+            document.getElementById('patr-main-cont').innerHTML = '';
+            document.getElementById('btn-patr-main').style.display = n.patronymic ? 'none' : 'block';
+            if(n.patronymic) addPatrField('main', n.patronymic);
+
+            document.getElementById('edit-pass-ser').value = n.pass_ser || '';
+            document.getElementById('edit-pass-num').value = n.pass_num || '';
+            document.getElementById('edit-inn').value = n.inn || '';
+            document.getElementById('edit-city').value = n.city || '';
+            document.getElementById('edit-street').value = n.street || '';
+            document.getElementById('edit-house').value = n.house || '';
+
+            document.getElementById('extra-addr-cont').innerHTML = '';
+            document.getElementById('btn-apt').style.display = n.apt ? 'none' : 'block';
+            document.getElementById('btn-zip').style.display = n.zip ? 'none' : 'block';
+            if(n.apt) addExtraAddr('apt', n.apt);
+            if(n.zip) addExtraAddr('zip', n.zip);
+
+            currentPhoto = n.photo || '';
+            document.getElementById('photo-preview').innerHTML = currentPhoto ? `<img src="${currentPhoto}" class="w-full h-full object-cover">` : `<span class="text-[10px] text-zinc-600">ФОТО</span>`;
+            
+            document.getElementById('phone-container').innerHTML = '';
+            (n.phones || []).forEach(p => addPhoneField(p));
+            document.getElementById('note-container').innerHTML = '';
+            (n.notes || []).forEach(nt => addNoteField(nt));
+
+            renderExtraInsButtons();
+            document.getElementById('editor').style.display = 'flex';
+        }
+
+        function renderExtraInsButtons() {
+            const cont = document.getElementById('extra-ins-list');
+            cont.innerHTML = '';
+            const n = treeData.find(x => x.id === currentId);
+            if (!n.insurances) n.insurances = [{}]; 
+            n.insurances.forEach((ins, i) => {
+                if(i === 0) return;
+                const b = document.createElement('button');
+                b.className = "w-full py-3 bg-zinc-900 border border-zinc-800 rounded-lg text-white mt-2";
+                b.innerText = `ПОЛІС ${i + 1}`;
+                b.onclick = () => openInsurance(i);
+                cont.appendChild(b);
             });
         }
 
-        function calculateAge(bday) {
-            if (!bday) return '';
-            const birth = new Date(bday);
-            const today = new Date();
-            let age = today.getFullYear() - birth.getFullYear();
-            if (today.getMonth() < birth.getMonth() || (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate())) age--;
-            return age + ' р.';
+        function addNewInsurance() {
+            const n = treeData.find(x => x.id === currentId);
+            if(!n.insurances) n.insurances = [{}];
+            n.insurances.push({});
+            renderExtraInsButtons();
         }
 
-        function updateAgeDisplay(el, id) { document.getElementById(id).innerText = calculateAge(el.value); }
+        function openInsurance(idx) {
+            activeInsIdx = idx;
+            const n = treeData.find(x => x.id === currentId);
+            if(!n.insurances) n.insurances = [{}];
+            const ins = n.insurances[idx];
+            
+            history.pushState({p:2}, '');
+            const root = document.getElementById('ins-fields-root');
+            root.innerHTML = `
+                <div class="input-group">
+                    <div class="field"><label>Прізвище</label><textarea id="ins-sur" oninput="autoH(this)">${ins.surname || ''}</textarea></div>
+                    <div class="field"><label>Ім'я</label><textarea id="ins-nam" oninput="autoH(this)">${ins.name || ''}</textarea></div>
+                    <div class="field"><label>По-батькові</label><input id="ins-pat" type="text" value="${ins.patronymic || ''}"></div>
+                </div>
+                <div class="input-group">
+                    <div class="field"><label>Дата нар.</label><input id="ins-bday" type="date" value="${ins.bday || ''}" onchange="updateAge(this, 'ia')"><span id="ia" class="age-badge">${calculateAge(ins.bday)}</span></div>
+                    <div class="field"><label>Стать</label><select id="ins-gen"><option value="жінка" ${ins.gender==='жінка'?'selected':''}>жінка</option><option value="чоловік" ${ins.gender==='чоловік'?'selected':''}>чоловік</option></select></div>
+                </div>
+                <div class="input-group">
+                    <div class="field"><label>Зріст/см</label><input id="ins-h" type="number" value="${ins.height || ''}"></div>
+                    <div class="field"><label>Вага/кг</label><input id="ins-w" type="number" value="${ins.weight || ''}"></div>
+                </div>
+                <div class="input-group">
+                    <div class="field"><label>Оформлено</label><input id="ins-start" type="date" value="${ins.date_start || ''}"></div>
+                    <div class="field"><label>Сума полісу</label><input id="ins-tot" type="text" value="${ins.total || ''}"></div>
+                    <div class="field"><label>№ Накоп.</label><input id="ins-nn" type="text" value="${ins.n_nakop || ''}"></div>
+                    <div class="field"><label>Сума Накоп.</label><input id="ins-sn" type="text" value="${ins.s_nakop || ''}"></div>
+                </div>
+                <div class="input-group">
+                    <div class="field"><label>Роль</label><select id="ins-role"><option value="Батько" ${ins.role==='Батько'?'selected':''}>Батько</option><option value="Мати" ${ins.role==='Мати'?'selected':''}>Мати</option></select></div>
+                    <div class="field"><label>Прізвище</label><input id="ins-psur" type="text" value="${ins.p_sur || ''}"></div>
+                    <div class="field"><label>Ім'я</label><input id="ins-pnam" type="text" value="${ins.p_nam || ''}"></div>
+                    <div class="field"><label>Дата нар.</label><input id="ins-pbday" type="date" value="${ins.p_bday || ''}" onchange="updateAge(this, 'ipa')"><span id="ipa" class="age-badge">${calculateAge(ins.p_bday)}</span></div>
+                </div>
+            `;
+            document.getElementById('ins-editor').style.display = 'flex';
+            setTimeout(() => { document.querySelectorAll('textarea').forEach(t => autoH(t)); }, 50);
+        }
 
+        function closeInsurance() {
+            const n = treeData.find(x => x.id === currentId);
+            const ins = n.insurances[activeInsIdx];
+            ins.surname = document.getElementById('ins-sur').value;
+            ins.name = document.getElementById('ins-nam').value;
+            ins.patronymic = document.getElementById('ins-pat').value;
+            ins.bday = document.getElementById('ins-bday').value;
+            ins.gender = document.getElementById('ins-gen').value;
+            ins.height = document.getElementById('ins-h').value;
+            ins.weight = document.getElementById('ins-w').value;
+            ins.date_start = document.getElementById('ins-start').value;
+            ins.total = document.getElementById('ins-tot').value;
+            ins.n_nakop = document.getElementById('ins-nn').value;
+            ins.s_nakop = document.getElementById('ins-sn').value;
+            ins.role = document.getElementById('ins-role').value;
+            ins.p_sur = document.getElementById('ins-psur').value;
+            ins.p_nam = document.getElementById('ins-pnam').value;
+            ins.p_bday = document.getElementById('ins-pbday').value;
+            document.getElementById('ins-editor').style.display = 'none';
+        }
+
+        function saveNode() {
+            const n = treeData.find(x => x.id === currentId);
+            n.status = document.getElementById('edit-status').value;
+            n.surname = document.getElementById('edit-surname').value;
+            n.name = document.getElementById('edit-name').value;
+            n.patronymic = document.getElementById('inp-main-patr')?.value || n.patronymic;
+            n.pass_ser = document.getElementById('edit-pass-ser').value;
+            n.pass_num = document.getElementById('edit-pass-num').value;
+            n.inn = document.getElementById('edit-inn').value;
+            n.city = document.getElementById('edit-city').value;
+            n.street = document.getElementById('edit-street').value;
+            n.house = document.getElementById('edit-house').value;
+            n.apt = document.getElementById('edit-apt')?.value || n.apt;
+            n.zip = document.getElementById('edit-zip')?.value || n.zip;
+            n.photo = currentPhoto;
+            n.phones = Array.from(document.querySelectorAll('.phone-data')).map(i => i.value).filter(v => v.trim());
+            n.notes = Array.from(document.querySelectorAll('.note-data')).map(t => t.value).filter(v => v.trim());
+
+            localStorage.setItem('treeData', JSON.stringify(treeData));
+            closeEditor();
+            render();
+        }
+
+        // Helpers
+        function addPatrField(type, v='') {
+            document.getElementById('patr-main-cont').innerHTML = `<div class="field"><label>По-батькові</label><input id="inp-main-patr" type="text" value="${v}"></div>`;
+            document.getElementById('btn-patr-main').style.display = 'none';
+        }
+        function addExtraAddr(t, v='') {
+            const div = document.createElement('div'); div.className = 'field';
+            div.innerHTML = `<label>${t==='apt'?'Квартира':'Індекс'}</label><input id="edit-${t}" type="text" value="${v}">`;
+            document.getElementById('extra-addr-cont').appendChild(div);
+            document.getElementById(`btn-${t}`).style.display = 'none';
+        }
+        function addPhoneField(v) {
+            const div = document.createElement('div'); div.className = 'input-group';
+            div.innerHTML = `<div class="field"><label>моб.</label><input type="tel" class="phone-data" value="${v}"></div>`;
+            document.getElementById('phone-container').appendChild(div);
+        }
+        function addNoteField(v) {
+            const div = document.createElement('div'); div.className = 'input-group';
+            div.innerHTML = `<div class="field"><textarea class="note-data" oninput="autoH(this)">${v}</textarea></div>`;
+            document.getElementById('note-container').appendChild(div);
+            autoH(div.querySelector('textarea'));
+        }
+        function autoH(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
+        function calculateAge(d) {
+            if(!d) return '';
+            const b = new Date(d); const t = new Date();
+            let a = t.getFullYear() - b.getFullYear();
+            if(t.getMonth() < b.getMonth() || (t.getMonth()===b.getMonth() && t.getDate() < b.getDate())) a--;
+            return a + ' р.';
+        }
+        function updateAge(el, id) { document.getElementById(id).innerText = calculateAge(el.value); }
         function previewPhoto(input) {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -217,243 +311,14 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
-
         function addNewNode(parentId) {
             const id = 'id' + Date.now();
-            treeData.push({ 
-                id, parentId, name:'', surname:'', patronymic:'', status:'', phones:[], emails:[], bday:'', notes:[], photo:'',
-                pass_ser:'', pass_num:'', inn:'', city:'', street:'', house:'', apt:'', zip:'', insurances: []
-            });
+            treeData.push({ id, parentId, surname:'', name:'', insurances:[{}] });
             openNode(id);
         }
-
-        function openNode(id) {
-            currentId = id;
-            const n = treeData.find(x => x.id === id);
-            history.pushState({p:1}, '');
-            
-            document.getElementById('edit-status').value = n.status || '';
-            document.getElementById('edit-surname').value = n.surname || '';
-            document.getElementById('edit-name').value = n.name || '';
-            
-            const pMain = document.getElementById('patronymic-field-main');
-            pMain.innerHTML = '';
-            document.getElementById('btn-add-patr-main').style.display = n.patronymic ? 'none' : 'block';
-            if(n.patronymic) addPatronymic('main', n.patronymic);
-
-            document.getElementById('edit-pass-ser').value = n.pass_ser || '';
-            document.getElementById('edit-pass-num').value = n.pass_num || '';
-            document.getElementById('edit-inn').value = n.inn || '';
-            document.getElementById('edit-city').value = n.city || '';
-            document.getElementById('edit-street').value = n.street || '';
-            document.getElementById('edit-house').value = n.house || '';
-
-            const exAd = document.getElementById('extra-address-fields');
-            exAd.innerHTML = '';
-            document.getElementById('btn-add-apt').style.display = n.apt ? 'none' : 'block';
-            document.getElementById('btn-add-zip').style.display = n.zip ? 'none' : 'block';
-            if(n.apt) addExtraAddress('apt', n.apt);
-            if(n.zip) addExtraAddress('zip', n.zip);
-
-            document.getElementById('edit-bday').value = n.bday || '';
-            updateAgeDisplay({value: n.bday}, 'age-display');
-            currentPhoto = n.photo || '';
-            document.getElementById('photo-preview').innerHTML = currentPhoto ? `<img src="${currentPhoto}" class="w-full h-full object-cover">` : `<span class="text-[10px] text-zinc-600">ФОТО</span>`;
-            
-            document.getElementById('phone-container').innerHTML = '';
-            (n.phones || []).forEach(p => addPhoneField(p));
-            document.getElementById('email-container').innerHTML = '';
-            (n.emails || []).forEach(e => addEmailField(e));
-            document.getElementById('note-container').innerHTML = '';
-            (n.notes || []).forEach(nt => addNoteField(nt));
-
-            refreshInsuranceList();
-            document.getElementById('editor').style.display = 'flex';
-            setTimeout(() => { document.querySelectorAll('textarea').forEach(t => autoH(t)); }, 50);
-        }
-
-        // Робота з Полісами
-        function refreshInsuranceList() {
-            const container = document.getElementById('insurance-list');
-            container.innerHTML = '';
-            const n = treeData.find(x => x.id === currentId);
-            (n.insurances || []).forEach((ins, idx) => {
-                const btn = document.createElement('button');
-                btn.className = "w-full py-3 bg-zinc-900 border border-zinc-700 rounded-lg text-left px-4 mb-2 flex justify-between";
-                btn.innerHTML = `<span>Поліс від ${ins.date_start || '...'}</span> <span class="text-blue-500">ред.</span>`;
-                btn.onclick = () => editInsurance(idx);
-                container.appendChild(btn);
-            });
-        }
-
-        function addInsuranceCard() {
-            const n = treeData.find(x => x.id === currentId);
-            if(!n.insurances) n.insurances = [];
-            const newIns = { surname:'', name:'', patronymic:'', bday:'', gender:'', height:'', weight:'', date_start:'', total:'', n_nakop:'', s_nakop:'', n_zahyst:'', s_zahyst:'', role:'Батько', p_surname:'', p_name:'', p_patr:'', p_bday:'', notes:[] };
-            n.insurances.push(newIns);
-            editInsurance(n.insurances.length - 1);
-        }
-
-        function editInsurance(idx) {
-            currentInsIdx = idx;
-            const ins = treeData.find(x => x.id === currentId).insurances[idx];
-            history.pushState({p:2}, '');
-            
-            document.getElementById('ins-surname').value = ins.surname || '';
-            document.getElementById('ins-name').value = ins.name || '';
-            document.getElementById('patr-ins-container').innerHTML = '';
-            document.getElementById('btn-ins-patr').style.display = ins.patronymic ? 'none' : 'block';
-            if(ins.patronymic) addInsPatr(ins.patronymic);
-
-            document.getElementById('ins-bday').value = ins.bday || '';
-            document.getElementById('ins-gender').value = ins.gender || 'не вказано';
-            document.getElementById('ins-height').value = ins.height || '';
-            document.getElementById('ins-weight').value = ins.weight || '';
-            document.getElementById('ins-date-start').value = ins.date_start || '';
-            document.getElementById('ins-total').value = ins.total || '';
-            document.getElementById('ins-num-nakop').value = ins.n_nakop || '';
-            document.getElementById('ins-sum-nakop').value = ins.s_nakop || '';
-            document.getElementById('ins-num-zahyst').value = ins.n_zahyst || '';
-            document.getElementById('ins-sum-zahyst').value = ins.s_zahyst || '';
-
-            document.getElementById('ins-parent-role').value = ins.role || 'Батько';
-            document.getElementById('ins-parent-surname').value = ins.p_surname || '';
-            document.getElementById('ins-parent-name').value = ins.p_name || '';
-            document.getElementById('patr-parent-container').innerHTML = '';
-            document.getElementById('btn-parent-patr').style.display = ins.p_patr ? 'none' : 'block';
-            if(ins.p_patr) addParentPatr(ins.p_patr);
-            document.getElementById('ins-parent-bday').value = ins.p_bday || '';
-            
-            document.getElementById('ins-note-container').innerHTML = '';
-            (ins.notes || []).forEach(nt => addInsNoteField(nt));
-
-            updateAgeDisplay({value: ins.bday}, 'ins-age-display');
-            updateAgeDisplay({value: ins.p_bday}, 'ins-parent-age');
-            
-            document.getElementById('insurance-editor').style.display = 'flex';
-            setTimeout(() => { document.querySelectorAll('#insurance-editor textarea').forEach(t => autoH(t)); }, 50);
-        }
-
-        function saveInsuranceData() {
-            const n = treeData.find(x => x.id === currentId);
-            const ins = n.insurances[currentInsIdx];
-            ins.surname = document.getElementById('ins-surname').value;
-            ins.name = document.getElementById('ins-name').value;
-            ins.patronymic = document.getElementById('ins-p-val')?.value || '';
-            ins.bday = document.getElementById('ins-bday').value;
-            ins.gender = document.getElementById('ins-gender').value;
-            ins.height = document.getElementById('ins-height').value;
-            ins.weight = document.getElementById('ins-weight').value;
-            ins.date_start = document.getElementById('ins-date-start').value;
-            ins.total = document.getElementById('ins-total').value;
-            ins.n_nakop = document.getElementById('ins-num-nakop').value;
-            ins.s_nakop = document.getElementById('ins-sum-nakop').value;
-            ins.n_zahyst = document.getElementById('ins-num-zahyst').value;
-            ins.s_zahyst = document.getElementById('ins-sum-zahyst').value;
-            ins.role = document.getElementById('ins-parent-role').value;
-            ins.p_surname = document.getElementById('ins-parent-surname').value;
-            ins.p_name = document.getElementById('ins-parent-name').value;
-            ins.p_patr = document.getElementById('p-p-val')?.value || '';
-            ins.p_bday = document.getElementById('ins-parent-bday').value;
-            ins.notes = Array.from(document.querySelectorAll('.ins-note-data')).map(t => t.value).filter(v => v.trim());
-
-            closeInsurance();
-            refreshInsuranceList();
-        }
-
-        function deleteCurrentInsurance() {
-            if(confirm('Видалити цей поліс?')) {
-                const n = treeData.find(x => x.id === currentId);
-                n.insurances.splice(currentInsIdx, 1);
-                closeInsurance();
-                refreshInsuranceList();
-            }
-        }
-
-        // Допоміжні функції полів
-        function addPatronymic(type, v='') {
-            document.getElementById(`patronymic-field-${type}`).innerHTML = `<div class="field"><label>По-батькові</label><input id="edit-patr-${type}" type="text" value="${v}"></div>`;
-            document.getElementById(`btn-add-patr-${type}`).style.display = 'none';
-        }
-        function addInsPatr(v='') {
-            document.getElementById('patr-ins-container').innerHTML = `<div class="field"><label>По-батькові</label><input id="ins-p-val" type="text" value="${v}"></div>`;
-            document.getElementById('btn-ins-patr').style.display = 'none';
-        }
-        function addParentPatr(v='') {
-            document.getElementById('patr-parent-container').innerHTML = `<div class="field"><label>По-батькові</label><input id="p-p-val" type="text" value="${v}"></div>`;
-            document.getElementById('btn-parent-patr').style.display = 'none';
-        }
-        function addExtraAddress(t, v='') {
-            const div = document.createElement('div'); div.className = 'field';
-            div.innerHTML = `<label>${t==='apt'?'Квартира':'Індекс'}</label><input id="edit-${t}" type="text" value="${v}">`;
-            document.getElementById('extra-address-fields').appendChild(div);
-            document.getElementById(`btn-add-${t}`).style.display = 'none';
-        }
-        function addPhoneField(v) {
-            const div = document.createElement('div'); div.className = 'input-group';
-            div.innerHTML = `<div class="field"><label>моб.</label><input type="tel" class="phone-data" value="${v}"></div>`;
-            document.getElementById('phone-container').appendChild(div);
-        }
-        function addEmailField(v) {
-            const div = document.createElement('div'); div.className = 'input-group';
-            div.innerHTML = `<div class="field"><label>email</label><input type="email" class="email-data" value="${v}"></div>`;
-            document.getElementById('email-container').appendChild(div);
-        }
-        function addNoteField(v) {
-            const div = document.createElement('div'); div.className = 'input-group';
-            div.innerHTML = `<div class="field"><textarea class="note-data" oninput="autoH(this)">${v}</textarea></div>`;
-            document.getElementById('note-container').appendChild(div);
-            autoH(div.querySelector('textarea'));
-        }
-        function addInsNoteField(v) {
-            const div = document.createElement('div'); div.className = 'input-group';
-            div.innerHTML = `<div class="field"><textarea class="ins-note-data" oninput="autoH(this)">${v}</textarea></div>`;
-            document.getElementById('ins-note-container').appendChild(div);
-            autoH(div.querySelector('textarea'));
-        }
-        function autoH(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
-
-        function saveNode() {
-            const idx = treeData.findIndex(x => x.id === currentId);
-            const n = treeData[idx];
-            n.status = document.getElementById('edit-status').value;
-            n.surname = document.getElementById('edit-surname').value;
-            n.name = document.getElementById('edit-name').value;
-            n.patronymic = document.getElementById('edit-patr-main')?.value || '';
-            n.pass_ser = document.getElementById('edit-pass-ser').value;
-            n.pass_num = document.getElementById('edit-pass-num').value;
-            n.inn = document.getElementById('edit-inn').value;
-            n.city = document.getElementById('edit-city').value;
-            n.street = document.getElementById('edit-street').value;
-            n.house = document.getElementById('edit-house').value;
-            n.apt = document.getElementById('edit-apt')?.value || '';
-            n.zip = document.getElementById('edit-zip')?.value || '';
-            n.bday = document.getElementById('edit-bday').value;
-            n.photo = currentPhoto;
-            n.phones = Array.from(document.querySelectorAll('.phone-data')).map(i => i.value).filter(v => v.trim());
-            n.emails = Array.from(document.querySelectorAll('.email-data')).map(i => i.value).filter(v => v.trim());
-            n.notes = Array.from(document.querySelectorAll('.note-data')).map(t => t.value).filter(v => v.trim());
-
-            localStorage.setItem('treeData', JSON.stringify(treeData));
-            closeEditor();
-            render();
-        }
-
-        function deleteNode() {
-            if(confirm('Видалити анкету?')) {
-                const delRec = (id) => {
-                    treeData.filter(x => x.parentId === id).forEach(c => delRec(c.id));
-                    treeData = treeData.filter(x => x.id !== id);
-                };
-                delRec(currentId);
-                localStorage.setItem('treeData', JSON.stringify(treeData));
-                closeEditor();
-                render();
-            }
-        }
-
         function closeEditor() { document.getElementById('editor').style.display = 'none'; }
-        function closeInsurance() { document.getElementById('insurance-editor').style.display = 'none'; }
+        function deleteNode() { if(confirm('Видалити?')) { treeData = treeData.filter(x => x.id !== currentId); localStorage.setItem('treeData', JSON.stringify(treeData)); closeEditor(); render(); } }
+
         render();
     </script>
 </body>
