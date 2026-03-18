@@ -9,7 +9,6 @@
         :root { --bg: #121212; --card: #1e1e1e; --border: #2a2a2a; --accent: #10b981; --blue: #3b82f6; }
         body { background: var(--bg); color: #e0e0e0; font-family: sans-serif; margin: 0; padding: env(safe-area-inset-top) 0 0 0; overflow: hidden; height: 100vh; }
         
-        /* Гілки дерева */
         .level-0 { border-left: 3px solid #3b82f6; margin-bottom: 4px; }
         .level-1 { border-left: 3px solid #10b981; margin-left: 12px; }
         .level-2 { border-left: 3px solid #ef4444; margin-left: 12px; }
@@ -23,30 +22,27 @@
         .field label { font-size: 11px; color: var(--accent); width: 85px; text-transform: uppercase; flex-shrink: 0; font-weight: bold; }
         .field input, .field select { background: transparent; border: none; outline: none; color: #fff; flex: 1; font-size: 16px; width: 100%; }
 
-        /* Паспорт без зазорів */
         .pass-tag { color: var(--accent); font-size: 10px; text-transform: uppercase; font-weight: bold; margin-right: 4px; }
         #edit-status { color: var(--accent) !important; font-weight: bold; }
 
-        /* Примітки завжди розгорнуті */
-        textarea.ins-note-data { min-height: 100px !important; resize: none; overflow-y: auto; display: block; width: 100%; background: transparent; border: none; outline: none; color: #fff; padding: 8px 0; }
-        
+        textarea { resize: none; overflow: hidden; min-height: 24px; display: block; width: 100%; background: transparent; border: none; outline: none; color: #fff; white-space: pre-wrap; }
         .btn-plus { color: var(--blue); font-size: 13px; padding: 8px 16px; display: block; margin-bottom: 10px; text-align: left; }
         .age-badge { font-size: 12px; color: var(--accent); margin-left: auto; font-weight: bold; }
 
-        /* Історія без підстрибувань */
-        #history-screen { display: none; flex-direction: column; height: 100%; position: fixed; inset: 0; z-index: 200; background: var(--bg); }
-        #history-content { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; }
+        /* Історія */
+        #history-content { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; -webkit-overflow-scrolling: touch; }
         .chat-date { text-align: center; font-size: 10px; color: var(--accent); margin: 15px 0 5px; text-transform: uppercase; font-weight: bold; }
         .chat-bubble { background: #2b2b2b; padding: 10px 14px; border-radius: 15px 15px 15px 2px; margin-bottom: 8px; max-width: 85%; align-self: flex-start; white-space: pre-wrap; position: relative; }
         .chat-time { font-size: 9px; color: var(--accent); float: right; margin-top: 5px; margin-left: 10px; font-weight: bold; }
         
         .history-footer { padding: 10px; background: #1e1e1e; border-top: 1px solid #333; display: flex; align-items: flex-end; gap: 10px; }
-        #history-input { background: #121212; border: 1px solid #333; border-radius: 8px; padding: 10px; color: #fff; flex: 1; min-height: 40px; max-height: 150px; resize: none; font-size: 16px; }
+        #history-input { background: #121212; border: 1px solid #333; border-radius: 8px; padding: 10px; color: #fff; flex: 1; min-height: 40px; max-height: 150px; font-size: 16px; }
 
-        #context-menu, #confirm-dialog { position: fixed; background: #252525; border-radius: 12px; display: none; z-index: 500; border: 1px solid #444; }
-        .menu-item, .dialog-btn { padding: 14px 24px; font-size: 15px; text-align: center; border-bottom: 1px solid #333; color: #fff; }
-
-        /* Фото та Видалити */
+        /* Меню та фото */
+        #context-menu, #confirm-dialog { position: fixed; background: #252525; border-radius: 12px; display: none; z-index: 500; border: 1px solid #444; box-shadow: 0 10px 40px rgba(0,0,0,1); }
+        .menu-item { padding: 16px 24px; font-size: 15px; text-align: left; border-bottom: 1px solid #333; color: #fff; min-width: 160px; }
+        .dialog-btn { padding: 14px; text-align: center; flex: 1; font-size: 15px; border-top: 1px solid #333; }
+        
         .photo-wrap { position: relative; width: 100px; height: 100px; margin: 0 auto 20px; }
         .btn-del-main { position: absolute; right: -70px; top: 0; color: #ef4444; font-size: 10px; font-weight: bold; text-transform: uppercase; }
     </style>
@@ -55,7 +51,7 @@
 
     <div id="main-screen" class="p-2 h-full overflow-y-auto">
         <div class="flex justify-between items-center px-2 mb-4">
-            <span class="text-accent font-bold text-xs uppercase">Список / Структура</span>
+            <span class="text-[#10b981] font-bold text-xs uppercase">Список / Структура</span>
             <button onclick="addNewNode(null)" class="text-blue-500 text-4xl leading-none">+</button>
         </div>
         <div id="tree-root"></div>
@@ -75,7 +71,6 @@
                 </div>
                 <button onclick="deleteNode()" class="btn-del-main">Видалити</button>
             </div>
-
             <div class="input-group">
                 <div class="field"><label>Статус</label><input id="edit-status" type="text"></div>
                 <div class="field"><label>Прізвище</label><input id="edit-surname" type="text"></div>
@@ -85,11 +80,7 @@
             <button id="btn-patr-main" onclick="addPatrField('main')" class="btn-plus">+ Додати по-батькові</button>
             <div id="phone-container"></div>
             <button onclick="addPhoneField('')" class="btn-plus">+ Додати мобільний</button>
-
-            <div class="input-group">
-                <div class="field"><label>Дата нар.</label><input id="edit-bday" type="date" onchange="updateAge(this, 'age-display')"><span id="age-display" class="age-badge"></span></div>
-            </div>
-
+            <div class="input-group"><div class="field"><label>Дата нар.</label><input id="edit-bday" type="date" onchange="updateAge(this, 'age-display')"><span id="age-display" class="age-badge"></span></div></div>
             <div class="input-group">
                 <div class="field">
                     <label>Паспорт</label>
@@ -98,7 +89,6 @@
                 </div>
                 <div class="field"><label>ІНН</label><input id="edit-inn" type="text"></div>
             </div>
-
             <div class="input-group">
                 <div class="field"><label>Область</label><input id="edit-region" type="text"></div>
                 <div class="field"><label>Нас. пункт</label><input id="edit-city" type="text"></div>
@@ -111,7 +101,6 @@
                 <button id="btn-apt" onclick="addExtraAddr('apt')" class="btn-plus">+ Квартира</button>
                 <button id="btn-zip" onclick="addExtraAddr('zip')" class="btn-plus">+ Індекс</button>
             </div>
-
             <button onclick="openHistory()" class="w-full py-4 bg-zinc-800 rounded-lg text-white font-bold mt-4 uppercase">Історія</button>
             <button onclick="openInsurance(0)" class="w-full py-4 bg-zinc-800 rounded-lg text-white font-medium mt-4 uppercase">Поліс</button>
             <div id="extra-ins-list"></div>
@@ -119,7 +108,7 @@
         </div>
     </div>
 
-    <div id="history-screen">
+    <div id="history-screen" class="full-page">
         <div class="flex justify-between items-center px-4 py-3 border-b border-[#2a2a2a] bg-[#121212]">
             <button onclick="closeHistory()" class="text-blue-500">Назад</button>
             <span class="font-bold">Історія дій</span><div class="w-10"></div>
@@ -167,8 +156,9 @@
             document.getElementById('edit-surname').value = n.surname || '';
             document.getElementById('edit-name').value = n.name || '';
             const img = document.getElementById('edit-photo-preview');
-            if(n.photo) { img.src = n.photo; img.style.display = 'block'; document.getElementById('photo-placeholder').style.display = 'none'; currentPhotoBase64 = n.photo; }
-            else { img.style.display = 'none'; document.getElementById('photo-placeholder').style.display = 'block'; currentPhotoBase64 = ''; }
+            currentPhotoBase64 = n.photo || '';
+            if(currentPhotoBase64) { img.src = currentPhotoBase64; img.style.display = 'block'; document.getElementById('photo-placeholder').style.display = 'none'; }
+            else { img.style.display = 'none'; document.getElementById('photo-placeholder').style.display = 'block'; }
             document.getElementById('patr-main-cont').innerHTML = '';
             if(n.patronymic) addPatrField('main', n.patronymic);
             else document.getElementById('btn-patr-main').style.display = 'block';
@@ -190,16 +180,25 @@
             history.pushState({p:1}, '');
         }
 
+        function previewPhoto(input) { if (input.files && input.files[0]) { const reader = new FileReader(); reader.onload = e => { currentPhotoBase64 = e.target.result; const img = document.getElementById('edit-photo-preview'); img.src = currentPhotoBase64; img.style.display = 'block'; document.getElementById('photo-placeholder').style.display = 'none'; }; reader.readAsDataURL(input.files[0]); } }
+
         function saveNode() {
             const n = treeData.find(x => x.id === currentId);
-            n.photo = currentPhotoBase64; n.status = document.getElementById('edit-status').value;
-            n.surname = document.getElementById('edit-surname').value; n.name = document.getElementById('edit-name').value;
+            n.photo = currentPhotoBase64; 
+            n.status = document.getElementById('edit-status').value;
+            n.surname = document.getElementById('edit-surname').value;
+            n.name = document.getElementById('edit-name').value;
             n.patronymic = document.getElementById('inp-main-patr')?.value || n.patronymic || '';
-            n.bday = document.getElementById('edit-bday').value; n.pass_ser = document.getElementById('edit-pass-ser').value;
-            n.pass_num = document.getElementById('edit-pass-num').value; n.inn = document.getElementById('edit-inn').value;
-            n.region = document.getElementById('edit-region').value; n.city = document.getElementById('edit-city').value;
-            n.street = document.getElementById('edit-street').value; n.house = document.getElementById('edit-house').value;
-            n.corp = document.getElementById('edit-corp')?.value || n.corp || ''; n.apt = document.getElementById('edit-apt')?.value || n.apt || '';
+            n.bday = document.getElementById('edit-bday').value;
+            n.pass_ser = document.getElementById('edit-pass-ser').value;
+            n.pass_num = document.getElementById('edit-pass-num').value;
+            n.inn = document.getElementById('edit-inn').value;
+            n.region = document.getElementById('edit-region').value;
+            n.city = document.getElementById('edit-city').value;
+            n.street = document.getElementById('edit-street').value;
+            n.house = document.getElementById('edit-house').value;
+            n.corp = document.getElementById('edit-corp')?.value || n.corp || '';
+            n.apt = document.getElementById('edit-apt')?.value || n.apt || '';
             n.zip = document.getElementById('edit-zip')?.value || n.zip || '';
             n.phones = Array.from(document.querySelectorAll('.phone-data')).map(i => i.value).filter(v => v.trim());
             localStorage.setItem('treeData', JSON.stringify(treeData));
@@ -216,11 +215,22 @@
                 const b = document.createElement('div'); b.className = "chat-bubble";
                 b.innerHTML = `${msg.text} <span class="chat-time">${dObj.toLocaleTimeString('uk-UA',{hour:'2-digit',minute:'2-digit'})}</span>`;
                 let timer;
-                b.onmousedown = b.ontouchstart = (e) => { const p = {x: e.clientX || e.touches[0].clientX, y: e.clientY || e.touches[0].clientY}; timer = setTimeout(() => showMenu(p, idx), 600); };
-                b.onmouseup = b.ontouchend = () => clearTimeout(timer);
+                b.ontouchstart = b.onmousedown = (e) => { 
+                    const p = {x: e.clientX || (e.touches ? e.touches[0].clientX : 0), y: e.clientY || (e.touches ? e.touches[0].clientY : 0)};
+                    timer = setTimeout(() => showMenu(p, idx), 600); 
+                };
+                b.ontouchend = b.onmouseup = () => clearTimeout(timer);
                 cont.appendChild(b);
             });
             cont.scrollTop = cont.scrollHeight;
+        }
+
+        function addHistoryMsg() {
+            const input = document.getElementById('history-input'); if(!input.value.trim()) return;
+            const n = treeData.find(x => x.id === currentId); if(!n.history) n.history = [];
+            if(editMode) { n.history[selectedMsgIdx].text = input.value; editMode = false; }
+            else { n.history.push({ text: input.value, time: new Date().toISOString() }); }
+            input.value = ''; input.style.height = '40px'; renderHistory();
         }
 
         function openInsurance(idx) {
@@ -258,6 +268,7 @@
             (ins.notes || []).forEach(nt => addInsNote(nt));
             document.getElementById('ins-editor').style.display = 'flex';
             history.pushState({p:3}, '');
+            setTimeout(() => { document.querySelectorAll('.ins-note-data').forEach(t => autoH(t)); }, 200);
         }
 
         function closeInsurance() {
@@ -275,9 +286,6 @@
             document.getElementById('ins-editor').style.display = 'none';
         }
 
-        // Базові функції
-        function previewPhoto(input) { if (input.files && input.files[0]) { const reader = new FileReader(); reader.onload = e => { currentPhotoBase64 = e.target.result; const img = document.getElementById('edit-photo-preview'); img.src = currentPhotoBase64; img.style.display = 'block'; document.getElementById('photo-placeholder').style.display = 'none'; }; reader.readAsDataURL(input.files[0]); } }
-        function addHistoryMsg() { const input = document.getElementById('history-input'); if(!input.value.trim()) return; const n = treeData.find(x => x.id === currentId); if(!n.history) n.history = []; if(editMode) { n.history[selectedMsgIdx].text = input.value; editMode = false; } else { n.history.push({ text: input.value, time: new Date().toISOString() }); } input.value = ''; input.style.height = '40px'; renderHistory(); }
         function startEditMsg() { const n = treeData.find(x => x.id === currentId); const input = document.getElementById('history-input'); input.value = n.history[selectedMsgIdx].text; editMode = true; closeModal(); autoH(input); input.focus(); }
         function showMenu(p, idx) { selectedMsgIdx = idx; const m = document.getElementById('context-menu'); m.style.display = 'block'; m.style.left = Math.min(p.x, window.innerWidth - 170) + 'px'; m.style.top = (p.y - 100) + 'px'; setTimeout(() => { document.onclick = (e) => { if(!m.contains(e.target)) closeModal(); }; }, 10); }
         function showDelDialog() { closeModal(); const d = document.getElementById('confirm-dialog'); d.style.display = 'block'; d.style.left='50%'; d.style.top='50%'; d.style.transform='translate(-50%,-50%)'; }
@@ -286,7 +294,7 @@
         function addPatrField(t, v='') { document.getElementById('patr-main-cont').innerHTML = `<div class="field"><label>По-батькові</label><input id="inp-main-patr" type="text" value="${v}"></div>`; document.getElementById('btn-patr-main').style.display = 'none'; }
         function addExtraAddr(t, v='') { const div = document.createElement('div'); div.className = 'field'; const labels = {corp:'Корпус', apt:'Квартира', zip:'Індекс'}; div.innerHTML = `<label>${labels[t]}</label><input id="edit-${t}" type="text" value="${v}">`; document.getElementById('extra-addr-cont').appendChild(div); document.getElementById('btn-'+t).style.display = 'none'; }
         function addPhoneField(v) { const div = document.createElement('div'); div.className = 'input-group'; div.innerHTML = `<div class="field"><label>моб.</label><input type="tel" class="phone-data" value="${v}"></div>`; document.getElementById('phone-container').appendChild(div); }
-        function addInsNote(v) { const div = document.createElement('div'); div.className = 'input-group'; div.innerHTML = `<div class="field"><textarea class="ins-note-data">${v}</textarea></div>`; document.getElementById('ins-notes-cont').appendChild(div); }
+        function addInsNote(v) { const div = document.createElement('div'); div.className = 'input-group'; div.innerHTML = `<div class="field"><textarea class="ins-note-data" oninput="autoH(this)">${v}</textarea></div>`; document.getElementById('ins-notes-cont').appendChild(div); autoH(div.querySelector('textarea')); }
         function calculateAge(d) { if(!d) return ''; const b = new Date(d), t = new Date(); let a = t.getFullYear()-b.getFullYear(); if(t.getMonth()<b.getMonth() || (t.getMonth()===b.getMonth() && t.getDate()<b.getDate())) a--; return a + ' р.'; }
         function updateAge(el, id) { document.getElementById(id).innerText = calculateAge(el.value); }
         function autoH(el) { el.style.height = '40px'; if(el.scrollHeight > 40) el.style.height = el.scrollHeight + 'px'; }
