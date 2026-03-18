@@ -8,14 +8,16 @@
     <style>
         :root { --bg: #121212; --card: #1e1e1e; --border: #2a2a2a; --accent: #10b981; --blue: #3b82f6; }
         body { background: var(--bg); color: #e0e0e0; font-family: sans-serif; margin: 0; padding: env(safe-area-inset-top) 0 0 0; overflow: hidden; height: 100vh; }
+        
         .level-0 { border-left: 2px solid var(--blue); margin-bottom: 6px; }
         .level-1 { border-left: 2px solid var(--accent); margin-left: 12px; }
         .level-2 { border-left: 2px solid #ef4444; margin-left: 12px; }
         .level-3 { border-left: 2px solid #f59e0b; margin-left: 12px; }
+
         .node-row { display: flex; align-items: center; padding: 10px 0 10px 12px; border-bottom: 1px solid #1a1a1a; background: rgba(255,255,255,0.02); }
         .full-page { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: none; flex-direction: column; padding-top: env(safe-area-inset-top); }
         
-        /* ЗАКРІПЛЕНА ПАНЕЛЬ */
+        /* КНОПКА ГОТОВО ЗАКРІПЛЕНА */
         .header-fix { position: sticky; top: 0; background: #121212; z-index: 110; display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); }
 
         .input-group { background: var(--card); border-radius: 8px; overflow: hidden; margin-bottom: 16px; border: 1px solid var(--border); }
@@ -26,16 +28,13 @@
         #edit-status { color: var(--accent) !important; font-weight: bold; text-transform: uppercase; }
         .btn-plus { color: var(--blue); font-size: 14px; padding: 10px 16px; display: block; margin-bottom: 12px; text-align: left; font-weight: normal; }
         .age-badge { font-size: 12px; color: var(--accent) !important; margin-left: auto; font-weight: bold; }
+        
         .photo-wrap { position: relative; width: 100px; height: 100px; margin: 20px auto; }
         .btn-del-main { position: absolute; right: -70px; top: 0; color: #ef4444; font-size: 10px; font-weight: bold; text-transform: uppercase; }
         textarea { resize: none; overflow: hidden; min-height: 40px; display: block; width: 100%; background: transparent; border: none; outline: none; color: #fff; white-space: pre-wrap; padding: 4px 0; }
-        
-        #history-screen { display: none; flex-direction: column; height: 100%; position: fixed; inset: 0; z-index: 200; background: var(--bg); }
-        #history-content { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; }
-        .chat-bubble { background: #2b2b2b; padding: 10px 14px; border-radius: 15px 15px 15px 2px; margin-bottom: 8px; max-width: 85%; align-self: flex-start; }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
     <div id="main-screen" class="p-2 h-full overflow-y-auto">
         <div class="flex justify-between items-center px-2 mb-4">
@@ -67,7 +66,6 @@
             <div id="phone-container"></div>
             <button onclick="addPhoneField('')" class="btn-plus">+ Додати мобільний</button>
             <div class="input-group"><div class="field"><label>Дата нар.</label><input id="edit-bday" type="date" onchange="updateAge(this, 'age-display')"><span id="age-display" class="age-badge"></span></div></div>
-            <button onclick="openHistory()" class="w-full py-4 bg-zinc-800 rounded-lg text-white font-bold mt-4 uppercase">Історія</button>
             <button onclick="openInsurance(0)" class="w-full py-4 bg-zinc-800 rounded-lg text-white font-medium mt-4 uppercase">Поліс</button>
         </div>
     </div>
@@ -75,11 +73,6 @@
     <div id="ins-editor" class="full-page overflow-y-auto">
         <div class="header-fix"><button onclick="closeInsurance()" class="text-blue-500 text-sm">Назад</button><div class="text-white font-bold">Поліс</div><div class="w-10"></div></div>
         <div class="p-4 pb-32" id="ins-fields-root"></div>
-    </div>
-
-    <div id="history-screen">
-        <div class="header-fix"><button onclick="closeHistory()" class="text-blue-500 text-sm">Назад</button><div class="text-white font-bold">Історія</div><div class="w-10"></div></div>
-        <div id="history-content"></div>
     </div>
 
     <script>
@@ -182,9 +175,6 @@
 
         function addNewNode(parentId) { const id = 'id' + Date.now(); treeData.push({ id, parentId: parentId || null, surname: '', name: '', status: '', phones: [], photo: '', history: [], insurances: [{notes:[]}] }); localStorage.setItem('treeData', JSON.stringify(treeData)); render(); openNode(id); }
         function closeEditor() { document.getElementById('editor').style.display = 'none'; }
-        function openHistory() { document.getElementById('history-screen').style.display = 'flex'; renderHistory(); }
-        function closeHistory() { document.getElementById('history-screen').style.display = 'none'; }
-        function renderHistory() { const cont = document.getElementById('history-content'); cont.innerHTML = ''; const n = treeData.find(x => x.id === currentId); (n.history || []).forEach(msg => { cont.innerHTML += `<div class="chat-bubble">${msg.text}</div>`; }); }
         function addPhoneField(v) { const div = document.createElement('div'); div.className = 'input-group'; div.innerHTML = `<div class="field"><label>моб.</label><input type="tel" class="phone-data" value="${v}"></div>`; document.getElementById('phone-container').appendChild(div); }
         function addInsNote(v) { const div = document.createElement('div'); div.className = 'input-group'; div.innerHTML = `<textarea class="ins-note-data" oninput="autoH(this)">${v}</textarea>`; autoH(div.querySelector('textarea')); document.getElementById('ins-notes-cont').appendChild(div); }
         function calculateAge(d) { if(!d) return ''; const b = new Date(d), t = new Date(); let a = t.getFullYear()-b.getFullYear(); if(t.getMonth()<b.getMonth() || (t.getMonth()===b.getMonth() && t.getDate()<b.getDate())) a--; return a + ' р.'; }
