@@ -3,42 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>HumanTree Fix</title>
+    <title>HumanTree FINAL FIX</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root { --bg: #121212; --card: #1e1e1e; --border: #2a2a2a; --accent: #10b981; --blue: #3b82f6; }
         body { background: var(--bg); color: #e0e0e0; font-family: sans-serif; margin: 0; padding: env(safe-area-inset-top) 0 0 0; overflow: hidden; height: 100vh; }
-        
         .level-0 { border-left: 2px solid var(--blue); margin-bottom: 6px; }
         .level-1 { border-left: 2px solid var(--accent); margin-left: 12px; }
         .level-2 { border-left: 2px solid #ef4444; margin-left: 12px; }
         .level-3 { border-left: 2px solid #f59e0b; margin-left: 12px; }
-
         .node-row { display: flex; align-items: center; padding: 10px 0 10px 12px; border-bottom: 1px solid #1a1a1a; background: rgba(255,255,255,0.02); }
         .full-page { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: none; flex-direction: column; padding-top: env(safe-area-inset-top); }
-        
         .input-group { background: var(--card); border-radius: 8px; overflow: hidden; margin-bottom: 16px; border: 1px solid var(--border); }
         .field { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
         .field label { font-size: 11px; color: var(--accent); width: 85px; text-transform: uppercase; flex-shrink: 0; font-weight: bold; }
         .field input, .field select { background: transparent; border: none; outline: none; color: #fff; flex: 1; font-size: 16px; width: 100%; }
-
         #edit-status { color: var(--accent) !important; font-weight: bold; text-transform: uppercase; }
-        .pass-tag { color: var(--accent); font-size: 10px; text-transform: uppercase; font-weight: bold; margin-right: 4px; }
-        
-        .btn-plus { color: var(--blue); font-size: 14px; padding: 10px 16px; display: block; margin-bottom: 12px; text-align: left; font-weight: normal; }
-        .node-plus-btn, .main-plus-btn { color: var(--blue) !important; font-weight: normal !important; }
-        
-        .age-badge { font-size: 12px; color: var(--accent) !important; margin-left: auto; font-weight: bold; min-width: 40px; text-align: right; }
+        .btn-plus { color: var(--blue); font-size: 14px; padding: 10px 16px; display: block; margin-bottom: 12px; text-align: left; }
+        .age-badge { font-size: 12px; color: var(--accent) !important; margin-left: auto; font-weight: bold; }
         .photo-wrap { position: relative; width: 100px; height: 100px; margin: 0 auto 20px; }
         .btn-del-main { position: absolute; right: -70px; top: 0; color: #ef4444; font-size: 10px; font-weight: bold; text-transform: uppercase; }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
     <div id="main-screen" class="p-2 h-full overflow-y-auto">
         <div class="flex justify-between items-center px-2 mb-4">
             <span class="text-[#10b981] font-bold text-xs uppercase">Список / Структура</span>
-            <button onclick="addNewNode(null)" class="main-plus-btn text-4xl leading-none">+</button>
+            <button onclick="addNewNode(null)" class="text-blue-500 text-4xl">+</button>
         </div>
         <div id="tree-root"></div>
     </div>
@@ -58,31 +50,15 @@
                 <button onclick="deleteNode()" class="btn-del-main">Видалити</button>
             </div>
             <div class="input-group">
-                <div class="field"><label>Статус</label><input id="edit-status" type="text" placeholder="..."></div>
-                <div class="field"><label>Прізвище</label><input id="edit-surname" type="text" placeholder="..."></div>
-                <div class="field"><label>Ім'я</label><input id="edit-name" type="text" placeholder="..."></div>
+                <div class="field"><label>Статус</label><input id="edit-status" type="text"></div>
+                <div class="field"><label>Прізвище</label><input id="edit-surname" type="text"></div>
+                <div class="field"><label>Ім'я</label><input id="edit-name" type="text"></div>
                 <div id="patr-main-cont"></div>
             </div>
             <button id="btn-patr-main" onclick="addPatrField('main')" class="btn-plus">+ Додати по-батькові</button>
             <div id="phone-container"></div>
             <button onclick="addPhoneField('')" class="btn-plus">+ Додати мобільний</button>
             <div class="input-group"><div class="field"><label>Дата нар.</label><input id="edit-bday" type="date" onchange="updateAge(this, 'age-display')"><span id="age-display" class="age-badge"></span></div></div>
-            <div class="input-group">
-                <div class="field"><label>Паспорт</label><span class="pass-tag">серія</span><input id="edit-pass-ser" style="width:40px; flex:none;"><span class="pass-tag">№</span><input id="edit-pass-num" style="flex:1;"></div>
-                <div class="field"><label>ІНН</label><input id="edit-inn" type="text"></div>
-            </div>
-            <div class="input-group">
-                <div class="field"><label>Область</label><input id="edit-region" type="text"></div>
-                <div class="field"><label>Нас. пункт</label><input id="edit-city" type="text"></div>
-                <div class="field"><label>Вулиця</label><input id="edit-street" type="text"></div>
-                <div class="field"><label>Будинок</label><input id="edit-house" type="text"></div>
-                <div id="extra-addr-cont"></div>
-            </div>
-            <div class="flex gap-2">
-                <button id="btn-corp" onclick="addExtraAddr('corp')" class="btn-plus">+ Корпус</button>
-                <button id="btn-apt" onclick="addExtraAddr('apt')" class="btn-plus">+ Квартира</button>
-                <button id="btn-zip" onclick="addExtraAddr('zip')" class="btn-plus">+ Індекс</button>
-            </div>
         </div>
     </div>
 
@@ -94,8 +70,7 @@
         function render() {
             const root = document.getElementById('tree-root');
             root.innerHTML = '';
-            const topLevel = treeData.filter(n => !n.parentId);
-            topLevel.forEach(node => buildTree(node, root, 0));
+            treeData.filter(n => !n.parentId).forEach(node => buildTree(node, root, 0));
         }
 
         function buildTree(node, container, level) {
@@ -108,57 +83,30 @@
                         <div class="text-[10px] text-[#10b981] font-bold mb-1 uppercase">${node.status || ''}</div>
                         <div class="text-lg font-light">${node.surname || ''} ${node.name || '...'}</div>
                     </div>
-                    <button onclick="addNewNode('${node.id}')" class="node-plus-btn text-2xl px-4">+</button>
+                    <button onclick="addNewNode('${node.id}')" class="text-blue-500 text-2xl px-4">+</button>
                 </div>`;
-            const children = treeData.filter(n => n.parentId === node.id);
-            children.forEach(child => buildTree(child, wrap, level + 1));
+            treeData.filter(n => n.parentId === node.id).forEach(child => buildTree(child, wrap, level + 1));
         }
 
         function openNode(id) {
             currentId = id;
             const n = treeData.find(x => x.id === id);
-            if(!n) return;
-
             document.getElementById('edit-status').value = n.status || '';
             document.getElementById('edit-surname').value = n.surname || '';
             document.getElementById('edit-name').value = n.name || '';
             
-            // Фото
             currentPhotoBase64 = n.photo || '';
             const img = document.getElementById('edit-photo-preview');
             const ph = document.getElementById('photo-placeholder');
-            if(currentPhotoBase64) {
-                img.src = currentPhotoBase64;
-                img.style.display = 'block';
-                ph.style.display = 'none';
-            } else {
-                img.style.display = 'none';
-                ph.style.display = 'block';
-            }
+            if(currentPhotoBase64) { img.src = currentPhotoBase64; img.style.display = 'block'; ph.style.display = 'none'; }
+            else { img.style.display = 'none'; ph.style.display = 'block'; }
 
-            // По-батькові
             document.getElementById('patr-main-cont').innerHTML = '';
-            if(n.patronymic) addPatrField('main', n.patronymic); 
+            if(n.patronymic) addPatrField('main', n.patronymic);
             else document.getElementById('btn-patr-main').style.display = 'block';
 
             document.getElementById('edit-bday').value = n.bday || '';
             updateAge({value: n.bday}, 'age-display');
-            document.getElementById('edit-pass-ser').value = n.pass_ser || '';
-            document.getElementById('edit-pass-num').value = n.pass_num || '';
-            document.getElementById('edit-inn').value = n.inn || '';
-            document.getElementById('edit-region').value = n.region || '';
-            document.getElementById('edit-city').value = n.city || '';
-            document.getElementById('edit-street').value = n.street || '';
-            document.getElementById('edit-house').value = n.house || '';
-
-            // Дод. адреса
-            document.getElementById('extra-addr-cont').innerHTML = '';
-            ['corp', 'apt', 'zip'].forEach(t => {
-                if(n[t]) addExtraAddr(t, n[t]);
-                else if(document.getElementById('btn-'+t)) document.getElementById('btn-'+t).style.display = 'block';
-            });
-
-            // Телефони
             document.getElementById('phone-container').innerHTML = '';
             (n.phones || []).forEach(p => addPhoneField(p));
 
@@ -166,32 +114,17 @@
         }
 
         function saveNode() {
-            const idx = treeData.findIndex(x => x.id === currentId);
-            if(idx === -1) return;
+            const node = treeData.find(x => x.id === currentId);
+            if(!node) return;
 
-            // Створюємо оновлений об'єкт
-            const updatedNode = {
-                ...treeData[idx],
-                status: document.getElementById('edit-status').value,
-                surname: document.getElementById('edit-surname').value,
-                name: document.getElementById('edit-name').value,
-                photo: currentPhotoBase64,
-                patronymic: document.getElementById('inp-main-patr')?.value || treeData[idx].patronymic || '',
-                bday: document.getElementById('edit-bday').value,
-                pass_ser: document.getElementById('edit-pass-ser').value,
-                pass_num: document.getElementById('edit-pass-num').value,
-                inn: document.getElementById('edit-inn').value,
-                region: document.getElementById('edit-region').value,
-                city: document.getElementById('edit-city').value,
-                street: document.getElementById('edit-street').value,
-                house: document.getElementById('edit-house').value,
-                corp: document.getElementById('edit-corp')?.value || treeData[idx].corp || '',
-                apt: document.getElementById('edit-apt')?.value || treeData[idx].apt || '',
-                zip: document.getElementById('edit-zip')?.value || treeData[idx].zip || '',
-                phones: Array.from(document.querySelectorAll('.phone-data')).map(i => i.value).filter(v => v.trim())
-            };
+            node.status = document.getElementById('edit-status').value;
+            node.surname = document.getElementById('edit-surname').value;
+            node.name = document.getElementById('edit-name').value;
+            node.photo = currentPhotoBase64;
+            node.patronymic = document.getElementById('inp-main-patr')?.value || node.patronymic || '';
+            node.bday = document.getElementById('edit-bday').value;
+            node.phones = Array.from(document.querySelectorAll('.phone-data')).map(i => i.value).filter(v => v.trim());
 
-            treeData[idx] = updatedNode;
             localStorage.setItem('treeData', JSON.stringify(treeData));
             closeEditor();
             render();
@@ -202,13 +135,12 @@
                 const reader = new FileReader();
                 reader.onload = e => {
                     currentPhotoBase64 = e.target.result;
-                    const img = document.getElementById('edit-photo-preview');
-                    img.src = currentPhotoBase64;
-                    img.style.display = 'block';
+                    document.getElementById('edit-photo-preview').src = currentPhotoBase64;
+                    document.getElementById('edit-photo-preview').style.display = 'block';
                     document.getElementById('photo-placeholder').style.display = 'none';
-                    // Зберігаємо в пам'ять негайно, щоб не втратити при закритті
+                    // Збереження негайно
                     const n = treeData.find(x => x.id === currentId);
-                    if(n) { n.photo = currentPhotoBase64; localStorage.setItem('treeData', JSON.stringify(treeData)); }
+                    if(n) n.photo = currentPhotoBase64;
                 };
                 reader.readAsDataURL(input.files[0]);
             }
@@ -216,29 +148,18 @@
 
         function addNewNode(parentId) {
             const id = 'id' + Date.now();
-            const newNode = { id, parentId: parentId || null, surname: '', name: '', status: '', insurances: [], history: [], phones: [] };
-            treeData.push(newNode);
+            treeData.push({ id, parentId: parentId || null, surname: '', name: '', status: '', phones: [] });
             localStorage.setItem('treeData', JSON.stringify(treeData));
             render();
             openNode(id);
         }
 
-        function closeEditor() { document.getElementById('editor').style.display = 'none'; currentId = null; }
+        function closeEditor() { document.getElementById('editor').style.display = 'none'; }
         function addPatrField(t, v='') { document.getElementById('patr-main-cont').innerHTML = `<div class="field"><label>По-батькові</label><input id="inp-main-patr" type="text" value="${v}"></div>`; document.getElementById('btn-patr-main').style.display = 'none'; }
-        function addExtraAddr(t, v='') { const div = document.createElement('div'); div.className = 'field'; const labels = {corp:'Корпус', apt:'Квартира', zip:'Індекс'}; div.innerHTML = `<label>${labels[t]}</label><input id="edit-${t}" type="text" value="${v}">`; document.getElementById('extra-addr-cont').appendChild(div); if(document.getElementById('btn-'+t)) document.getElementById('btn-'+t).style.display = 'none'; }
         function addPhoneField(v) { const div = document.createElement('div'); div.className = 'input-group'; div.innerHTML = `<div class="field"><label>моб.</label><input type="tel" class="phone-data" value="${v}"></div>`; document.getElementById('phone-container').appendChild(div); }
         function calculateAge(d) { if(!d) return ''; const b = new Date(d), t = new Date(); let a = t.getFullYear()-b.getFullYear(); if(t.getMonth()<b.getMonth() || (t.getMonth()===b.getMonth() && t.getDate()<b.getDate())) a--; return a + ' р.'; }
         function updateAge(el, id) { document.getElementById(id).innerText = calculateAge(el.value); }
-        
-        function deleteNode() {
-            if(!confirm('Видалити цей вузол?')) return;
-            const idx = treeData.findIndex(n => n.id === currentId);
-            const pId = treeData[idx].parentId;
-            treeData.filter(n => n.parentId === currentId).forEach(c => c.parentId = pId);
-            treeData.splice(idx, 1);
-            localStorage.setItem('treeData', JSON.stringify(treeData));
-            closeEditor(); render();
-        }
+        function deleteNode() { if(confirm('Видалити?')) { treeData = treeData.filter(n => n.id !== currentId); localStorage.setItem('treeData', JSON.stringify(treeData)); closeEditor(); render(); } }
 
         render();
     </script>
