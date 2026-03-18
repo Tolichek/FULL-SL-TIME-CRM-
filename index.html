@@ -8,9 +8,15 @@
     <style>
         :root { --bg: #121212; --card: #1e1e1e; --border: #2a2a2a; --accent: #10b981; --blue: #3b82f6; }
         body { background: var(--bg); color: #e0e0e0; font-family: sans-serif; margin: 0; padding: env(safe-area-inset-top) 0 0 0; overflow-x: hidden; height: 100vh; }
-        .node-container { margin-left: 10px; padding-left: 14px; }
-        .node-row { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #1a1a1a; position: relative; }
-        .node-row::before { content: ''; position: absolute; left: -14px; top: 50%; width: 10px; height: 1px; background: rgba(255,255,255,0.1); }
+        
+        /* Та сама яскрава структура */
+        .level-0 { border-left: 3px solid #3b82f6; margin-bottom: 4px; }
+        .level-1 { border-left: 3px solid #10b981; margin-left: 12px; }
+        .level-2 { border-left: 3px solid #ef4444; margin-left: 12px; }
+        .level-3 { border-left: 3px solid #f59e0b; margin-left: 12px; }
+
+        .node-row { display: flex; align-items: center; padding: 12px 0 12px 12px; border-bottom: 1px solid #1a1a1a; position: relative; background: rgba(255,255,255,0.02); }
+        
         .full-page { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: none; flex-direction: column; padding-top: env(safe-area-inset-top); }
         .input-group { background: var(--card); border-radius: 8px; overflow: hidden; margin-bottom: 10px; border: 1px solid var(--border); }
         .field { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
@@ -18,6 +24,7 @@
         .field label { font-size: 11px; color: var(--accent); width: 85px; text-transform: uppercase; flex-shrink: 0; font-weight: bold; }
         .label-green { color: var(--accent); font-weight: bold; font-size: 11px; text-transform: uppercase; }
         .field input, .field textarea, .field select { background: transparent; border: none; outline: none; color: #fff; flex: 1; font-size: 16px; width: 100%; }
+        
         input[type="date"] { color-scheme: dark; font-size: 14px; }
         textarea { resize: none; overflow: hidden; min-height: 24px; display: block; width: 100%; }
         .btn-plus { color: var(--blue); font-size: 13px; padding: 8px 16px; display: block; margin-bottom: 10px; text-align: left; }
@@ -126,7 +133,7 @@
             const children = treeData.filter(n => n.parentId === parentId);
             children.forEach(node => {
                 const wrap = document.createElement('div');
-                wrap.className = parentId ? `node-container` : '';
+                wrap.className = `level-${level % 4}`;
                 container.appendChild(wrap);
                 wrap.innerHTML = `
                     <div class="node-row">
@@ -154,7 +161,7 @@
                         else { if (h > max) { w *= max / h; h = max; } }
                         canvas.width = w; canvas.height = h;
                         canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                        currentPhoto = canvas.toDataURL('image/jpeg', 0.7);
+                        currentPhoto = canvas.toDataURL('image/jpeg', 0.6);
                         document.getElementById('photo-preview').innerHTML = `<img src="${currentPhoto}" class="w-full h-full object-cover">`;
                     };
                     img.src = e.target.result;
@@ -170,11 +177,9 @@
             document.getElementById('edit-status').value = n.status || '';
             document.getElementById('edit-surname').value = n.surname || '';
             document.getElementById('edit-name').value = n.name || '';
-            
             document.getElementById('patr-main-cont').innerHTML = '';
             document.getElementById('btn-patr-main').style.display = n.patronymic ? 'none' : 'block';
             if(n.patronymic) addPatrField('main', n.patronymic);
-
             document.getElementById('edit-bday').value = n.bday || '';
             updateAge({value: n.bday}, 'age-display');
             document.getElementById('edit-pass-ser').value = n.pass_ser || '';
@@ -183,21 +188,17 @@
             document.getElementById('edit-city').value = n.city || '';
             document.getElementById('edit-street').value = n.street || '';
             document.getElementById('edit-house').value = n.house || '';
-
             document.getElementById('extra-addr-cont').innerHTML = '';
             document.getElementById('btn-apt').style.display = n.apt ? 'none' : 'block';
             document.getElementById('btn-zip').style.display = n.zip ? 'none' : 'block';
             if(n.apt) addExtraAddr('apt', n.apt);
             if(n.zip) addExtraAddr('zip', n.zip);
-
             currentPhoto = n.photo || '';
             document.getElementById('photo-preview').innerHTML = currentPhoto ? `<img src="${currentPhoto}" class="w-full h-full object-cover">` : `<span class="text-[10px] text-zinc-600">ФОТО</span>`;
-            
             document.getElementById('phone-container').innerHTML = '';
             (n.phones || []).forEach(p => addPhoneField(p));
             document.getElementById('note-container').innerHTML = '';
             (n.notes || []).forEach(nt => addNoteField(nt));
-
             renderExtraInsButtons();
             document.getElementById('editor').style.display = 'flex';
             setTimeout(() => { document.querySelectorAll('textarea').forEach(t => autoH(t)); }, 200);
