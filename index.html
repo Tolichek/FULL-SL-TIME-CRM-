@@ -9,7 +9,6 @@
         :root { --bg: #121212; --card: #1e1e1e; --border: #2a2a2a; --accent: #10b981; --blue: #3b82f6; }
         body { background: var(--bg); color: #e0e0e0; font-family: sans-serif; margin: 0; padding: env(safe-area-inset-top) 0 0 0; overflow: hidden; height: 100vh; }
         
-        /* Оригінальна структура */
         .level-0 { border-left: 3px solid #3b82f6; margin-bottom: 4px; }
         .level-1 { border-left: 3px solid #10b981; margin-left: 12px; }
         .level-2 { border-left: 3px solid #ef4444; margin-left: 12px; }
@@ -23,19 +22,23 @@
         .field label { font-size: 11px; color: var(--accent); width: 85px; text-transform: uppercase; flex-shrink: 0; font-weight: bold; }
         .field input, .field select { background: transparent; border: none; outline: none; color: #fff; flex: 1; font-size: 16px; width: 100%; }
 
-        /* Паспорт без зазорів */
         .pass-container { display: flex; align-items: center; gap: 4px; flex: 1; }
         .pass-tag { color: var(--accent); font-size: 10px; text-transform: uppercase; font-weight: bold; flex-shrink: 0; }
         .pass-input { background: transparent; border: none; outline: none; color: #fff; font-size: 16px; }
 
         #edit-status { color: var(--accent) !important; font-weight: bold; }
 
+        /* Фото блок */
+        .photo-box { width: 80px; height: 80px; background: #2a2a2a; border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 2px solid var(--border); margin-bottom: 15px; position: relative; }
+        .photo-box img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-placeholder { font-size: 30px; color: #555; }
+
         textarea { resize: none; overflow: hidden; min-height: 24px; display: block; width: 100%; background: transparent; border: none; outline: none; color: #fff; }
         #history-input { background: #121212; border: 1px solid #333; border-radius: 8px; padding: 10px; min-height: 40px; font-size: 16px; }
         .btn-plus { color: var(--blue); font-size: 13px; padding: 8px 16px; display: block; margin-bottom: 10px; text-align: left; }
         .age-badge { font-size: 12px; color: var(--accent); margin-left: auto; font-weight: bold; }
 
-        #history-content { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; user-select: none; -webkit-user-select: none; }
+        #history-content { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; }
         .chat-date { text-align: center; font-size: 10px; color: var(--accent); margin: 15px 0 5px; text-transform: uppercase; font-weight: bold; }
         .chat-bubble { background: #2b2b2b; padding: 10px 14px; border-radius: 15px 15px 15px 2px; margin-bottom: 8px; max-width: 85%; align-self: flex-start; white-space: pre-wrap; }
         .chat-time { font-size: 9px; color: var(--accent); float: right; margin-top: 5px; margin-left: 10px; font-weight: bold; }
@@ -61,6 +64,14 @@
             <button onclick="saveNode()" class="text-blue-500 font-bold text-lg">Готово</button>
         </div>
         <div class="p-4 pb-32">
+            <div class="flex justify-center">
+                <div class="photo-box" onclick="document.getElementById('photo-input').click()">
+                    <img id="edit-photo-preview" src="" style="display:none">
+                    <span id="photo-placeholder" class="photo-placeholder">👤</span>
+                </div>
+                <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="previewPhoto(this)">
+            </div>
+
             <div class="input-group">
                 <div class="field"><label>Статус</label><input id="edit-status" type="text"></div>
                 <div class="field"><label>Прізвище</label><input id="edit-surname" type="text"></div>
@@ -128,7 +139,7 @@
 
     <script>
         let treeData = JSON.parse(localStorage.getItem('treeData')) || [];
-        let currentId = null, activeInsIdx = 0, selectedMsgIdx = null, editMode = false;
+        let currentId = null, activeInsIdx = 0, selectedMsgIdx = null, editMode = false, currentPhotoBase64 = '';
 
         function render() {
             const root = document.getElementById('tree-root'); root.innerHTML = '';
@@ -139,9 +150,24 @@
             treeData.filter(n => n.parentId === parentId).forEach(node => {
                 const wrap = document.createElement('div'); wrap.className = `level-${level % 4}`;
                 container.appendChild(wrap);
-                wrap.innerHTML = `<div class="node-row"><div class="flex-1" onclick="openNode('${node.id}')"><div class="text-[10px] text-accent font-bold mb-1">${node.status || ''}</div><div class="text-lg font-light">${node.surname || ''} ${node.name || '...'}</div></div><button onclick="addNewNode('${node.id}')" class="text-blue-500 text-2xl px-4">+</button></div>`;
+                // Статус зроблено зеленим та жирним
+                wrap.innerHTML = `<div class="node-row"><div class="flex-1" onclick="openNode('${node.id}')"><div class="text-[10px] text-[#10b981] font-bold mb-1 uppercase">${node.status || ''}</div><div class="text-lg font-light">${node.surname || ''} ${node.name || '...'}</div></div><button onclick="addNewNode('${node.id}')" class="text-blue-500 text-2xl px-4">+</button></div>`;
                 buildTree(node.id, wrap, level + 1);
             });
+        }
+
+        function previewPhoto(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentPhotoBase64 = e.target.result;
+                    const img = document.getElementById('edit-photo-preview');
+                    img.src = currentPhotoBase64;
+                    img.style.display = 'block';
+                    document.getElementById('photo-placeholder').style.display = 'none';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
         }
 
         function openNode(id) {
@@ -149,6 +175,19 @@
             document.getElementById('edit-status').value = n.status || '';
             document.getElementById('edit-surname').value = n.surname || '';
             document.getElementById('edit-name').value = n.name || '';
+            
+            // Завантаження фото
+            const img = document.getElementById('edit-photo-preview');
+            if(n.photo) {
+                img.src = n.photo; img.style.display = 'block';
+                document.getElementById('photo-placeholder').style.display = 'none';
+                currentPhotoBase64 = n.photo;
+            } else {
+                img.style.display = 'none';
+                document.getElementById('photo-placeholder').style.display = 'block';
+                currentPhotoBase64 = '';
+            }
+
             document.getElementById('patr-main-cont').innerHTML = '';
             if(n.patronymic) addPatrField('main', n.patronymic);
             else document.getElementById('btn-patr-main').style.display = 'block';
@@ -172,6 +211,7 @@
 
         function saveNode() {
             const n = treeData.find(x => x.id === currentId);
+            n.photo = currentPhotoBase64;
             n.status = document.getElementById('edit-status').value;
             n.surname = document.getElementById('edit-surname').value;
             n.name = document.getElementById('edit-name').value;
@@ -225,25 +265,9 @@
                 <div class="input-group">
                     <div class="field"><label>Прізвище</label><input id="ins-sur" value="${ins.surname||''}"></div>
                     <div class="field"><label>Ім'я</label><input id="ins-nam" value="${ins.name||''}"></div>
-                    <div class="field"><label>По-батькові</label><input id="ins-pat" value="${ins.patronymic||''}"></div>
                 </div>
                 <div class="input-group">
                     <div class="field"><label>Дата нар.</label><input id="ins-bday" type="date" value="${ins.bday||''}" onchange="updateAge(this, 'ia')"><span id="ia" class="age-badge">${calculateAge(ins.bday)}</span></div>
-                    <div class="field"><label>Стать</label><select id="ins-gen"><option value="жінка" ${ins.gender==='жінка'?'selected':''}>жінка</option><option value="чоловік" ${ins.gender==='чоловік'?'selected':''}>чоловік</option></select></div>
-                    <div class="field"><label>Зріст</label><input id="ins-h" value="${ins.height||''}"></div>
-                    <div class="field"><label>Вага</label><input id="ins-w" value="${ins.weight||''}"></div>
-                </div>
-                <div class="input-group">
-                    <div class="field"><label>Оформлено</label><input id="ins-start" type="date" value="${ins.date_start||''}"></div>
-                    <div class="field"><label>Строк</label><select id="ins-term">${[10,15,16,17,20,25,50,55,60,65].map(y => `<option value="${y}" ${ins.term==y?'selected':''}>${y>40?'до':'на'} ${y} років</option>`).join('')}</select></div>
-                    <div class="field"><label>Сума полісу</label><input id="ins-tot" value="${ins.total||''}"></div>
-                    <div class="field"><label>№ Накоп.</label><input id="ins-nn" value="${ins.n_nakop||''}"></div>
-                </div>
-                <div class="input-group">
-                    <div class="field"><label>Роль</label><select id="ins-role"><option value="Батько" ${ins.role==='Батько'?'selected':''}>Батько</option><option value="Мати" ${ins.role==='Мати'?'selected':''}>Мати</option></select></div>
-                    <div class="field"><label>Прізвище</label><input id="ins-psur" value="${ins.p_sur||''}"></div>
-                    <div class="field"><label>Ім'я</label><input id="ins-pnam" value="${ins.p_nam||''}"></div>
-                    <div class="field"><label>Дата нар.</label><input id="ins-pbday" type="date" value="${ins.p_bday||''}"></div>
                 </div>
                 <div id="ins-notes-cont"></div>
                 <button onclick="addInsNote('')" class="btn-plus">+ Додати примітку</button>
@@ -256,18 +280,11 @@
         function closeInsurance() {
             const n = treeData.find(x => x.id === currentId), ins = n.insurances[activeInsIdx];
             ins.surname = document.getElementById('ins-sur').value; ins.name = document.getElementById('ins-nam').value;
-            ins.patronymic = document.getElementById('ins-pat').value; ins.bday = document.getElementById('ins-bday').value;
-            ins.gender = document.getElementById('ins-gen').value; ins.height = document.getElementById('ins-h').value;
-            ins.weight = document.getElementById('ins-w').value; ins.date_start = document.getElementById('ins-start').value;
-            ins.term = document.getElementById('ins-term').value; ins.total = document.getElementById('ins-tot').value;
-            ins.n_nakop = document.getElementById('ins-nn').value; ins.role = document.getElementById('ins-role').value;
-            ins.p_sur = document.getElementById('ins-psur').value; ins.p_nam = document.getElementById('ins-pnam').value;
-            ins.p_bday = document.getElementById('ins-pbday').value;
+            ins.bday = document.getElementById('ins-bday').value;
             ins.notes = Array.from(document.querySelectorAll('.ins-note-data')).map(t => t.value).filter(v => v.trim());
             document.getElementById('ins-editor').style.display = 'none';
         }
 
-        // Вспомогательные функции
         function startEditMsg() { const n = treeData.find(x => x.id === currentId); const input = document.getElementById('history-input'); input.value = n.history[selectedMsgIdx].text; editMode = true; closeModal(); autoH(input); input.focus(); }
         function showMenu(p, idx) { selectedMsgIdx = idx; const m = document.getElementById('context-menu'); m.style.display = 'block'; m.style.left = Math.min(p.x, window.innerWidth - 170) + 'px'; m.style.top = (p.y - 100) + 'px'; setTimeout(() => { document.onclick = (e) => { if(!m.contains(e.target)) closeModal(); }; }, 10); }
         function showDelDialog() { closeModal(); const d = document.getElementById('confirm-dialog'); d.style.display = 'block'; d.style.left='50%'; d.style.top='50%'; d.style.transform='translate(-50%,-50%)'; }
@@ -287,7 +304,7 @@
         function renderExtraInsButtons() { const cont = document.getElementById('extra-ins-list'); cont.innerHTML = ''; const n = treeData.find(x => x.id === currentId); (n.insurances || []).forEach((ins, i) => { if(i > 0) { const b = document.createElement('button'); b.className = "w-full py-3 bg-zinc-900 border border-zinc-800 rounded-lg text-white mt-2 uppercase text-xs"; b.innerText = `Поліс ${i + 1}`; b.onclick = () => openInsurance(i); cont.appendChild(b); } }); }
         function addNewInsurance() { const n = treeData.find(x => x.id === currentId); if(!n.insurances) n.insurances = [{}]; n.insurances.push({notes:[]}); renderExtraInsButtons(); }
 
-        window.onpopstate = (e) => {
+        window.onpopstate = () => {
             if (document.getElementById('ins-editor').style.display === 'flex') closeInsurance();
             else if (document.getElementById('history-screen').style.display === 'flex') closeHistory();
             else closeEditor();
