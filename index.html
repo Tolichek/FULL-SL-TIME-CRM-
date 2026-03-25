@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мій софт - Картка клієнта (Розширена)</title>
+    <title>Мій софт - Картка клієнта (Поліс)</title>
     <style>
         body {
             margin: 0;
@@ -18,7 +18,7 @@
         }
 
         .window {
-            width: 700px; /* Картка ширше */
+            width: 750px; /* Широке вікно для зручності рядків */
             background: rgba(45, 45, 45, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
@@ -46,7 +46,7 @@
         .nav-bar {
             display: flex;
             background: #333;
-            padding-left: 10px; /* Кнопки залишаються зліва */
+            padding-left: 10px;
         }
 
         .nav-btn {
@@ -61,6 +61,7 @@
         .nav-btn.active {
             background: #e95420;
             color: white;
+            font-weight: bold;
         }
 
         .content {
@@ -69,38 +70,21 @@
 
         .row {
             display: flex;
-            gap: 40px; /* Відступ між колонками в одному рядку */
-            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 20px;
             align-items: baseline;
         }
 
-        .profile-row {
-            display: flex;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .avatar {
-            width: 80px;
-            height: 80px;
-            background: #5e2750;
-            border-radius: 50%;
-            margin-right: 20px;
-            border: 1px solid rgba(255,255,255,0.2);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 30px;
+        /* Розділювач для блоків (батьки/поліси) */
+        .section-divider {
+            margin: 25px 0 15px 0;
+            border-top: 1px solid rgba(255,255,255,0.07);
+            padding-top: 10px;
         }
 
         .label { color: #999; margin-right: 8px; font-size: 14px; }
         .value { color: #fff; font-size: 15px; }
-
-        .address-row {
-            margin: 20px 0;
-            padding: 10px 0;
-            border-top: 1px solid rgba(255,255,255,0.05);
-        }
 
         .footer {
             padding: 20px;
@@ -129,7 +113,7 @@
 
 <div class="window">
     <div class="title-bar">
-        <span>Картка клієнта (ms001) / Загальна</span>
+        <span>Картка клієнта (ms001) / Поліс</span>
         <div class="window-controls">
             <div class="dot"></div>
             <div class="dot"></div>
@@ -138,33 +122,15 @@
     </div>
     
     <div class="nav-bar">
-        <button class="nav-btn active">Загальна</button>
-        <button class="nav-btn">Поліс</button>
+        <button class="nav-btn">Загальна</button>
+        <button class="nav-btn active">Поліс</button>
         <button class="nav-btn">Історія</button>
         <button class="nav-btn">Документи</button>
     </div>
 
     <div class="content">
-        <div class="profile-row">
-            <div class="avatar">О</div>
-            <div>
-                <span class="label">ПІБ:</span>
-                <span class="value" style="font-size: 20px;">Олена Петрівна Коваль</span>
-            </div>
-        </div>
-
         <div class="row">
-            <div><span class="label">Мобільний:</span> <span class="value">+380 50 123 45 67</span></div>
-            <div><span class="label">Додатковий:</span> <span class="value">+380 67 987 65 43</span></div>
-        </div>
-
-        <div class="row">
-            <div><span class="label">E-mail:</span> <span class="value">elena.kova@email.com</span></div>
-        </div>
-
-        <div class="address-row">
-            <span class="label">Адреса:</span> 
-            <span class="value">Житомир, вул. Лесі Українки, 10, кВ. 2</span>
+            <div><span class="label">ПІБ клієнта:</span> <span class="value" style="font-size: 18px;">Олена Петрівна Коваль</span></div>
         </div>
 
         <div class="row">
@@ -173,8 +139,32 @@
         </div>
 
         <div class="row">
-            <div><span class="label">Паспорт / ID серія і номер:</span> <span class="value">АБ 123456</span></div>
-            <div><span class="label">ІНН:</span> <span class="value">2803225577</span></div>
+            <div><span class="label">Стать:</span> <span class="value">Жіноча</span></div>
+            <div><span class="label">Зріст:</span> <span class="value">170 см</span></div>
+            <div><span class="label">Вага:</span> <span class="value">62 кг</span></div>
+            <div><span class="label">Правша/шульга:</span> <span class="value">Правша</span></div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="row">
+            <div><span class="label">№ полісів:</span> <span class="value">AXA-00987123</span></div>
+            <div><span class="label">Сума:</span> <span class="value">500 000 грн</span></div>
+            <div><span class="label">Дата:</span> <span class="value">12.01.2026</span></div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="row">
+            <div><span class="label">Батько:</span> <span class="value">Коваль Петро Іванович</span></div>
+            <div><span class="label">Дата нар.:</span> <span class="value">10.05.1970</span></div>
+            <div><span class="label">Вік:</span> <span class="value">55 років</span></div>
+        </div>
+
+        <div class="row">
+            <div><span class="label">Мати:</span> <span class="value">Коваль Марія Степанівна</span></div>
+            <div><span class="label">Дата нар.:</span> <span class="value">22.08.1972</span></div>
+            <div><span class="label">Вік:</span> <span class="value">53 роки</span></div>
         </div>
     </div>
 
