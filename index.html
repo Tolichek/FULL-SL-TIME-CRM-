@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Мій софт - CRM</title>
     <style>
-        /* БАЗОВИЙ СТИЛЬ (ПЕРШІ КОДИ) */
         body {
             margin: 0; padding: 0; height: 100vh;
             background: linear-gradient(135deg, #2d0922 0%, #4b1a30 50%, #c14e1a 100%);
@@ -15,7 +14,7 @@
         }
 
         .window {
-            width: 850px; background: rgba(45, 45, 45, 0.9);
+            width: 900px; background: rgba(45, 45, 45, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.6); backdrop-filter: blur(12px);
         }
@@ -26,19 +25,14 @@
         .nav-btn { padding: 12px 25px; border: none; background: transparent; color: #aaa; cursor: pointer; font-family: 'Ubuntu'; }
         .nav-btn.active { background: #e95420; color: white; font-weight: bold; }
 
-        .content { padding: 30px; min-height: 400px; display: none; }
+        .content { padding: 30px; min-height: 420px; display: none; }
         .content.active { display: block; }
 
-        /* СТИЛЬ ДЛЯ ЗАГАЛЬНА ТА ПОЛІС */
-        .row { display: flex; gap: 40px; margin-bottom: 20px; align-items: baseline; }
+        .row { display: flex; gap: 30px; margin-bottom: 15px; align-items: baseline; flex-wrap: wrap; }
         .label { color: #999; margin-right: 8px; font-size: 14px; }
         .value { color: #fff; font-size: 15px; }
         .clickable { cursor: pointer; border-bottom: 1px dashed #e95420; }
-        .section-divider { margin: 20px 0; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px; }
-
-        /* ІСТОРІЯ ТА ДОКУМЕНТИ */
-        .list-item { padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
-        .list-item:hover { background: rgba(255,255,255,0.02); }
+        .section-divider { margin: 15px 0; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 10px; }
 
         /* ПІДВАЛ */
         .footer { padding: 20px; display: flex; justify-content: space-between; background: rgba(0,0,0,0.2); }
@@ -48,18 +42,17 @@
         .btn-sec { background: #4a4a4a; }
         .btn-del { background: #7c1c1c; }
 
-        /* МОДАЛЬНІ ВІКНА */
+        /* МОДАЛКИ */
         .overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.75); display: none;
             justify-content: center; align-items: center; z-index: 100;
         }
-        .modal { width: 450px; background: #2d2d2d; border-radius: 8px; border: 1px solid #444; }
-        .modal-wide { width: 750px; }
+        .modal { background: #2d2d2d; border-radius: 8px; border: 1px solid #444; overflow: hidden; }
         .modal-body { padding: 25px; }
         input, textarea, select {
             background: #3d3d3d; border: 1px solid #555; border-radius: 4px;
-            padding: 10px; color: white; width: 100%; box-sizing: border-box; outline: none; margin-top: 5px;
+            padding: 10px; color: white; width: 100%; box-sizing: border-box; outline: none; margin-top: 5px; font-family: 'Ubuntu';
         }
     </style>
 </head>
@@ -76,43 +69,64 @@
     </div>
 
     <div id="tab-general" class="content active">
-        <div class="row">
-            <div style="width: 80px; height: 80px; background: #5e2750; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 30px;">О</div>
-            <div>
-                <span class="label">ПІБ:</span>
-                <span class="value" style="font-size: 20px;">Олена Петрівна Коваль</span>
-            </div>
+        <div class="row" style="margin-bottom: 25px;">
+            <div style="width: 70px; height: 70px; background: #5e2750; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px;">О</div>
+            <div><span class="label">ПІБ клієнта:</span><span class="value" style="font-size: 19px;">Олена Петрівна Коваль</span></div>
         </div>
         <div class="row">
             <div><span class="label">Мобільний:</span> <span class="value">+380 50 123 45 67</span></div>
             <div><span class="label">Додатковий:</span> <span class="value">+380 67 987 65 43</span></div>
         </div>
         <div class="row">
-            <div><span class="label">Адреса:</span> <span class="value clickable" onclick="openModal('modal-address')">Житомир, вул. Лесі Українки, 10, кВ. 2</span></div>
+            <div><span class="label">Адреса:</span> <span class="value clickable" onclick="openModal('modal-address')">01001, Житомирська обл., м. Житомир, вул. Лесі Українки, 10, кВ. 2</span></div>
+        </div>
+        <div class="row">
+            <div><span class="label">Дата народження:</span> <span class="value">25.04.1998</span></div>
+            <div><span class="label">Вік:</span> <span class="value">28 років</span></div>
+        </div>
+        <div class="row">
+            <div><span class="label">Паспорт / ID серія і номер:</span> <span class="value">АБ 123456</span></div>
+            <div><span class="label">ІНН:</span> <span class="value">2803225577</span></div>
         </div>
     </div>
 
     <div id="tab-policy" class="content">
         <div class="row">
+            <div><span class="label">ПІБ:</span> <span class="value">Олена Петрівна Коваль</span></div>
+        </div>
+        <div class="row">
+            <div><span class="label">Дата народження:</span> <span class="value">25.04.1998</span></div>
+            <div><span class="label">Вік:</span> <span class="value">28 років</span></div>
+        </div>
+        <div class="row">
             <div><span class="label">Стать:</span> <span class="value">Жіноча</span></div>
             <div><span class="label">Зріст:</span> <span class="value">170 см</span></div>
             <div><span class="label">Вага:</span> <span class="value">62 кг</span></div>
+            <div><span class="label">Правша/шульга:</span> <span class="value">Правша</span></div>
         </div>
         <div class="section-divider"></div>
         <div class="row">
-            <div><span class="label">№ поліса:</span> <span class="value">AXA-00987123</span></div>
+            <div><span class="label">№ полісів:</span> <span class="value">AXA-00987123</span></div>
             <div><span class="label">Сума:</span> <span class="value">500 000 грн</span></div>
+            <div><span class="label">Дата:</span> <span class="value">12.01.2026</span></div>
+        </div>
+        <div class="section-divider"></div>
+        <div class="row">
+            <div><span class="label">Батько:</span> <span class="value">Коваль Петро Іванович, 10.05.1970 (55 років)</span></div>
+        </div>
+        <div class="row">
+            <div><span class="label">Мати:</span> <span class="value">Коваль Марія Степанівна, 22.08.1972 (53 роки)</span></div>
         </div>
     </div>
 
     <div id="tab-history" class="content">
-        <div class="list-item" onclick="openModal('modal-work')">
-            <div class="row" style="margin-bottom: 5px;">
+        <div class="list-item" onclick="openModal('modal-work')" style="border-bottom: 1px solid #444; padding: 10px 0;">
+            <div class="row" style="margin-bottom: 5px; gap: 20px;">
                 <span><span class="label">Записано:</span> <span class="value">25.03.2026, 18:30</span></span>
-                <span><span class="label">Вид:</span> <span class="value">Дзвінок</span></span>
+                <span><span class="label">Вид контакту:</span> <span class="value">Дзвінок</span></span>
                 <span><span class="label">Наступна:</span> <span class="value" style="color: #ff9d5c;">30.03.2026</span></span>
+                <span><span class="label">Тема наступної зустрічі:</span> <span class="value">Обговорення договору</span></span>
             </div>
-            <div><span class="label">Тема:</span> <span class="value">Обговорення договору</span></div>
         </div>
     </div>
 
@@ -131,53 +145,8 @@
 </div>
 
 <div id="modal-address" class="overlay">
-    <div class="modal">
+    <div class="modal" style="width: 420px;">
         <div class="title-bar"><span>Введення адреси</span><span class="clickable" onclick="closeModal()">×</span></div>
         <div class="modal-body">
             <div style="display:flex; gap:10px; margin-bottom:15px;">
-                <div style="flex:1"><span class="label">Індекс</span><input type="text" value="10001"></div>
-                <div style="flex:2"><span class="label">Область</span><input type="text" value="Житомирська"></div>
-            </div>
-            <div class="label">Населений пункт</div><input type="text" value="Житомир" style="margin-bottom:15px;">
-            <div style="display:flex; gap:10px;">
-                <div><span class="label">Буд.</span><input type="text"></div>
-                <div><span class="label">Корп.</span><input type="text"></div>
-                <div><span class="label">Кв.</span><input type="text"></div>
-            </div>
-            <button class="btn btn-ok" style="margin-top:20px; width:100%" onclick="closeModal()">Зберегти</button>
-        </div>
-    </div>
-</div>
-
-<div id="modal-work" class="overlay">
-    <div class="modal modal-wide">
-        <div class="title-bar"><span>Робота з клієнтом</span><span class="clickable" onclick="closeModal()">×</span></div>
-        <div class="modal-body" style="display:flex; gap:20px;">
-            <div style="flex:2">
-                <span class="label">Нотатки</span>
-                <textarea style="height:200px;"></textarea>
-            </div>
-            <div style="flex:1">
-                <span class="label">Вид контакту</span>
-                <select><option>Дзвінок</option><option>Офіс</option></select>
-                <span class="label" style="display:block; margin-top:15px;">Наступна зустріч</span>
-                <input type="text" value="30.03.2026">
-            </div>
-        </div>
-        <div class="footer"><button class="btn btn-ok" onclick="closeModal()">ОК</button></div>
-    </div>
-</div>
-
-<script>
-    function showTab(id) {
-        document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        event.currentTarget.classList.add('active');
-    }
-    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-    function closeModal() { document.querySelectorAll('.overlay').forEach(o => o.style.display = 'none'); }
-</script>
-
-</body>
-</html>
+                <div style="width: 30%"><span class="label">
