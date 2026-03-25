@@ -3,109 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мій софт - Картка клієнта (Історія)</title>
+    <title>Мій софт - Історія</title>
     <style>
         body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
+            margin: 0; padding: 0; height: 100vh;
             background: linear-gradient(135deg, #2d0922 0%, #4b1a30 50%, #c14e1a 100%);
             font-family: 'Ubuntu', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #ffffff;
+            display: flex; justify-content: center; align-items: center; color: #ffffff;
         }
-
         .window {
-            width: 800px;
-            background: rgba(45, 45, 45, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
-            backdrop-filter: blur(12px);
+            width: 900px; background: rgba(45, 45, 45, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px;
+            backdrop-filter: blur(12px); overflow: hidden;
         }
-
-        .title-bar {
-            background: #3d3d3d;
-            padding: 8px 15px;
-            font-size: 13px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .window-controls { display: flex; gap: 8px; }
-        .dot { width: 12px; height: 12px; border-radius: 50%; background: #555; }
-        .dot.close { background: #e95420; }
-
-        .nav-bar {
-            display: flex;
-            background: #333;
-            padding-left: 10px;
-        }
-
-        .nav-btn {
-            padding: 12px 25px;
-            font-size: 13px;
-            border: none;
-            background: transparent;
-            color: #aaa;
-            cursor: pointer;
-        }
-
+        .title-bar { background: #3d3d3d; padding: 10px 15px; font-size: 13px; display: flex; justify-content: space-between; }
+        .nav-bar { display: flex; background: #333; padding-left: 10px; }
+        .nav-btn { padding: 12px 25px; border: none; background: transparent; color: #aaa; cursor: pointer; }
         .nav-btn.active { background: #e95420; color: white; font-weight: bold; }
-
-        .content {
-            padding: 30px;
-            min-height: 250px;
-        }
-
-        /* Рядок історії контактів */
+        
+        .content { padding: 25px 30px; }
         .history-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 25px;
-            margin-bottom: 25px;
-            align-items: baseline;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex; gap: 35px; align-items: baseline; margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px;
         }
-
-        .history-row:last-child { border-bottom: none; }
-
         .label { color: #999; margin-right: 8px; font-size: 14px; }
         .value { color: #fff; font-size: 15px; }
-        
-        .theme-block {
-            width: 100%;
-            margin-top: 10px;
-            background: rgba(255,255,255,0.03);
-            padding: 10px;
-            border-radius: 4px;
-        }
 
-        .footer {
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            background: rgba(0,0,0,0.2);
-        }
-
-        .footer-left { display: flex; gap: 12px; }
-
-        button.btn {
-            padding: 8px 20px;
-            border-radius: 4px;
-            border: none;
-            font-size: 14px;
-            cursor: pointer;
-            background: #4a4a4a;
-            color: white;
-        }
-
-        button.btn-ok { background: #e95420; }
-        button.btn-del { background: #7c1c1c; color: #f8d7da; }
+        .footer { padding: 20px; display: flex; justify-content: space-between; background: rgba(0,0,0,0.2); }
+        .btn-left { display: flex; gap: 12px; }
+        button.btn { padding: 8px 20px; border-radius: 4px; border: none; cursor: pointer; background: #4a4a4a; color: white; font-size: 14px; }
+        .btn-ok { background: #e95420; }
+        .btn-del { background: #7c1c1c; color: #f8d7da; }
     </style>
 </head>
 <body>
@@ -113,11 +41,6 @@
 <div class="window">
     <div class="title-bar">
         <span>Картка клієнта (ms001) / Історія</span>
-        <div class="window-controls">
-            <div class="dot"></div>
-            <div class="dot"></div>
-            <div class="dot close"></div>
-        </div>
     </div>
     
     <div class="nav-bar">
@@ -129,30 +52,22 @@
 
     <div class="content">
         <div class="history-row">
-            <div><span class="label">Записано:</span> <span class="value">25.03.2026, 18:20</span></div>
+            <div><span class="label">Записано:</span> <span class="value">25.03.2026, 18:45</span></div>
             <div><span class="label">Вид контакту:</span> <span class="value">Дзвінок</span></div>
-            <div><span class="label">Наступна:</span> <span class="value" style="color: #ff9d5c;">30.03.2026</span></div>
-            
-            <div class="theme-block">
-                <span class="label">Тема наступної зустрічі:</span> 
-                <span class="value">Узгодження фінального макета ПЗ "Мій софт" та підписання договору.</span>
-            </div>
+            <div><span class="label">Наступна:</span> <span class="value">30.03.2026</span></div>
+            <div><span class="label">Тема наступної зустрічі:</span> <span class="value">Обговорення договору</span></div>
         </div>
 
         <div class="history-row">
-            <div><span class="label">Записано:</span> <span class="value">20.03.2026, 10:00</span></div>
+            <div><span class="label">Записано:</span> <span class="value">20.03.2026, 12:00</span></div>
             <div><span class="label">Вид контакту:</span> <span class="value">В офісі</span></div>
             <div><span class="label">Наступна:</span> <span class="value">25.03.2026</span></div>
-            
-            <div class="theme-block">
-                <span class="label">Тема наступної зустрічі:</span> 
-                <span class="value">Первинна презентація функціоналу клієнтської бази.</span>
-            </div>
+            <div><span class="label">Тема наступної зустрічі:</span> <span class="value">Презентація софту</span></div>
         </div>
     </div>
 
     <div class="footer">
-        <div class="footer-left">
+        <div class="btn-left">
             <button class="btn btn-ok">Ок</button>
             <button class="btn">Записати</button>
         </div>
