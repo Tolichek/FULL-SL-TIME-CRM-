@@ -21,7 +21,7 @@
             padding: 0 15px; font-size: 13px; z-index: 1000;
         }
 
-        /* LAUNCHER (SIDEBAR) */
+        /* LAUNCHER */
         .launcher {
             position: fixed; left: 0; top: 28px; bottom: 0; width: 55px;
             background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(10px);
@@ -56,141 +56,141 @@
             height: 35px; background: #3d3d3d; border-radius: 8px 8px 0 0;
             display: flex; justify-content: space-between; align-items: center; padding: 0 12px;
         }
-
+        .win-controls { display: flex; gap: 8px; }
         .dot { width: 12px; height: 12px; border-radius: 50%; background: #555; cursor: pointer; }
         .close { background: var(--u-orange); }
 
         /* TABS */
         .tabs { display: flex; background: #333; }
-        .t-btn { padding: 10px 20px; border: none; background: transparent; color: #aaa; cursor: pointer; font-family: 'Ubuntu'; font-size: 13px; }
+        .t-btn { padding: 10px 25px; border: none; background: transparent; color: #aaa; cursor: pointer; font-family: 'Ubuntu'; font-size: 13px; }
         .t-btn.active { background: var(--u-orange); color: white; font-weight: bold; }
 
         .t-content { padding: 25px; min-height: 400px; display: none; }
         .t-content.active { display: block; }
 
-        /* ROWS & LABELS */
+        /* CONTENT STYLES */
         .row { display: flex; gap: 30px; margin-bottom: 15px; align-items: baseline; }
         .lbl { color: #999; font-size: 13px; min-width: 100px; }
         .val { color: #fff; font-size: 15px; }
         .link { border-bottom: 1px dashed var(--u-orange); cursor: pointer; }
 
-        /* MODALS (OVERLAYS) */
+        /* MODALS */
         .ovl {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 2000;
         }
         .modal { background: #2d2d2d; border-radius: 8px; border: 1px solid #444; overflow: hidden; }
-        
         input, textarea, select {
             background: #3d3d3d; border: 1px solid #555; border-radius: 4px; padding: 8px;
             color: white; width: 100%; box-sizing: border-box; outline: none; margin-top: 5px; font-family: 'Ubuntu';
         }
-
         .footer { padding: 15px 20px; background: rgba(0,0,0,0.2); display: flex; justify-content: space-between; }
-        .btn { padding: 8px 20px; border-radius: 4px; border: none; cursor: pointer; font-size: 13px; color: white; }
+        .btn { padding: 8px 22px; border-radius: 4px; border: none; cursor: pointer; font-size: 13px; color: white; font-weight: bold; }
         .btn-o { background: var(--u-orange); }
         .btn-g { background: #4a4a4a; }
     </style>
 </head>
 <body>
 
-<div class="top-bar">
-    <div>Мій софт</div>
-    <div id="clock">Срд 25 Бер, 22:10</div>
-    <div>Меню</div>
-</div>
+    <div class="top-bar">
+        <div>Мій софт</div>
+        <div>Срд 25 Бер, 22:15</div>
+        <div>Меню</div>
+    </div>
 
-<div class="launcher">
-    <div class="l-icon">🏠</div>
-    <div class="l-icon" id="l-btn" onclick="toggleWin('client-win')">👥</div>
-    <div class="l-icon">⚙️</div>
-</div>
+    <div class="launcher">
+        <div class="l-icon">🏠</div>
+        <div class="l-icon" id="l-btn" onclick="toggleWin('client-win')">👥</div>
+        <div class="l-icon">📅</div>
+        <div class="l-icon">⚙️</div>
+    </div>
 
-<div class="desktop">
-    <div class="win" id="client-win">
-        <div class="title-bar">
-            <span id="win-title">Картка клієнта / Загальна</span>
-            <div class="dot close" onclick="toggleWin('client-win')"></div>
-        </div>
-        
-        <div class="tabs">
-            <button class="t-btn active" onclick="tab(event, 'gen')">Загальна</button>
-            <button class="t-btn" onclick="tab(event, 'pol')">Поліс</button>
-            <button class="t-btn" onclick="tab(event, 'his')">Історія</button>
-            <button class="t-btn" onclick="tab(event, 'doc')">Документи</button>
-        </div>
-
-        <div id="gen" class="t-content active">
-            <div class="row">
-                <div style="width: 60px; height: 60px; background: #5e2750; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 22px;">О</div>
-                <div><span class="lbl">ПІБ:</span> <span class="val" style="font-size: 18px; font-weight: bold;">Олена Петрівна Коваль</span></div>
+    <div class="desktop">
+        <div class="win" id="client-win">
+            <div class="title-bar">
+                <span id="win-title">Картка клієнта / Загальна</span>
+                <div class="win-controls"><div class="dot close" onclick="toggleWin('client-win')"></div></div>
             </div>
-            <div class="row">
-                <div><span class="lbl">Мобільний:</span> <span class="val">+380 50 123 45 67</span></div>
+            
+            <div class="tabs">
+                <button class="t-btn active" onclick="tab(event, 'gen')">Загальна</button>
+                <button class="t-btn" onclick="tab(event, 'pol')">Поліс</button>
+                <button class="t-btn" onclick="tab(event, 'his')">Історія</button>
+                <button class="t-btn" onclick="tab(event, 'doc')">Документи</button>
             </div>
-            <div class="row">
-                <div><span class="lbl">Адреса:</span> <span class="val link" onclick="openOvl('m-addr')">10001, м. Житомир, вул. Лесі Українки, 10, кВ. 2</span></div>
-            </div>
-            <div class="row">
-                <div><span class="lbl">Дата нар:</span> <span class="val">25.04.1998 (28 р.)</span></div>
-            </div>
-        </div>
 
-        <div id="pol" class="t-content">
-            <div class="row"><div><span class="lbl">№ полісів:</span> <span class="val">AXA-00987123</span></div></div>
-            <div class="row"><div><span class="lbl">Батько:</span> <span class="val">Коваль П.І. (55 р.)</span></div></div>
-        </div>
-
-        <div id="his" class="t-content">
-            <div style="padding: 10px; border-bottom: 1px solid #444; cursor: pointer;" onclick="openOvl('m-work')">
+            <div id="gen" class="t-content active">
                 <div class="row">
-                    <span><span class="lbl">Записано:</span> <span class="val">25.03.2026</span></span>
-                    <span><span class="lbl">Вид:</span> <span class="val">Дзвінок</span></span>
+                    <div style="width: 65px; height: 65px; background: #5e2750; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px;">О</div>
+                    <div><span class="lbl">ПІБ:</span> <span class="val" style="font-size: 18px; font-weight: bold;">Олена Петрівна Коваль</span></div>
+                </div>
+                <div class="row"><div><span class="lbl">Мобільний:</span> <span class="val">+380 50 123 45 67</span></div></div>
+                <div class="row"><div><span class="lbl">Адреса:</span> <span class="val link" onclick="ovl('m-addr')">10001, м. Житомир, вул. Лесі Українки, 10, кВ. 2</span></div></div>
+                <div class="row"><div><span class="lbl">Дата народження:</span> <span class="val">25.04.1998 (28 р.)</span></div></div>
+            </div>
+
+            <div id="pol" class="t-content">
+                <div class="row"><div><span class="lbl">№ полісів:</span> <span class="val">AXA-00987123</span></div></div>
+                <div class="row"><div><span class="lbl">Батько:</span> <span class="val">Коваль П.І. (10.05.1970)</span></div></div>
+                <div class="row"><div><span class="lbl">Мати:</span> <span class="val">Коваль М.С. (22.08.1972)</span></div></div>
+            </div>
+
+            <div id="his" class="t-content">
+                <div style="padding: 12px; border-bottom: 1px solid #444; cursor: pointer;" onclick="ovl('m-work')">
+                    <div class="row">
+                        <span><span class="lbl">Записано:</span> <span class="val">25.03.2026</span></span>
+                        <span><span class="lbl">Вид:</span> <span class="val">Дзвінок</span></span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div id="doc" class="t-content">
-            <div style="padding: 10px; border-bottom: 1px solid #444;">📄 Договір.pdf</div>
-        </div>
+            <div id="doc" class="t-content">
+                <div style="padding: 10px; border-bottom: 1px solid #444;">📄 Скан_паспорта.pdf</div>
+            </div>
 
-        <div class="footer">
-            <div style="display:flex; gap:10px;"><button class="btn btn-o">Ок</button><button class="btn btn-g">Записати</button></div>
-            <button class="btn" style="background:#7c1c1c;">Видалити</button>
+            <div class="footer">
+                <div style="display:flex; gap:12px;"><button class="btn btn-o">Ок</button><button class="btn btn-g">Записати</button></div>
+                <button class="btn" style="background:#7c1c1c;">Видалити</button>
+            </div>
         </div>
     </div>
-</div>
 
-<div id="m-addr" class="ovl">
-    <div class="modal" style="width:400px;">
-        <div class="title-bar"><span>Введення адреси</span><div class="dot close" onclick="closeOvl()"></div></div>
-        <div class="modal-body">
-            <div style="display:flex; gap:10px;"><div style="width:30%"><span class="lbl">Індекс</span><input type="text"></div><div style="flex:1"><span class="lbl">Область</span><input type="text"></div></div>
-            <div style="margin-top:10px;"><span class="lbl">Місто</span><input type="text"></div>
-            <div style="display:flex; gap:5px; margin-top:10px;"><div style="flex:1"><input type="text" placeholder="Буд."></div><div style="flex:1"><input type="text" placeholder="Корп."></div><div style="flex:1"><input type="text" placeholder="Кв."></div></div>
-            <button class="btn btn-o" style="width:100%; margin-top:15px;" onclick="closeOvl()">Зберегти</button>
+    <div id="m-addr" class="ovl">
+        <div class="modal" style="width:420px;">
+            <div class="title-bar"><span>Введення адреси</span><div class="win-controls"><div class="dot close" onclick="ovl_c()"></div></div></div>
+            <div class="modal-body">
+                <div style="display:flex; gap:10px;"><div style="width:30%"><span class="lbl">Індекс</span><input type="text"></div><div style="flex:1"><span class="lbl">Область</span><input type="text"></div></div>
+                <div style="margin-top:10px;"><span class="lbl">Місто</span><input type="text"></div>
+                <div style="display:flex; gap:10px; margin-top:10px;">
+                    <div style="flex:1"><input type="text" placeholder="Буд."></div>
+                    <div style="flex:1"><input type="text" placeholder="Корп."></div>
+                    <div style="flex:1"><input type="text" placeholder="Кв."></div>
+                </div>
+                <button class="btn btn-o" style="width:100%; margin-top:20px;" onclick="ovl_c()">ОК</button>
+            </div>
         </div>
     </div>
-</div>
 
-<div id="m-work" class="ovl">
-    <div class="modal" style="width:700px;">
-        <div class="title-bar"><span>Робота з клієнтом</span><div class="dot close" onclick="closeOvl()"></div></div>
-        <div class="modal-body" style="display:flex; gap:20px;">
-            <div style="flex:2"><span class="lbl">Нотатки</span><textarea style="height:150px;"></textarea></div>
-            <div style="flex:1"><span class="lbl">Вид</span><select><option>Дзвінок</option></select></div>
+    <div id="m-work" class="ovl">
+        <div class="modal" style="width:720px;">
+            <div class="title-bar"><span>Робота з клієнтом</span><div class="win-controls"><div class="dot close" onclick="ovl_c()"></div></div></div>
+            <div class="modal-body" style="display:flex; gap:20px;">
+                <div style="flex:2"><span class="lbl">Нотатки</span><textarea style="height:150px;"></textarea></div>
+                <div style="flex:1">
+                    <span class="lbl">Вид контакту</span><select><option>Дзвінок</option><option>Офіс</option></select>
+                    <span class="lbl" style="margin-top:15px; display:block;">Наступна</span><input type="text">
+                </div>
+            </div>
+            <div class="footer"><button class="btn btn-o" onclick="ovl_c()">ОК</button></div>
         </div>
-        <div class="footer"><button class="btn btn-o" onclick="closeOvl()">ОК</button></div>
     </div>
-</div>
 
 <script>
     function toggleWin(id) {
-        let w = document.getElementById(id); 
-        let btn = document.getElementById('l-btn');
-        let isOpen = w.style.display === 'flex';
-        w.style.display = isOpen ? 'none' : 'flex';
-        btn.classList.toggle('active', !isOpen);
+        let w = document.getElementById(id); let b = document.getElementById('l-btn');
+        let open = w.style.display === 'flex';
+        w.style.display = open ? 'none' : 'flex';
+        b.classList.toggle('active', !open);
     }
     function tab(e, n) {
         document.querySelectorAll('.t-content').forEach(c => c.style.display = "none");
@@ -199,8 +199,8 @@
         e.currentTarget.classList.add("active");
         document.getElementById('win-title').innerText = "Картка клієнта / " + e.currentTarget.innerText;
     }
-    function openOvl(id) { document.getElementById(id).style.display = 'flex'; }
-    function closeOvl() { document.querySelectorAll('.ovl').forEach(o => o.style.display = 'none'); }
+    function ovl(id) { document.getElementById(id).style.display = 'flex'; }
+    function ovl_c() { document.querySelectorAll('.ovl').forEach(o => o.style.display = 'none'); }
 </script>
 </body>
 </html>
