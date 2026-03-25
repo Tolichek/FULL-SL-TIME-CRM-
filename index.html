@@ -2,28 +2,34 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Мій софт - Desktop</title>
     <style>
         :root {
+            /* СТАНДАРТНА ПАЛІТРА UBUNTU */
+            --u-bg: #1a0512; /* Глибокий фіолетовий для градієнта */
             --u-orange: #e95420;
-            --u-bg: #1a0512;
-            --u-grey: #2d2d2d;
+            --u-dark-grey: #2d2d2d;
+            --u-text: #ffffff;
+            --u-text-dim: #aaaaaa;
         }
 
         body {
             margin: 0; padding: 0; height: 100vh;
-            /* ШПАЛЕРИ: Ми використовуємо саме твоє графіті на стіні */
+            /* ШПАЛЕРИ ЗА ЗАМОВЧУВАННЯМ: "Мій софт" */
             background: 
-                url('image_0.png') no-repeat center center fixed; /* Шпалери графіті */
-            background-size: cover;
+                radial-gradient(circle at center, rgba(75, 26, 48, 0.5) 0%, rgba(26, 5, 18, 0.8) 70%),
+                url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAMklEQVRYR2NkYGBgYGFgYPgvC6OnKkYpYpQiRili/KeMUcoYpYhRihilmPFPGaOUMUoRAwCidwP8F9D7nAAAAABJRU5ErkJggg=='), /* Текстура шуму */
+                #1a0512;
+            background-blend-mode: overlay;
             font-family: 'Ubuntu', 'Noto Sans UI', sans-serif;
-            color: white;
+            color: var(--u-text);
             overflow: hidden;
             display: flex;
             flex-direction: column;
         }
 
-        /* --- ВЕРХНЯ ПАНЕЛЬ --- */
+        /* --- TOP BAR --- */
         .top-bar {
             height: 28px;
             background: rgba(0, 0, 0, 0.7);
@@ -33,28 +39,26 @@
             align-items: center;
             padding: 0 15px;
             font-size: 13px;
+            position: relative;
             z-index: 1000;
         }
 
-        .top-left { display: flex; align-items: center; }
+        .top-bar-left, .top-bar-right, .clock-container {
+            display: flex; align-items: center; gap: 5px; cursor: pointer;
+        }
 
-        /* CLOCK (WORKING) */
-        .clock {
-            cursor: pointer;
-            font-weight: bold;
+        .top-bar-right { gap: 10px; }
+
+        /* --- CLOCK & DATE (WORKING) --- */
+        .clock-container {
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-        }
-
-        .top-right {
-            cursor: pointer;
+            color: var(--u-text);
             font-weight: bold;
-            padding: 0 10px;
         }
-        .top-right:hover { background: rgba(255,255,255,0.1); }
 
-        /* --- ДОК (SIDEBAR) --- */
+        /* --- DOCK --- */
         .dock {
             position: fixed;
             left: 0; top: 28px; bottom: 0;
@@ -69,21 +73,27 @@
             z-index: 900;
         }
 
-        .l-icon {
+        .dock-icon {
             width: 42px; height: 42px;
             margin-bottom: 12px;
-            border-radius: 6px;
+            border-radius: 8px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             transition: 0.2s;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 24px;
+            color: var(--u-text-dim);
+            font-size: 20px;
         }
 
-        .l-icon:hover { background: rgba(255, 255, 255, 0.1); color: white; }
-        .l-icon.active { border-left: 3px solid var(--u-orange); background: rgba(255,255,255,0.1); border-radius: 0 6px 6px 0; color: white;}
+        .dock-icon:hover { background: rgba(255, 255, 255, 0.1); color: var(--u-text); }
+        
+        .dock-icon.active {
+            border-left: 3px solid var(--u-orange);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0 8px 8px 0;
+            color: var(--u-text);
+        }
 
         .dock-bottom { margin-top: auto; padding-bottom: 15px; }
 
@@ -92,15 +102,26 @@
             position: relative;
             flex-grow: 1;
             margin-left: 58px; /* Відступ під док */
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* --- WINDOWS --- */
-        .win {
+        /* ЛОГОТИП ПО ЦЕНТРУ */
+        .desktop-logo-center {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        /* --- WINDOWS (STUB FOR CLIENT CARD) --- */
+        .window {
             position: absolute;
             background: rgba(45, 45, 45, 0.98);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
-            box-shadow: 0 30px 70px rgba(0,0,0,0.8);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
             backdrop-filter: blur(15px);
             display: none; /* Приховане за замовчуванням */
             flex-direction: column;
@@ -108,118 +129,169 @@
             z-index: 800;
         }
 
-        .win.open { display: flex; animation: winOpen 0.3s ease-out; }
+        .window.open { display: flex; animation: winOpen 0.3s ease-out; }
 
         @keyframes winOpen { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
-        .win-head {
+        .title-bar {
             height: 35px; background: #3d3d3d;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 0 15px; cursor: move; border-bottom: 1px solid rgba(0,0,0,0.2);
+            padding: 0 12px; cursor: move; border-bottom: 1px solid rgba(0,0,0,0.2);
         }
         
-        .win-title { font-size: 14px; font-weight: bold; }
+        .win-title { font-size: 14px; color: var(--u-text); }
         .win-controls { display: flex; gap: 8px; }
-        .close-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--u-orange); cursor: pointer; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; background: #555; cursor: pointer; }
+        .close { background: var(--u-orange); }
+        .close:hover { background: #ff7d4d; }
 
-        /* ВЕЛИКИЙ ЦЕНТРОВАНИЙ КАЛЕНДАР */
-        .win-cal-pop {
-            position: fixed; top: 50%; left: 50%;
-            transform: translate(-50%, -50%); /* ЦЕНТР */
-            width: 700px; height: 550px;
-            background: var(--u-grey);
-            z-index: 1050;
+        /* --- CALENDAR POPUP --- */
+        #calendar-pop {
+            top: 40px; right: 20px; width: 350px;
+            background: var(--u-dark-grey);
         }
         
-        /* ПРОСТИЙ БЛОКНОТ (ПРИКЛАД ВІКНА, ЯКЕ РОЗГОРТАЄТЬСЯ) */
-        #note-win {
-            top: 50px; left: 50px; width: 600px; height: 400px;
+        .cal-header {
+            padding: 15px; border-bottom: 1px solid #444;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        #note-win.maximized { top: 30px !important; left: 60px !important; width: calc(100% - 70px) !important; height: calc(100% - 40px) !important; border-radius: 0; }
-        #note-win textarea { flex-grow: 1; background: transparent; border: none; color: white; padding: 15px; font-family: monospace; font-size: 14px; outline: none; resize: none; }
+        
+        .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; padding: 15px; font-size: 13px; text-align: center;}
+        .cal-day-lbl { color: #888; font-weight: bold;}
+        .cal-day { padding: 8px; cursor: pointer; }
+        .cal-day:hover { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        .cal-day.today { background: var(--u-orange); border-radius: 4px; font-weight: bold; }
 
         /* --- DROPDOWN MENU --- */
-        .menu-pop {
+        .dropdown {
             position: absolute; top: 32px; right: 10px; width: 220px;
-            background: var(--u-grey); border: 1px solid rgba(255,255,255,0.1);
+            background: var(--u-dark-grey); border: 1px solid rgba(255,255,255,0.1);
             border-radius: 6px; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
             display: none; flex-direction: column; padding: 5px 0; z-index: 1001;
         }
         
-        .menu-pop.open { display: flex; }
-        .m-item { padding: 10px 15px; cursor: pointer; font-size: 14px; }
-        .m-item:hover { background: rgba(255, 255, 255, 0.1); }
-        .m-sep { height: 1px; background: rgba(255,255,255,0.1); margin: 5px 0; }
+        .dropdown.open { display: flex; }
+        .drop-item {
+            padding: 10px 15px; cursor: pointer; color: var(--u-text); font-size: 14px;
+        }
+        .drop-item:hover { background: rgba(255, 255, 255, 0.1); }
+        .drop-sep { height: 1px; background: rgba(255,255,255,0.1); margin: 5px 0; }
+
+        /* --- CORNER STAR --- */
+        .corner-star {
+            position: absolute; bottom: 20px; right: 20px;
+            font-size: 32px; color: rgba(255, 255, 255, 0.6);
+            pointer-events: none; z-index: 5;
+        }
 
     </style>
 </head>
 <body>
 
     <div class="top-bar">
-        <div class="top-left"><span>Мій софт</span></div>
-
-        <div class="clock" onclick="toggleWindow('calendar-pop')">
-            Срд 15 Трв, 10:30
+        <div class="top-bar-left">
+            <span>Мій софт</span>
         </div>
 
-        <div class="top-right" id="menu-trigger" onclick="toggleMenu()">
-            Меню
+        <div class="clock-container" onclick="toggleWindow('calendar-pop')">
+            <span id="date-part">Срд 15 Трв</span>, <span id="time-part">10:30</span>
+        </div>
+
+        <div class="top-bar-right">
+            <span>Меню</span>
+            <div id="menu-btn" style="cursor: pointer; display: flex; gap: 3px;" onclick="toggleMenu()">
+                <div style="width: 4px; height: 4px; background: white; border-radius: 50%;"></div>
+                <div style="width: 4px; height: 4px; background: white; border-radius: 50%;"></div>
+                <div style="width: 4px; height: 4px; background: white; border-radius: 50%;"></div>
+            </div>
         </div>
     </div>
 
     <div class="dock">
-        <div class="l-icon" id="btn-note" onclick="toggleWindow('note-win')">📑</div> <div class="l-icon">🌱</div> <div class="l-icon">☂️</div> <div class="l-icon">👥</div> <div class="l-icon">👤</div> <div class="dock-bottom">
-            <div class="l-icon">⚙️</div> <div class="l-icon">:::</div> </div>
+        <div class="dock-icon">📑</div> <div class="dock-icon">🌱</div> <div class="dock-icon">☂️</div> <div class="dock-icon" id="app-btn-clients" onclick="toggleWindow('client-win')">👥</div> <div class="dock-icon">👤</div> <div class="dock-bottom">
+            <div class="dock-icon">⚙️</div> <div class="dock-icon">:::</div> </div>
     </div>
 
     <div class="desktop">
         
-        <div class="win win-cal-pop" id="calendar-pop">
-            <div class="win-head">
-                <span class="win-title">Травень 2026</span>
-                <div class="win-controls"><div class="close-dot" onclick="toggleWindow('calendar-pop')"></div></div>
-            </div>
-            <div style="padding: 50px; text-align: center; font-size: 24px;">ВЕЛИКИЙ КАЛЕНДАР ПО ЦЕНТРУ</div>
+        <div class="desktop-logo-center">
+            <h1>мій софт</h1>
         </div>
 
-        <div class="win" id="note-win">
-            <div class="win-head">
-                <span class="win-title">Нотатки</span>
+        <div class="corner-star">✦</div>
+
+        <div class="window" id="client-win" style="width: 800px; height: 500px; top: 50px; left: 50px;">
+            <div class="title-bar">
+                <span class="win-title">Картка клієнта / Загальна</span>
                 <div class="win-controls">
-                    <div class="dot" style="background: #3ac43a;" onclick="maximizeWin('note-win')"></div> <div class="close-dot" onclick="toggleWindow('note-win')"></div>
+                    <div class="dot close" onclick="toggleWindow('client-win')"></div>
                 </div>
             </div>
-            <textarea placeholder="Почніть писати тут..."></textarea>
+            <div class="win-body" style="padding: 20px;">
+                <h1>Тут буде контент картки</h1>
+                <p>Базовий каркас вікна готовий.</p>
+            </div>
         </div>
 
-        <div id="sys-menu" class="menu-pop">
-            <div class="m-item">Налаштування акаунту</div>
-            <div class="m-item">Налаштування</div>
-            <div class="m-sep"></div>
-            <div class="m-item" style="color: #ed333b;">Вихід</div>
+        <div class="window" id="calendar-pop">
+            <div class="title-bar">
+                <span class="win-title">Травень 2026</span>
+                <div class="win-controls"><div class="dot close" onclick="toggleWindow('calendar-pop')"></div></div>
+            </div>
+            <div class="cal-grid">
+                <div class="cal-day-lbl">Пн</div><div class="cal-day-lbl">Вт</div><div class="cal-day-lbl">Ср</div><div class="cal-day-lbl">Чт</div><div class="cal-day-lbl">Пт</div><div class="cal-day-lbl">Сб</div><div class="cal-day-lbl">Нд</div>
+                <div class="cal-day"></div><div class="cal-day"></div><div class="cal-day"></div><div class="cal-day"></div><div class="cal-day">1</div><div class="cal-day">2</div><div class="cal-day">3</div>
+                <div class="cal-day">4</div><div class="cal-day">5</div><div class="cal-day">6</div><div class="cal-day">7</div><div class="cal-day">8</div><div class="cal-day">9</div><div class="cal-day">10</div>
+                <div class="cal-day">11</div><div class="cal-day">12</div><div class="cal-day">13</div><div class="cal-day">14</div><div class="cal-day today">15</div><div class="cal-day">16</div><div class="cal-day">17</div>
+                <div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day">20</div><div class="cal-day">21</div><div class="cal-day">22</div><div class="cal-day">23</div><div class="cal-day">24</div>
+                <div class="cal-day">25</div><div class="cal-day">26</div><div class="cal-day">27</div><div class="cal-day">28</div><div class="cal-day">29</div><div class="cal-day">30</div><div class="cal-day">31</div>
+            </div>
+        </div>
+
+        <div id="sys-menu" class="dropdown">
+            <div class="drop-item">Налаштування акаунту</div>
+            <div class="drop-item">Налаштування</div>
+            <div class="drop-sep"></div>
+            <div class="drop-item" style="color: #ed333b;">Вихід</div>
         </div>
 
     </div>
 
 <script>
+    // --- ГОДИННИК ТА ДАТА (WORKING) ---
+    function updateClock() {
+        const now = new Date();
+        const options = { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+        
+        // Форматування дати
+        const dateStr = now.toLocaleDateString('uk-UA', { weekday: 'short', month: 'short', day: 'numeric' });
+        // Капіталізація першої літери
+        const dateFormatted = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+        
+        // Форматування часу
+        const timeStr = now.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' });
+
+        document.getElementById('date-part').innerText = dateFormatted;
+        document.getElementById('time-part').innerText = timeStr;
+    }
+    
+    // Оновлення кожну секунду
+    setInterval(updateClock, 1000);
+    updateClock(); // Перший запуск
+
     // --- УПРАВЛІННЯ ВІКНАМИ ---
     function toggleWindow(id) {
         let win = document.getElementById(id);
+        let clientsBtn = document.getElementById('app-btn-clients');
         
-        // Спеціальний випадок для іконки блокнота (📑)
-        if (id === 'note-win') {
-            let btn = document.getElementById('btn-note');
+        // Спеціальний випадок для картки клієнта (щоб підсвітити іконку)
+        if (id === 'client-win') {
             let isOpen = win.classList.contains('open');
             win.classList.toggle('open', !isOpen);
-            btn.classList.toggle('active', !isOpen);
+            clientsBtn.classList.toggle('active', !isOpen);
         } else {
             win.classList.toggle('open');
         }
-    }
-
-    // Максимізація вікна
-    function maximizeWin(id) {
-        document.getElementById(id).classList.toggle('maximized');
     }
 
     // --- УПРАВЛІННЯ МЕНЮ ---
@@ -228,12 +300,15 @@
         menu.classList.toggle('open');
     }
 
-    // Закриття меню при кліку поза ним
+    // Закриття меню та календаря при кліку поза ними
     document.addEventListener('click', function(event) {
         let menu = document.getElementById('sys-menu');
-        let menuTrigger = document.getElementById('menu-trigger');
+        let cal = document.getElementById('calendar-pop');
+        let clockContainer = document.querySelector('.clock-container');
+        let menuBtn = document.getElementById('menu-btn');
 
-        if (!menuTrigger.contains(event.target) && !menu.contains(event.target)) { menu.classList.remove('open'); }
+        if (!menuBtn.contains(event.target) && !menu.contains(event.target)) { menu.classList.remove('open'); }
+        if (!clockContainer.contains(event.target) && !cal.contains(event.target)) { cal.classList.remove('open'); }
     });
 
 </script>
