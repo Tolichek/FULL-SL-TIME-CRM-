@@ -3,97 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мій софт - Документи</title>
+    <title>Мій софт - CRM</title>
     <style>
+        /* БАЗОВИЙ СТИЛЬ (ПЕРШІ КОДИ) */
         body {
-            margin: 0; padding: 0; min-height: 100vh;
-            background: #1a1a1a;
+            margin: 0; padding: 0; height: 100vh;
+            background: linear-gradient(135deg, #2d0922 0%, #4b1a30 50%, #c14e1a 100%);
             font-family: 'Ubuntu', sans-serif;
-            display: flex; justify-content: center; align-items: flex-start; 
-            color: #ffffff; padding-top: 20px;
+            display: flex; justify-content: center; align-items: center; color: #ffffff;
+            overflow: hidden;
         }
-        .window {
-            width: 95%; max-width: 850px; background: #2d2d2d;
-            border-radius: 8px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .nav-bar { display: flex; background: #333; }
-        .nav-btn { flex: 1; padding: 15px; border: none; background: transparent; color: #aaa; font-size: 14px; cursor: pointer; }
-        .nav-btn.active { background: #e95420; color: white; font-weight: bold; }
-        
-        .content { padding: 20px; min-height: 300px; }
-        
-        /* Рядок документа */
-        .doc-item {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 12px 0; border-bottom: 1px solid #444;
-        }
-        .doc-info { display: flex; align-items: center; gap: 15px; }
-        .doc-icon { font-size: 24px; color: #e95420; opacity: 0.8; }
-        .doc-details { display: flex; flex-direction: column; }
-        .doc-name { color: #fff; font-size: 15px; cursor: pointer; }
-        .doc-name:hover { text-decoration: underline; }
-        .doc-meta { color: #888; font-size: 12px; margin-top: 2px; }
 
-        .footer { padding: 15px; display: flex; justify-content: space-between; background: #252525; }
-        .btn-group { display: flex; gap: 10px; }
-        button { padding: 10px 20px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; font-size: 13px; }
-        .btn-ok { background: #e95420; color: white; }
-        .btn-save { background: #444; color: white; }
-        .btn-add { background: #3a5c3a; color: #d4edda; } /* Кнопка додавання */
-        .btn-del { background: #7c1c1c; color: white; }
+        .window {
+            width: 850px; background: rgba(45, 45, 45, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6); backdrop-filter: blur(12px);
+        }
+
+        .title-bar { background: #3d3d3d; padding: 10px 15px; font-size: 13px; display: flex; justify-content: space-between; }
+        
+        .nav-bar { display: flex; background: #333; padding-left: 10px; }
+        .nav-btn { padding: 12px 25px; border: none; background: transparent; color: #aaa; cursor: pointer; font-family: 'Ubuntu'; }
+        .nav-btn.active { background: #e95420; color: white; font-weight: bold; }
+
+        .content { padding: 30px; min-height: 400px; display: none; }
+        .content.active { display: block; }
+
+        /* СТИЛЬ ДЛЯ ЗАГАЛЬНА ТА ПОЛІС */
+        .row { display: flex; gap: 40px; margin-bottom: 20px; align-items: baseline; }
+        .label { color: #999; margin-right: 8px; font-size: 14px; }
+        .value { color: #fff; font-size: 15px; }
+        .clickable { cursor: pointer; border-bottom: 1px dashed #e95420; }
+        .section-divider { margin: 20px 0; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 15px; }
+
+        /* ІСТОРІЯ ТА ДОКУМЕНТИ */
+        .list-item { padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; }
+        .list-item:hover { background: rgba(255,255,255,0.02); }
+
+        /* ПІДВАЛ */
+        .footer { padding: 20px; display: flex; justify-content: space-between; background: rgba(0,0,0,0.2); }
+        .btn-left { display: flex; gap: 12px; }
+        button.btn { padding: 8px 22px; border-radius: 4px; border: none; cursor: pointer; font-family: 'Ubuntu'; font-size: 14px; color: white; }
+        .btn-ok { background: #e95420; }
+        .btn-sec { background: #4a4a4a; }
+        .btn-del { background: #7c1c1c; }
+
+        /* МОДАЛЬНІ ВІКНА */
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75); display: none;
+            justify-content: center; align-items: center; z-index: 100;
+        }
+        .modal { width: 450px; background: #2d2d2d; border-radius: 8px; border: 1px solid #444; }
+        .modal-wide { width: 750px; }
+        .modal-body { padding: 25px; }
+        input, textarea, select {
+            background: #3d3d3d; border: 1px solid #555; border-radius: 4px;
+            padding: 10px; color: white; width: 100%; box-sizing: border-box; outline: none; margin-top: 5px;
+        }
     </style>
 </head>
 <body>
 
 <div class="window">
+    <div class="title-bar"><span>Картка клієнта: Олена Коваль</span></div>
+    
     <div class="nav-bar">
-        <button class="nav-btn">Загальна</button>
-        <button class="nav-btn">Поліс</button>
-        <button class="nav-btn">Історія</button>
-        <button class="nav-btn active">Документи</button>
+        <button class="nav-btn active" onclick="showTab('tab-general')">Загальна</button>
+        <button class="nav-btn" onclick="showTab('tab-policy')">Поліс</button>
+        <button class="nav-btn" onclick="showTab('tab-history')">Історія</button>
+        <button class="nav-btn" onclick="showTab('tab-docs')">Документи</button>
     </div>
 
-    <div class="content">
-        <div class="doc-item">
-            <div class="doc-info">
-                <div class="doc-icon">📄</div>
-                <div class="doc-details">
-                    <span class="doc-name">Договір_страхування_Коваль.pdf</span>
-                    <span class="doc-meta">25.03.2026 • 2.4 MB • PDF</span>
-                </div>
+    <div id="tab-general" class="content active">
+        <div class="row">
+            <div style="width: 80px; height: 80px; background: #5e2750; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 30px;">О</div>
+            <div>
+                <span class="label">ПІБ:</span>
+                <span class="value" style="font-size: 20px;">Олена Петрівна Коваль</span>
             </div>
         </div>
+        <div class="row">
+            <div><span class="label">Мобільний:</span> <span class="value">+380 50 123 45 67</span></div>
+            <div><span class="label">Додатковий:</span> <span class="value">+380 67 987 65 43</span></div>
+        </div>
+        <div class="row">
+            <div><span class="label">Адреса:</span> <span class="value clickable" onclick="openModal('modal-address')">Житомир, вул. Лесі Українки, 10, кВ. 2</span></div>
+        </div>
+    </div>
 
-        <div class="doc-item">
-            <div class="doc-info">
-                <div class="doc-icon">🖼️</div>
-                <div class="doc-details">
-                    <span class="doc-name">Фото_авто_перед_страхуванням.jpg</span>
-                    <span class="doc-meta">24.03.2026 • 4.1 MB • JPG</span>
-                </div>
-            </div>
+    <div id="tab-policy" class="content">
+        <div class="row">
+            <div><span class="label">Стать:</span> <span class="value">Жіноча</span></div>
+            <div><span class="label">Зріст:</span> <span class="value">170 см</span></div>
+            <div><span class="label">Вага:</span> <span class="value">62 кг</span></div>
         </div>
+        <div class="section-divider"></div>
+        <div class="row">
+            <div><span class="label">№ поліса:</span> <span class="value">AXA-00987123</span></div>
+            <div><span class="label">Сума:</span> <span class="value">500 000 грн</span></div>
+        </div>
+    </div>
 
-        <div class="doc-item">
-            <div class="doc-info">
-                <div class="doc-icon">📝</div>
-                <div class="doc-details">
-                    <span class="doc-name">Замітка_до_полісу.txt</span>
-                    <span class="doc-meta">20.03.2026 • 12 KB • TXT</span>
-                </div>
+    <div id="tab-history" class="content">
+        <div class="list-item" onclick="openModal('modal-work')">
+            <div class="row" style="margin-bottom: 5px;">
+                <span><span class="label">Записано:</span> <span class="value">25.03.2026, 18:30</span></span>
+                <span><span class="label">Вид:</span> <span class="value">Дзвінок</span></span>
+                <span><span class="label">Наступна:</span> <span class="value" style="color: #ff9d5c;">30.03.2026</span></span>
             </div>
+            <div><span class="label">Тема:</span> <span class="value">Обговорення договору</span></div>
         </div>
+    </div>
+
+    <div id="tab-docs" class="content">
+        <div class="list-item">📄 <span class="value">Паспорт_Коваль.pdf</span> <span class="label" style="float: right;">1.4 MB</span></div>
+        <div class="list-item">🖼️ <span class="value">Фото_авто.jpg</span> <span class="label" style="float: right;">4.2 MB</span></div>
     </div>
 
     <div class="footer">
-        <div class="btn-group">
-            <button class="btn-ok">ОК</button>
-            <button class="btn-save">Записати</button>
-            <button class="btn-add">+ Додати файл</button>
+        <div class="btn-left">
+            <button class="btn btn-ok">Ок</button>
+            <button class="btn btn-sec">Записати</button>
         </div>
-        <button class="btn-del">Видалити</button>
+        <button class="btn btn-del">Видалити</button>
     </div>
 </div>
+
+<div id="modal-address" class="overlay">
+    <div class="modal">
+        <div class="title-bar"><span>Введення адреси</span><span class="clickable" onclick="closeModal()">×</span></div>
+        <div class="modal-body">
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
+                <div style="flex:1"><span class="label">Індекс</span><input type="text" value="10001"></div>
+                <div style="flex:2"><span class="label">Область</span><input type="text" value="Житомирська"></div>
+            </div>
+            <div class="label">Населений пункт</div><input type="text" value="Житомир" style="margin-bottom:15px;">
+            <div style="display:flex; gap:10px;">
+                <div><span class="label">Буд.</span><input type="text"></div>
+                <div><span class="label">Корп.</span><input type="text"></div>
+                <div><span class="label">Кв.</span><input type="text"></div>
+            </div>
+            <button class="btn btn-ok" style="margin-top:20px; width:100%" onclick="closeModal()">Зберегти</button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-work" class="overlay">
+    <div class="modal modal-wide">
+        <div class="title-bar"><span>Робота з клієнтом</span><span class="clickable" onclick="closeModal()">×</span></div>
+        <div class="modal-body" style="display:flex; gap:20px;">
+            <div style="flex:2">
+                <span class="label">Нотатки</span>
+                <textarea style="height:200px;"></textarea>
+            </div>
+            <div style="flex:1">
+                <span class="label">Вид контакту</span>
+                <select><option>Дзвінок</option><option>Офіс</option></select>
+                <span class="label" style="display:block; margin-top:15px;">Наступна зустріч</span>
+                <input type="text" value="30.03.2026">
+            </div>
+        </div>
+        <div class="footer"><button class="btn btn-ok" onclick="closeModal()">ОК</button></div>
+    </div>
+</div>
+
+<script>
+    function showTab(id) {
+        document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        event.currentTarget.classList.add('active');
+    }
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeModal() { document.querySelectorAll('.overlay').forEach(o => o.style.display = 'none'); }
+</script>
 
 </body>
 </html>
